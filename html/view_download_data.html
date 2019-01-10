@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title> View/Download Data </title>
+</head>
+    
+<body>
+    <h1>Real Food Calculator</h1>
+    
+        <a href=''>Home</a>
+        <a href=''>Data Entry Session</a>
+        <a href=''>Data Visualization</a>
+        
+    <h2>View/Download Data</h2>
+    <style>
+        /*table */
+        table {
+            font-family: "Arial", arial, Sans-serif;
+            border-collapse: collapse;
+            width: 75%;
+        }
+        th, td {
+            border: 1px solid;
+            text-align: left;
+            padding: 8px;
+        }
+    
+        /*hover buttons */
+        .dropdown-content {
+          display: none;
+          position: absolute;
+          z-index: 1;
+        }
+
+        .dropdown-content a {
+          color: black;
+          text-decoration: none;
+          display: block;
+        }
+
+        .dropdown:hover .dropdown-content {
+          display: block;
+        }
+        
+    </style>
+    
+        Sort By:
+            <select id="category">
+                <option value="date">Date</option>
+                <option value="desc">Description</option>
+                <option value="cat">Category</option>
+                <option value="code">Product Code</option>
+                <option value="vendor">Vendor</option>
+                <option value="fair">Fair</option>
+                <option value="local">Local</option>
+                <option value="eco">Ecological</option>
+                <option value="humane">Humane</option>
+                <option value="disq">Disqualifier</option>
+                <option value="cost">Cost</option>
+            </select>
+    
+    <p></p>
+    
+    <div>
+    Showing data for: <input type="text" placeholder="Month">
+        <input type="text" placeholder="Year">
+        <button class="Button">Go</button>
+
+    </div>
+    <table>
+        <tr>
+            <th>Vendor</th>
+            <th>Desc.</th>
+            <th>Category</th>
+            <th>Real</th>
+            <th>Entry Date</th>
+        </tr>
+        <tbody>
+            <!-- enter items here -->
+            <td>Sysco</td>
+            <td>Apple</td>
+            <td>Produce</td>
+            <td>Organic</td>
+            <td>10/1/18</td>
+        </tbody>
+    </table>
+    <p></p>
+    <div>
+    Search for:
+      <input type="text" placeholder="Vendor">      
+      <input type="text" placeholder="Description">
+      <input type="text" placeholder="Category">
+    <button class="Button">Go</button>
+
+    </div>
+    <p></p>
+
+    <div class="dropdown">
+      <button class="dropbtn">Download as:</button>
+      <div class="dropdown-content">
+        <a href="#">.csv</a>
+        <a href="#">.xlsx</a>
+      </div>
+    </div>
+
+                
+
+</body>
+    
+</html>
+    
+
+    
+    
+    
