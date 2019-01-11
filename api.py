@@ -26,7 +26,7 @@ def get_connection():
         connection = psycopg2.connect(dbname='RealFood',
                                       user='RealFood',
                                       password='L00kB4uL3@p',
-					host='localhost')
+                                      host='localhost')
     except Exception as e:
         print(e)
     return connection
@@ -57,52 +57,53 @@ def hello():
 
 @app.route('/entry_session')
 
-@app.route('/table')
+@app.route('/test_data')
 def get_products():
 
     month = flask.request.args.get('month', default='%').lower()
     year = flask.request.args.get('year', default='%').lower()
     description = flask.request.args.get('description', default='%').lower()
     category = flask.request.args.get('category', default='%').lower()
-    productCode = flask.request.args.get('productCode', default='%').lower()
-    brand = flask.request.args.get('brand', default='%').lower()
+    productCode = flask.request.args.get('product_code', default='%').lower()
+    brand = flask.request.args.get('label_brand', default='%').lower()
     vendor = flask.request.args.get('vendor', default='points').lower()
     notes = flask.request.args.get('notes', default='%').lower()
     #points = flask.request.args.get('points', type=int)
     #price = flask.request.args.get('price', type=int)
 
     query = """
-            SELECT  table.month,
-                    table.year,
-                    table.description,
-                    table.category,
-                    table.productCode,
-                    table.productCodeType,
-                    table.brand,
-                    table.vendor,
-                    table.rating,
-                    table.local,
-                    table.localDescription,
-                    table.fair,
-                    table.fairDescription,
-                    table.ecological,
-                    table.ecologicalDescription,
-                    table.humane,
-                    table.humaneDescription,
-                    table.disqualifier,
-                    table.disqualifierDescription,
-                    table.cost,
-                    table.notes
-            FROM table
-            WHERE   lower(table.month) LIKE '%{0}%'
-                    AND lower(table.year) LIKE '%{1}%'
-                    AND lower(table.description) LIKE '%{2}%'
-                    AND lower(table.category) LIKE '%{3}%'
-                    AND lower(table.productCode) LIKE '%{4}%'
-                    AND lower(table.brand) LIKE '%{5}%'
-                    AND lower(table.vendor) LIKE '%{6}%'
-                    AND lower(table.notes) LIKE '%{7}%'
-            ORDER BY table.brand
+            SELECT  test_data.month,
+                    test_data.year,
+                    test_data.description,
+                    test_data.category,
+                    test_data.product_code,
+                    test_data.product_code_type,
+                    test_data.label_brand,
+                    test_data.vendor,
+                    test_data.rating_version,
+                    test_data.local,
+                    test_data.local_description,
+                    test_data.fair,
+                    test_data.fair_description,
+                    test_data.ecological,
+                    test_data.ecological_description,
+                    test_data.humane,
+                    test_data.humane_description,
+                    test_data.disqualifier,
+                    test_data.disqualifier_description,
+                    test_data.cost,
+                    test_data.notes,
+                    test_data.facility
+            FROM test_data
+            WHERE   lower(test_data.month) LIKE '%{0}%'
+                    AND lower(test_data.year) LIKE '%{1}%'
+                    AND lower(test_data.description) LIKE '%{2}%'
+                    AND lower(test_data.category) LIKE '%{3}%'
+                    AND lower(test_data.product_code) LIKE '%{4}%'
+                    AND lower(test_data.label_brand) LIKE '%{5}%'
+                    AND lower(test_data.vendor) LIKE '%{6}%'
+                    AND lower(test_data.notes) LIKE '%{7}%'
+            ORDER BY test_data.brand
             """.format(month, year, description, category, productCode, brand, vendor, notes)
 
     products_list = []
