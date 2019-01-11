@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+
+<script src="http://d3js.org/d3.v3.js" charset="utf-8"></script>
+<script src="https://cdn.rawgit.com/novus/nvd3/v1.8.1/build/nv.d3.js"></script>
+
+<html lang="en">
+    <head>
+        <title>data-entry</title>
+        <meta charset="utf-8">
+        <meta content="width=device-width, initial-scale=1" name="viewport">
+        <link href="visualization_page.css" rel="stylesheet">  
+    </head>
+<body>
+    <h1>Real Food Calculator</h1>
+    <a>Data Entry Session</a> 
+    <a>Data Visualization</a>   
+    <a>View/Download Files</a>
+
+<!-- /* Real food calculator visualization page using d3.js
+ * Author: James Yang (part of the Real Food Calculator comps group)
+ *
+ * Visualization types:
+ * 1) Percentage of real food in each food category:
+ * Pie chart showing the percentage purchase of each food category
+ * Stacked bar chart where each column stands for prominent types of food in that category, and color coded into real vs not
+ * Buttons: which food category to be investigated, and how many items to show
+ *
+ * 2) Most impact/up for change food item:
+ * A line chart showing the percentage of increase of purchase for that particular food type plus
+ * a bar chart ranked by the amount of money increase in total of real food purchase 
+ * Buttons: how many items to shown, ranked from high to low or vice versa, as well as customizable panel to enter and control specific food types to display,
+ * as well as which (one or multiple) food categories to be selected for visualization on the joint bar line chart.
+ *
+ * 3) Time series:
+ * A line chart showing the increase in real/non-real/all food purchases for food items of all categories
+ * Buttons: how many items to shown, ranked from high to low or vice versa, ranked by real/non-real/all, 
+ * and by month (1-12, all, sum) and year (2006, 2007, 2008, etc.),
+ * as well as customizable panel to enter and control specific food types to display
+ *
+ * 4) Other graphs:
+ * - graphs that serve as motivating students to engage in the initiatives
+ * - comprehensive customizable graphs (limited to a certain scope) that can be fully customized (need to discuss with real food people, may not be necessary)
+ *
+ * Options: add/remove existing graph chunk, as well as download.
+ */ -->
+
+<div id="pieChart"><svg style="width:450px;height:450px;"></svg></div>
+<script>
+data_pieChart=[{"values": [{"value": 3, "label": "dairy"},
+               {"value": 4, "label": "produce"},
+               {"value": 1, "label": "grocery"},
+               {"value": 3, "label": "beverages"},
+               {"value": 9, "label": "meat"}], "key": "Graph 1a)"}];
+
+data_stackBar = [{"values":[{"values": {"real": 3, "non-real": 2}, "key": "milk"},
+                {"values": {"real": 0, "non-real": 5}, "key": "egg"},
+                {"values": {"real": 5, "non-real": 2}, "key": "cheese"},
+                {"values": {"real": 0, "non-real": 0}, "key": "butter"}], "key": "dairy"}, 
+                {"values":[{"values": {"real": 1, "non-real": 4}, "key": "turnip"},
+                {"values": {"real": 6, "non-real": 5}, "key": "carrot"}], "key": "produce"},
+                {"values":[{"values": {"real": 4, "non-real": 4}, "key": "oatmeal"},
+                {"values": {"real": 5, "non-real": 5}, "key": "cereal"}], "key": "grocery"},
+                {"values":[{"values": {"real": 5, "non-real": 8}, "key": "coke"},
+                {"values": {"real": 2, "non-real": 3}, "key": "oj"}], "key": "beverages"},
+                {"values":[{"values": {"real": 3, "non-real": 1}, "key": "pork"},
+                {"values": {"real": 7, "non-real": 8}, "key": "beef"}], "key": "meat"}];
+
+nv.addGraph(function() {
+    var chart = nv.models.pieChart();
+    chart.margin({top: 30, right: 60, bottom: 20, left: 60});
+    var datum = data_pieChart[0].values;
+
+        chart.showLegend(true);
+        chart.showLabels(true);
+        chart.donut(false);
+    chart
+        .x(function(d) { return d.label })
+        .y(function(d) { return d.value });
+
+    chart.width(450);
+    chart.height(450);
+    d3.select('#pieChart svg')
+        .datum(datum)
+        .transition().duration(500)
+        .attr('width', 450)
+        .attr('height', 450)
+        .call(chart)
+
+});
+</script>
+
+<!-- Second type of visualization -->
+<div id="barlinechart"><svg style="width:450px;height:450px;"></svg></div>
+<script>
+
+  data_barlinechart = [{"key": "Individual % increase"}, 
+                        {"key": "Total % increase"},
+                        {"key": "Dollar expense increase"}]
+
+  nv.addGraph(function() {
+
+      var chart = nv.models.linePlusBarChart()
+            .margin({top: 30, right: 60, bottom: 50, left: 70})
+            //We can set x data accessor to use index. Reason? So the bars all appear evenly spaced.
+            .x(function(d,i) { return i })
+            .y(function(d,i) {return d[1] })
+            ;
+
+      chart.xAxis.tickFormat(function(d) {
+        var dx = data[0].values[d] && data[0].values[d][0] || 0;
+        return d3.time.format('%x')(new Date(dx))
+      });
+
+      chart.y1Axis
+          .tickFormat(d3.format(',f'));
+
+      chart.y2Axis
+          .tickFormat(function(d) { return '$' + d3.format(',f')(d) });
+
+      chart.bars.forceY([0]);
+
+      d3.select('#chart svg')
+        .datum(data)
+        .transition()
+        .duration(0)
+        .call(chart);
+
+      nv.utils.windowResize(chart.update);
+
+      return chart;
+  });
+
+</script>
+
+<!-- Second type of visualization -->
+<script>
+
+  // Total is essentially the sum of the previous two
+  data_barlinechart = [{"key": "Real", "values": [{"year": 1995, "amount": 23}, {"year": 1998, "amount": 43}, {"year": 2007, "amount": 43}]}, 
+                        {"key": "Non-real", "values": [{"year": 1995, "amount": 30}, {"year": 1998, "amount": 23}, {"year": 2007, "amount": 7}]},
+                        {"key": "Total", "values": [{"year": 1995, "amount": 53}, {"year": 1998, "amount": 66}, {"year": 2007, "amount": 50}]}]
+
+</script>
+
+</body>
+
+
+</html>

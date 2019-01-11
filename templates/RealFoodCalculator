@@ -2,12 +2,14 @@
     api.py
     Chae Kim
 '''
-from flask import Flask, render_template
+
+from flask import Flask, render_template, jsonify
 import sys
 import flask
 import json
-import psycopg2
-#
+#import psycopg2
+
+
 #from config import password
 #from config import database
 #from config import user
@@ -23,9 +25,9 @@ def get_connection():
     '''
     connection = None
     try:
-        connection = psycopg2.connect(database='RealFoodCalculator',
-                                      user='RealFoodCalculator',
-                                      password='$now!Tr33')
+        connection = psycopg2.connect(database=database,
+                                      user=user,
+                                      password=password)
     except Exception as e:
         print(e, file=sys.stderr)
     return connection
@@ -52,9 +54,8 @@ def set_headers(response):
 
 @app.route('/')
 def hello():
-    return render_template('home.html')
+    return render_template("home.html")
 
-@app.route('/entry_session')
 
 @app.route('/table')
 def get_products():
@@ -134,18 +135,16 @@ def get_products():
         except Exception as e:
             print(e, file=sys.stderr)
         connection.close()
-    return json.dumps(products_list)
+    return json.dumps(wines_list)
 
 
 if __name__ == '__main__':
-    """if len(sys.argv) != 3:
-        print('Usage: {0} host port'.format(sys.argv[0]))
-        print('  Example: {0} perlman.mathcs.carleton.edu 5101'.format(sys.argv[0]))
-        exit()
-    """
+#    if len(sys.argv) != 3:
+#        print('Usage: {0} host port'.format(sys.argv[0]))
+#        print('  Example: {0} perlman.mathcs.carleton.edu 5101'.format(sys.argv[0]))
+#        exit()
+#
 #    host = sys.argv[1]
-    host = 'cmc307-06.mathcs.carleton.edu'
-#   port = int(sys.argv[2])
-#   host=host
-#   port=5000
-    app.run(host=host, debug=True)
+#    port = int(sys.argv[2])
+#    host=host, port=port, 
+    app.run(debug=True)
