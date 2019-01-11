@@ -23,9 +23,10 @@ def get_connection():
     '''
     connection = None
     try:
-        connection = psycopg2.connect(database='RealFood',
+        connection = psycopg2.connect(dbname='RealFood',
                                       user='RealFood',
-                                      password='L00kB4uL3@p')
+                                      password='L00kB4uL3@p',
+					host='localhost')
     except Exception as e:
         print(e)
     return connection
