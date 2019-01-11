@@ -23,11 +23,11 @@ def get_connection():
     '''
     connection = None
     try:
-        connection = psycopg2.connect(database='RealFoodCalculator',
-                                      user='RealFoodCalculator',
-                                      password='$now!Tr33')
+        connection = psycopg2.connect(database='RealFood',
+                                      user='RealFood',
+                                      password='L00kB4uL3@p')
     except Exception as e:
-        print(e, file=sys.stderr)
+        print(e)
     return connection
 
 def get_select_query_results(connection, query, parameters=None):
@@ -132,7 +132,7 @@ def get_products():
                         'notes':row[20]}
                 products_list.append(wine)
         except Exception as e:
-            print(e, file=sys.stderr)
+            print(e)
         connection.close()
     return json.dumps(products_list)
 
