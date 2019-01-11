@@ -5,7 +5,8 @@
 from flask import Flask, render_template
 import sys
 import flask
-import json
+import simplejson as json
+#import json as simplejson
 import psycopg2
 #
 #from config import password
@@ -72,7 +73,7 @@ def get_products():
     #price = flask.request.args.get('price', type=int)
 
     if month == "-1" and year == "-1":
-	month = " "
+        month = " "
     elif month == "-1":
         month = "test_data.year = " + year + " AND "
     elif year == "-1":
