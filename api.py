@@ -60,16 +60,25 @@ def hello():
 @app.route('/test_data')
 def get_products():
 
-    month = flask.request.args.get('month', default='%').lower()
-    year = flask.request.args.get('year', default='%').lower()
+    month = flask.request.args.get('month', default='-1').lower()
+    year = flask.request.args.get('year', default='-1').lower()
     description = flask.request.args.get('description', default='%').lower()
     category = flask.request.args.get('category', default='%').lower()
     productCode = flask.request.args.get('product_code', default='%').lower()
     brand = flask.request.args.get('label_brand', default='%').lower()
-    vendor = flask.request.args.get('vendor', default='points').lower()
+    vendor = flask.request.args.get('vendor', default='%').lower()
     notes = flask.request.args.get('notes', default='%').lower()
     #points = flask.request.args.get('points', type=int)
     #price = flask.request.args.get('price', type=int)
+
+    if month == "-1" and year == "-1":
+	month = " "
+    elif month == "-1":
+        month = "test_data.year = " + year + " AND "
+    elif year == "-1":
+        month = "test_data.month =  " + month + " AND "
+    else:
+        month = "test_data.month = " + month + " AND test_data.year = " + year + " AND "
 
     query = """
             SELECT  test_data.month,
@@ -95,16 +104,15 @@ def get_products():
                     test_data.notes,
                     test_data.facility
             FROM test_data
-            WHERE   lower(test_data.month) LIKE '%{0}%'
-                    AND lower(test_data.year) LIKE '%{1}%'
-                    AND lower(test_data.description) LIKE '%{2}%'
-                    AND lower(test_data.category) LIKE '%{3}%'
-                    AND lower(test_data.product_code) LIKE '%{4}%'
-                    AND lower(test_data.label_brand) LIKE '%{5}%'
-                    AND lower(test_data.vendor) LIKE '%{6}%'
-                    AND lower(test_data.notes) LIKE '%{7}%'
-            ORDER BY test_data.brand
-            """.format(month, year, description, category, productCode, brand, vendor, notes)
+            WHERE   {0} 
+                    lower(test_data.description) LIKE '%{1}%'
+                    AND lower(test_data.category) LIKE '%{2}%'
+                    AND lower(test_data.product_code) LIKE '%{3}%'
+                    AND lower(test_data.label_brand) LIKE '%{4}%'
+                    AND lower(test_data.vendor) LIKE '%{5}%'
+                    AND lower(test_data.notes) LIKE '%{6}%'
+            ORDER BY test_data.label_brand
+            """.format(month, description, category, productCode, brand, vendor, notes)
 
     products_list = []
     connection = get_connection()
