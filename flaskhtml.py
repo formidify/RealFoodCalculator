@@ -1,6 +1,7 @@
 '''
    Connects python and RFC html using flask
 '''
+import flask
 from flask import Flask, render_template, jsonify
 import sys
 import json
@@ -39,12 +40,13 @@ def visualization():
 
 
 if __name__ == '__main__':
-    if len(sys.argv) != 3:
-        print('Usage: {0} host port'.format(sys.argv[0]))
-        print('  Example: {0} perlman.mathcs.carleton.edu 5101'.format(sys.argv[0]))
-        exit()
+#    if len(sys.argv) != 3:
+#        print('Usage: {0} host port'.format(sys.argv[0]))
+#        print('  Example: {0} perlman.mathcs.carleton.edu 5101'.format(sys.argv[0]))
+#        exit()
+#
+#    host = sys.argv[1]
+#    port = int(sys.argv[2])
+#    app.run(host=host, port=port, debug=True)
 
-    host = sys.argv[1]
-    port = int(sys.argv[2])
-    app.run(host=host, port=port, debug=True)
-
+    app.run(debug = True)
