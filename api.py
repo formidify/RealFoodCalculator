@@ -56,28 +56,6 @@ def set_headers(response):
 def hello():
     return render_template('home.html')
 
-@app.route('/entrysession')
-def entrySession():
-    return render_template('entry_session.html')
-
-@app.route('/viewdownload', methods = ['POST', 'GET'])
-def viewDownload():
-
-    if request.method == 'POST':
-        result = request.form
-        result = api.get_products()
-        description = "Showing all information"
-
-        return render_template('view_download_data.html', result = result, description = description)
-
-@app.route('/dataentry')
-def dataEntry():
-    return render_template('data-entry.html')
-
-@app.route('/visualization')
-def visualization():
-    return render_template('visualization_page.html')
-
 @app.route('/test_data')
 def get_products():
 
