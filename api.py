@@ -6,9 +6,9 @@ from flask import Flask, render_template
 import sys
 import flask
 import simplejson as json
-#import json as simplejson
 import psycopg2
-#
+
+
 #from config import password
 #from config import database
 #from config import user
@@ -56,7 +56,27 @@ def set_headers(response):
 def hello():
     return render_template('home.html')
 
-@app.route('/entry_session')
+@app.route('/entrysession')
+def entrySession():
+    return render_template('entry_session.html')
+
+@app.route('/viewdownload', methods = ['POST', 'GET'])
+def viewDownload():
+
+    if request.method == 'POST':
+        result = request.form
+        result = api.get_products()
+        description = "Showing all information"
+
+        return render_template('view_download_data.html', result = result, description = description)
+
+@app.route('/dataentry')
+def dataEntry():
+    return render_template('data-entry.html')
+
+@app.route('/visualization')
+def visualization():
+    return render_template('visualization_page.html')
 
 @app.route('/test_data')
 def get_products():
@@ -105,7 +125,7 @@ def get_products():
                     test_data.notes,
                     test_data.facility
             FROM test_data
-            WHERE   {0} 
+            WHERE   {0}
                     lower(test_data.description) LIKE '%{1}%'
                     AND lower(test_data.category) LIKE '%{2}%'
                     AND lower(test_data.product_code) LIKE '%{3}%'

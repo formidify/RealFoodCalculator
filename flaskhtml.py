@@ -2,9 +2,10 @@
    Connects python and RFC html using flask
 '''
 import flask
-from flask import Flask, render_template, jsonify
+#from flask import Flask, render_template, jsonify
+from flask import *
 import sys
-import json
+import simplejson as json
 import psycopg2
 
 #import other flask file
@@ -45,8 +46,8 @@ if __name__ == '__main__':
 #        print('  Example: {0} perlman.mathcs.carleton.edu 5101'.format(sys.argv[0]))
 #        exit()
 #
-#    host = sys.argv[1]
+    host = 'cmc307-06.mathcs.carleton.edu'
 #    port = int(sys.argv[2])
-#    app.run(host=host, port=port, debug=True)
+    app.run(host=host,debug=True)
 
     app.run(debug = True)
