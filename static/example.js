@@ -42,7 +42,7 @@ function initialize() {
 
   function go_to_data_entry(){
     console.log("Recognizing data entry button");
-    document.location.href = (getBaseWebURL() + "/dataentry");
+    document.location.href = (getBaseWebURL() + "/data_entry");
   }
 
   function go_to_entry_session(){
@@ -52,7 +52,7 @@ function initialize() {
 
   function go_to_view_download() {
     console.log("Recognizing view download button");
-    document.location.href = (getBaseWebURL() + "/viewdownload");
+    document.location.href = (getBaseWebURL() + "/view_download");
   }
 
   function go_to_visualization() {
