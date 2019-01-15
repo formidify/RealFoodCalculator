@@ -1,7 +1,5 @@
 /*
 Chae Kim
-
-Web application phase 6
  */
 
 initialize();
@@ -9,24 +7,72 @@ initialize();
 function initialize() {
 
   // recognizes buttons, assigns functions for each button click
-  var home_button = document.getElementById('go_to_home_page');
+  var home_button = document.getElementById('home_btn');
   home_button.onclick = function() {
-    go_to_home_page();
+    go_to_home();
   }
 
-  var discover_wine_button = document.getElementById('go_to_discover_wine');
+  var home_button = document.getElementById('data_entry_btn');
+  home_button.onclick = function() {
+    go_to_data_entry();
+  }
+
+  var discover_wine_button = document.getElementById('entry_session_btn');
   discover_wine_button.onclick = function() {
-    go_to_discover_wine();
+    go_to_entry_session();
   }
 
-  var about_button = document.getElementById('go_to_about_page');
+  var about_button = document.getElementById('view_download_btn');
   about_button.onclick = function () {
-    go_to_about_page();
+    go_to_view_download();
   }
 
-  var advanced_search_button = document.getElementById('go_to_advanced_search_page')
+  var about_button = document.getElementById('visualization_page_btn');
+  about_button.onclick = function () {
+    go_to_visualization();
+  }
+
+
+  //BUTTON FUCTIONS
+
+  function go_to_home() {
+    document.location.href = (getBaseWebURL() + "/");
+  }
+
+  function go_to_data_entry(){
+    document.location.href = (getBaseWebURL() + "/dataentry");
+  }
+
+  function go_to_entry_session(){
+    document.location.href = (getBaseWebURL() + "/entry_session");
+  }
+
+  function go_to_view_download() {
+    document.location.href = (getBaseWebURL() + "/viewdownload");
+  }
+
+  function go_to_visualization() {
+    document.location.href = (getBaseWebURL() + "/visualization");
+  }
+
+
+  // WILL PROBABLY NEED LATER
+
+  function getBaseApiURL() {
+    var baseURL = window.location.protocol + '//' + window.location.hostname + ':' + api_port;
+    return baseURL;
+  }
+
+  function getBaseWebURL() {
+      var baseWebURL = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port;
+      console.log(baseWebURL);
+      return baseWebURL;
+  }
+
+  /*
+  var advanced_search_button = document.getElementById('visualization_page_btn')
   advanced_search_button.onclick = function() {
-    go_to_advanced_search_page();
+    go_to_visualization();
   }
 
   // stores search text to query with and pass to next html page
@@ -84,26 +130,6 @@ function initialize() {
   }
 }
 
-function go_to_home_page() {
-  document.location.href = getBaseWebURL();
-}
-
-function go_to_discover_wine(){
-  document.location.href = (getBaseWebURL() + "#discover_wine");
-}
-
-function go_to_about_page(){
-  document.location.href = (getBaseWebURL() + "/about");
-}
-
-function go_to_display_page() {
-  document.location.href = (getBaseWebURL() + "/display");
-}
-
-function go_to_advanced_search_page() {
-  document.location.href = (getBaseWebURL() + "/advanced_search");
-}
-
 // gives random wine for wine highlight of the moment
 function discover_wine() {
   var url = getBaseApiURL() + '/wines';
@@ -134,17 +160,6 @@ function discover_wine() {
       .catch(function(error) {
           console.log(error);
       });
-}
-
-function getBaseApiURL() {
-  var baseURL = window.location.protocol + '//' + window.location.hostname + ':' + api_port;
-  return baseURL;
-}
-
-function getBaseWebURL() {
-    var baseWebURL = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port;
-    console.log(baseWebURL);
-    return baseWebURL;
 }
 
 function append(parent, el) {
@@ -245,3 +260,4 @@ function onAdvancedWinesSearch(varieties, taster, region, description, vineyard,
     })
     .catch(error => console.error(error));
 }
+*/
