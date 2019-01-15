@@ -36,22 +36,27 @@ function initialize() {
   //BUTTON FUCTIONS
 
   function go_to_home() {
+    console.log("Recognizing home button");
     document.location.href = (getBaseWebURL() + "/");
   }
 
   function go_to_data_entry(){
+    console.log("Recognizing data entry button");
     document.location.href = (getBaseWebURL() + "/dataentry");
   }
 
   function go_to_entry_session(){
+    console.log("Recognizing entry session button");
     document.location.href = (getBaseWebURL() + "/entry_session");
   }
 
   function go_to_view_download() {
+    console.log("Recognizing view download button");
     document.location.href = (getBaseWebURL() + "/viewdownload");
   }
 
   function go_to_visualization() {
+    console.log("Recognizing visualization button");
     document.location.href = (getBaseWebURL() + "/visualization");
   }
 
@@ -60,6 +65,7 @@ function initialize() {
 
   function getBaseApiURL() {
     var baseURL = window.location.protocol + '//' + window.location.hostname + ':' + api_port;
+    console.log(baseURL);
     return baseURL;
   }
 
@@ -68,6 +74,7 @@ function initialize() {
       console.log(baseWebURL);
       return baseWebURL;
   }
+}
 
   /*
   var advanced_search_button = document.getElementById('visualization_page_btn')
