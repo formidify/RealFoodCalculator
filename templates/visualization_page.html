@@ -4,7 +4,8 @@
     <head>
         <title>visualization</title>
         <meta charset="utf-8">
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
         <script src="https://codepen.io/anon/pen/aWapBE.js"></script>
         <meta content="width=device-width, initial-scale=1" name="viewport">
         <link href="visualization_page.css" rel="stylesheet">  
@@ -54,6 +55,7 @@
 <canvas id="percentChart2" style="float: right; display: block; height: 300px; width: 300px;"></canvas></div>
 </div>
 <script>
+Chart.defaults.global.plugins.datalabels.display = false
 // pie chart
 var inputdata = [3, 4, 1, 3, 9] // pie chart distribution data
 data = {
@@ -140,6 +142,7 @@ ctx2.canvas.height = 300;
 <canvas id="increaseChart2" style="float: right; display: block; height: 300px; width: 300px;"></canvas> </div>
 </div>
 <script>
+Chart.defaults.global.plugins.datalabels.display = false
 // pie chart
 var inputdata = [3, 4, 1, 3, 9] // pie chart distribution data
 data = {
@@ -176,8 +179,12 @@ var mixedChart = new Chart(ctx4, {
           data: [377.5, 123.4, 66.5, 78.7, 233.7],
           backgroundColor: 'rgba(75, 192, 192, 0.2)',
           borderColor: 'rgba(75, 192, 192, 1)',
-          yAxisID: "bar"
-        }, {
+          yAxisID: "bar",
+          datalabels: {
+          // display labels for this specific dataset
+          display: true,
+          anchor: 'end'
+        }}, {
           label: 'Percent increase in single item',
           data: [51, 76, 49, 23, 96],
           yAxisID: "A",
@@ -226,7 +233,15 @@ var mixedChart = new Chart(ctx4, {
         id: 'bar',
         type: 'linear',
         display: false
-      }]
+      }],
+      plugins: {
+      datalabels: {
+         display: false,
+         font: {weight: 'bold'},
+         align: 'center',
+         anchor: 'end'
+      }
+   }
     }
 }});
 ctx4.canvas.width = 300;
@@ -237,6 +252,7 @@ ctx4.canvas.height = 300;
 <h1>Visualization 3</h1>
 <canvas id="timeSeriesChart" style="display: block; width: 80%;"></canvas> 
 <script>
+Chart.defaults.global.plugins.datalabels.display = false
 // insert data into the chart object
 
 lineChartData = {};          
