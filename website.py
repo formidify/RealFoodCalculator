@@ -25,15 +25,18 @@ def example():
 def entrySession():
     return render_template('entry_session.html')
 
-@app.route('/view_download', methods = ['POST', 'GET'])
+@app.route('/view_download') #, methods = ['POST', 'GET'])
 def viewDownload():
 
+    """
     if request.method == 'POST':
         result = request.form
         result = api.get_products()
         description = "Showing all information"
 
         return render_template('view_download_data.html', result = result, description = description)
+    """
+    return render_template("view_download.html")
 
 @app.route('/data_entry')
 def dataEntry():
@@ -41,7 +44,7 @@ def dataEntry():
 
 @app.route('/visualization')
 def visualization():
-    return render_template('visualization_page.html')
+    return render_template('visualization.html')
 
 
 if __name__ == '__main__':
