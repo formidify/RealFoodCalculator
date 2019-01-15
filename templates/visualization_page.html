@@ -8,12 +8,12 @@
         <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
         <script src="https://codepen.io/anon/pen/aWapBE.js"></script>
         <meta content="width=device-width, initial-scale=1" name="viewport">
-        <link href="visualization_page.css" rel="stylesheet">  
+        <link href="../static/visualization_page.css" rel="stylesheet" type="text/css"/>
     </head>
 <body>
     <h1>Real Food Calculator</h1>
-    <a>Data Entry Session</a> 
-    <a>Data Visualization</a>   
+    <a>Data Entry Session</a>
+    <a>Data Visualization</a>
     <a>View/Download Files</a>
 
 <!-- /* Real food calculator visualization page using d3.js
@@ -28,14 +28,14 @@
  *
  * 2) Most impact/up for change food item:
  * A line chart showing the percentage of increase of purchase for that particular food type plus
- * a bar chart ranked by the amount of money increase in total of real food purchase 
+ * a bar chart ranked by the amount of money increase in total of real food purchase
  * Buttons: how many items to shown, ranked from high to low or vice versa, as well as customizable panel to enter and control specific food types to display,
  * as well as which (one or multiple) food categories to be selected for visualization on the joint bar line chart.
  * IMPORTANT: also needs to take into account of what is the most % that Carleton wishes to increase by (so if not a complete switch?? idk)
  *
  * 3) Time series:
  * A line chart showing the increase in real/non-real/all food purchases for food items of all categories
- * Buttons: how many items to shown, ranked from high to low or vice versa, ranked by real/non-real/all, 
+ * Buttons: how many items to shown, ranked from high to low or vice versa, ranked by real/non-real/all,
  * and by month (1-12, all, sum) and year (2006, 2007, 2008, etc.),
  * as well as customizable panel to enter and control specific food types to display
  *
@@ -250,12 +250,12 @@ ctx4.canvas.height = 300;
 </script>
 
 <h1>Visualization 3</h1>
-<canvas id="timeSeriesChart" style="display: block; width: 80%;"></canvas> 
+<canvas id="timeSeriesChart" style="display: block; width: 80%;"></canvas>
 <script>
 Chart.defaults.global.plugins.datalabels.display = false
 // insert data into the chart object
 
-lineChartData = {};          
+lineChartData = {};
 lineChartData.labels  = ["June 2016", "June 2017", "June 2018"]; // time frame
 lineChartData.datasets = [];  //add 'datasets' array element to object
 
@@ -282,7 +282,7 @@ for (i = 0; i < items.length; i++) {
         line.fill = false
         if (j > 0) {
             line.borderDash = [10, 5]
-        } 
+        }
         datasets.push(line)
     }
 }
