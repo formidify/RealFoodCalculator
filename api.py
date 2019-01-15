@@ -156,5 +156,5 @@ if __name__ == '__main__':
     host = 'cmc307-06.mathcs.carleton.edu'
 #   port = int(sys.argv[2])
 #   host=host
-#   port=5000
-    app.run(host=host, debug=True)
+    port=5001
+    app.run(host=host,port=port, debug=True)

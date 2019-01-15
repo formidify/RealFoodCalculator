@@ -48,6 +48,5 @@ if __name__ == '__main__':
 #
     host = 'cmc307-06.mathcs.carleton.edu'
 #    port = int(sys.argv[2])
-    app.run(host=host,debug=True)
-
-    app.run(debug = True)
+    
+    app.run(host=host, port=2019,  debug=True)
