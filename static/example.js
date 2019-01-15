@@ -7,27 +7,27 @@ initialize();
 function initialize() {
 
   // recognizes buttons, assigns functions for each button click
-  var home_button = document.getElementById('home_btn');
-  home_button.onclick = function() {
+  var home_btn = document.getElementById('home_btn');
+  home_btn.onclick = function() {
     go_to_home();
   }
 
-  var home_button = document.getElementById('data_entry_btn');
-  home_button.onclick = function() {
+  var data_entry_btn = document.getElementById('data_entry_btn');
+  data_entry_btn.onclick = function() {
     go_to_data_entry();
   }
 
-  var discover_wine_button = document.getElementById('entry_session_btn');
-  discover_wine_button.onclick = function() {
+  var entry_session_btn = document.getElementById('entry_session_btn');
+  entry_session_btn.onclick = function() {
     go_to_entry_session();
   }
 
-  var about_button = document.getElementById('view_download_btn');
-  about_button.onclick = function () {
+  var view_download_btn = document.getElementById('view_download_btn');
+  view_download_btn.onclick = function () {
     go_to_view_download();
   }
 
-  var about_button = document.getElementById('visualization_page_btn');
+  var visualization_btn = document.getElementById('visualization_btn');
   about_button.onclick = function () {
     go_to_visualization();
   }
