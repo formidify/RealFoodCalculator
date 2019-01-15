@@ -28,7 +28,7 @@ function initialize() {
   }
 
   var visualization_btn = document.getElementById('visualization_btn');
-  about_button.onclick = function () {
+  visualization_btn.onclick = function () {
     go_to_visualization();
   }
 
