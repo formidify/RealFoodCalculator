@@ -1,7 +1,5 @@
 /*
 Chae Kim
-Dawson d'Almeida
-Justin Washington
 
 Web application phase 6
  */
