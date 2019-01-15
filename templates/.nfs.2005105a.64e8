@@ -8,12 +8,12 @@
         <title>data-entry</title>
         <meta charset="utf-8">
         <meta content="width=device-width, initial-scale=1" name="viewport">
-        <link href="visualization_page.css" rel="stylesheet">  
+        <link href="../static/visualization_page.css" rel="stylesheet" type="text/css"/>
     </head>
 <body>
     <h1>Real Food Calculator</h1>
-    <a>Data Entry Session</a> 
-    <a>Data Visualization</a>   
+    <a>Data Entry Session</a>
+    <a>Data Visualization</a>
     <a>View/Download Files</a>
 
 <!-- /* Real food calculator visualization page using d3.js
@@ -27,13 +27,13 @@
  *
  * 2) Most impact/up for change food item:
  * A line chart showing the percentage of increase of purchase for that particular food type plus
- * a bar chart ranked by the amount of money increase in total of real food purchase 
+ * a bar chart ranked by the amount of money increase in total of real food purchase
  * Buttons: how many items to shown, ranked from high to low or vice versa, as well as customizable panel to enter and control specific food types to display,
  * as well as which (one or multiple) food categories to be selected for visualization on the joint bar line chart.
  *
  * 3) Time series:
  * A line chart showing the increase in real/non-real/all food purchases for food items of all categories
- * Buttons: how many items to shown, ranked from high to low or vice versa, ranked by real/non-real/all, 
+ * Buttons: how many items to shown, ranked from high to low or vice versa, ranked by real/non-real/all,
  * and by month (1-12, all, sum) and year (2006, 2007, 2008, etc.),
  * as well as customizable panel to enter and control specific food types to display
  *
@@ -55,7 +55,7 @@ data_pieChart=[{"values": [{"value": 3, "label": "dairy"},
 data_stackBar = [{"values":[{"values": {"real": 3, "non-real": 2}, "key": "milk"},
                 {"values": {"real": 0, "non-real": 5}, "key": "egg"},
                 {"values": {"real": 5, "non-real": 2}, "key": "cheese"},
-                {"values": {"real": 0, "non-real": 0}, "key": "butter"}], "key": "dairy"}, 
+                {"values": {"real": 0, "non-real": 0}, "key": "butter"}], "key": "dairy"},
                 {"values":[{"values": {"real": 1, "non-real": 4}, "key": "turnip"},
                 {"values": {"real": 6, "non-real": 5}, "key": "carrot"}], "key": "produce"},
                 {"values":[{"values": {"real": 4, "non-real": 4}, "key": "oatmeal"},
@@ -93,7 +93,7 @@ nv.addGraph(function() {
 <div id="barlinechart"><svg style="width:450px;height:450px;"></svg></div>
 <script>
 
-  data_barlinechart = [{"key": "Individual % increase"}, 
+  data_barlinechart = [{"key": "Individual % increase"},
                         {"key": "Total % increase"},
                         {"key": "Dollar expense increase"}]
 
@@ -136,7 +136,7 @@ nv.addGraph(function() {
 <script>
 
   // Total is essentially the sum of the previous two
-  data_barlinechart = [{"key": "Real", "values": [{"year": 1995, "amount": 23}, {"year": 1998, "amount": 43}, {"year": 2007, "amount": 43}]}, 
+  data_barlinechart = [{"key": "Real", "values": [{"year": 1995, "amount": 23}, {"year": 1998, "amount": 43}, {"year": 2007, "amount": 43}]},
                         {"key": "Non-real", "values": [{"year": 1995, "amount": 30}, {"year": 1998, "amount": 23}, {"year": 2007, "amount": 7}]},
                         {"key": "Total", "values": [{"year": 1995, "amount": 53}, {"year": 1998, "amount": 66}, {"year": 2007, "amount": 50}]}]
 

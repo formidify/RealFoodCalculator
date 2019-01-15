@@ -157,4 +157,4 @@ if __name__ == '__main__':
 #   port = int(sys.argv[2])
 #   host=host
 #   port=5000
-    app.run(host=host, debug=True)
+    app.run(host=host, port=1996, debug=True)

@@ -17,6 +17,10 @@ app = flask.Flask(__name__, static_folder='static', template_folder='templates')
 def homepage():
     return render_template('home.html')
 
+@app.route('/example')
+def example():
+    return render_template('example.html')
+
 @app.route('/entrysession')
 def entrySession():
     return render_template('entry_session.html')
@@ -48,6 +52,4 @@ if __name__ == '__main__':
 #
     host = 'cmc307-06.mathcs.carleton.edu'
 #    port = int(sys.argv[2])
-    app.run(host=host,debug=True)
-
-    app.run(debug = True)
+    app.run(host=host,port=1106, debug=True)
