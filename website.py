@@ -44,9 +44,10 @@ def dataEntry():
 
 @app.route('/data_entry_result', methods = ['POST', 'GET'])
 def result():
-   if request.method == 'POST':
-      result = request.form
-      return render_template("data_entry_result.html",result = result)
+    if request.method == 'POST':
+        result = request.form
+        #result = api.get_products()
+        return render_template("data_entry_result.html",result = result)
 
 @app.route('/visualization')
 def visualization():
