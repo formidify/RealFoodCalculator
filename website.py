@@ -46,7 +46,7 @@ def dataEntry():
 def result():
     if request.method == 'POST':
         result = request.form
-        #result = api.get_products()
+        #result = api.get_products()  ??
         return render_template("data_entry_result.html",result = result)
 
 @app.route('/visualization')
