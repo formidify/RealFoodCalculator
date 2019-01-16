@@ -42,6 +42,12 @@ def viewDownload():
 def dataEntry():
     return render_template('data_entry.html')
 
+@app.route('/data_entry_result', methods = ['POST', 'GET'])
+def result():
+   if request.method == 'POST':
+      result = request.form
+      return render_template("data_entry_result.html",result = result)
+
 @app.route('/visualization')
 def visualization():
     return render_template('visualization.html')
