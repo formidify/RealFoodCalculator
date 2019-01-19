@@ -7,9 +7,7 @@ from flask import *
 import sys
 import simplejson as json
 import psycopg2
-
-#import other flask file
-import api
+import results
 
 app = flask.Flask(__name__, static_folder='static', template_folder='templates')
 

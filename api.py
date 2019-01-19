@@ -52,10 +52,6 @@ def set_headers(response):
     response.headers['Access-Control-Allow-Origin'] = '*'
     return response
 
-@app.route('/')
-def hello():
-    return render_template('home.html')
-
 @app.route('/test_data')
 def get_products():
 
@@ -67,8 +63,7 @@ def get_products():
     brand = flask.request.args.get('label_brand', default='%').lower()
     vendor = flask.request.args.get('vendor', default='%').lower()
     notes = flask.request.args.get('notes', default='%').lower()
-    #points = flask.request.args.get('points', type=int)
-    #price = flask.request.args.get('price', type=int)
+    cost  = flask.request.args.get('cost', type=float)
 
     if month == "-1" and year == "-1":
         month = " "
@@ -118,7 +113,7 @@ def get_products():
     if connection is not None:
         try:
             for row in get_select_query_results(connection, query):
-                wine = {'month':row[0],
+                product = {'month':row[0],
                         'year':row[1],
                         'description':row[2],
                         'category':row[3],
@@ -139,7 +134,7 @@ def get_products():
                         'disqualifierDescription':row[18],
                         'cost':row[19],
                         'notes':row[20]}
-                products_list.append(wine)
+                products_list.append(product)
         except Exception as e:
             print(e)
         connection.close()
@@ -156,5 +151,6 @@ if __name__ == '__main__':
     host = 'cmc307-06.mathcs.carleton.edu'
 #   port = int(sys.argv[2])
 #   host=host
-    port=5001
+    port= 5001
+    print('Using Port: '+ sys.argv[0])
     app.run(host=host,port=port, debug=True)

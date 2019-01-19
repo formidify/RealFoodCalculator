@@ -7,7 +7,9 @@ from flask import *
 import sys
 import simplejson as json
 import psycopg2
-import requests
+
+#import other flask file
+import api
 
 app = flask.Flask(__name__, static_folder='static', template_folder='templates')
 
@@ -35,27 +37,20 @@ def viewDownload():
         return render_template('view_download_data.html', result = result, description = description)
     """
     return render_template("view_download.html")
-
+'''
+@app.route('/data_entry')
+def dataEntry():
+    result = {"data": "Please Search for Data"}
+    return render_template('data_entry.html')
+'''
 @app.route('/data_entry', methods = ['POST', 'GET'])
 def result():
-    result =[ {"description": "test description"}]
-    api_url = 'http://cmc307-06.mathcs.carleton.edu:5001/test_data?'
+    result = {}
     
     if request.method == 'POST':
         result = request.form
-        #result = request.form.get('description', 'default_description')
-        print("This is request.form.get: ")
-        print(result)
-        for key, value in result.items():
-            print('Key:', key)
-            print('Value:', value)
-            if (value):
-                api_url += (key + '=' + value + '&')
-        api_url += 'year=year'
-        print(api_url)
-        r = requests.get(api_url)
-        print(json.loads(r.text))
-        return render_template("data_entry.html",result = json.loads(r.text))
+        #result = api.get_products()
+        return render_template("data_entry.html",result = result)
 
     return render_template("data_entry.html", result = result)
 
