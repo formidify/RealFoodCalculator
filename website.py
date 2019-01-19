@@ -7,9 +7,7 @@ from flask import *
 import sys
 import simplejson as json
 import psycopg2
-
-#import other flask file
-import api
+import requests
 
 app = flask.Flask(__name__, static_folder='static', template_folder='templates')
 
@@ -38,16 +36,29 @@ def viewDownload():
     """
     return render_template("view_download.html")
 
-@app.route('/data_entry')
-def dataEntry():
-    return render_template('data_entry.html')
-
-@app.route('/data_entry_result', methods = ['POST', 'GET'])
+@app.route('/data_entry', methods = ['POST', 'GET'])
 def result():
+    result =[ {"description": "test description"}]
+    api_url = 'http://cmc307-06.mathcs.carleton.edu:5001/test_data?'
+    
     if request.method == 'POST':
         result = request.form
-        #result = api.get_products()  ??
-        return render_template("data_entry_result.html",result = result)
+        #result = request.form.get('description', 'default_description')
+        print("This is request.form.get: ")
+        print(result)
+        for key, value in result.items():
+            print('Key:', key)
+            print('Value:', value)
+            if (value):
+                api_url += (key + '=' + value + '&')
+        api_url += 'year=year'
+        print(api_url)
+        r = requests.get(api_url)
+        print(json.loads(r.text))
+        return render_template("data_entry.html",result = json.loads(r.text))
+
+    return render_template("data_entry.html", result = result)
+
 
 @app.route('/visualization')
 def visualization():
