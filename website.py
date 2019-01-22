@@ -59,6 +59,7 @@ def result():
 
     return render_template("data_entry.html", result = result)
 
+
 @app.route('/visualization')
 def visualization():
     return render_template('visualization.html')
