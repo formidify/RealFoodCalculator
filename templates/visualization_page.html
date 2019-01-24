@@ -45,7 +45,15 @@
  *
  * Options: add/remove existing graph chunk, as well as download.
  */ -->
-<h1>Visualization 1</h1>
+<h1></h1>
+<a>Items to show:</a>
+<select name="Show:">
+  <option value="" disabled selected>Please Choose...</option>
+  <option value="5">5</option>
+  <option value="10">10</option>
+  <option value="15">15</option>
+  <option value="20">20</option>
+</select>
  <div id="contain">
  <div id="canvas-holder" style="width:50%;float: left;" \
  class="col-xs-6">
@@ -133,6 +141,30 @@ ctx2.canvas.height = 300;
 </script>
 
 <h1>Visualization 2</h1>
+<a>Items to show:</a>
+<select name="Show:">
+  <option value="" disabled selected>Please Choose...</option>
+  <option value="5">5</option>
+  <option value="10">10</option>
+  <option value="15">15</option>
+  <option value="20">20</option>
+</select>
+
+<a>Ranked by:</a>
+<select name="Show:">
+  <option value="" disabled selected>Please Choose...</option>
+  <option value="5">Dollar Increase</option>
+  <option value="10">Single Item % Increase</option>
+  <option value="15">Total Purchase % Increase</option>
+</select>
+
+<a>Rank order:</a>
+<select name="Show:">
+  <option value="" disabled selected>Please Choose...</option>
+  <option value="5">Increasing</option>
+  <option value="10">Decreasing</option>
+</select>
+
  <div id="contain">
  <div id="canvas-holder" style="width:50%;float: left;" \
  class="col-xs-6">
@@ -211,6 +243,7 @@ var mixedChart = new Chart(ctx4, {
         type: 'linear',
         position: 'left',
         ticks: {
+          fontColor: 'rgba(255,99,132,1)',
           max: 100,
           min: 0
         },
@@ -223,6 +256,7 @@ var mixedChart = new Chart(ctx4, {
         type: 'linear',
         position: 'right',
         ticks: {
+          fontColor: 'rgba(75, 00, 1300,1)',
           beginAtZero: true
         },
           scaleLabel: {
@@ -239,7 +273,8 @@ var mixedChart = new Chart(ctx4, {
          display: false,
          font: {weight: 'bold'},
          align: 'center',
-         anchor: 'end'
+         anchor: 'end',
+         clamp: true
       }
    }
     }
@@ -250,6 +285,14 @@ ctx4.canvas.height = 300;
 </script>
 
 <h1>Visualization 3</h1>
+<a>Add Item:</a>
+<input type="text" name="fname"><br>
+<a>Ranked by types of purchase:</a>
+<select name="Show:">
+  <option value="" disabled selected>Please Choose...</option>
+  <option value="5">Real</option>
+  <option value="10">Total</option>
+</select>
 <canvas id="timeSeriesChart" style="display: block; width: 80%;"></canvas> 
 <script>
 Chart.defaults.global.plugins.datalabels.display = false
@@ -294,7 +337,14 @@ var ctx5 = document.getElementById("timeSeriesChart").getContext('2d');
 myLineChart = new Chart(ctx5, {
     type: 'line',
     data: lineChartData,
-    options: {}
+    options: {scales: {yAxes:[{scaleLabel: {display: true, labelString: "Dollar purchases ($)"}}]}, 
+              legend: {
+                display: true, 
+                labels: {
+                  fontColor: 'rgba(75, 192, 192, 1)',
+                  lineDash: Array[10, 5]
+                }
+              }}
 });
 ctx5.canvas.width = 300;
 ctx5.canvas.height = 300;
