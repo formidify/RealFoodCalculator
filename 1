@@ -21,27 +21,42 @@ def homepage():
 def example():
     return render_template('example.html')
 
-@app.route('/entrysession')
+@app.route('/entry_session')
 def entrySession():
     return render_template('entry_session.html')
 
-@app.route('/viewdownload', methods = ['POST', 'GET'])
+@app.route('/view_download') #, methods = ['POST', 'GET'])
 def viewDownload():
 
+    """
     if request.method == 'POST':
         result = request.form
         result = api.get_products()
         description = "Showing all information"
 
         return render_template('view_download_data.html', result = result, description = description)
-
-@app.route('/dataentry')
+    """
+    return render_template("view_download.html")
+'''
+@app.route('/data_entry')
 def dataEntry():
-    return render_template('data-entry.html')
+    result = {"data": "Please Search for Data"}
+    return render_template('data_entry.html')
+'''
+@app.route('/data_entry', methods = ['POST', 'GET'])
+def result():
+    result = {}
+    
+    if request.method == 'POST':
+        result = request.form
+        #result = api.get_products()
+        return render_template("data_entry.html",result = result)
+
+    return render_template("data_entry.html", result = result)
 
 @app.route('/visualization')
 def visualization():
-    return render_template('visualization_page.html')
+    return render_template('visualization.html')
 
 
 if __name__ == '__main__':

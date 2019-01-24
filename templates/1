@@ -5,20 +5,33 @@
         <title>data-entry</title>
         <meta charset="utf-8">
         <meta content="width=device-width, initial-scale=1" name="viewport">
-        <link href="styles.css" rel="stylesheet">  
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}" />
+        <script type="text/javascript" src="{{ url_for('static', filename='example.js') }}" defer></script>
     </head>
 <body>
     <h1>Real Food Calculator</h1>
-    <a>Data Entry Session</a> 
-    <a>Data Visualization</a>   
+    <div class="topnav">
+      <nav>
+          <a id="home_btn" href="#">Home</a>
+          <a id="data_entry_btn" href="#">Data Entry</a>
+          <a id="entry_session_btn" href="#">Entry Session</a>
+          <a id="view_download_btn" href="#">View/Download Data</a>
+          <a id="visualization_btn" href="#">Visualization</a>
+      </nav>
+    </div>
+    <!--
+    <a>Data Entry Session</a>
+    <a>Data Visualization</a>
     <a>View/Download Files</a>
+  -->
     <h2>Adding Items to October 2018 with Rating Version 2</h2>
 
-    <form action="" id="item-data" method="post" name="item-data">
+    <form action = "http://cmc307-06.mathcs.carleton.edu:5001/test_data" method = "POST">
         <fieldset>
         <div>
             <label for="category">Category</label>
-            <select id="category" name="category" required>
+            <select id="category" name="category">
+		<option value="%">Choose a Category</option>
                 <option value="dairy">dairy</option>
                 <option value="baked">baked</option>
                 <option value="beverages">beverages</option>
@@ -34,19 +47,19 @@
         </div>
         <div>
             <label for="vendor">Vendor</label>
-            <input id="vendor" name="vendor" type="text" required>
+            <input id="vendor" name="vendor" type="text" value="%">
             <input id="vendor" name="vendor-keep" type="checkbox">
         </div>
         <div>
             <label for="brand">Label/Brand</label>
-            <input id="brand" name="brand" type="text">
+            <input id="brand" name="brand" type="text" value="%">
             <input id="brand" name="brand-keep" type="checkbox">
         </div>
         </fieldset>
         <fieldset>
         <div>
             <label for="description">Description</label>
-            <input id="description" name="description" type="text" placeholder="one to two words" required>
+            <input id="description" name="description" type="text" placeholder="one to two words">
             <input id="description" name="description-keep" type="checkbox">
         </div>
         <div>
@@ -61,7 +74,7 @@
             </div>
         <div>
             <label for="cost">Cost</label>
-            <input id="cost" name="cost" type="number" step="any" placeholder="0.00" required>
+            <input id="cost" name="cost" type="number" step="any" placeholder="0.00">
         </div>
     </fieldset>
 
@@ -71,7 +84,7 @@
             <input id="local" name="local" type="checkbox">
             <input id="local" name="local-notes" type="text" placeholder="local notes">
             </div>
-            
+
             <div>
             <label for="fair">Fair</label>
             <input id="fair" name="fair" type="checkbox">
@@ -83,7 +96,7 @@
             <input id="ecological" name="ecological" type="checkbox">
             <input id="ecological" name="ecological-notes" type="text" placeholder="ecological notes">
             </div>
-        
+
             <div>
             <label for="humane">Humane</label>
             <input id="humane" name="humane" type="checkbox">
@@ -95,57 +108,19 @@
             <input id="disqualifer" name="disqualifer" type="checkbox">
             <input id="disqualifer" name="disqualifier-notes" type="text" placeholder="disqualifer notes">
             </div>
-            
+
         </fieldset>
         <button type="submit">Add Item</button>
     </form>
     <h3>Past Entries</h3>
     <table>
-        <tr>
-            <th>Month</th>
-            <th>Year</th> 
-            <th>Description</th>
-            <th>Product Code</th>
-            <th>Label/Brand</th>
-            <th>Vendor</th>
-            <th>Rating</th>
-            <th>Local</th>
-            <th>Fair</th>
-            <th>Ecological</th>
-            <th>Humane</th>
-            <th>Disqualifier</th>
-            <th>Notes</th>
-            </tr>
-            <tr>
-                <td>Oct</td>
-                <td>2017</td> 
-                <td>juice</td>
-                <td>52347</td>
-                <td>Tropicana</td>
-                <td>Sysco</td>
-                <td>2</td>
-                <td>Y</td>
-                <td>N</td>
-                <td>N</td>
-                <td>N</td>
-                <td>N</td>
-                <td>this is an example</td>
-            </tr>
-            <tr>
-                <td>Oct</td>
-                <td>2017</td> 
-                <td>juice</td>
-                <td>52347</td>
-                <td>Tropicana</td>
-                <td>Sysco</td>
-                <td>2</td>
-                <td>Y</td>
-                <td>N</td>
-                <td>N</td>
-                <td>N</td>
-                <td>N</td>
-                <td>this is an example</td>
-            </tr>
+	{% for key, value in result.items() %}
+        
+	<th> {{key}} </th>
+	<td> {{value}} </td>
+        
+{% endfor %}
     </table>
+
 </body>
 </html>

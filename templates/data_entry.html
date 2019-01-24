@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <title>data-entry</title>
+        <meta charset="utf-8">
+        <meta content="width=device-width, initial-scale=1" name="viewport">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}" />
+        <script type="text/javascript" src="{{ url_for('static', filename='example.js') }}" defer></script>
+    </head>
+<body>
+    <h1>Real Food Calculator</h1>
+    <div class="topnav">
+      <nav>
+          <a id="home_btn" href="#">Home</a>
+          <a id="data_entry_btn" href="#">Data Entry</a>
+          <a id="entry_session_btn" href="#">Entry Session</a>
+          <a id="view_download_btn" href="#">View/Download Data</a>
+          <a id="visualization_btn" href="#">Visualization</a>
+      </nav>
+    </div>
+    <!--
+    <a>Data Entry Session</a>
+    <a>Data Visualization</a>
+    <a>View/Download Files</a>
+  -->
+    <h2>Adding Items to October 2018 with Rating Version 2</h2>
+
+    <form action = "http://cmc307-06.mathcs.carleton.edu:2019/data_entry" method = "POST">
+        <fieldset>
+        <div>
+            <label for="category">Category</label>
+            <select id="category" name="category">
+		<option value="%">Choose a Category</option>
+                <option value="dairy">dairy</option>
+                <option value="baked">baked</option>
+                <option value="beverages">beverages</option>
+                <option value="eggs">eggs</option>
+                <option value="grocery">grocery</option>
+                <option value="meat">meat</option>
+                <option value="poultry">poultry</option>
+                <option value="produce">produce</option>
+                <option value="fish">fish</option>
+                <option value="teacoffee">tea or coffee</option>
+            </select>
+            <input id="category" name="category-keep" type="checkbox">
+        </div>
+        <div>
+            <label for="vendor">Vendor</label>
+            <input id="vendor" name="vendor" type="text">
+            <input id="vendor" name="vendor-keep" type="checkbox">
+        </div>
+        <div>
+            <label for="brand">Label/Brand</label>
+            <input id="brand" name="brand" type="text">
+            <input id="brand" name="brand-keep" type="checkbox">
+        </div>
+        </fieldset>
+        <fieldset>
+        <div>
+            <label for="description">Description</label>
+            <input id="description" name="description" type="text" placeholder="one to two words">
+            <input id="description" name="description-keep" type="checkbox">
+        </div>
+        <div>
+            <label for="notes">Notes</label>
+            <input id="notes" name="notes" type="text" placeholder="as labeled on invoice">
+            <input id="notes" name="notes-keep" type="checkbox">
+        </div>
+        <div>
+                <label for="productCode">Product Code</label>
+                <input id="productCode" name="productCode" type="number">
+                <input id="productCode" name="productCode-keep" type="checkbox">
+            </div>
+        <div>
+            <label for="cost">Cost</label>
+            <input id="cost" name="cost" type="number" step="any" placeholder="0.00">
+        </div>
+    </fieldset>
+
+        <fieldset>
+            <div>
+            <label for="local">Local</label>
+            <input id="local" name="local" type="checkbox">
+            <input id="local" name="localDescription" type="text" placeholder="local notes">
+            </div>
+
+            <div>
+            <label for="fair">Fair</label>
+            <input id="fair" name="fair" type="checkbox">
+            <input id="fair" name="fairDescription" type="text" placeholder="fair notes">
+            </div>
+
+            <div>
+            <label for="ecological">Ecological</label>
+            <input id="ecological" name="ecological" type="checkbox">
+            <input id="ecological" name="ecologicalDescription" type="text" placeholder="ecological notes">
+            </div>
+
+            <div>
+            <label for="humane">Humane</label>
+            <input id="humane" name="humane" type="checkbox">
+            <input id="humane" name="humaneDescription" type="text" placeholder="humane notes">
+            </div>
+
+            <div>
+            <label for="disqualifer">Disqualifier</label>
+            <input id="disqualifer" name="disqualifer" type="checkbox">
+            <input id="disqualifer" name="disqualifierDescription" type="text" placeholder="disqualifer notes">
+            </div>
+
+        </fieldset>
+        <button type="submit">Add Item</button>
+    </form>
+    <h3>Past Entries</h3>
+    <table>
+	<tr>
+        <th>Description</th>
+        <th>Category</th>
+        <th>Product Code</th>
+        <th>Label/Brand</th>
+        <th>Vendor</th>
+        <th>Local</th>
+        <th>Local Description</th>
+        <th>Fair</th>
+        <th>Fair Description</th>
+        <th>Ecological</th>
+        <th>Ecological Description</th>
+        <th>Humane</th>
+        <th>Humane Description</th>
+        <th>Disqualifier</th>
+        <th>Disqualifier Description</th>
+        <th>Notes</th>
+        </tr>
+	{% for item in result %}
+        <tr>
+	<td> {{item.description}} </td>
+        <td> {{item.category}}</td>
+        <td> {{item.productCode}} </td>
+        <td> {{item.brand}} </td>
+        <td> {{item.vendor}} </td>
+        <td> {{item.loca}} </td>
+        <td> {{item.localDescription}} </td>
+        <td> {{item.fair}} </td>
+        <td> {{item.fairDescription}} </td>
+        <td> {{item.ecological}} </td>
+        <td> {{item.ecologicalDescription}} </td>
+        <td> {{item.humane}} </td>
+        <td> {{item.humaneDescription}} </td>
+        <td> {{item.disqualifer}} </td>
+        <td> {{item.disqualiferDescription}} </td> 
+        <td> {{item.notes}} </td>
+        </tr>
+{% endfor %}
+    </table>
+
+</body>
+</html>

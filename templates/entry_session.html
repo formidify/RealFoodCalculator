@@ -3,15 +3,29 @@
 <head>
     <meta charset="utf-8">
     <title> Entry Session</title>
+   <!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}" />-->
+   <!-- <script type="text/javascript" src="{{ url_for('static', filename='example.js') }}" defer></script> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 </head>
-    
+
 <body>
     <h1>Real Food Calculator</h1>
-    
-        <a href=''>Home</a>
+
+    <div class="topnav">
+      <nav>
+          <a id="home_btn" href="#">Home</a>
+          <a id="data_entry_btn" href="#">Data Entry</a>
+          <a id="entry_session_btn" href="#">Entry Session</a>
+          <a id="view_download_btn" href="#">View/Download Data</a>
+          <a id="visualization_btn" href="#">Visualization</a>
+      </nav>
+    </div>
+
+    <!--    <a href=''>Home</a>
         <a href=''>Data Visualization</a>
         <a href=''>View/Download Data</a>
-        
+    -->
+
     <h2>Entry Session</h2>
     <style>
           .button {
@@ -24,9 +38,9 @@
                       font-size: 14px;
                         border-radius: 5px;
                     }
-        
+
             .button3 {
-                      background-color: green; 
+                      background-color: green;
                       border: black;
                       padding: 10px 15px;
                       text-align: center;
@@ -36,7 +50,7 @@
                         border-radius: 5px;
                     }
             .button4 {
-                      background-color: gray; 
+                      background-color: gray;
                       border: black;
                       padding: 10px 15px;
                       text-align: center;
@@ -49,18 +63,18 @@
             background-color: lightcoral;
             cursor: pointer;
         }
-        
+
         .button3:hover {
              background-color: lightgreen;
             cursor: pointer;
-            
+
         }
         .button4:hover {
              background-color: lightgrey;
             cursor: pointer;
-            
+
         }
-        
+
         table {
             font-family: "Arial", arial, Sans-serif;
             border-collapse: collapse;
@@ -72,21 +86,22 @@
             padding: 8px;
         }
     </style>
-    
+
      <button class="button">Add New Item</button>
 
     <p></p>
-    
+
     <div>
-        Volunteer Name: <input type="text">   
-        Vendor: <input type="text">   
-        Date of Entry: <input type="text">   
-        
+        Volunteer Name: <input type="text">
+        Vendor: <input type="text">
+        Date of Entry: <input type="text">
+
         <h3> March 2019 </h3>
 
 
     </div>
-    <table>
+   <!--
+    <table id="dataTable">
         <tr>
             <th>Vendor</th>
             <th>Desc.</th>
@@ -96,13 +111,13 @@
             <th></th>
         </tr>
         <tbody>
-            <!-- enter items here -->
+            enter items here 
             <td>Sysco</td>
             <td>Apple</td>
             <td>Produce</td>
             <td>Organic</td>
             <td>3/1/19</td>
-            <td>  <button class="button2">Edit</button> </td>
+          <td>  <button class="button2">Edit</button> </td>
         </tbody>
         <tbody>
             <td>Carleton Farm</td>
@@ -110,21 +125,170 @@
             <td>Produce</td>
             <td>Local</td>
             <td>3/1/19</td>
-            <td>  <button class="button2">Edit</button> </td>
+          <td>  <button class="button2">Edit</button> </td> 
         </tbody>
-        
+
     </table>
-    <p></p>
-   
+-->
+    
+    <div class="row">
+    <div class="col-md-4 col-md-offset-4">
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="fName">First Name</label>
+            <div class="col-sm-4">
+                <input type="text" placeholder="First Name" id="fName" class="form-control" name="fName">
+            </div>
+            <label class="col-sm-2 control-label" for="lName">Last Name</label>
+            <div class="col-sm-4">
+                <input type="text" placeholder="Last Name" id="lName" class="form-control" name="lName">
+            </div>
+            <br/>
+            <br>
+            <label class="col-sm-2 control-label" for="mId">Member Id</label>
+            <div class="col-sm-4">
+                <input type="text" placeholder="Member Id" id="mId" class="form-control" name="mId">
+                     <button type="button" class="btn btn-default" id="save">Save</button>
+            </div>
+        </div>
+        <br/>
+        <br/>
+        <br/>
+        <hr/>
+        <div class="container">
+            <table class="table table-striped" id="dataTable">
+                <thead>
+                    <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Member Id</th>
+                        </tr>
+        </thead>
+
+        <tbody>
+
+        </tbody>
+    </table>
+            <button class="button3 btn btn-default" id="loadBtn">Submit All</button>
+
+   <!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>-->
+    <script type="text/javascript">
+        //info from https://stackoverflow.com/questions/28206654/saving-table-data-to-html5-localstorage and 
+        //https://stackoverflow.com/questions/47559534/how-to-put-json-data-into-html-table
+        function MemberInfo(fName,lName,memberId){
+                this.FirstName=fName;
+                this.LastName=lName;
+                this.MemberId=memberId;    
+                }
+
+        $('#save').click(function () {
+
+
+              $("#dataTable").find('tbody')
+                  .append($('<tr>')
+                  .append($('<td>')
+                  .text($('#fName').val()))
+                  .append($('<td>')
+                  .text($('#lName').val()))
+                  .append($('<td>')
+                  .text($('#mId').val()))
+                          );
+
+              $('#fName').val('');
+              $('#lName').val('');
+              $('#mId').val('');
+
+            var arr=[];  
+
+            $("#dataTable").find('tbody tr').each(function(index,item){
+
+                var fName=$(item).find('td').eq(0).text();
+                var lName=$(item).find('td').eq(1).text();
+                var memberId=$(item).find('td').eq(2).text();
+                arr.push(new MemberInfo(fName,lName,memberId))
+            });
+
+          localStorage.setItem("memberData",JSON.stringify(arr));
+            console.log(arr);
+          })
+
+        $('#loadBtn').on('click', function() {
+            console.log('Here');
+           // document.getElementById("result").innerHTML = localStorage.lastname;   
+            
+            var jsonData = JSON.parse(localStorage.memberData);
+            
+            for (var i = 0; i < jsonData.length; i++) {
+            //Insert data into HTML table here...
+                var jsonObj = jsonData[i];
+                console.log(jsonObj);
+                var $tr = $("<tr>");
+                var $name = $("<td>");
+                var $Lname = $("<td>");
+                var $occupation = $("<td>");
+                $name.append(jsonObj.FirstName);
+                $Lname.append(jsonObj.LastName);
+                $occupation.append(jsonObj.MemberId);
+                $tr.append($name);
+                $tr.append($Lname);
+                $tr.append($occupation);
+                $('#dataTable').append($tr);
+                }   
+        });
+        
+        
+        
+//        <table border = 1>
+//         {% for key, value in result.items() %}
+//            <tr>
+//               <th> {{ key }} </th>
+//               <td> {{ value }} </td>
+//            </tr>
+//         {% endfor %}
+//      </table>
+        
+        
+//        
+//        function MemberInfo(fName,lName,memberId){
+//            this.FirstName=fname;
+//            this.LastName=lName;
+//            this.MemberId=memberId;    
+//            }
+//        
+//        var arr=[];    
+//            $("#dataTable").find('tbody tr').each(function(index,item){
+//                var fName=$(item).find('td').eq(0).text();
+//                var lName=$(item).find('td').eq(1).text();
+//                var memberId=$(item).find('td').eq(2).text();
+//                var realStatus=$(item).find('td').eq(3).text();
+//                var dateEntry=$(item).find('td').eq(4).text();
+//                arr.push(new MemberInfo(fName,lName,memberId))
+//        });
+//
+//
+//    localStorage.setItem("memberData",arr);
+        
+//        var tableDataArray = [];
+//        var inputs = $("tr").children('input').val();
+//        $.each(inputs, function(index, i){
+//
+//            myArray.push(i.value);
+//            
+//        });
+//
+//        ('body').append(tableDataArray);
+//        localStorage.setItem("info", JSON.stringify(tableDataArray));
+    
+    </script>
     <p></p>
 
-    <div class="submitbutton">
-        <button class="button4">Cancel Session</button>
-        <button class="button3">Submit All</button>
-    </div>
-                  
+    <p></p>
+
+    
+    <button class="button4">Cancel Session</button>
+    <!--<button class="button3 btn btn-default" id="loadBtn">Submit All</button>-->
+   
+
 
 </body>
-    
+
 </html>
-    

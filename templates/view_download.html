@@ -3,15 +3,28 @@
 <head>
     <meta charset="utf-8">
     <title> View/Download Data </title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}" />
+    <script type="text/javascript" src="{{ url_for('static', filename='example.js') }}" defer></script>
 </head>
-    
+
 <body>
     <h1>Real Food Calculator</h1>
-    
+    <div class="topnav">
+      <nav>
+          <a id="home_btn" href="#">Home</a>
+          <a id="data_entry_btn" href="#">Data Entry</a>
+          <a id="entry_session_btn" href="#">Entry Session</a>
+          <a id="view_download_btn" href="#">View/Download Data</a>
+          <a id="visualization_btn" href="#">Visualization</a>
+      </nav>
+    </div>
+
+    <!--
         <a href=''>Home</a>
         <a href=''>Data Entry Session</a>
         <a href=''>Data Visualization</a>
-        
+    -->
+
     <h2>View/Download Data</h2>
     <style>
         /*table */
@@ -25,7 +38,7 @@
             text-align: left;
             padding: 8px;
         }
-    
+
         /*hover buttons */
         .dropdown-content {
           display: none;
@@ -42,9 +55,9 @@
         .dropdown:hover .dropdown-content {
           display: block;
         }
-        
+
     </style>
-    
+
         Sort By:
             <select id="category">
                 <option value="date">Date</option>
@@ -59,9 +72,9 @@
                 <option value="disq">Disqualifier</option>
                 <option value="cost">Cost</option>
             </select>
-    
+
     <p></p>
-    
+
     <div>
     Showing data for: <input type="text" placeholder="Month">
         <input type="text" placeholder="Year">
@@ -88,7 +101,7 @@
     <p></p>
     <div>
     Search for:
-      <input type="text" placeholder="Vendor">      
+      <input type="text" placeholder="Vendor">
       <input type="text" placeholder="Description">
       <input type="text" placeholder="Category">
     <button class="Button">Go</button>
@@ -104,13 +117,8 @@
       </div>
     </div>
 
-                
+
 
 </body>
-    
-</html>
-    
 
-    
-    
-    
+</html>
