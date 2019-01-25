@@ -167,7 +167,7 @@
             <label class="radio" for="local">
                 <input id="local" name="local" type="radio" value="on">Local</label>
             <label class="radio" for="local">
-                <input id="local" name="local" type="radio" checked>Not Local</label>
+                <input id="local" name="local" type="radio" value="off" checked>Not Local</label>
                 
             <input id="local" name="localDescription" type="text" placeholder="local notes">
             <input id="local-check" name="local-keep" type="checkbox" onclick="toggleCheckbox(this)">
@@ -177,7 +177,7 @@
             <label class="radio" for="fair">
                 <input id="fair" name="fair" type="radio" value="on">Fair</label>
             <label class="radio" for="fair">
-                <input id="fair" name="fair" type="radio" checked>Not Fair</label>
+                <input id="fair" name="fair" type="radio" value="off" checked>Not Fair</label>
             <input id="fair" name="fairDescription" type="text" placeholder="fair notes">
             <input id="fair-check" name="fair-keep" type="checkbox" onclick="toggleCheckbox(this)">
 
@@ -187,7 +187,7 @@
             <label class="radio" for="ecological">
                 <input id="ecological" name="ecological" type="radio" value="on">Ecological</label>
             <label class="radio" for="ecological">
-                <input id="ecological" name="ecological" type="radio" checked>Not Ecological</label>
+                <input id="ecological" name="ecological" type="radio" value="off" checked>Not Ecological</label>
             <input id="ecological" name="ecologicalDescription" type="text" placeholder="ecological notes">
             <input id="ecological-check" name="ecological-keep" type="checkbox" onclick="toggleCheckbox(this)">
 
@@ -199,7 +199,7 @@
             <label class="radio" for="humane">
                 <input id="ecological" name="humane" type="radio" value="off">Not Humane</label>
             <label class="radio" for="humane">
-                <input id="humane" name="humane" type="radio" checked>Not Applicable</label>
+                <input id="humane" name="humane" type="radio" value="na" checked>Not Applicable</label>
             <input id="humane" name="humaneDescription" type="text" placeholder="humane notes">
             <input id="humane-check" name="humane-keep" type="checkbox" onclick="toggleCheckbox(this)">
 
@@ -214,7 +214,7 @@
             </div>
 
         </fieldset>
-        <button type="submit" onclick="clearFields()">Add Item/Search for item</button>
+        <button type="submit">Add Item/Search for item</button>
        
     </form>
     <button type="button" id="clear-submit" onclick="clearFields()">Clear/submit items</button>
