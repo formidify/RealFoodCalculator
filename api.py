@@ -59,11 +59,21 @@ def get_products():
     year = flask.request.args.get('year', default='-1').lower()
     description = flask.request.args.get('description', default='%').lower()
     category = flask.request.args.get('category', default='%').lower()
-    productCode = flask.request.args.get('product_code', default='%').lower()
-    brand = flask.request.args.get('label_brand', default='%').lower()
+    productCode = flask.request.args.get('productCode', default='%').lower()
+    brand = flask.request.args.get('brand', default='%').lower()
     vendor = flask.request.args.get('vendor', default='%').lower()
     notes = flask.request.args.get('notes', default='%').lower()
     cost  = flask.request.args.get('cost', type=float)
+    local = flask.request.args.get('local', default='-1')
+    localDescription = flask.request.args.get('localDescription', default='%')
+    fair = flask.request.args.get('fair', default='-1')
+    fairDescription = flask.request.args.get('fairDescription', default='%')
+    ecological = flask.request.args.get('ecological', default='-1')
+    ecologicalDescription = flask.request.args.get('ecologicalDescription', default='%')
+    humane = flask.request.args.get('humane', default='-1')
+    humaneDescription = flask.request.args.get('humaneDescription', default='%')
+    disqualifier = flask.request.args.get('disqualifier', default='-1')
+    disqualifierDescription = flask.request.args.get('disqualifierDescription', default ='%')
 
     if month == "-1" and year == "-1":
         month = " "
@@ -73,6 +83,27 @@ def get_products():
         month = "test_data.month =  " + month + " AND "
     else:
         month = "test_data.month = " + month + " AND test_data.year = " + year + " AND "
+    if local == "on":
+        local = "AND test_data.local = TRUE"
+    else: 
+        local = ""
+    if fair == "on": 
+        fair = "AND test_data.fair = TRUE"
+    else: 
+        fair = ""
+    if ecological == "on":
+        ecological = "AND test_data.ecological = TRUE"
+    else: 
+        ecological = ""
+    if humane == "on":
+        humane = "AND test_data.humane = TRUE"
+    else: 
+        humane = ""
+    if disqualifier == "on":
+        disqualifier = "AND test_data.disqualifier = TRUE"
+    else: 
+       disqualifier = "" 
+
 
     query = """
             SELECT  test_data.month,
@@ -101,12 +132,22 @@ def get_products():
             WHERE   {0}
                     lower(test_data.description) LIKE '%{1}%'
                     AND lower(test_data.category) LIKE '%{2}%'
-                    AND lower(test_data.product_code) LIKE '%{3}%'
+                    AND lower(test_data.product_code) LIKE '{3}'
                     AND lower(test_data.label_brand) LIKE '%{4}%'
                     AND lower(test_data.vendor) LIKE '%{5}%'
                     AND lower(test_data.notes) LIKE '%{6}%'
+                    {7}
+                    {8}
+                    {9}
+                    {10}
+                    {11}
+                    AND lower(test_data.local_description) LIKE '%{12}%'
+                    AND lower(test_data.fair_description) LIKE '%{13}%'
+                    AND lower(test_data.ecological_description) LIKE '%{14}%'
+                    AND lower(test_data.humane_description) LIKE '%{15}%'
+                    AND lower(test_data.disqualifier_description) LIKE '%{16}%'
             ORDER BY test_data.label_brand
-            """.format(month, description, category, productCode, brand, vendor, notes)
+            """.format(month, description, category, productCode, brand, vendor, notes, local, fair, ecological, humane, disqualifier, localDescription, fairDescription, ecologicalDescription,humaneDescription, disqualifierDescription)
 
     products_list = []
     connection = get_connection()
@@ -133,7 +174,8 @@ def get_products():
                         'disqualifier':row[17],
                         'disqualifierDescription':row[18],
                         'cost':row[19],
-                        'notes':row[20]}
+                        'notes':row[20],
+                        'facility': row[21]}
                 products_list.append(product)
         except Exception as e:
             print(e)
