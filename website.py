@@ -39,7 +39,7 @@ def viewDownload():
 @app.route('/data_entry', methods = ['POST', 'GET'])
 def result():
     result =[ {"description": "test description"}]
-    api_url = 'http://cmc307-06.mathcs.carleton.edu:5001/test_data?'
+    api_url = 'http://cmc307-06.mathcs.carleton.edu:5001/test_data_large?'
     
     if request.method == 'POST':
         result = request.form
@@ -53,11 +53,12 @@ def result():
                 api_url += (key + '=' + value + '&')
         api_url += 'year=year'
         print(api_url)
-        r = requests.get(api_url)
-        print(json.loads(r.text))
-        return render_template("data_entry.html",result = json.loads(r.text))
+        r = requests.get(api_url).json()
+        print(r)
+        # print(json.loads(r.text))
+        return render_template("data_entry.html",result = r)
 
-    return render_template("data_entry.html", result = result)
+    return render_template("data_entry.html", result = result, clear = True, disqualifier="on")
 
 
 @app.route('/visualization')
