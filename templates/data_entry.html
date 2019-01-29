@@ -90,7 +90,12 @@
             }
         }
     }
-        </script>
+    function populateForm(dataLabel, row){
+        console.log(row);
+       // data = row.eq(0).html();
+   	document.getElementById(dataLabel).value = row;
+    }
+</script>
     </head>
 <body>
     <h1>Real Food Calculator</h1>
@@ -245,7 +250,7 @@
         </tr>
 	{% for item in result %}
         <tr>
-	<td> {{item.description}} </td>
+	<td onclick="populateForm('description','{{item.description}}')"> {{item.description}} </td>
         <td> {{item.category}}</td>
         <td> {{item.productCode}} </td>
         <td> {{item.brand}} </td>
@@ -266,4 +271,5 @@
     </table>
 
 </body>
+p
 </html>
