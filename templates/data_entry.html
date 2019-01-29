@@ -93,13 +93,13 @@
     function populateForm(dataLabel, row){
         console.log(row);
         // data = row.eq(0).html();
-        if row.equals("False") {
+        if (row=="False") {
             row = "off";
         }
-        if row.equals("True") {
+        if (row=="True") {
             row = "on";
         }
-        if row.equals("None") {
+        if (row=="None") {
             row = "none";
         }
    	document.getElementById(dataLabel).value = row;
@@ -187,7 +187,7 @@
             <label class="radio" for="local">
                 <input id="local" name="local" type="radio" value="off" checked>Not Local</label>
                 
-            <input id="local" name="localDescription" type="text" placeholder="local notes">
+            <input id="localDescription" name="localDescription" type="text" placeholder="local notes">
             <input id="local-check" name="local-keep" type="checkbox" onclick="toggleCheckbox(this)">
             </div> 
 
@@ -196,7 +196,7 @@
                 <input id="fair" name="fair" type="radio" value="on">Fair</label>
             <label class="radio" for="fair">
                 <input id="fair" name="fair" type="radio" value="off" checked>Not Fair</label>
-            <input id="fair" name="fairDescription" type="text" placeholder="fair notes">
+            <input id="fairDescription" name="fairDescription" type="text" placeholder="fair notes">
             <input id="fair-check" name="fair-keep" type="checkbox" onclick="toggleCheckbox(this)">
 
             </div>
@@ -206,7 +206,7 @@
                 <input id="ecological" name="ecological" type="radio" value="on">Ecological</label>
             <label class="radio" for="ecological">
                 <input id="ecological" name="ecological" type="radio" value="off" checked>Not Ecological</label>
-            <input id="ecological" name="ecologicalDescription" type="text" placeholder="ecological notes">
+            <input id="ecologicalDescription" name="ecologicalDescription" type="text" placeholder="ecological notes">
             <input id="ecological-check" name="ecological-keep" type="checkbox" onclick="toggleCheckbox(this)">
 
             </div>
@@ -218,7 +218,7 @@
                 <input id="ecological" name="humane" type="radio" value="off">Not Humane</label>
             <label class="radio" for="humane">
                 <input id="humane" name="humane" type="radio" value="none" checked>Not Applicable</label>
-            <input id="humane" name="humaneDescription" type="text" placeholder="humane notes">
+            <input id="humaneDescription" name="humaneDescription" type="text" placeholder="humane notes">
             <input id="humane-check" name="humane-keep" type="checkbox" onclick="toggleCheckbox(this)">
 
             </div>
@@ -227,7 +227,7 @@
                 <input id="disqualifier" name="disqualifier"type="radio" value="on" >Disqualifier</label>
             <label class="radio" for="disqualifier">
                 <input id="disqualifier" name="disqualifier" type="radio" value="off" checked>No Disqualifier</label>
-            <input id="disqualifier" name="disqualifierDescription" type="text" placeholder="disqualifier notes">
+            <input id="disqualifierDescription" name="disqualifierDescription" type="text" placeholder="disqualifier notes">
             <input id="disqualifier-check" name="disqualifier-keep" type="checkbox" onclick="toggleCheckbox(this)">
             </div>
 
