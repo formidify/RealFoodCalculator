@@ -92,7 +92,16 @@
     }
     function populateForm(dataLabel, row){
         console.log(row);
-       // data = row.eq(0).html();
+        // data = row.eq(0).html();
+        if row.equals("False") {
+            row = "off";
+        }
+        if row.equals("True") {
+            row = "on";
+        }
+        if row.equals("None") {
+            row = "none";
+        }
    	document.getElementById(dataLabel).value = row;
     }
 </script>
@@ -251,21 +260,21 @@
 	{% for item in result %}
         <tr>
 	<td onclick="populateForm('description','{{item.description}}')"> {{item.description}} </td>
-        <td> {{item.category}}</td>
-        <td> {{item.productCode}} </td>
-        <td> {{item.brand}} </td>
-        <td> {{item.vendor}} </td>
-        <td> {{item.local}} </td>
-        <td> {{item.localDescription}} </td>
-        <td> {{item.fair}} </td>
-        <td> {{item.fairDescription}} </td>
-        <td> {{item.ecological}} </td>
-        <td> {{item.ecologicalDescription}} </td>
-        <td> {{item.humane}} </td>
-        <td> {{item.humaneDescription}} </td>
-        <td> {{item.disqualifier}} </td>
-        <td> {{item.disqualifierDescription}} </td> 
-        <td> {{item.notes}} </td>
+    <td onclick="populateForm('category','{{item.category}}')"> {{item.category}} </td>
+    <td onclick="populateForm('productCode','{{item.productCode}}')"> {{item.productCode}} </td>
+    <td onclick="populateForm('brand','{{item.brand}}')"> {{item.brand}} </td>
+    <td onclick="populateForm('vendor','{{item.vendor}}')"> {{item.vendor}} </td>
+    <td onclick="populateForm('local','{{item.local}}')"> {{item.local}} </td>
+    <td onclick="populateForm('localDescription','{{item.localDescription}}')"> {{item.localDescription}} </td>
+    <td onclick="populateForm('fair','{{item.fair}}')"> {{item.fair}} </td>
+    <td onclick="populateForm('fairDescription','{{item.fairDescription}}')"> {{item.fairDescription}} </td>
+    <td onclick="populateForm('ecological','{{item.ecological}}')"> {{item.ecological}} </td>
+    <td onclick="populateForm('ecologicalDescription','{{item.ecologicalDescription}}')"> {{item.ecologicalDescription}} </td>
+    <td onclick="populateForm('humane','{{item.humane}}')"> {{item.humane}} </td>
+    <td onclick="populateForm('humaneDescription','{{item.humaneDescription}}')"> {{item.humaneDescription}} </td>
+    <td onclick="populateForm('disqualifier','{{item.disqualifier}}')"> {{item.disqualifier}} </td>
+    <td onclick="populateForm('disqualifierDescription','{{item.disqualifierDescription}}')"> {{item.disqualifierDescription}} </td>
+    <td onclick="populateForm('notes','{{item.notes}}')"> {{item.notes}} </td>
         </tr>
 {% endfor %}
     </table>
