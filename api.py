@@ -210,7 +210,7 @@ def get_pie_data():
             print(e)
         connection.close()
 
-    return flask.jsonify("data": data, "labels": labels)
+    return flask.jsonify({"data": data, "labels": labels})
 
 
 # get bar data for vis page
@@ -240,7 +240,7 @@ def get_pie_data(cat):
             print(e)
         connection.close()
 
-    return flask.jsonify("items": items, "real": real, "nonreal": nonreal)
+    return flask.jsonify({"items": items, "real": real, "nonreal": nonreal})
 
 
 
