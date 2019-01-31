@@ -241,7 +241,7 @@ def get_bar_data(cat):
     print(items)
     print(real)
     print(nonreal)
-    return flask.jsonify({"items": items, "real": real, "nonreal": nonreal})
+    return flask.jsonify({"items": items[:8], "real": real[:8], "nonreal": nonreal[:8]})
 
 
 
