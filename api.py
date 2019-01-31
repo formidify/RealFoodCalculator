@@ -214,6 +214,7 @@ def get_pie_data():
 
 
 # get bar data for vis page
+@app.route("/visualization/bar_data", defaults = {'cat': 'produce'})
 @app.route("/visualization/bar_data/<cat>")
 def get_bar_data(cat):
     items = []
