@@ -101,6 +101,7 @@ Chart.defaults.global.plugins.datalabels.display = false
 var myPieChart;
 // load data from Flask; shows all categories
 var getData = $.get('/visualization/pie_data')
+var init;
 
 getData.done(function(results) {
   data = {
@@ -119,7 +120,7 @@ getData.done(function(results) {
   };
 
   // initial data 
-  var init = results.labels[0]
+  init = results.labels[0]
   var ctx1 = document.getElementById("percentChart1").getContext('2d');
   myPieChart = new Chart(ctx1, {
       type: 'pie',
