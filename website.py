@@ -15,6 +15,10 @@ app = flask.Flask(__name__, static_folder='static', template_folder='templates')
 def homepage():
     return render_template('home.html')
 
+@app.route('/login')
+def login():
+    return render_template("login_draft.html")
+
 @app.route('/example')
 def example():
     return render_template('example.html')
@@ -40,7 +44,7 @@ def viewDownload():
 def result():
     result =[ {"description": "test description"}]
     api_url = 'http://cmc307-06.mathcs.carleton.edu:5001/test_data_large?'
-    
+
     if request.method == 'POST':
         result = request.form
         #result = request.form.get('description', 'default_description')
@@ -74,4 +78,4 @@ if __name__ == '__main__':
 #
     host = 'cmc307-06.mathcs.carleton.edu'
 #    port = int(sys.argv[2])
-    app.run(host=host, port=2019, debug=True)
+    app.run(host= host, port=2019, debug=True)

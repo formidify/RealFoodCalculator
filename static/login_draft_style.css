@@ -1,0 +1,92 @@
+body{
+    margin: 0;
+    padding: 0;
+    background: url(pic1.jpg);
+    background-size: cover;
+    background-position: center;
+    font-family: sans-serif
+}
+
+.login-wrapper{
+    width: 320px;
+    height: 420px;
+    background: #000;
+    color: #fff;
+    top: 50%;
+    left: 50%;
+    margin-top: -160px;
+    margin-left: -210px;
+    position: absolute;
+    transform: translate(-50%,-50%)
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.g-signin2{
+  display: inline-block;
+  text-align: center;
+}
+
+.avatar{
+  width: 100px;
+  height: 100px;
+  margin-top: 75px;
+  display: inline-block;
+  position: relative;
+}
+
+h1{
+  margin: 0;
+  padding: 0 0 20px;
+  text-align: center;
+  font-size: 22px;
+}
+
+.loginbox p{
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  font-weight: bold;
+}
+
+.login-wrapper input{
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.login-wrapper input[type="text"], input[type="password"]{
+  border: none;
+  border-bottom: 1px solid #fff;
+  background: transparent;
+  outline: none;
+  height: 40px;
+  color: #fff;
+  font-size: 16px;
+}
+
+.login-wrapper input[type="submit"]{
+  border: none;
+  outline:none;
+  background: #fb2525;
+  color: #fff;
+  font-size: 18px;
+  border-radius: 20px;
+}
+
+.login-wrapper input[type="submit"]:hover{
+  cursor: pointer;
+  background: #ffc107;
+  color: #000;
+  text-align: center;
+}
+
+.login-wrapper a{
+  text-decoration: none;
+  font-size: 12px;
+  line-height:20px;
+  color: darkgrey;
+}
+
+.login-wrapper a:hover{
+  color: #ffc107;
+}
