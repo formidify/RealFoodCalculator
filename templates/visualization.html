@@ -135,6 +135,7 @@ getData.done(function(results) {
 })
 
 var barData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/bar_data/' + init)
+var myBarChart;
 
 barData.done(function(results) {
   // bar plot
@@ -169,7 +170,7 @@ barData.done(function(results) {
   };
 
   var ctx2 = document.getElementById("percentChart2").getContext('2d');
-  var myBarChart = new Chart(ctx2, {
+  myBarChart = new Chart(ctx2, {
       type: 'bar',
       data: data,
       options: {
