@@ -100,7 +100,7 @@ Chart.defaults.global.plugins.datalabels.display = false
 // pie chart
 var myPieChart;
 // load data from Flask; shows all categories
-var getData = $.get('/visualization/pie_data')
+var getData = $.get('http://cmc307-06.mathcs.carleton.edu:2019/visualization/pie_data')
 var init;
 
 getData.done(function(results) {
@@ -134,7 +134,7 @@ getData.done(function(results) {
   ctx1.canvas.height = 300;
 })
 
-var barData = $.get('visualization/bar_data/' + init)
+var barData = $.get('http://cmc307-06.mathcs.carleton.edu:2019/visualization/bar_data/' + init)
 
 barData.done(function(results) {
   // bar plot
