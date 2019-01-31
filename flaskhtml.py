@@ -5,7 +5,7 @@ import flask
 #from flask import Flask, render_template, jsonify
 from flask import *
 import sys
-import simplejson as json
+import json
 import psycopg2
 
 #import other flask file
@@ -27,7 +27,6 @@ def entrySession():
 
 @app.route('/viewdownload', methods = ['POST', 'GET'])
 def viewDownload():
-
     if request.method == 'POST':
         result = request.form
         result = api.get_products()
@@ -42,7 +41,6 @@ def dataEntry():
 @app.route('/visualization')
 def visualization():
     return render_template('visualization_page.html')
-
 
 if __name__ == '__main__':
 #    if len(sys.argv) != 3:

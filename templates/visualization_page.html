@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <title>visualization</title>
+        <meta charset="utf-8">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+        <script src="https://codepen.io/anon/pen/aWapBE.js"></script>
+        <meta content="width=device-width, initial-scale=1" name="viewport">
+        <link href="visualization_page.css" rel="stylesheet">  
+    </head>
+<body>
+    <h1>Real Food Calculator</h1>
+    <a>Data Entry Session</a> 
+    <a>Data Visualization</a>   
+    <a>View/Download Files</a>
+
+<!-- /* Real food calculator visualization page using d3.js
+ * Author: James Yang (part of the Real Food Calculator comps group)
+ *
+ * Visualization types:
+ * what time period do we want to do?
+ * 1) Percentage of real food in each food category:
+ * Pie chart showing the percentage purchase of each food category
+ * Stacked bar chart where each column stands for prominent types of food in that category, and color coded into real vs not
+ * Buttons: which food category to be investigated, and how many items to show
+ *
+ * 2) Most impact/up for change food item:
+ * A line chart showing the percentage of increase of purchase for that particular food type plus
+ * a bar chart ranked by the amount of money increase in total of real food purchase 
+ * Buttons: how many items to shown, ranked from high to low or vice versa, as well as customizable panel to enter and control specific food types to display,
+ * as well as which (one or multiple) food categories to be selected for visualization on the joint bar line chart.
+ * IMPORTANT: also needs to take into account of what is the most % that Carleton wishes to increase by (so if not a complete switch?? idk)
+ *
+ * 3) Time series:
+ * A line chart showing the increase in real/non-real/all food purchases for food items of all categories
+ * Buttons: how many items to shown, ranked from high to low or vice versa, ranked by real/non-real/all, 
+ * and by month (1-12, all, sum) and year (2006, 2007, 2008, etc.),
+ * as well as customizable panel to enter and control specific food types to display
+ *
+ * 4) Other graphs:
+ * - graphs that serve as motivating students to engage in the initiatives
+ * - comprehensive customizable graphs (limited to a certain scope) that can be fully customized (need to discuss with real food people, may not be necessary)
+ *
+ * Options: add/remove existing graph chunk, as well as download.
+ */ -->
+<h1></h1>
+<a>Items to show:</a>
+<select name="Show:">
+  <option value="" disabled selected>Please Choose...</option>
+  <option value="5">5</option>
+  <option value="10">10</option>
+  <option value="15">15</option>
+  <option value="20">20</option>
+</select>
+ <div id="contain">
+ <div id="canvas-holder" style="width:50%;float: left;" \
+ class="col-xs-6">
+<canvas id="percentChart1" style="float: left; display: block; height: 300px; width: 300px;"></canvas></div>
+<div id="canvas-holder" style="width:50%;float: right;" \
+ class="col-xs-6">
+<canvas id="percentChart2" style="float: right; display: block; height: 300px; width: 300px;"></canvas></div>
+</div>
+<script>
+Chart.defaults.global.plugins.datalabels.display = false
+// pie chart
+var inputdata = [3, 4, 1, 3, 9] // pie chart distribution data
+data = {
+    datasets: [{
+        data: [3, 4, 1, 3, 9],
+        backgroundColor: palette('tol', inputdata.length).map(function(hex) {
+        return '#' + hex;
+      })
+    }],
+
+    // These labels appear in the legend and in the tooltips when hovering different arcs
+    labels: ["dairy", "produce", "grocery", "beverages", "meat"],
+    options: {
+        responsive: true
+    }
+};
+
+var ctx1 = document.getElementById("percentChart1").getContext('2d');
+var myPieChart = new Chart(ctx1, {
+    type: 'pie',
+    data: data
+});
+ctx1.canvas.width = 300;
+ctx1.canvas.height = 300;
+
+// bar plot
+var items = ["milk", "cheese", "butter", "yoghurt", "sour cream"]
+var real_color = Array(items.length).fill('rgba(255, 99, 132, 0.2)')
+var nonreal_color = Array(items.length).fill('rgba(255, 159, 64, 0.2)')
+
+var real_border_color = Array(items.length).fill('rgba(255,99,132,1)')
+var nonreal_border_color = Array(items.length).fill('rgba(255, 159, 64, 1)')
+
+data = {
+    datasets: [{
+        label: "real",
+        data: [13, 24, 11, 33, 9],
+        borderWidth: 2,
+        backgroundColor: real_color,
+        borderColor: real_border_color
+    },
+    {
+        label: "non-real",
+        data: [7, 6, 1, 8, 10],
+        borderWidth: 2,
+        backgroundColor: nonreal_color,
+        borderColor: nonreal_border_color
+      }
+    ],
+    // These labels appear in the legend and in the tooltips when hovering different arcs
+    labels: ["milk", "cheese", "butter", "yoghurt", "sour cream"],
+    options: {
+        responsive: true
+    }
+};
+
+var ctx2 = document.getElementById("percentChart2").getContext('2d');
+var myBarChart = new Chart(ctx2, {
+    type: 'bar',
+    data: data,
+    options: {
+        scales: {
+            xAxes: [{
+                stacked: true
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+});
+ctx2.canvas.width = 300;
+ctx2.canvas.height = 300;
+
+</script>
+
+<h1>Visualization 2</h1>
+<a>Items to show:</a>
+<select name="Show:">
+  <option value="" disabled selected>Please Choose...</option>
+  <option value="5">5</option>
+  <option value="10">10</option>
+  <option value="15">15</option>
+  <option value="20">20</option>
+</select>
+
+<a>Ranked by:</a>
+<select name="Show:">
+  <option value="" disabled selected>Please Choose...</option>
+  <option value="5">Dollar Increase</option>
+  <option value="10">Single Item % Increase</option>
+  <option value="15">Total Purchase % Increase</option>
+</select>
+
+<a>Rank order:</a>
+<select name="Show:">
+  <option value="" disabled selected>Please Choose...</option>
+  <option value="5">Increasing</option>
+  <option value="10">Decreasing</option>
+</select>
+
+ <div id="contain">
+ <div id="canvas-holder" style="width:50%;float: left;" \
+ class="col-xs-6">
+<canvas id="increaseChart1" style="float: left; display: block; height: 300px; width: 300px;"></canvas> </div>
+<div id="canvas-holder" style="width:50%;float: right;" \
+ class="col-xs-6">
+<canvas id="increaseChart2" style="float: right; display: block; height: 300px; width: 300px;"></canvas> </div>
+</div>
+<script>
+Chart.defaults.global.plugins.datalabels.display = false
+// pie chart
+var inputdata = [3, 4, 1, 3, 9] // pie chart distribution data
+data = {
+    datasets: [{
+        data: [3, 4, 1, 3, 9],
+        backgroundColor: palette('tol', inputdata.length).map(function(hex) {
+        return '#' + hex;
+      })
+    }],
+
+    // These labels appear in the legend and in the tooltips when hovering different arcs
+    labels: ["dairy", "produce", "grocery", "beverages", "meat"],
+    options: {
+        responsive: true
+    }
+};
+
+var ctx3 = document.getElementById("increaseChart1").getContext('2d');
+var myPieChart = new Chart(ctx3, {
+    type: 'pie',
+    data: data
+});
+ctx3.canvas.width = 300;
+ctx3.canvas.height = 300;
+
+// bar and line chart
+var ctx4 = document.getElementById("increaseChart2").getContext('2d');
+var mixedChart = new Chart(ctx4, {
+  type: 'bar',
+  data: {
+    datasets: [{
+          type: "bar",
+          label: 'Increase in dollar amount',
+          data: [377.5, 123.4, 66.5, 78.7, 233.7],
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          borderColor: 'rgba(75, 192, 192, 1)',
+          yAxisID: "bar",
+          datalabels: {
+          // display labels for this specific dataset
+          display: true,
+          anchor: 'end'
+        }}, {
+          label: 'Percent increase in single item',
+          data: [51, 76, 49, 23, 96],
+          yAxisID: "A",
+          type: 'line',
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            borderColor: 'rgba(255,99,132,1)',
+            fill: false
+        }, {
+          label: 'Percent increase for all purchases',
+          data: [2.3, 5.0, 3.4, 1.6, 4.8],
+          yAxisID: "B",
+          type: 'line',
+        backgroundColor: 'rgba(75, 00, 1300, 0.2)',
+        borderColor: 'rgba(75, 00, 1300,1)',
+        fill: false
+        }],
+    labels: ['milk', 'yoghurt', 'cheese', 'butter', 'cream']
+  },
+  options: {
+
+    scales: {
+      yAxes: [{
+        id: 'A',
+        type: 'linear',
+        position: 'left',
+        ticks: {
+          fontColor: 'rgba(255,99,132,1)',
+          max: 100,
+          min: 0
+        },
+          scaleLabel: {
+          display: true,
+          labelString: 'Percent increase in single item'
+        }
+      }, {
+        id: 'B',
+        type: 'linear',
+        position: 'right',
+        ticks: {
+          fontColor: 'rgba(75, 00, 1300,1)',
+          beginAtZero: true
+        },
+          scaleLabel: {
+          display: true,
+          labelString: 'Percent increase for all purchases'
+        }
+      }, {
+        id: 'bar',
+        type: 'linear',
+        display: false
+      }],
+      plugins: {
+      datalabels: {
+         display: false,
+         font: {weight: 'bold'},
+         align: 'center',
+         anchor: 'end',
+         clamp: true
+      }
+   }
+    }
+}});
+ctx4.canvas.width = 300;
+ctx4.canvas.height = 300;
+
+</script>
+
+<h1>Visualization 3</h1>
+<a>Add Item:</a>
+<input type="text" name="fname"><br>
+<a>Ranked by types of purchase:</a>
+<select name="Show:">
+  <option value="" disabled selected>Please Choose...</option>
+  <option value="5">Real</option>
+  <option value="10">Total</option>
+</select>
+<canvas id="timeSeriesChart" style="display: block; width: 80%;"></canvas> 
+<script>
+Chart.defaults.global.plugins.datalabels.display = false
+// insert data into the chart object
+
+lineChartData = {};          
+lineChartData.labels  = ["June 2016", "June 2017", "June 2018"]; // time frame
+lineChartData.datasets = [];  //add 'datasets' array element to object
+
+var items = ['steak', 'chicken', 'carrots', 'peas', 'cheese']
+var colors = palette('tol', items.length).map(function(hex) {
+        return '#' + hex;
+      })
+var types = ['total', 'real']
+
+
+var data = [[[304, 407, 529], [1777, 2378, 3454], [665, 798, 300, 200], [234, 567, 987], [111, 222, 333]], // total
+[[204, 40, 519], [1577, 2368, 3254], [635, 758, 20, 100], [134, 537, 947], [101, 202, 303]]] // real
+
+
+datasets = []
+for (i = 0; i < items.length; i++) {
+    for (j = 0; j < types.length; j++) {
+        line = {}
+        line.data = data[j][i]
+        line.type = 'line'
+        line.label = types[j] + " " + items[i]
+        line.backgroundColor = colors[i]
+        line.borderColor = colors[i]
+        line.fill = false
+        if (j > 0) {
+            line.borderDash = [10, 5]
+        } 
+        datasets.push(line)
+    }
+}
+
+lineChartData.datasets = datasets
+
+
+var ctx5 = document.getElementById("timeSeriesChart").getContext('2d');
+myLineChart = new Chart(ctx5, {
+    type: 'line',
+    data: lineChartData,
+    options: {scales: {yAxes:[{scaleLabel: {display: true, labelString: "Dollar purchases ($)"}}]}, 
+              legend: {
+                display: true, 
+                labels: {
+                  fontColor: 'rgba(75, 192, 192, 1)',
+                  lineDash: Array[10, 5]
+                }
+              }}
+});
+ctx5.canvas.width = 300;
+ctx5.canvas.height = 300;
+
+</script>
+
+</body>
+
+
+</html>

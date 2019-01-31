@@ -140,6 +140,61 @@ def get_products():
         connection.close()
     return json.dumps(products_list)
 
+# get pie chart data for vis page (for 3 most recent years plus in total)
+@app.route("/visualization/pie_data")
+def get_pie_data():
+    data = []
+    labels = []
+    query = """SELECT trim(category), SUM(cost) AS c_cost FROM test_data_large GROUP BY trim(category) ORDER BY c_cost DESC;"""
+
+    # currently not in use
+    query_by_year = """SELECT year, trim(category), SUM(cost) AS c_cost FROM test_data_large GROUP BY trim(category),year ORDER BY c_cost DESC;"""
+
+    # todo: query should also take account of the years
+    connection = get_connection()
+    if connection is not None:
+        try:
+            # either this or minimum items allowed to show
+            for row in get_select_query_results(connection, query):
+                labels.append(row[0])
+                data.append(row[1])
+        except Exception as e:
+            print(e)
+        connection.close()
+
+    return flask.jsonify("data": data, "labels": labels)
+
+
+# get bar data for vis page
+@app.route("/visualization/bar_data/<string:cat>")
+def get_pie_data(cat):
+    items = []
+    real = []
+    nonreal = []
+    # not filtered by year
+    query = """SELECT COALESCE(Z.description, B.description) AS description, COALESCE(Z.real, 0) AS real, COALESCE(B.nonreal, 0) 
+    as nonreal FROM (SELECT description, SUM(cost) AS real FROM test_data_large WHERE category = '%{1}%' AND 
+        (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't') GROUP BY description) Z 
+    FULL OUTER JOIN (SELECT description, SUM(cost) AS nonreal FROM test_data_large WHERE category = '%{1}%' AND 
+        local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't' GROUP BY description) B 
+    ON Z.description = B.description ORDER BY real desc;""".format(cat)
+
+    # todo: query should also take account of the years
+    connection = get_connection()
+    if connection is not None:
+        try:
+            # either this or minimum items allowed to show
+            for row in get_select_query_results(connection, query):
+                items.append(row[0])
+                real.append(row[1])
+                nonreal.append(row[2])
+        except Exception as e:
+            print(e)
+        connection.close()
+
+    return flask.jsonify("items": items, "real": real, "nonreal": nonreal)
+
+
 
 if __name__ == '__main__':
     """if len(sys.argv) != 3:
