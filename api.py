@@ -221,11 +221,11 @@ def get_bar_data(cat):
     real = []
     nonreal = []
     # not filtered by year
-    query = """SELECT COALESCE(Z.description, B.description) AS description, COALESCE(Z.real, 0) AS real, COALESCE(B.nonreal, 0) 
-    as nonreal FROM (SELECT description, SUM(cost) AS real FROM test_data_large WHERE category = '%{0}%' AND 
-        (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't') GROUP BY description) Z 
-    FULL OUTER JOIN (SELECT description, SUM(cost) AS nonreal FROM test_data_large WHERE category = '%{1}%' AND 
-        local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't' GROUP BY description) B 
+    query = """SELECT COALESCE(Z.description, B.description) AS description, COALESCE(Z.real, 0) AS real, COALESCE(B.nonreal, 0) \
+    as nonreal FROM (SELECT description, SUM(cost) AS real FROM test_data_large WHERE category = '%{0}%' AND \
+        (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't') GROUP BY description) Z \
+    FULL OUTER JOIN (SELECT description, SUM(cost) AS nonreal FROM test_data_large WHERE category = '%{1}%' AND \
+        local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't' GROUP BY description) B \
     ON Z.description = B.description ORDER BY real desc;""".format(cat, cat)
 
     # todo: query should also take account of the years
@@ -241,6 +241,9 @@ def get_bar_data(cat):
             print(e)
         connection.close()
 
+    print(items)
+    print(real)
+    print(nonreal)
     return flask.jsonify({"items": items, "real": real, "nonreal": nonreal})
 
 
