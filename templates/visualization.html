@@ -118,6 +118,8 @@ getData.done(function(results) {
       }
   };
 
+  // initial data 
+  var init = results.labels[0]
   var ctx1 = document.getElementById("percentChart1").getContext('2d');
   myPieChart = new Chart(ctx1, {
       type: 'pie',
@@ -130,9 +132,6 @@ getData.done(function(results) {
   ctx1.canvas.width = 300;
   ctx1.canvas.height = 300;
 })
-
-// initial data 
-var init = myPieChart.data.labels[0]
 
 var barData = $.get('visualization/bar_data/' + init)
 
