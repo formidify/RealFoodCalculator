@@ -6,7 +6,105 @@
         <meta charset="utf-8">
         <meta content="width=device-width, initial-scale=1" name="viewport">
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}" />
-        <script type="text/javascript" src="{{ url_for('static', filename='example.js') }}" defer></script>
+        <script>
+
+            
+    function toggleCheckbox(item){
+         console.log("hi we're here");
+         var inputID = item.id;
+         console.log(inputID);
+        
+         if (typeof(Storage) !== "undefined") {
+              if (!document.getElementById(inputID).checked){
+                  //this may be backwards!! 
+                 sessionStorage.removeItem(inputID.slice(0, -6));
+                 console.log("its gone!");
+                }
+            else{
+             //unchecked, save info
+                var thisInput = document.getElementById(inputID.slice(0, -6));
+                console.log(thisInput.value);
+                sessionStorage[inputID.slice(0, -6)] = thisInput.value;
+            }
+        }
+         else {
+            document.getElementById("result").innerHTML = "Sorry, your browser does not support web storage...";
+         }
+    }
+            
+    function clearFields(){
+        //bug is that if checkbox is already clicked and user changes value in input the old value (that existed
+        //when the checkbox was originally clicked) resurfaces once form is cleared
+        //--this could probably be fixed by just repopulating with what's in the input field instead of using session
+        //storage at all...
+
+        console.log("clearing/submitting...");
+      //  document.getElementById("data-entry-form").reset();
+        
+        var inputs = document.querySelectorAll('input[type=text]');
+        //apparently this only works on newer broswers- will this be a problem?
+        
+        var numInputs = document.querySelectorAll('input[type=number]');
+        console.log(numInputs);
+        numInputs[0].value = '';
+        
+        var categoryInputs = document.querySelectorAll('[name=category]');
+        
+        var radioInputs = document.querySelectorAll('[type=radio]');
+ 
+        if (sessionStorage.category && (document.getElementById('category-check').checked)){
+        //instead of loading from session storage, load the value that is in the field currently
+            categoryInputs[0].value = sessionStorage.category;
+        }
+        else{
+            categoryInputs[0].value = '%';
+        }
+     
+        
+        for(var i = 0; i < inputs.length; i++) {
+            console.log(inputs[i]);
+            
+            inputID = inputs[i].id;
+            //set vendor to thing in session storage 
+            console.log(sessionStorage[inputID]);
+            
+            //finds fields with defined session storage to repopulate fields (based on id tags)
+            if (sessionStorage[inputID]) {
+                console.log('made it alllthewayhere')
+                var vendorValue = sessionStorage.getItem(inputID);
+                
+                if (document.getElementById(inputID + '-check').checked){
+                
+                document.getElementById(inputID).value = vendorValue;
+                }
+                else{
+                    
+                    inputs[i].value = '';
+                    sessionStorage.removeItem(inputID);
+                    
+                }
+            }
+            else {
+                //if no session storage of input, clear field
+                inputs[i].value = '';
+            }
+        }
+    }
+    function populateForm(dataLabel, row){
+        console.log(row);
+        // data = row.eq(0).html();
+        if (row=="False") {
+            row = "off";
+        }
+        if (row=="True") {
+            row = "on";
+        }
+        if (row=="None") {
+            row = "none";
+        }
+   	document.getElementById(dataLabel).value = row;
+    }
+</script>
     </head>
 <body>
     <h1>Real Food Calculator</h1>
@@ -25,13 +123,15 @@
     <a>View/Download Files</a>
   -->
     <h2>Adding Items to October 2018 with Rating Version 2</h2>
-
-    <form action = "http://cmc307-06.mathcs.carleton.edu:2019/data_entry" method = "POST">
+    {%if clear%}
+    <script> clearFields(); </script>
+    {%endif%}
+    <form action = "http://cmc307-06.mathcs.carleton.edu:2019/data_entry" method = "POST" id = "data-entry-form">
         <fieldset>
         <div>
             <label for="category">Category</label>
             <select id="category" name="category">
-		<option value="%">Choose a Category</option>
+		    <option value="%">Choose a Category</option>
                 <option value="dairy">dairy</option>
                 <option value="baked">baked</option>
                 <option value="beverages">beverages</option>
@@ -43,34 +143,36 @@
                 <option value="fish">fish</option>
                 <option value="teacoffee">tea or coffee</option>
             </select>
-            <input id="category" name="category-keep" type="checkbox">
+                  <input id="category-check" name="category-keep" type="checkbox" onclick="toggleCheckbox(this)">
         </div>
         <div>
+          
             <label for="vendor">Vendor</label>
             <input id="vendor" name="vendor" type="text">
-            <input id="vendor" name="vendor-keep" type="checkbox">
+     
+            <input id="vendor-check" name="vendor-keep" type="checkbox" onclick="toggleCheckbox(this)">
         </div>
         <div>
             <label for="brand">Label/Brand</label>
             <input id="brand" name="brand" type="text">
-            <input id="brand" name="brand-keep" type="checkbox">
+            <input id="brand-check" name="brand-keep" type="checkbox" onclick="toggleCheckbox(this)">
         </div>
         </fieldset>
         <fieldset>
         <div>
             <label for="description">Description</label>
             <input id="description" name="description" type="text" placeholder="one to two words">
-            <input id="description" name="description-keep" type="checkbox">
+            <input id="description-check" name="description-keep" type="checkbox" onclick="toggleCheckbox(this)">
         </div>
         <div>
             <label for="notes">Notes</label>
             <input id="notes" name="notes" type="text" placeholder="as labeled on invoice">
-            <input id="notes" name="notes-keep" type="checkbox">
+            <input id="notes-check" name="notes-keep" type="checkbox" onclick="toggleCheckbox(this)">
         </div>
         <div>
                 <label for="productCode">Product Code</label>
-                <input id="productCode" name="productCode" type="number">
-                <input id="productCode" name="productCode-keep" type="checkbox">
+                <input id="productCode" name="productCode" type="text">
+                <input id="productCode-check" name="productCode-keep" type="checkbox" onclick="toggleCheckbox(this)">
             </div>
         <div>
             <label for="cost">Cost</label>
@@ -78,40 +180,63 @@
         </div>
     </fieldset>
 
-        <fieldset>
-            <div>
-            <label for="local">Local</label>
-            <input id="local" name="local" type="checkbox">
-            <input id="local" name="localDescription" type="text" placeholder="local notes">
+        <fieldset id = "real-qualifications">
+            <div class="control">
+            <label class="radio" for="local">
+                <input id="local" name="local" type="radio" value="on">Local</label>
+            <label class="radio" for="local">
+                <input id="local" name="local" type="radio" value="off" checked>Not Local</label>
+                
+            <input id="localDescription" name="localDescription" type="text" placeholder="local notes">
+            <input id="local-check" name="local-keep" type="checkbox" onclick="toggleCheckbox(this)">
+            </div> 
+
+            <div class="control">
+            <label class="radio" for="fair">
+                <input id="fair" name="fair" type="radio" value="on">Fair</label>
+            <label class="radio" for="fair">
+                <input id="fair" name="fair" type="radio" value="off" checked>Not Fair</label>
+            <input id="fairDescription" name="fairDescription" type="text" placeholder="fair notes">
+            <input id="fair-check" name="fair-keep" type="checkbox" onclick="toggleCheckbox(this)">
+
             </div>
 
-            <div>
-            <label for="fair">Fair</label>
-            <input id="fair" name="fair" type="checkbox">
-            <input id="fair" name="fairDescription" type="text" placeholder="fair notes">
+            <div class="control">
+            <label class="radio" for="ecological">
+                <input id="ecological" name="ecological" type="radio" value="on">Ecological</label>
+            <label class="radio" for="ecological">
+                <input id="ecological" name="ecological" type="radio" value="off" checked>Not Ecological</label>
+            <input id="ecologicalDescription" name="ecologicalDescription" type="text" placeholder="ecological notes">
+            <input id="ecological-check" name="ecological-keep" type="checkbox" onclick="toggleCheckbox(this)">
+
             </div>
 
-            <div>
-            <label for="ecological">Ecological</label>
-            <input id="ecological" name="ecological" type="checkbox">
-            <input id="ecological" name="ecologicalDescription" type="text" placeholder="ecological notes">
-            </div>
+            <div class="control">
+            <label class="radio" for="humane">
+                <input id="humane" name="humane" type="radio" value="on">Humane</label>
+            <label class="radio" for="humane">
+                <input id="ecological" name="humane" type="radio" value="off">Not Humane</label>
+            <label class="radio" for="humane">
+                <input id="humane" name="humane" type="radio" value="none" checked>Not Applicable</label>
+            <input id="humaneDescription" name="humaneDescription" type="text" placeholder="humane notes">
+            <input id="humane-check" name="humane-keep" type="checkbox" onclick="toggleCheckbox(this)">
 
-            <div>
-            <label for="humane">Humane</label>
-            <input id="humane" name="humane" type="checkbox">
-            <input id="humane" name="humaneDescription" type="text" placeholder="humane notes">
             </div>
-
-            <div>
-            <label for="disqualifer">Disqualifier</label>
-            <input id="disqualifer" name="disqualifer" type="checkbox">
-            <input id="disqualifer" name="disqualifierDescription" type="text" placeholder="disqualifer notes">
+            <div class="control">
+            <label class="radio" for="disqualifier">
+                <input id="disqualifier" name="disqualifier"type="radio" value="on" >Disqualifier</label>
+            <label class="radio" for="disqualifier">
+                <input id="disqualifier" name="disqualifier" type="radio" value="off" checked>No Disqualifier</label>
+            <input id="disqualifierDescription" name="disqualifierDescription" type="text" placeholder="disqualifier notes">
+            <input id="disqualifier-check" name="disqualifier-keep" type="checkbox" onclick="toggleCheckbox(this)">
             </div>
 
         </fieldset>
-        <button type="submit">Add Item</button>
+        <button type="submit">Add Item/Search for item</button>
+       
     </form>
+    <button type="button" id="clear-submit" onclick="clearFields()">Clear/submit items</button>
+    
     <h3>Past Entries</h3>
     <table>
 	<tr>
@@ -134,25 +259,26 @@
         </tr>
 	{% for item in result %}
         <tr>
-	<td> {{item.description}} </td>
-        <td> {{item.category}}</td>
-        <td> {{item.productCode}} </td>
-        <td> {{item.brand}} </td>
-        <td> {{item.vendor}} </td>
-        <td> {{item.loca}} </td>
-        <td> {{item.localDescription}} </td>
-        <td> {{item.fair}} </td>
-        <td> {{item.fairDescription}} </td>
-        <td> {{item.ecological}} </td>
-        <td> {{item.ecologicalDescription}} </td>
-        <td> {{item.humane}} </td>
-        <td> {{item.humaneDescription}} </td>
-        <td> {{item.disqualifer}} </td>
-        <td> {{item.disqualiferDescription}} </td> 
-        <td> {{item.notes}} </td>
+	<td onclick="populateForm('description','{{item.description}}')"> {{item.description}} </td>
+    <td onclick="populateForm('category','{{item.category}}')"> {{item.category}} </td>
+    <td onclick="populateForm('productCode','{{item.productCode}}')"> {{item.productCode}} </td>
+    <td onclick="populateForm('brand','{{item.brand}}')"> {{item.brand}} </td>
+    <td onclick="populateForm('vendor','{{item.vendor}}')"> {{item.vendor}} </td>
+    <td onclick="populateForm('local','{{item.local}}')"> {{item.local}} </td>
+    <td onclick="populateForm('localDescription','{{item.localDescription}}')"> {{item.localDescription}} </td>
+    <td onclick="populateForm('fair','{{item.fair}}')"> {{item.fair}} </td>
+    <td onclick="populateForm('fairDescription','{{item.fairDescription}}')"> {{item.fairDescription}} </td>
+    <td onclick="populateForm('ecological','{{item.ecological}}')"> {{item.ecological}} </td>
+    <td onclick="populateForm('ecologicalDescription','{{item.ecologicalDescription}}')"> {{item.ecologicalDescription}} </td>
+    <td onclick="populateForm('humane','{{item.humane}}')"> {{item.humane}} </td>
+    <td onclick="populateForm('humaneDescription','{{item.humaneDescription}}')"> {{item.humaneDescription}} </td>
+    <td onclick="populateForm('disqualifier','{{item.disqualifier}}')"> {{item.disqualifier}} </td>
+    <td onclick="populateForm('disqualifierDescription','{{item.disqualifierDescription}}')"> {{item.disqualifierDescription}} </td>
+    <td onclick="populateForm('notes','{{item.notes}}')"> {{item.notes}} </td>
         </tr>
 {% endfor %}
     </table>
 
 </body>
+p
 </html>

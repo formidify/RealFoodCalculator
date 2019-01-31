@@ -1,6 +1,10 @@
 '''
     api.py
-    Chae Kim
+    Chae Kim, Syd Botz, Claudia Naughton, Bryce Barton, James Yang
+
+TO DO: 
+- make a separate config.py file for password security 
+- change table from "test_data" to other name  
 '''
 from flask import Flask, render_template
 import sys
@@ -52,61 +56,104 @@ def set_headers(response):
     response.headers['Access-Control-Allow-Origin'] = '*'
     return response
 
-@app.route('/test_data')
+@app.route('/test_data_large')
 def get_products():
 
     month = flask.request.args.get('month', default='-1').lower()
     year = flask.request.args.get('year', default='-1').lower()
     description = flask.request.args.get('description', default='%').lower()
     category = flask.request.args.get('category', default='%').lower()
-    productCode = flask.request.args.get('product_code', default='%').lower()
-    brand = flask.request.args.get('label_brand', default='%').lower()
+    productCode = flask.request.args.get('productCode', default='%').lower()
+    brand = flask.request.args.get('brand', default='%').lower()
     vendor = flask.request.args.get('vendor', default='%').lower()
     notes = flask.request.args.get('notes', default='%').lower()
     cost  = flask.request.args.get('cost', type=float)
+    local = flask.request.args.get('local', default='-1')
+    localDescription = flask.request.args.get('localDescription', default='%').lower()
+    fair = flask.request.args.get('fair', default='-1')
+    fairDescription = flask.request.args.get('fairDescription', default='%').lower()
+    ecological = flask.request.args.get('ecological', default='-1')
+    ecologicalDescription = flask.request.args.get('ecologicalDescription', default='%').lower()
+    humane = flask.request.args.get('humane', default='-1')
+    humaneDescription = flask.request.args.get('humaneDescription', default='%').lower()
+    disqualifier = flask.request.args.get('disqualifier', default='-1')
+    disqualifierDescription = flask.request.args.get('disqualifierDescription', default ='%').lower()
 
     if month == "-1" and year == "-1":
         month = " "
     elif month == "-1":
-        month = "test_data.year = " + year + " AND "
+        month = "test_data_large.year = " + year + " AND "
     elif year == "-1":
-        month = "test_data.month =  " + month + " AND "
+        month = "test_data_large.month = " + month + " AND "
     else:
-        month = "test_data.month = " + month + " AND test_data.year = " + year + " AND "
+        month = "test_data_large.month = " + month + " AND test_data_large.year = " + year + " AND "
+    if local == "on":
+        local = "AND test_data_large.local = TRUE"
+    else: 
+        local = ""
+    if fair == "on": 
+        fair = "AND test_data_large.fair = TRUE"
+    else: 
+        fair = ""
+    if ecological == "on":
+        ecological = "AND test_data_large.ecological = TRUE"
+    else: 
+        ecological = ""
+    if humane == "on":
+        humane = "AND test_data_large.humane = TRUE"
+    elif humane == "none":
+        humane = "AND test_data_large.humane IS NULL"
+    else: 
+        humane = "AND test_data_large.humane = FALSE"
+    if disqualifier == "on":
+        disqualifier = "AND test_data_large.disqualifier = TRUE"
+    else: 
+       disqualifier = "" 
+
 
     query = """
-            SELECT  test_data.month,
-                    test_data.year,
-                    test_data.description,
-                    test_data.category,
-                    test_data.product_code,
-                    test_data.product_code_type,
-                    test_data.label_brand,
-                    test_data.vendor,
-                    test_data.rating_version,
-                    test_data.local,
-                    test_data.local_description,
-                    test_data.fair,
-                    test_data.fair_description,
-                    test_data.ecological,
-                    test_data.ecological_description,
-                    test_data.humane,
-                    test_data.humane_description,
-                    test_data.disqualifier,
-                    test_data.disqualifier_description,
-                    test_data.cost,
-                    test_data.notes,
-                    test_data.facility
-            FROM test_data
+            SELECT  test_data_large.month,
+                    test_data_large.year,
+                    test_data_large.description,
+                    test_data_large.category,
+                    test_data_large.product_code,
+                    test_data_large.product_code_type,
+                    test_data_large.label_brand,
+                    test_data_large.vendor,
+                    test_data_large.rating_version,
+                    test_data_large.local,
+                    test_data_large.local_description,
+                    test_data_large.fair,
+                    test_data_large.fair_description,
+                    test_data_large.ecological,
+                    test_data_large.ecological_description,
+                    test_data_large.humane,
+                    test_data_large.humane_description,
+                    test_data_large.disqualifier,
+                    test_data_large.disqualifier_description,
+                    test_data_large.cost,
+                    test_data_large.notes,
+                    test_data_large.facility
+            FROM test_data_large
             WHERE   {0}
-                    lower(test_data.description) LIKE '%{1}%'
-                    AND lower(test_data.category) LIKE '%{2}%'
-                    AND lower(test_data.product_code) LIKE '%{3}%'
-                    AND lower(test_data.label_brand) LIKE '%{4}%'
-                    AND lower(test_data.vendor) LIKE '%{5}%'
-                    AND lower(test_data.notes) LIKE '%{6}%'
-            ORDER BY test_data.label_brand
-            """.format(month, description, category, productCode, brand, vendor, notes)
+                    lower(test_data_large.description) LIKE '%{1}%'
+                    AND lower(test_data_large.category) LIKE '%{2}%'
+                    AND lower(test_data_large.product_code) LIKE '{3}'
+                    AND lower(test_data_large.label_brand) LIKE '%{4}%'
+                    AND lower(test_data_large.vendor) LIKE '%{5}%'
+                    AND lower(test_data_large.notes) LIKE '%{6}%'
+                    {7}
+                    {8}
+                    {9}
+                    {10}
+                    {11}
+                    AND lower(test_data_large.local_description) LIKE lower('%{12}%')
+                    AND lower(test_data_large.fair_description) LIKE lower('%{13}%')
+                    AND lower(test_data_large.ecological_description) LIKE lower( '%{14}%')
+                    AND lower(test_data_large.humane_description) LIKE lower('%{15}%')
+                    AND lower(test_data_large.disqualifier_description) LIKE lower('%{16}%')
+            ORDER BY test_data_large.label_brand
+            """.format(month, description, category, productCode, brand, vendor, notes, local, fair, ecological, humane, disqualifier, localDescription, fairDescription, ecologicalDescription,humaneDescription, disqualifierDescription)
 
     products_list = []
     connection = get_connection()
@@ -133,7 +180,8 @@ def get_products():
                         'disqualifier':row[17],
                         'disqualifierDescription':row[18],
                         'cost':row[19],
-                        'notes':row[20]}
+                        'notes':row[20],
+                        'facility': row[21]}
                 products_list.append(product)
         except Exception as e:
             print(e)
