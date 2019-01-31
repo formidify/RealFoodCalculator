@@ -223,9 +223,9 @@ def get_bar_data(cat):
     query = """SELECT COALESCE(Z.description, B.description) AS description, COALESCE(Z.real, 0) AS real, COALESCE(B.nonreal, 0) 
     as nonreal FROM (SELECT description, SUM(cost) AS real FROM test_data_large WHERE category = '%{1}%' AND 
         (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't') GROUP BY description) Z 
-    FULL OUTER JOIN (SELECT description, SUM(cost) AS nonreal FROM test_data_large WHERE category = '%{1}%' AND 
+    FULL OUTER JOIN (SELECT description, SUM(cost) AS nonreal FROM test_data_large WHERE category = '%{2}%' AND 
         local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't' GROUP BY description) B 
-    ON Z.description = B.description ORDER BY real desc;""".format(cat)
+    ON Z.description = B.description ORDER BY real desc;""".format(cat, cat)
 
     # todo: query should also take account of the years
     connection = get_connection()
