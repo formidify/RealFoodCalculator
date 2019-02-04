@@ -90,19 +90,34 @@
             }
         }
     }
+    function populateItem(description, category,productCode, brand,vendor,local,localDescription, fair, fairDescription, ecological, ecologicalDescription, humane, humaneDescription, disqualifier,disqualfierDescription, notes){
+      console.log("Description Param:", description);
+      console.log("Category param:", category);
+       var item  = {"description": description, "category": category, "productCode": productCode, "brand":brand,"vendor":vendor, "local": local, "localDescription": localDescription, "fair": fair, "fairDescription": fairDescription, "ecological": ecological, "ecologicalDescription": ecologicalDescription, "humane": humane, "humaneDescription": humaneDescription, "disqualifier": disqualifier, "disqualifierDescription": disqualfierDescription, "notes":notes}
+	for (var data in item){
+           console.log("Data", data);
+           console.log("value", item[data]);
+           populateForm(data, item[data]);
+    }
+    }
     function populateForm(dataLabel, row){
         console.log(row);
         // data = row.eq(0).html();
         if (row=="False") {
+            document.getElementById(dataLabel+"-false").checked = true;
+            console.log("False thing");
             row = "off";
         }
         if (row=="True") {
+            console.log("True thing");
+            document.getElementById(dataLabel+"-true").checked = true;
             row = "on";
         }
         if (row=="None") {
+            document.getElementById(dataLabel+"-na").checked = true;
             row = "none";
         }
-   	document.getElementById(dataLabel).value = row;
+       document.getElementById(dataLabel).value = row;
     }
 </script>
     </head>
@@ -182,10 +197,10 @@
 
         <fieldset id = "real-qualifications">
             <div class="control">
+           <label class="radio" for="local">
+                <input id="local-true" name="local" type="radio" value="on">Local</label>
             <label class="radio" for="local">
-                <input id="local" name="local" type="radio" value="on">Local</label>
-            <label class="radio" for="local">
-                <input id="local" name="local" type="radio" value="off" checked>Not Local</label>
+                <input id="local-false" name="local" type="radio" value="off" checked>Not Local</label>
                 
             <input id="localDescription" name="localDescription" type="text" placeholder="local notes">
             <input id="local-check" name="local-keep" type="checkbox" onclick="toggleCheckbox(this)">
@@ -193,9 +208,9 @@
 
             <div class="control">
             <label class="radio" for="fair">
-                <input id="fair" name="fair" type="radio" value="on">Fair</label>
+                <input id="fair-true" name="fair" type="radio" value="on">Fair</label>
             <label class="radio" for="fair">
-                <input id="fair" name="fair" type="radio" value="off" checked>Not Fair</label>
+                <input id="fair-false" name="fair" type="radio" value="off" checked>Not Fair</label>
             <input id="fairDescription" name="fairDescription" type="text" placeholder="fair notes">
             <input id="fair-check" name="fair-keep" type="checkbox" onclick="toggleCheckbox(this)">
 
@@ -203,9 +218,9 @@
 
             <div class="control">
             <label class="radio" for="ecological">
-                <input id="ecological" name="ecological" type="radio" value="on">Ecological</label>
+                <input id="ecological-true" name="ecological" type="radio" value="on">Ecological</label>
             <label class="radio" for="ecological">
-                <input id="ecological" name="ecological" type="radio" value="off" checked>Not Ecological</label>
+                <input id="ecological-false" name="ecological" type="radio" value="off" checked>Not Ecological</label>
             <input id="ecologicalDescription" name="ecologicalDescription" type="text" placeholder="ecological notes">
             <input id="ecological-check" name="ecological-keep" type="checkbox" onclick="toggleCheckbox(this)">
 
@@ -213,33 +228,34 @@
 
             <div class="control">
             <label class="radio" for="humane">
-                <input id="humane" name="humane" type="radio" value="on">Humane</label>
+                <input id="humane-true" name="humane" type="radio" value="on">Humane</label>
             <label class="radio" for="humane">
-                <input id="ecological" name="humane" type="radio" value="off">Not Humane</label>
+                <input id="ecological-false" name="humane" type="radio" value="off">Not Humane</label>
             <label class="radio" for="humane">
-                <input id="humane" name="humane" type="radio" value="none" checked>Not Applicable</label>
+                <input id="humane-na" name="humane" type="radio" value="none" checked>Not Applicable</label>
             <input id="humaneDescription" name="humaneDescription" type="text" placeholder="humane notes">
             <input id="humane-check" name="humane-keep" type="checkbox" onclick="toggleCheckbox(this)">
 
             </div>
             <div class="control">
             <label class="radio" for="disqualifier">
-                <input id="disqualifier" name="disqualifier"type="radio" value="on" >Disqualifier</label>
+                <input id="disqualifier-true" name="disqualifier"type="radio" value="on" >Disqualifier</label>
             <label class="radio" for="disqualifier">
-                <input id="disqualifier" name="disqualifier" type="radio" value="off" checked>No Disqualifier</label>
+                <input id="disqualifier-false" name="disqualifier" type="radio" value="off" checked>No Disqualifier</label>
             <input id="disqualifierDescription" name="disqualifierDescription" type="text" placeholder="disqualifier notes">
             <input id="disqualifier-check" name="disqualifier-keep" type="checkbox" onclick="toggleCheckbox(this)">
             </div>
 
         </fieldset>
-        <button type="submit">Add Item/Search for item</button>
+        <button type="submit">Search</button>
        
     </form>
-    <button type="button" id="clear-submit" onclick="clearFields()">Clear/submit items</button>
+    <button type="button" id="clear-submit" onclick="clearFields()">Submit</button>
     
     <h3>Past Entries</h3>
     <table>
 	<tr>
+        <th></th>
         <th>Description</th>
         <th>Category</th>
         <th>Product Code</th>
@@ -259,6 +275,7 @@
         </tr>
 	{% for item in result %}
         <tr>
+        <td><button onclick="populateItem('{{item.description}}','{{item.category}}','{{item.productCode}}','{{item.brand}}','{{item.vendor}}','{{item.local}}','{{item.localDescription}}','{{item.fair}}','{{item.fairDescription}}','{{item.ecological}}','{{item.ecologicalDescription}}','{{item.humane}}','{{item.humaneDescription}}','{{item.disqualifier}}','{{item.disqualifierDescription}}','{{item.notes}}')">ADD</button></td>
 	<td onclick="populateForm('description','{{item.description}}')"> {{item.description}} </td>
     <td onclick="populateForm('category','{{item.category}}')"> {{item.category}} </td>
     <td onclick="populateForm('productCode','{{item.productCode}}')"> {{item.productCode}} </td>
@@ -280,5 +297,5 @@
     </table>
 
 </body>
-p
+
 </html>
