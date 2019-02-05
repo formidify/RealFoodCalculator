@@ -150,6 +150,7 @@ getData.done(function(results) {
         options: {
           title: {
               display: true,
+              position: 'bottom',
               text: yr
           }
       }
@@ -181,6 +182,7 @@ getData.done(function(results) {
         options: {
           title: {
               display: true,
+              position: 'bottom',
               text: yr
           }
       }
@@ -212,6 +214,7 @@ getData.done(function(results) {
         options: {
           title: {
               display: true,
+              position: 'bottom',
               text: yr
           }
       }
@@ -243,13 +246,14 @@ getData.done(function(results) {
         options: {
           title: {
               display: true,
+              position: 'bottom',
               text: yr
           }
       }
     });
 })
 
-var barData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/bar_data/produce')
+var barData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/bar_data/produce+total')
 var myBarChart;
 
 barData.done(function(results) {
@@ -295,7 +299,11 @@ barData.done(function(results) {
               }],
               yAxes: [{
                   stacked: true
-              }]
+              }],
+              title: {
+              display: true,
+              text: "Purchase for total produce"
+          }
           }
       }
   });
@@ -337,6 +345,22 @@ function updateChart(cat, yr){
   };
 
   myBarChart.data = data;
+  myBarChart.options = 
+        {
+          scales: {
+              xAxes: [{
+                  stacked: true
+              }],
+              yAxes: [{
+                  stacked: true
+              }],
+              title: {
+              display: true,
+              position: 'bottom',
+              text: "Purchase for " + yr + " " + cat
+          }
+          }
+      }
   myBarChart.update();
     })
 }
