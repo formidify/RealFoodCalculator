@@ -107,6 +107,7 @@ var getData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/pie
 var init;
 
 getData.done(function(results) {
+    years = results.labels
     // year 1
     yr = years[0]
     result = results.yr
