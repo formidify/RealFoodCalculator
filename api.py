@@ -212,6 +212,8 @@ def get_pie_data():
 
     query = """SELECT trim(category), SUM(cost) AS c_cost FROM test_data_large GROUP BY trim(category) ORDER BY trim(category) DESC;"""
 
+    # make sure we pick most recent years of ascending order TODO
+
     # DELETE later!
     if len(yrs) < 3:
         yrs.append('2016')
