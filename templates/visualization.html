@@ -345,21 +345,7 @@ function updateChart(cat, yr){
   };
 
   myBarChart.data = data;
-  myBarChart.options = 
-        {
-          scales: {
-              xAxes: [{
-                  stacked: true
-              }],
-              yAxes: [{
-                  stacked: true
-              }]},
-              title: {
-              display: true,
-              position: 'bottom',
-              text: "Purchase for " + yr + " " + cat
-          }
-      };
+  myBarChart.options.title.text = "Purchase for " + yr + " " + cat;
 
   myBarChart.update();
     })
