@@ -209,7 +209,7 @@ def get_pie_data():
             print(e)
         connection.close()
 
-
+    
     query = """SELECT trim(category), SUM(cost) AS c_cost FROM test_data_large GROUP BY trim(category) ORDER BY c_cost DESC;"""
 
     for i in range(3): # 3 most recent years
