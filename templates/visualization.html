@@ -90,6 +90,9 @@
  <div id="canvas-holder" style="width:50%;float: left;" \
  class="col-xs-6">
 <canvas id="percentChart1" style="float: left; display: block; height: 75px; width: 75px;"></canvas></div>
+<canvas id="percentChart3" style="float: left; display: block; height: 75px; width: 75px;"></canvas></div>
+<canvas id="percentChart4" style="float: left; display: block; height: 75px; width: 75px;"></canvas></div>
+<canvas id="percentChart5" style="float: left; display: block; height: 75px; width: 75px;"></canvas></div>
 <div id="canvas-holder" style="width:50%;float: right;" \
  class="col-xs-6">
 <canvas id="percentChart2" style="float: right; display: block; height: 300px; width: 300px;"></canvas></div>
@@ -104,34 +107,128 @@ var getData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/pie
 var init;
 
 getData.done(function(results) {
-  data = {
-      datasets: [{
-          data: results.data,
-          backgroundColor: palette('tol', results.data.length).map(function(hex) {
-          return '#' + hex;
-        })
-      }],
+    // year 1
+    yr = years[0]
+    result = results.yr
+    data = {
+        datasets: [{
+            data: result.data,
+            backgroundColor: palette('tol', result.data.length).map(function(hex) {
+            return '#' + hex;
+          })
+        }],
 
-      // These labels appear in the legend and in the tooltips when hovering different arcs
-      labels: results.labels,
-      options: {
-          responsive: true
-      }
-  };
+        // These labels appear in the legend and in the tooltips when hovering different arcs
+        labels: result.labels,
+        options: {
+            responsive: true
+        }
+    };
 
-  // initial data 
-  init = results.labels[0]
-  var ctx1 = document.getElementById("percentChart1").getContext('2d');
-  myPieChart = new Chart(ctx1, {
-      type: 'pie',
-      data: data ,
-      title: {
-              display: true,
-              text: '2016' // by year
-          }
-  });
-  ctx1.canvas.width = 300;
-  ctx1.canvas.height = 300;
+    var ctx1 = document.getElementById("percentChart1").getContext('2d');
+    myPieChart1 = new Chart(ctx1, {
+        type: 'pie',
+        data: data ,
+        title: {
+                display: true,
+                text: yr // by year
+            }
+    });
+    ctx1.canvas.width = 300;
+    ctx1.canvas.height = 300;
+
+
+    // year 2
+    yr = years[1]
+    result = results.yr
+    data = {
+        datasets: [{
+            data: result.data,
+            backgroundColor: palette('tol', result.data.length).map(function(hex) {
+            return '#' + hex;
+          })
+        }],
+
+        // These labels appear in the legend and in the tooltips when hovering different arcs
+        labels: result.labels,
+        options: {
+            responsive: true
+        }
+    };
+
+    var ctx6 = document.getElementById("percentChart3").getContext('2d');
+    myPieChart2 = new Chart(ctx6, {
+        type: 'pie',
+        data: data ,
+        title: {
+                display: true,
+                text: yr // by year
+            }
+    });
+    ctx6.canvas.width = 300;
+    ctx6.canvas.height = 300;
+
+
+    // year 3
+    yr = years[2]
+    result = results.yr
+    data = {
+        datasets: [{
+            data: result.data,
+            backgroundColor: palette('tol', result.data.length).map(function(hex) {
+            return '#' + hex;
+          })
+        }],
+
+        // These labels appear in the legend and in the tooltips when hovering different arcs
+        labels: result.labels,
+        options: {
+            responsive: true
+        }
+    };
+
+    var ctx7 = document.getElementById("percentChart4").getContext('2d');
+    myPieChart3 = new Chart(ctx7, {
+        type: 'pie',
+        data: data ,
+        title: {
+                display: true,
+                text: yr // by year
+            }
+    });
+    ctx7.canvas.width = 300;
+    ctx7.canvas.height = 300;
+
+
+    // total
+    yr = years[3]
+    result = results.total
+    data = {
+        datasets: [{
+            data: result.data,
+            backgroundColor: palette('tol', result.data.length).map(function(hex) {
+            return '#' + hex;
+          })
+        }],
+
+        // These labels appear in the legend and in the tooltips when hovering different arcs
+        labels: result.labels,
+        options: {
+            responsive: true
+        }
+    };
+
+    var ctx8 = document.getElementById("percentChart5").getContext('2d');
+    myPieChart4 = new Chart(ctx8, {
+        type: 'pie',
+        data: data ,
+        title: {
+                display: true,
+                text: yr // by year
+            }
+    });
+    ctx8.canvas.width = 300;
+    ctx8.canvas.height = 300;
 })
 
 var barData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/bar_data/produce')
@@ -189,8 +286,8 @@ barData.done(function(results) {
 })
 
 // update bar chart
-function updateChart(cat){
-  var updatedData = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/bar_data/" + cat);
+function updateChart(cat, yr){
+  var updatedData = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/bar_data/" + cat + "+" yr);
   updatedData.done(function(results) {
   var real_color = Array(results.items.length).fill('rgba(255, 99, 132, 0.2)')
   var nonreal_color = Array(results.items.length).fill('rgba(255, 159, 64, 0.2)')
@@ -228,7 +325,7 @@ function updateChart(cat){
 
 document.getElementById("percentChart1").onclick = function(evt)
 {   
-    var activePoints = myPieChart.getElementsAtEvent(evt);
+    var activePoints = myPieChart1.getElementsAtEvent(evt);
 
     if(activePoints.length > 0)
     {
@@ -236,12 +333,77 @@ document.getElementById("percentChart1").onclick = function(evt)
       var clickedElementindex = activePoints[0]["_index"];
 
       //get specific label by index 
-      var label = myPieChart.data.labels[clickedElementindex];
+      var label = myPieChart1.data.labels[clickedElementindex];
 
       //get value by index      
-      var value = myPieChart.data.datasets[0].data[clickedElementindex];
+      var value = myPieChart1.data.datasets[0].data[clickedElementindex];
 
-      updateChart(label);
+      var year = myPieChart1.title.text
+
+      updateChart(label, year);
+   }
+}
+
+document.getElementById("percentChart3").onclick = function(evt)
+{   
+    var activePoints = myPieChart2.getElementsAtEvent(evt);
+
+    if(activePoints.length > 0)
+    {
+      //get the internal index of slice in pie chart
+      var clickedElementindex = activePoints[0]["_index"];
+
+      //get specific label by index 
+      var label = myPieChart2.data.labels[clickedElementindex];
+
+      //get value by index      
+      var value = myPieChart2.data.datasets[0].data[clickedElementindex];
+
+      var year = myPieChart2.title.text
+
+      updateChart(label, year);
+   }
+}
+
+document.getElementById("percentChart4").onclick = function(evt)
+{   
+    var activePoints = myPieChart3.getElementsAtEvent(evt);
+
+    if(activePoints.length > 0)
+    {
+      //get the internal index of slice in pie chart
+      var clickedElementindex = activePoints[0]["_index"];
+
+      //get specific label by index 
+      var label = myPieChart3.data.labels[clickedElementindex];
+
+      //get value by index      
+      var value = myPieChart3.data.datasets[0].data[clickedElementindex];
+
+      var year = myPieChart3.title.text
+
+      updateChart(label, year);
+   }
+}
+
+document.getElementById("percentChart5").onclick = function(evt)
+{   
+    var activePoints = myPieChart4.getElementsAtEvent(evt);
+
+    if(activePoints.length > 0)
+    {
+      //get the internal index of slice in pie chart
+      var clickedElementindex = activePoints[0]["_index"];
+
+      //get specific label by index 
+      var label = myPieChart4.data.labels[clickedElementindex];
+
+      //get value by index      
+      var value = myPieChart4.data.datasets[0].data[clickedElementindex];
+
+      var year = myPieChart4.title.text
+
+      updateChart(label, year);
    }
 }
 

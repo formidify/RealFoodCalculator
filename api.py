@@ -191,38 +191,75 @@ def get_products():
 # get pie chart data for vis page (for 3 most recent years plus in total)
 @app.route("/visualization/pie_data")
 def get_pie_data():
+    dic = {}
+
     data = []
     labels = []
-    query = """SELECT trim(category), SUM(cost) AS c_cost FROM test_data_large GROUP BY trim(category) ORDER BY c_cost DESC;"""
+    yrs = []
 
-    # currently not in use
-    query_by_year = """SELECT year, trim(category), SUM(cost) AS c_cost FROM test_data_large GROUP BY trim(category),year ORDER BY c_cost DESC;"""
+    yr_query = """SELECT DISTINCT ON (year) year FROM test_data_large ORDER BY year DESC;"""
 
-    # todo: query should also take account of the years
     connection = get_connection()
     if connection is not None:
         try:
             # either this or minimum items allowed to show
-            for row in get_select_query_results(connection, query):
-                labels.append(row[0])
-                data.append(row[1])
+            for row in get_select_query_results(connection, yr_query):
+                yrs.append(row[0])
         except Exception as e:
             print(e)
         connection.close()
 
-    return flask.jsonify({"data": data, "labels": labels})
+
+    query = """SELECT trim(category), SUM(cost) AS c_cost FROM test_data_large GROUP BY trim(category) ORDER BY c_cost DESC;"""
+
+    for i in range(3): # 3 most recent years
+
+        query_by_year = """SELECT trim(category), SUM(cost) AS c_cost FROM test_data_large WHERE year = {1} GROUP BY trim(category) ORDER BY c_cost DESC;""".format(yrs[i])
+        connection = get_connection()
+        if connection is not None:
+            try:
+                # either this or minimum items allowed to show
+                for row in get_select_query_results(connection, query_by_year):
+                    labels.append(row[0])
+                    data.append(row[1])
+            except Exception as e:
+                print(e)
+            connection.close()
+        dic[str(yrs[i])] = {"data": data, "labels": labels}
+        # reset for other years
+        data = []
+        labels = []
+
+    # get data for all years
+    connection = get_connection()
+        if connection is not None:
+            try:
+                # either this or minimum items allowed to show
+                for row in get_select_query_results(connection, query):
+                    labels.append(row[0])
+                    data.append(row[1])
+            except Exception as e:
+                print(e)
+            connection.close()
+    dic['total'] = {"data": data, "labels": labels}
+    dic['labels'] = yrs + ['total'] # add labels to the dictionary
+
+    return flask.jsonify(dic)
 
 
 # get bar data for vis page
-@app.route("/visualization/bar_data", defaults = {'cat': 'produce'})
-@app.route("/visualization/bar_data/<cat>")
-def get_bar_data(cat):
+@app.route("/visualization/bar_data", defaults = {'cat': 'produce', 'yr': 'total'})
+@app.route("/visualization/bar_data/<cat>+<yr>")
+def get_bar_data(cat, yr):
     items = []
     real = []
     nonreal = []
     print(cat)
     # not filtered by year
-    query = """SELECT COALESCE(Z.description, B.description) AS description, COALESCE(Z.real, 0) AS real, COALESCE(B.nonreal, 0) AS nonreal FROM (SELECT description, SUM(cost) AS real FROM test_data_large WHERE category = '{0}' AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't') GROUP BY description) Z FULL OUTER JOIN (SELECT description, SUM(cost) AS nonreal FROM test_data_large WHERE category = '{1}' AND local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't' GROUP BY description) B ON Z.description = B.description ORDER BY real desc;""".format(cat, cat)
+    if yr == 'total':
+        query = """SELECT COALESCE(Z.description, B.description) AS description, COALESCE(Z.real, 0) AS real, COALESCE(B.nonreal, 0) AS nonreal FROM (SELECT description, SUM(cost) AS real FROM test_data_large WHERE category = '{0}' AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't') GROUP BY description) Z FULL OUTER JOIN (SELECT description, SUM(cost) AS nonreal FROM test_data_large WHERE category = '{1}' AND local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't' GROUP BY description) B ON Z.description = B.description ORDER BY real desc;""".format(cat, cat)
+    else:
+        query = """SELECT COALESCE(Z.description, B.description) AS description, COALESCE(Z.real, 0) AS real, COALESCE(B.nonreal, 0) AS nonreal FROM (SELECT description, SUM(cost) AS real FROM test_data_large WHERE year = '{0}' AND category = '{1}' AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't') GROUP BY description) Z FULL OUTER JOIN (SELECT description, SUM(cost) AS nonreal FROM test_data_large WHERE year = '{2}' AND category = '{3}' AND local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't' GROUP BY description) B ON Z.description = B.description ORDER BY real desc;""".format(yr, cat, yr, cat)
     print(query)
 
     # todo: query should also take account of the years
