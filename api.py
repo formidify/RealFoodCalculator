@@ -219,7 +219,7 @@ def get_pie_data():
 
     for i in range(3): # 3 most recent years
 
-        query_by_year = """SELECT trim(category), SUM(cost) AS c_cost FROM test_data_large WHERE year = {1} GROUP BY trim(category) ORDER BY c_cost DESC;""".format(yrs[i])
+        query_by_year = """SELECT trim(category), SUM(cost) AS c_cost FROM test_data_large WHERE year = {0} GROUP BY trim(category) ORDER BY c_cost DESC;""".format(yrs[i])
         connection = get_connection()
         if connection is not None:
             try:
