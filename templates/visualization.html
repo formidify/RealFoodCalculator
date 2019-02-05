@@ -9,7 +9,9 @@
         <script src="https://codepen.io/anon/pen/aWapBE.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <!--         <meta content="width=device-width, initial-scale=1" name="viewport"> -->
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}" />
+        <!--<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}" />-->
+        <link rel="stylesheet" type="text/css" href="../static/styles.css" />
+        <script type="text/javascript" src="../static/example.js" defer></script>
     </head>
 <body>
 
@@ -79,7 +81,7 @@
 </div>
 
 <div>
-<form> 
+<form>
     <label for="add">Add item:</label>
     <input id="add" type="text" name="text">
     <input type="submit" value="Search">
@@ -119,7 +121,7 @@ getData.done(function(results) {
       }
   };
 
-  // initial data 
+  // initial data
   init = results.labels[0]
   var ctx1 = document.getElementById("percentChart1").getContext('2d');
   myPieChart = new Chart(ctx1, {
@@ -227,7 +229,7 @@ function updateChart(cat){
 }
 
 document.getElementById("percentChart1").onclick = function(evt)
-{   
+{
     var activePoints = myPieChart.getElementsAtEvent(evt);
 
     if(activePoints.length > 0)
@@ -235,10 +237,10 @@ document.getElementById("percentChart1").onclick = function(evt)
       //get the internal index of slice in pie chart
       var clickedElementindex = activePoints[0]["_index"];
 
-      //get specific label by index 
+      //get specific label by index
       var label = myPieChart.data.labels[clickedElementindex];
 
-      //get value by index      
+      //get value by index
       var value = myPieChart.data.datasets[0].data[clickedElementindex];
 
       updateChart(label);
@@ -426,7 +428,7 @@ ctx4.canvas.height = 300;
   <option value="10">Total</option>
 </select>
 <div id="chart-legends"></div>
-<canvas id="timeSeriesChart" style="display: block; width: 80%;"></canvas> 
+<canvas id="timeSeriesChart" style="display: block; width: 80%;"></canvas>
 <script>
 Chart.defaults.global.plugins.datalabels.display = false
 // insert data into the chart object
@@ -471,7 +473,7 @@ var ctx5 = document.getElementById("timeSeriesChart").getContext('2d');
 myLineChart = new Chart(ctx5, {
     type: 'line',
     data: lineChartData,
-    options: {scales: {yAxes:[{scaleLabel: {display: true, labelString: "Dollar purchases ($)"}}]}, 
+    options: {scales: {yAxes:[{scaleLabel: {display: true, labelString: "Dollar purchases ($)"}}]},
               legend: {
                 display: true,
                 fill: false
@@ -489,7 +491,7 @@ myLineChart = new Chart(ctx5, {
                 text.push(items[i]);
                 text.push('</li>');
               }
-              
+
               /*text.push('</ul>');
               // legend for line dash
               text.push('<ul class="' + chart.id + '-legend2">');

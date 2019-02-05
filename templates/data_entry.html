@@ -5,18 +5,18 @@
         <title>data-entry</title>
         <meta charset="utf-8">
         <meta content="width=device-width, initial-scale=1" name="viewport">
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}" />
+        <!--<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}" />-->
         <script>
 
-            
+
     function toggleCheckbox(item){
          console.log("hi we're here");
          var inputID = item.id;
          console.log(inputID);
-        
+
          if (typeof(Storage) !== "undefined") {
               if (!document.getElementById(inputID).checked){
-                  //this may be backwards!! 
+                  //this may be backwards!!
                  sessionStorage.removeItem(inputID.slice(0, -6));
                  console.log("its gone!");
                 }
@@ -31,7 +31,7 @@
             document.getElementById("result").innerHTML = "Sorry, your browser does not support web storage...";
          }
     }
-            
+
     function clearFields(){
         //bug is that if checkbox is already clicked and user changes value in input the old value (that existed
         //when the checkbox was originally clicked) resurfaces once form is cleared
@@ -40,18 +40,18 @@
 
         console.log("clearing/submitting...");
       //  document.getElementById("data-entry-form").reset();
-        
+
         var inputs = document.querySelectorAll('input[type=text]');
         //apparently this only works on newer broswers- will this be a problem?
-        
+
         var numInputs = document.querySelectorAll('input[type=number]');
         console.log(numInputs);
         numInputs[0].value = '';
-        
+
         var categoryInputs = document.querySelectorAll('[name=category]');
-        
+
         var radioInputs = document.querySelectorAll('[type=radio]');
- 
+
         if (sessionStorage.category && (document.getElementById('category-check').checked)){
         //instead of loading from session storage, load the value that is in the field currently
             categoryInputs[0].value = sessionStorage.category;
@@ -59,29 +59,29 @@
         else{
             categoryInputs[0].value = '%';
         }
-     
-        
+
+
         for(var i = 0; i < inputs.length; i++) {
             console.log(inputs[i]);
-            
+
             inputID = inputs[i].id;
-            //set vendor to thing in session storage 
+            //set vendor to thing in session storage
             console.log(sessionStorage[inputID]);
-            
+
             //finds fields with defined session storage to repopulate fields (based on id tags)
             if (sessionStorage[inputID]) {
                 console.log('made it alllthewayhere')
                 var vendorValue = sessionStorage.getItem(inputID);
-                
+
                 if (document.getElementById(inputID + '-check').checked){
-                
+
                 document.getElementById(inputID).value = vendorValue;
                 }
                 else{
-                    
+
                     inputs[i].value = '';
                     sessionStorage.removeItem(inputID);
-                    
+
                 }
             }
             else {
@@ -120,6 +120,8 @@
        document.getElementById(dataLabel).value = row;
     }
 </script>
+<link rel="stylesheet" type="text/css" href="../static/styles.css" />
+<script type="text/javascript" src="../static/example.js" defer></script>
     </head>
 <body>
     <h1>Real Food Calculator</h1>
@@ -161,10 +163,10 @@
                   <input id="category-check" name="category-keep" type="checkbox" onclick="toggleCheckbox(this)">
         </div>
         <div>
-          
+
             <label for="vendor">Vendor</label>
             <input id="vendor" name="vendor" type="text">
-     
+
             <input id="vendor-check" name="vendor-keep" type="checkbox" onclick="toggleCheckbox(this)">
         </div>
         <div>
@@ -201,10 +203,10 @@
                 <input id="local-true" name="local" type="radio" value="on">Local</label>
             <label class="radio" for="local">
                 <input id="local-false" name="local" type="radio" value="off" checked>Not Local</label>
-                
+
             <input id="localDescription" name="localDescription" type="text" placeholder="local notes">
             <input id="local-check" name="local-keep" type="checkbox" onclick="toggleCheckbox(this)">
-            </div> 
+            </div>
 
             <div class="control">
             <label class="radio" for="fair">
@@ -248,10 +250,10 @@
 
         </fieldset>
         <button type="submit">Search</button>
-       
+
     </form>
     <button type="button" id="clear-submit" onclick="clearFields()">Submit</button>
-    
+
     <h3>Past Entries</h3>
     <table>
 	<tr>

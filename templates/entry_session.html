@@ -5,7 +5,9 @@
     <title> Entry Session</title>
    <!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}" />-->
    <!-- <script type="text/javascript" src="{{ url_for('static', filename='example.js') }}" defer></script> -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+   <link rel="stylesheet" type="text/css" href="../static/styles.css" />
+   <script type="text/javascript" src="../static/example.js" defer></script>
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 </head>
 
 <body>
@@ -111,7 +113,7 @@
             <th></th>
         </tr>
         <tbody>
-            enter items here 
+            enter items here
             <td>Sysco</td>
             <td>Apple</td>
             <td>Produce</td>
@@ -125,12 +127,12 @@
             <td>Produce</td>
             <td>Local</td>
             <td>3/1/19</td>
-          <td>  <button class="button2">Edit</button> </td> 
+          <td>  <button class="button2">Edit</button> </td>
         </tbody>
 
     </table>
 -->
-    
+
     <div class="row">
     <div class="col-md-4 col-md-offset-4">
         <div class="form-group">
@@ -172,12 +174,12 @@
 
    <!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>-->
     <script type="text/javascript">
-        //info from https://stackoverflow.com/questions/28206654/saving-table-data-to-html5-localstorage and 
+        //info from https://stackoverflow.com/questions/28206654/saving-table-data-to-html5-localstorage and
         //https://stackoverflow.com/questions/47559534/how-to-put-json-data-into-html-table
         function MemberInfo(fName,lName,memberId){
                 this.FirstName=fName;
                 this.LastName=lName;
-                this.MemberId=memberId;    
+                this.MemberId=memberId;
                 }
 
         $('#save').click(function () {
@@ -197,7 +199,7 @@
               $('#lName').val('');
               $('#mId').val('');
 
-            var arr=[];  
+            var arr=[];
 
             $("#dataTable").find('tbody tr').each(function(index,item){
 
@@ -213,10 +215,10 @@
 
         $('#loadBtn').on('click', function() {
             console.log('Here');
-           // document.getElementById("result").innerHTML = localStorage.lastname;   
-            
+           // document.getElementById("result").innerHTML = localStorage.lastname;
+
             var jsonData = JSON.parse(localStorage.memberData);
-            
+
             for (var i = 0; i < jsonData.length; i++) {
             //Insert data into HTML table here...
                 var jsonObj = jsonData[i];
@@ -232,11 +234,11 @@
                 $tr.append($Lname);
                 $tr.append($occupation);
                 $('#dataTable').append($tr);
-                }   
+                }
         });
-        
-        
-        
+
+
+
 //        <table border = 1>
 //         {% for key, value in result.items() %}
 //            <tr>
@@ -245,16 +247,16 @@
 //            </tr>
 //         {% endfor %}
 //      </table>
-        
-        
-//        
+
+
+//
 //        function MemberInfo(fName,lName,memberId){
 //            this.FirstName=fname;
 //            this.LastName=lName;
-//            this.MemberId=memberId;    
+//            this.MemberId=memberId;
 //            }
-//        
-//        var arr=[];    
+//
+//        var arr=[];
 //            $("#dataTable").find('tbody tr').each(function(index,item){
 //                var fName=$(item).find('td').eq(0).text();
 //                var lName=$(item).find('td').eq(1).text();
@@ -266,27 +268,27 @@
 //
 //
 //    localStorage.setItem("memberData",arr);
-        
+
 //        var tableDataArray = [];
 //        var inputs = $("tr").children('input').val();
 //        $.each(inputs, function(index, i){
 //
 //            myArray.push(i.value);
-//            
+//
 //        });
 //
 //        ('body').append(tableDataArray);
 //        localStorage.setItem("info", JSON.stringify(tableDataArray));
-    
+
     </script>
     <p></p>
 
     <p></p>
 
-    
+
     <button class="button4">Cancel Session</button>
     <!--<button class="button3 btn btn-default" id="loadBtn">Submit All</button>-->
-   
+
 
 
 </body>

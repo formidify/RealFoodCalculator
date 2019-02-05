@@ -2,9 +2,9 @@
     api.py
     Chae Kim, Syd Botz, Claudia Naughton, Bryce Barton, James Yang
 
-TO DO: 
-- make a separate config.py file for password security 
-- change table from "test_data" to other name  
+TO DO:
+- make a separate config.py file for password security
+- change table from "test_data" to other name
 '''
 from flask import Flask, render_template
 import sys
@@ -89,26 +89,26 @@ def get_products():
         month = "test_data_large.month = " + month + " AND test_data_large.year = " + year + " AND "
     if local == "on":
         local = "AND test_data_large.local = TRUE"
-    else: 
+    else:
         local = ""
-    if fair == "on": 
+    if fair == "on":
         fair = "AND test_data_large.fair = TRUE"
-    else: 
+    else:
         fair = ""
     if ecological == "on":
         ecological = "AND test_data_large.ecological = TRUE"
-    else: 
+    else:
         ecological = ""
     if humane == "on":
         humane = "AND test_data_large.humane = TRUE"
     elif humane == "none":
         humane = "AND test_data_large.humane IS NULL"
-    else: 
+    else:
         humane = "AND test_data_large.humane = FALSE"
     if disqualifier == "on":
         disqualifier = "AND test_data_large.disqualifier = TRUE"
-    else: 
-       disqualifier = "" 
+    else:
+       disqualifier = ""
 
 
     query = """

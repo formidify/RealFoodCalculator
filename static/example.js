@@ -6,74 +6,125 @@ initialize();
 
 function initialize() {
 
-  // recognizes buttons, assigns functions for each button click
-  var home_btn = document.getElementById('home_btn');
-  home_btn.onclick = function() {
-    go_to_home();
+  var logged_in = sessionStorage.getItem("logged_in");
+  console.log(logged_in);
+  if (logged_in == null) {logged_in = false;}
+  if (!window.location.href.includes("/login") && !(logged_in)){
+    console.log("Getting false in line 15")
+    redirect_to_login();
   }
 
-  var data_entry_btn = document.getElementById('data_entry_btn');
-  data_entry_btn.onclick = function() {
-    go_to_data_entry();
-  }
+  if (window.location.href.includes("/login")){
+    // recognizes buttons, assigns functions for each button click
+    var login_btn = document.getElementById('login_btn');
+    login_btn.onclick = function() {
+      var inputID = document.getElementById('id_bar').value;
+      var inputPW = document.getElementById('pw_bar').value;
+      if (confirm_credentials(inputID, inputPW)){
+        login();
+        console.log("Getting into the login if at least");
+        go_to_home();
+        console.log("WHY IS THIS NOT WORKING?2?@?@?");
+        //redirect_to_home();
+      }
+      else{
+        try_again();
+      }
+    }
+  } else {
+    // recognizes buttons, assigns functions for each button click
+    var home_btn = document.getElementById('home_btn');
+    home_btn.onclick = function() {
+      go_to_home();
+    }
 
-  var entry_session_btn = document.getElementById('entry_session_btn');
-  entry_session_btn.onclick = function() {
-    go_to_entry_session();
-  }
+    var data_entry_btn = document.getElementById('data_entry_btn');
+    data_entry_btn.onclick = function() {
+      go_to_data_entry();
+    }
 
-  var view_download_btn = document.getElementById('view_download_btn');
-  view_download_btn.onclick = function () {
-    go_to_view_download();
-  }
+    var entry_session_btn = document.getElementById('entry_session_btn');
+    entry_session_btn.onclick = function() {
+      go_to_entry_session();
+    }
 
-  var visualization_btn = document.getElementById('visualization_btn');
-  visualization_btn.onclick = function () {
-    go_to_visualization();
-  }
+    var view_download_btn = document.getElementById('view_download_btn');
+    view_download_btn.onclick = function () {
+      go_to_view_download();
+    }
 
+    var visualization_btn = document.getElementById('visualization_btn');
+    visualization_btn.onclick = function () {
+      go_to_visualization();
+    }
+  }
+}
 
   //BUTTON FUCTIONS
 
-  function go_to_home() {
-    console.log("Recognizing home button");
-    document.location.href = (getBaseWebURL() + "/");
+function go_to_home() {
+  console.log("Recognizing home button");
+  document.location.href = (getBaseWebURL() + "/");
+}
+
+function go_to_data_entry(){
+  console.log("Recognizing data entry button");
+  document.location.href = (getBaseWebURL() + "/data_entry");
+}
+
+function go_to_entry_session(){
+  console.log("Recognizing entry session button");
+  document.location.href = (getBaseWebURL() + "/entry_session");
+}
+
+function go_to_view_download() {
+  console.log("Recognizing view download button");
+  document.location.href = (getBaseWebURL() + "/view_download");
+}
+
+function go_to_visualization() {
+  console.log("Recognizing visualization button");
+  document.location.href = (getBaseWebURL() + "/visualization");
+}
+
+function confirm_credentials(inputID, inputPW) {
+  // TODO un-hard code this
+  var userID = "RealFoodCalc2019";
+  var userPW = "REALLYYUMMY";
+  if (inputID==userID && inputPW==userPW){
+   return true;
   }
+ return false;
+}
 
-  function go_to_data_entry(){
-    console.log("Recognizing data entry button");
-    document.location.href = (getBaseWebURL() + "/data_entry");
-  }
+function try_again(){
+  // TODO output console message onto screen so normal users can see
+  console.log("Incorrect credentials, try again.");
+  window.location.reload();
+}
 
-  function go_to_entry_session(){
-    console.log("Recognizing entry session button");
-    document.location.href = (getBaseWebURL() + "/entry_session");
-  }
+function login(){
+  // TODO maybe look into localstorage if sessionstorage causes bugs.
+  sessionStorage.setItem("logged_in",true);
+  logged_in = true;
+  console.log(logged_in);
+}
 
-  function go_to_view_download() {
-    console.log("Recognizing view download button");
-    document.location.href = (getBaseWebURL() + "/view_download");
-  }
+function redirect_to_login(){
+  console.log("Redirecting to log in page")
+  document.location.href=(getBaseWebURL() + "/login");
+}
 
-  function go_to_visualization() {
-    console.log("Recognizing visualization button");
-    document.location.href = (getBaseWebURL() + "/visualization");
-  }
+function getBaseApiURL() {
+  var baseURL = window.location.protocol + '//' + window.location.hostname + ':' + api_port;
+  //console.log(baseURL);
+  return baseURL;
+}
 
-
-  // WILL PROBABLY NEED LATER
-
-  function getBaseApiURL() {
-    var baseURL = window.location.protocol + '//' + window.location.hostname + ':' + api_port;
-    console.log(baseURL);
-    return baseURL;
-  }
-
-  function getBaseWebURL() {
-      var baseWebURL = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port;
-      console.log(baseWebURL);
-      return baseWebURL;
-  }
+function getBaseWebURL() {
+  var baseWebURL = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port;
+  //console.log(baseWebURL);
+  return baseWebURL;
 }
 
   /*

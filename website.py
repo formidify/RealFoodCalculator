@@ -17,7 +17,7 @@ def homepage():
 
 @app.route('/login')
 def login():
-    return render_template("login_draft.html")
+    return render_template("login.html")
 
 @app.route('/example')
 def example():
@@ -78,4 +78,5 @@ if __name__ == '__main__':
 #
     host = 'cmc307-06.mathcs.carleton.edu'
 #    port = int(sys.argv[2])
-    app.run(host= host, port=2019, debug=True)
+#   PUT LOCALHOST HERE FOR TESTING - CHAE
+    app.run(host="localhost", port=2019, debug=True)
