@@ -209,8 +209,13 @@ def get_pie_data():
             print(e)
         connection.close()
 
-    
+
     query = """SELECT trim(category), SUM(cost) AS c_cost FROM test_data_large GROUP BY trim(category) ORDER BY c_cost DESC;"""
+
+    # DELETE later!
+    if len(yrs) < 3:
+        yrs.append('2016')
+
 
     for i in range(3): # 3 most recent years
 
