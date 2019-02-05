@@ -232,15 +232,15 @@ def get_pie_data():
 
     # get data for all years
     connection = get_connection()
-        if connection is not None:
-            try:
-                # either this or minimum items allowed to show
-                for row in get_select_query_results(connection, query):
-                    labels.append(row[0])
-                    data.append(row[1])
-            except Exception as e:
-                print(e)
-            connection.close()
+    if connection is not None:
+        try:
+            # either this or minimum items allowed to show
+            for row in get_select_query_results(connection, query):
+                labels.append(row[0])
+                data.append(row[1])
+        except Exception as e:
+            print(e)
+        connection.close()
     dic['total'] = {"data": data, "labels": labels}
     dic['labels'] = yrs + ['total'] # add labels to the dictionary
 
