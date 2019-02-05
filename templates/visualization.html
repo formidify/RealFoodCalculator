@@ -299,12 +299,12 @@ barData.done(function(results) {
               }],
               yAxes: [{
                   stacked: true
-              }],
+              }]}
               title: {
               display: true,
               text: "Purchase for total produce"
           }
-          }
+          
       }
   });
   ctx2.canvas.width = 300;
@@ -353,14 +353,14 @@ function updateChart(cat, yr){
               }],
               yAxes: [{
                   stacked: true
-              }],
+              }]},
               title: {
               display: true,
               position: 'bottom',
               text: "Purchase for " + yr + " " + cat
           }
-          }
-      }
+      };
+  
   myBarChart.update();
     })
 }
