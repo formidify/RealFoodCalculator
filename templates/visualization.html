@@ -110,7 +110,7 @@ getData.done(function(results) {
     years = results.labels
     // year 1
     yr = years[0]
-    result = results.yr
+    result = results[yr]
     data = {
         datasets: [{
             data: result.data,
@@ -141,7 +141,7 @@ getData.done(function(results) {
 
     // year 2
     yr = years[1]
-    result = results.yr
+    result = results[yr]
     data = {
         datasets: [{
             data: result.data,
@@ -172,7 +172,7 @@ getData.done(function(results) {
 
     // year 3
     yr = years[2]
-    result = results.yr
+    result = results[yr]
     data = {
         datasets: [{
             data: result.data,
