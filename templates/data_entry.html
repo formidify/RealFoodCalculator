@@ -7,12 +7,16 @@
         <meta content="width=device-width, initial-scale=1" name="viewport">
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}" />
         <script>
-
+            
+            
+    localStorage["foodData"] = [];
+    //every time this page is reloaded foodData will be cleared
             
     function toggleCheckbox(item){
          console.log("hi we're here");
          var inputID = item.id;
          console.log(inputID);
+
         
          if (typeof(Storage) !== "undefined") {
               if (!document.getElementById(inputID).checked){
@@ -25,6 +29,8 @@
                 var thisInput = document.getElementById(inputID.slice(0, -6));
                 console.log(thisInput.value);
                 sessionStorage[inputID.slice(0, -6)] = thisInput.value;
+                
+                
             }
         }
          else {
@@ -32,11 +38,15 @@
          }
     }
             
-    function clearFields(){
+    function submit(){
         //bug is that if checkbox is already clicked and user changes value in input the old value (that existed
         //when the checkbox was originally clicked) resurfaces once form is cleared
         //--this could probably be fixed by just repopulating with what's in the input field instead of using session
         //storage at all...
+        
+        var thisEntry = [];
+        console.log(thisEntry);
+        
 
         console.log("clearing/submitting...");
       //  document.getElementById("data-entry-form").reset();
@@ -63,6 +73,7 @@
         
         for(var i = 0; i < inputs.length; i++) {
             console.log(inputs[i]);
+            thisEntry.push(inputs[i].value);
             
             inputID = inputs[i].id;
             //set vendor to thing in session storage 
@@ -72,6 +83,8 @@
             if (sessionStorage[inputID]) {
                 console.log('made it alllthewayhere')
                 var vendorValue = sessionStorage.getItem(inputID);
+                
+              
                 
                 if (document.getElementById(inputID + '-check').checked){
                 
@@ -89,7 +102,12 @@
                 inputs[i].value = '';
             }
         }
+        localStorage["foodData"] += "/" + JSON.stringify(thisEntry);
+        //added '/' to later split string up, is there a better way to do this?
     }
+            
+            
+            
     function populateItem(description, category,productCode, brand,vendor,local,localDescription, fair, fairDescription, ecological, ecologicalDescription, humane, humaneDescription, disqualifier,disqualfierDescription, notes){
       console.log("Description Param:", description);
       console.log("Category param:", category);
@@ -139,7 +157,7 @@
   -->
     <h2>Adding Items to October 2018 with Rating Version 2</h2>
     {%if clear%}
-    <script> clearFields(); </script>
+    <script> //clearFields(); </script>
     {%endif%}
     <form action = "http://cmc307-06.mathcs.carleton.edu:2019/data_entry" method = "POST" id = "data-entry-form">
         <fieldset>
@@ -250,7 +268,7 @@
         <button type="submit">Search</button>
        
     </form>
-    <button type="button" id="clear-submit" onclick="clearFields()">Submit</button>
+    <button type="button" id="clear-submit" onclick="submit()">Submit</button>
     
     <h3>Past Entries</h3>
     <table>
