@@ -1,28 +1,23 @@
-
-<html lang="en">
-  <head>
-  	<title>Real Food Calculator</title>
-    <meta name="google-signin-scope" content="profile email">
-    <meta name="google-signin-client_id" content="YOUR_CLIENT_ID.apps.googleusercontent.com">
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
-  </head>
-  <body>
-    <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
-    <script>
-      function onSignIn(googleUser) {
-        // Useful data for your client-side scripts:
-        var profile = googleUser.getBasicProfile();
-        console.log("ID: " + profile.getId()); // Don't send this directly to your server!
-        console.log('Full Name: ' + profile.getName());
-        console.log('Given Name: ' + profile.getGivenName());
-        console.log('Family Name: ' + profile.getFamilyName());
-        console.log("Image URL: " + profile.getImageUrl());
-        console.log("Email: " + profile.getEmail());
-
-        // The ID token you need to pass to your backend:
-        var id_token = googleUser.getAuthResponse().id_token;
-        console.log("ID Token: " + id_token);
-      }
-    </script>
-  </body>
+<html lang=eng>
+<head>
+  <title>RFC Login</title>
+  <link rel="stylesheet" type="text/css" href="../static/login_draft_style.css" />
+  <script type="text/javascript" src="../static/example.js" defer></script>
+</head>
+<body>
+  <div class="loginbox">
+    <img src="../static/login2.png" class="avatar">
+    <h1>Login Here</h1>
+    <form>
+      <p>Username</p>
+      <input type="text" name="" id="id_bar" placeholder="Enter Username">
+      <p>Password</p>
+      <input type="password" name="" id="pw_bar" placeholder="Enter Password">
+      <input type="button" name="" id="login_btn" value="Login"><br>
+      <br>
+      <a href="#">Lost your password?</a><br>
+      <a href="#">Don't have an account?</a>
+    </form>
+  </div>
+</body>
 </html>
