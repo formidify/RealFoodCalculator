@@ -99,42 +99,8 @@
 
 
     </div>
-<<<<<<< HEAD
-   <!--
-    <table id="dataTable">
-        <tr>
-            <th>Vendor</th>
-            <th>Desc.</th>
-            <th>Category</th>
-            <th>Real</th>
-            <th>Entry Date</th>
-            <th></th>
-        </tr>
-        <tbody>
-            enter items here
-            <td>Sysco</td>
-            <td>Apple</td>
-            <td>Produce</td>
-            <td>Organic</td>
-            <td>3/1/19</td>
-          <td>  <button class="button2">Edit</button> </td>
-        </tbody>
-        <tbody>
-            <td>Carleton Farm</td>
-            <td>Carrot</td>
-            <td>Produce</td>
-            <td>Local</td>
-            <td>3/1/19</td>
-          <td>  <button class="button2">Edit</button> </td>
-        </tbody>
 
-    </table>
--->
 
-=======
-
-    
->>>>>>> origin/master
     <div class="row">
 
         <div class="container">
@@ -151,10 +117,10 @@
                         <th>Fair Notes</th>
                         <th>Humane Notes</th>
                         <th>Disqualifier Notes</th>
-                        
+
                         </tr>
                 </thead>
-                
+
 
     </table>
     <button class="button3 btn btn-default" id="loadBtn">Submit All</button>
@@ -162,80 +128,30 @@
     <script type="text/javascript">
         //info from https://stackoverflow.com/questions/28206654/saving-table-data-to-html5-localstorage and
         //https://stackoverflow.com/questions/47559534/how-to-put-json-data-into-html-table
-<<<<<<< HEAD
-        function MemberInfo(fName,lName,memberId){
-                this.FirstName=fName;
-                this.LastName=lName;
-                this.MemberId=memberId;
-                }
-
-        $('#save').click(function () {
-
-
-              $("#dataTable").find('tbody')
-                  .append($('<tr>')
-                  .append($('<td>')
-                  .text($('#fName').val()))
-                  .append($('<td>')
-                  .text($('#lName').val()))
-                  .append($('<td>')
-                  .text($('#mId').val()))
-                          );
-
-              $('#fName').val('');
-              $('#lName').val('');
-              $('#mId').val('');
-
-            var arr=[];
-
-            $("#dataTable").find('tbody tr').each(function(index,item){
-
-                var fName=$(item).find('td').eq(0).text();
-                var lName=$(item).find('td').eq(1).text();
-                var memberId=$(item).find('td').eq(2).text();
-                arr.push(new MemberInfo(fName,lName,memberId))
-            });
-
-          localStorage.setItem("memberData",JSON.stringify(arr));
-            console.log(arr);
-          })
-
-        $('#loadBtn').on('click', function() {
-            console.log('Here');
-           // document.getElementById("result").innerHTML = localStorage.lastname;
-
-            var jsonData = JSON.parse(localStorage.memberData);
-
-            for (var i = 0; i < jsonData.length; i++) {
-            //Insert data into HTML table here...
-                var jsonObj = jsonData[i];
-                console.log(jsonObj);
-=======
 
 
         $('#loadBtn').on('click', function() {
             console.log('Here');
 //            var jsonData2 = JSON.parse(localStorage.foodData);
-            
-            
-            
+
+
+
             //reading localStorage string and splitting into array format to populate table
             var tempData = localStorage.foodData;
             var ar = tempData.split('/');
             var foodItem = [];
-            
+
             for (var i = 1; i < ar.length; i++){
                 foodItem[i - 1] = JSON.parse(ar[i]);
             }
- 
+
             for (var i = 0; i < foodItem.length; i++) {
             //Insert data into HTML table
 
                 //foodItem[i] represents string/array of one individual entry
                 console.log(foodItem);
-                
 
->>>>>>> origin/master
+
                 var $tr = $("<tr>");
                 var $1 = $("<td>");
                 var $2 = $("<td>");
@@ -269,62 +185,10 @@
                 $tr.append($8);
                 $tr.append($9);
                 $tr.append($10);
-            
+
                 $('#dataTable').append($tr);
-<<<<<<< HEAD
-                }
+            }
         });
-
-
-
-//        <table border = 1>
-//         {% for key, value in result.items() %}
-//            <tr>
-//               <th> {{ key }} </th>
-//               <td> {{ value }} </td>
-//            </tr>
-//         {% endfor %}
-//      </table>
-
-
-//
-//        function MemberInfo(fName,lName,memberId){
-//            this.FirstName=fname;
-//            this.LastName=lName;
-//            this.MemberId=memberId;
-//            }
-//
-//        var arr=[];
-//            $("#dataTable").find('tbody tr').each(function(index,item){
-//                var fName=$(item).find('td').eq(0).text();
-//                var lName=$(item).find('td').eq(1).text();
-//                var memberId=$(item).find('td').eq(2).text();
-//                var realStatus=$(item).find('td').eq(3).text();
-//                var dateEntry=$(item).find('td').eq(4).text();
-//                arr.push(new MemberInfo(fName,lName,memberId))
-//        });
-//
-//
-//    localStorage.setItem("memberData",arr);
-
-//        var tableDataArray = [];
-//        var inputs = $("tr").children('input').val();
-//        $.each(inputs, function(index, i){
-//
-//            myArray.push(i.value);
-//
-//        });
-//
-//        ('body').append(tableDataArray);
-//        localStorage.setItem("info", JSON.stringify(tableDataArray));
-
-=======
-            }   
-        });
-        
-        
-    
->>>>>>> origin/master
     </script>
 
 
