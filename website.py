@@ -79,4 +79,4 @@ if __name__ == '__main__':
     host = 'cmc307-06.mathcs.carleton.edu'
 #    port = int(sys.argv[2])
 #   PUT LOCALHOST HERE FOR TESTING - CHAE
-    app.run(host="localhost", port=2019, debug=True)
+    app.run(host=host, port=2019, debug=True)
