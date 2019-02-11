@@ -8,7 +8,9 @@ function initialize() {
 
   var logged_in = sessionStorage.getItem("logged_in");
   console.log(logged_in);
-  if (logged_in == null) {logged_in = false;}
+  // TODO : change logged_in from true back to false if wanting to develop
+  //    functionality.
+  if (logged_in == null) {logged_in = true;}
   if (!window.location.href.includes("/login") && !(logged_in)){
     console.log("Getting false in line 15")
     redirect_to_login();
@@ -34,28 +36,38 @@ function initialize() {
   } else {
     // recognizes buttons, assigns functions for each button click
     var home_btn = document.getElementById('home_btn');
-    home_btn.onclick = function() {
-      go_to_home();
+    if (home_btn != null){
+      home_btn.onclick = function() {
+        go_to_home();
+      }
     }
-
+    // TODO : might want to delete later
     var data_entry_btn = document.getElementById('data_entry_btn');
-    data_entry_btn.onclick = function() {
-      go_to_data_entry();
+    if (data_entry_btn != null){
+      data_entry_btn.onclick = function() {
+        go_to_data_entry();
+      }
     }
 
     var entry_session_btn = document.getElementById('entry_session_btn');
-    entry_session_btn.onclick = function() {
-      go_to_entry_session();
+    if (entry_session_btn != null) {
+      entry_session_btn.onclick = function() {
+        go_to_entry_session();
+      }
     }
 
     var view_download_btn = document.getElementById('view_download_btn');
-    view_download_btn.onclick = function () {
-      go_to_view_download();
+    if (view_download_btn != null) {
+      view_download_btn.onclick = function () {
+        go_to_view_download();
+      }
     }
 
     var visualization_btn = document.getElementById('visualization_btn');
-    visualization_btn.onclick = function () {
-      go_to_visualization();
+    if (visualization_btn != null) {
+      visualization_btn.onclick = function () {
+        go_to_visualization();
+      }
     }
   }
 }
