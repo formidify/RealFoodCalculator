@@ -5,30 +5,18 @@
         <title>data-entry</title>
         <meta charset="utf-8">
         <meta content="width=device-width, initial-scale=1" name="viewport">
-        <!--<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}" />-->
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}" />
         <script>
-<<<<<<< HEAD
 
-
-=======
             
-            
-    localStorage["foodData"] = [];
-    //every time this page is reloaded foodData will be cleared
-            
->>>>>>> origin/master
     function toggleCheckbox(item){
          console.log("hi we're here");
          var inputID = item.id;
          console.log(inputID);
-
-<<<<<<< HEAD
-=======
         
->>>>>>> origin/master
          if (typeof(Storage) !== "undefined") {
               if (!document.getElementById(inputID).checked){
-                  //this may be backwards!!
+                  //this may be backwards!! 
                  sessionStorage.removeItem(inputID.slice(0, -6));
                  console.log("its gone!");
                 }
@@ -37,44 +25,33 @@
                 var thisInput = document.getElementById(inputID.slice(0, -6));
                 console.log(thisInput.value);
                 sessionStorage[inputID.slice(0, -6)] = thisInput.value;
-                
-                
             }
         }
          else {
-            document.getElementById("result").innerHTML = "Sorry, your browser does not support web storage...";
+            document.getElementById("result").innerHTML = "browser does not support web storage, may cause bugs";
          }
     }
-<<<<<<< HEAD
-
-    function clearFields(){
-=======
             
-    function submit(){
->>>>>>> origin/master
+    function clearFields(){
         //bug is that if checkbox is already clicked and user changes value in input the old value (that existed
         //when the checkbox was originally clicked) resurfaces once form is cleared
         //--this could probably be fixed by just repopulating with what's in the input field instead of using session
         //storage at all...
-        
-        var thisEntry = [];
-        console.log(thisEntry);
-        
 
         console.log("clearing/submitting...");
       //  document.getElementById("data-entry-form").reset();
-
+        
         var inputs = document.querySelectorAll('input[type=text]');
         //apparently this only works on newer broswers- will this be a problem?
-
+        
         var numInputs = document.querySelectorAll('input[type=number]');
         console.log(numInputs);
         numInputs[0].value = '';
-
+        
         var categoryInputs = document.querySelectorAll('[name=category]');
-
-        var radioInputs = document.querySelectorAll('[type=radio]');
-
+        
+        
+ 
         if (sessionStorage.category && (document.getElementById('category-check').checked)){
         //instead of loading from session storage, load the value that is in the field currently
             categoryInputs[0].value = sessionStorage.category;
@@ -82,40 +59,26 @@
         else{
             categoryInputs[0].value = '%';
         }
-
-
+     
         for(var i = 0; i < inputs.length; i++) {
             console.log(inputs[i]);
-<<<<<<< HEAD
-
-=======
-            thisEntry.push(inputs[i].value);
             
->>>>>>> origin/master
             inputID = inputs[i].id;
-            //set vendor to thing in session storage
+            //set vendor to thing in session storage 
             console.log(sessionStorage[inputID]);
-
+            
             //finds fields with defined session storage to repopulate fields (based on id tags)
             if (sessionStorage[inputID]) {
                 console.log('made it alllthewayhere')
                 var vendorValue = sessionStorage.getItem(inputID);
-<<<<<<< HEAD
-
-=======
                 
-              
-                
->>>>>>> origin/master
                 if (document.getElementById(inputID + '-check').checked){
-
+                
                 document.getElementById(inputID).value = vendorValue;
                 }
-                else{
-
+                else{   
                     inputs[i].value = '';
-                    sessionStorage.removeItem(inputID);
-
+                    sessionStorage.removeItem(inputID);       
                 }
             }
             else {
@@ -123,11 +86,100 @@
                 inputs[i].value = '';
             }
         }
-        localStorage["foodData"] += "/" + JSON.stringify(thisEntry);
-        //added '/' to later split string up, is there a better way to do this?
+        
+        //check radio buttons
+        var radioInputs = document.querySelectorAll('[type=radio]');
+        
+        
+        if (document.getElementById('local-check').checked){
+            //if local box is checked, save value
+            if (radioInputs[0].checked){
+                //radioinputs[0] = 'on' toggle, if its checked
+                //do what?
+            }
+            else{
+                //not checked so keep unchecked?       
+            }
+        }
+        else{
+           //radio was not checked, so make default, which is off
+            radioInputs[0].checked = false;
+            radioInputs[1].checked = true;      
+        }
+        if (!document.getElementById('fair-check').checked){
+            //radio was not checked, so make default off
+            radioInputs[2].checked = false;
+            radioInputs[3].checked = true;  
+        }
+        if (!document.getElementById('ecological-check').checked){
+            //radio not checked, make default off
+            radioInputs[4].checked = false;
+            radioInputs[5].checked = true;  
+        }
+        if (!document.getElementById('humane-check').checked){
+            //radio was not checked, so make default na
+            radioInputs[6].checked = false;
+            radioInputs[7].checked = false;
+            radioInputs[8].checked = true;  
+        }
+        if (!document.getElementById('disqualifier-check').checked){
+            //radio was not checked, so make default off
+            radioInputs[9].checked = false;
+            radioInputs[10].checked = true;  
+        }
+
     }
             
+    function repopulate(){
+        //function for when page is reloaded (after search is made) to re-enter all the values 
+        //that are in local storage (so that everything isn't cleared after search button is 
+        //clicked) --this might be pointless?
+        
+        var inputs = document.querySelectorAll('input[type=text]');
+        
+        var numInputs = document.querySelectorAll('input[type=number]');
+        console.log(numInputs);
+        numInputs[0].value = '';
+        
+        var categoryInputs = document.querySelectorAll('[name=category]');
+        
+        var radioInputs = document.querySelectorAll('[type=radio]');
+ 
+        if (document.getElementById('category-check').checked){
+        //only if checked, puts in the thing that was saved (this will have the bug of the switched value that clearFields accounts for)
+            categoryInputs[0].value = sessionStorage.category;
+        }
+//        else{
+//            categoryInputs[0].value = '%';
+//        } //else not necessary since everything is otherwise cleared anyway?
+        
+        for(var i = 0; i < inputs.length; i++) {
+            console.log(inputs[i]);
             
+            inputID = inputs[i].id;
+            //set vendor to thing in session storage 
+            console.log(sessionStorage[inputID]);
+            
+            //finds fields with defined session storage to repopulate fields (based on id tags)
+            if (sessionStorage[inputID]) {
+                var vendorValue = sessionStorage.getItem(inputID);
+                
+                if (document.getElementById(inputID + '-check').checked){
+                
+                    document.getElementById(inputID).value = vendorValue;
+                }
+//                else{
+//                    inputs[i].value = '';
+//                    sessionStorage.removeItem(inputID);
+//                }
+            }
+//            else {
+//                //if no session storage of input, clear field
+//                inputs[i].value = '';
+//            }
+        }
+
+    }
             
     function populateItem(description, category,productCode, brand,vendor,local,localDescription, fair, fairDescription, ecological, ecologicalDescription, humane, humaneDescription, disqualifier,disqualfierDescription, notes){
       console.log("Description Param:", description);
@@ -158,11 +210,10 @@
         }
        document.getElementById(dataLabel).value = row;
     }
+            
 </script>
-<link rel="stylesheet" type="text/css" href="../static/styles.css" />
-<script type="text/javascript" src="../static/example.js" defer></script>
     </head>
-<body>
+<body onload = "repopulate()">
     <h1>Real Food Calculator</h1>
     <div class="topnav">
       <nav>
@@ -177,10 +228,10 @@
     <a>Data Entry Session</a>
     <a>Data Visualization</a>
     <a>View/Download Files</a>
-  -->
+    -->
     <h2>Adding Items to October 2018 with Rating Version 2</h2>
     {%if clear%}
-    <script> //clearFields(); </script>
+    <script> clearFields(); </script>
     {%endif%}
     <form action = "http://cmc307-06.mathcs.carleton.edu:2019/data_entry" method = "POST" id = "data-entry-form">
         <fieldset>
@@ -202,10 +253,10 @@
                   <input id="category-check" name="category-keep" type="checkbox" onclick="toggleCheckbox(this)">
         </div>
         <div>
-
+          
             <label for="vendor">Vendor</label>
             <input id="vendor" name="vendor" type="text">
-
+     
             <input id="vendor-check" name="vendor-keep" type="checkbox" onclick="toggleCheckbox(this)">
         </div>
         <div>
@@ -242,10 +293,10 @@
                 <input id="local-true" name="local" type="radio" value="on">Local</label>
             <label class="radio" for="local">
                 <input id="local-false" name="local" type="radio" value="off" checked>Not Local</label>
-
+                
             <input id="localDescription" name="localDescription" type="text" placeholder="local notes">
             <input id="local-check" name="local-keep" type="checkbox" onclick="toggleCheckbox(this)">
-            </div>
+            </div> 
 
             <div class="control">
             <label class="radio" for="fair">
@@ -271,7 +322,7 @@
             <label class="radio" for="humane">
                 <input id="humane-true" name="humane" type="radio" value="on">Humane</label>
             <label class="radio" for="humane">
-                <input id="ecological-false" name="humane" type="radio" value="off">Not Humane</label>
+                <input id="humane-false" name="humane" type="radio" value="off">Not Humane</label>
             <label class="radio" for="humane">
                 <input id="humane-na" name="humane" type="radio" value="none" checked>Not Applicable</label>
             <input id="humaneDescription" name="humaneDescription" type="text" placeholder="humane notes">
@@ -289,15 +340,10 @@
 
         </fieldset>
         <button type="submit">Search</button>
-
+       
     </form>
-<<<<<<< HEAD
     <button type="button" id="clear-submit" onclick="clearFields()">Submit</button>
-
-=======
-    <button type="button" id="clear-submit" onclick="submit()">Submit</button>
     
->>>>>>> origin/master
     <h3>Past Entries</h3>
     <table>
 	<tr>
