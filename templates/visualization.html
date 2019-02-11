@@ -63,14 +63,6 @@
 <h1>Real vs non-real percantage</h1>
 
 <div class = "control">
-<a>Piecharts:</a>
-<label class="radio" for="show">
-<input id="show" name="show"type="radio" value="on" >Show</label>
-<label class="radio" for="show">
-<input id="show" name="show" type="radio" value="off" checked>Hide</label>
-</div>
-
-<div class = "control">
 <a>Items to show:</a>
 <select id = "num_items" name="Show:">
   <option value="5">5</option>
@@ -88,14 +80,42 @@
 </form>
 </div>
 
- <div id="container-fluid">
+<div class="row">
+  <div class="column" style = "width: 25%; height: 25%;  float: left">
+    <canvas id="percentChart1" style="display: block; height: 75px; width: 75px;"></canvas>
+    <canvas id="percentChart4" style="display: block; height: 75px; width: 75px;"></canvas>
+  </div>
+  <div class="column" style = "width: 25%; height: 25%;  float: left">
+    <canvas id="percentChart3" style="display: block; height: 75px; width: 75px;"></canvas>
+    <canvas id="percentChart5" style="display: block; height: 75px; width: 75px;"></canvas>
+  </div>
+  <div class="column" style = "width: 50%; height: 50%; float: left">
+    <canvas id="percentChart2" style="display: block; height: 300px; width: 300px;"></canvas>
+  </div>
+</div>
+
+
+<div class="onoffswitch">
+    <a>Show barchart data as table:</a>
+    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked>
+    <label class="onoffswitch-label" for="myonoffswitch">
+        <span class="onoffswitch-inner"></span>
+        <span class="onoffswitch-switch"></span>
+    </label>
+</div>
+
+
+<!--  <div id="container-fluid">
  <div id="canvas-holder" style="width:50%;float: left;" \
  class="col-xs-6">
 <canvas id="percentChart1" style="float: left; display: block; height: 75px; width: 75px;"></canvas></div>
+<canvas id="percentChart3" style="float: left; display: block; height: 75px; width: 75px;"></canvas></div>
+<canvas id="percentChart4" style="float: left; display: block; height: 75px; width: 75px;"></canvas></div>
+<canvas id="percentChart5" style="float: left; display: block; height: 75px; width: 75px;"></canvas></div>
 <div id="canvas-holder" style="width:50%;float: right;" \
  class="col-xs-6">
 <canvas id="percentChart2" style="float: right; display: block; height: 300px; width: 300px;"></canvas></div>
-</div>
+</div> -->
 
 <script>
 Chart.defaults.global.plugins.datalabels.display = false
@@ -106,21 +126,51 @@ var getData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/pie
 var init;
 
 getData.done(function(results) {
-  data = {
-      datasets: [{
-          data: results.data,
-          backgroundColor: palette('tol', results.data.length).map(function(hex) {
-          return '#' + hex;
-        })
-      }],
+    years = results.labels
+    // year 1
+    yr = years[0]
+    result = results[yr]
+    data = {
+        datasets: [{
+            data: result.data,
+            backgroundColor: palette('tol', result.data.length).map(function(hex) {
+            return '#' + hex;
+          })
+        }],
 
-      // These labels appear in the legend and in the tooltips when hovering different arcs
-      labels: results.labels,
-      options: {
-          responsive: true
+        // These labels appear in the legend and in the tooltips when hovering different arcs
+        labels: result.labels,
+        options: {
+            responsive: true
+        }
+    };
+
+    var ctx1 = document.getElementById("percentChart1").getContext('2d');
+    myPieChart1 = new Chart(ctx1, {
+        type: 'pie',
+        data: data ,
+        options: {
+          title: {
+              display: true,
+              position: 'bottom',
+              text: yr
+          }
       }
-  };
+    });
 
+
+    // year 2
+    yr = years[1]
+    result = results[yr]
+    data = {
+        datasets: [{
+            data: result.data,
+            backgroundColor: palette('tol', result.data.length).map(function(hex) {
+            return '#' + hex;
+          })
+        }],
+
+<<<<<<< HEAD
   // initial data
   init = results.labels[0]
   var ctx1 = document.getElementById("percentChart1").getContext('2d');
@@ -128,15 +178,94 @@ getData.done(function(results) {
       type: 'pie',
       data: data ,
       title: {
+=======
+        // These labels appear in the legend and in the tooltips when hovering different arcs
+        labels: result.labels,
+        options: {
+            responsive: true
+        }
+    };
+
+    var ctx6 = document.getElementById("percentChart3").getContext('2d');
+    myPieChart2 = new Chart(ctx6, {
+        type: 'pie',
+        data: data ,
+        options: {
+          title: {
+>>>>>>> 67b3916c64f2f31ca2ec7ff7dc275ed61c0636a6
               display: true,
-              text: '2016' // by year
+              position: 'bottom',
+              text: yr
           }
-  });
-  ctx1.canvas.width = 300;
-  ctx1.canvas.height = 300;
+      }
+    });
+
+
+    // year 3
+    yr = years[2]
+    result = results[yr]
+    data = {
+        datasets: [{
+            data: result.data,
+            backgroundColor: palette('tol', result.data.length).map(function(hex) {
+            return '#' + hex;
+          })
+        }],
+
+        // These labels appear in the legend and in the tooltips when hovering different arcs
+        labels: result.labels,
+        options: {
+            responsive: true
+        }
+    };
+
+    var ctx7 = document.getElementById("percentChart4").getContext('2d');
+    myPieChart3 = new Chart(ctx7, {
+        type: 'pie',
+        data: data ,
+        options: {
+          title: {
+              display: true,
+              position: 'bottom',
+              text: yr
+          }
+      }
+    });
+
+
+    // total
+    yr = years[3]
+    result = results.total
+    data = {
+        datasets: [{
+            data: result.data,
+            backgroundColor: palette('tol', result.data.length).map(function(hex) {
+            return '#' + hex;
+          })
+        }],
+
+        // These labels appear in the legend and in the tooltips when hovering different arcs
+        labels: result.labels,
+        options: {
+            responsive: true
+        }
+    };
+
+    var ctx8 = document.getElementById("percentChart5").getContext('2d');
+    myPieChart4 = new Chart(ctx8, {
+        type: 'pie',
+        data: data ,
+        options: {
+          title: {
+              display: true,
+              position: 'bottom',
+              text: yr
+          }
+      }
+    });
 })
 
-var barData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/bar_data/produce')
+var barData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/bar_data/produce+total')
 var myBarChart;
 
 barData.done(function(results) {
@@ -182,17 +311,19 @@ barData.done(function(results) {
               }],
               yAxes: [{
                   stacked: true
-              }]
+              }]},
+              title: {
+              display: true,
+              text: "Purchase for total produce"
           }
+          
       }
   });
-  ctx2.canvas.width = 300;
-  ctx2.canvas.height = 300;
 })
 
 // update bar chart
-function updateChart(cat){
-  var updatedData = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/bar_data/" + cat);
+function updateChart(cat, yr){
+  var updatedData = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/bar_data/" + cat + "+" + yr);
   updatedData.done(function(results) {
   var real_color = Array(results.items.length).fill('rgba(255, 99, 132, 0.2)')
   var nonreal_color = Array(results.items.length).fill('rgba(255, 159, 64, 0.2)')
@@ -224,26 +355,106 @@ function updateChart(cat){
   };
 
   myBarChart.data = data;
+  myBarChart.options.title.text = "Purchase for " + yr + " " + cat;
+
   myBarChart.update();
     })
 }
 
 document.getElementById("percentChart1").onclick = function(evt)
+<<<<<<< HEAD
 {
     var activePoints = myPieChart.getElementsAtEvent(evt);
+=======
+{   
+    var activePoints = myPieChart1.getElementsAtEvent(evt);
 
     if(activePoints.length > 0)
     {
       //get the internal index of slice in pie chart
       var clickedElementindex = activePoints[0]["_index"];
 
+      //get specific label by index 
+      var label = myPieChart1.data.labels[clickedElementindex];
+
+      //get value by index      
+      var value = myPieChart1.data.datasets[0].data[clickedElementindex];
+
+      var year = years[0];
+
+      updateChart(label, year);
+   }
+}
+
+document.getElementById("percentChart3").onclick = function(evt)
+{   
+    var activePoints = myPieChart2.getElementsAtEvent(evt);
+>>>>>>> 67b3916c64f2f31ca2ec7ff7dc275ed61c0636a6
+
+    if(activePoints.length > 0)
+    {
+      //get the internal index of slice in pie chart
+      var clickedElementindex = activePoints[0]["_index"];
+
+<<<<<<< HEAD
       //get specific label by index
       var label = myPieChart.data.labels[clickedElementindex];
 
       //get value by index
       var value = myPieChart.data.datasets[0].data[clickedElementindex];
+=======
+      //get specific label by index 
+      var label = myPieChart2.data.labels[clickedElementindex];
 
-      updateChart(label);
+      //get value by index      
+      var value = myPieChart2.data.datasets[0].data[clickedElementindex];
+
+      var year = years[1];
+
+      updateChart(label, year);
+   }
+}
+
+document.getElementById("percentChart4").onclick = function(evt)
+{   
+    var activePoints = myPieChart3.getElementsAtEvent(evt);
+
+    if(activePoints.length > 0)
+    {
+      //get the internal index of slice in pie chart
+      var clickedElementindex = activePoints[0]["_index"];
+
+      //get specific label by index 
+      var label = myPieChart3.data.labels[clickedElementindex];
+
+      //get value by index      
+      var value = myPieChart3.data.datasets[0].data[clickedElementindex];
+
+      var year = years[2];
+
+      updateChart(label, year);
+   }
+}
+
+document.getElementById("percentChart5").onclick = function(evt)
+{   
+    var activePoints = myPieChart4.getElementsAtEvent(evt);
+
+    if(activePoints.length > 0)
+    {
+      //get the internal index of slice in pie chart
+      var clickedElementindex = activePoints[0]["_index"];
+
+      //get specific label by index 
+      var label = myPieChart4.data.labels[clickedElementindex];
+
+      //get value by index      
+      var value = myPieChart4.data.datasets[0].data[clickedElementindex];
+
+      var year = years[3];
+>>>>>>> 67b3916c64f2f31ca2ec7ff7dc275ed61c0636a6
+
+      updateChart(label, year);
    }
 }
 
@@ -321,8 +532,6 @@ var myPieChart = new Chart(ctx3, {
     type: 'pie',
     data: data
 });
-ctx3.canvas.width = 300;
-ctx3.canvas.height = 300;
 
 // bar and line chart
 var ctx4 = document.getElementById("increaseChart2").getContext('2d');
@@ -403,8 +612,6 @@ var mixedChart = new Chart(ctx4, {
    }
     }
 }});
-ctx4.canvas.width = 300;
-ctx4.canvas.height = 300;
 
 </script>
 
@@ -508,8 +715,6 @@ myLineChart = new Chart(ctx5, {
 });
 
 // document.getElementById('chart-legends').innerHTML = myLineChart.generateLegend();
-ctx5.canvas.width = 300;
-ctx5.canvas.height = 300;
 
 </script>
 

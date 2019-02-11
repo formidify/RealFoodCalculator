@@ -23,10 +23,7 @@
       </nav>
     </div>
 
-    <!--    <a href=''>Home</a>
-        <a href=''>Data Visualization</a>
-        <a href=''>View/Download Data</a>
-    -->
+
 
     <h2>Entry Session</h2>
     <style>
@@ -102,6 +99,7 @@
 
 
     </div>
+<<<<<<< HEAD
    <!--
     <table id="dataTable">
         <tr>
@@ -133,49 +131,38 @@
     </table>
 -->
 
+=======
+
+    
+>>>>>>> 67b3916c64f2f31ca2ec7ff7dc275ed61c0636a6
     <div class="row">
-    <div class="col-md-4 col-md-offset-4">
-        <div class="form-group">
-            <label class="col-sm-2 control-label" for="fName">First Name</label>
-            <div class="col-sm-4">
-                <input type="text" placeholder="First Name" id="fName" class="form-control" name="fName">
-            </div>
-            <label class="col-sm-2 control-label" for="lName">Last Name</label>
-            <div class="col-sm-4">
-                <input type="text" placeholder="Last Name" id="lName" class="form-control" name="lName">
-            </div>
-            <br/>
-            <br>
-            <label class="col-sm-2 control-label" for="mId">Member Id</label>
-            <div class="col-sm-4">
-                <input type="text" placeholder="Member Id" id="mId" class="form-control" name="mId">
-                     <button type="button" class="btn btn-default" id="save">Save</button>
-            </div>
-        </div>
-        <br/>
-        <br/>
-        <br/>
-        <hr/>
+
         <div class="container">
             <table class="table table-striped" id="dataTable">
                 <thead>
                     <tr>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Member Id</th>
+                        <th>Vendor</th>
+                        <th>Label/Brand</th>
+                        <th>Description</th>
+                        <th>Notes</th>
+                        <th>Product Code</th>
+                        <th>Cost</th>
+                        <th>Local Notes</th>
+                        <th>Fair Notes</th>
+                        <th>Humane Notes</th>
+                        <th>Disqualifier Notes</th>
+                        
                         </tr>
-        </thead>
+                </thead>
+                
 
-        <tbody>
-
-        </tbody>
     </table>
-            <button class="button3 btn btn-default" id="loadBtn">Submit All</button>
+    <button class="button3 btn btn-default" id="loadBtn">Submit All</button>
 
-   <!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>-->
     <script type="text/javascript">
         //info from https://stackoverflow.com/questions/28206654/saving-table-data-to-html5-localstorage and
         //https://stackoverflow.com/questions/47559534/how-to-put-json-data-into-html-table
+<<<<<<< HEAD
         function MemberInfo(fName,lName,memberId){
                 this.FirstName=fName;
                 this.LastName=lName;
@@ -223,17 +210,68 @@
             //Insert data into HTML table here...
                 var jsonObj = jsonData[i];
                 console.log(jsonObj);
+=======
+
+
+        $('#loadBtn').on('click', function() {
+            console.log('Here');
+//            var jsonData2 = JSON.parse(localStorage.foodData);
+            
+            
+            
+            //reading localStorage string and splitting into array format to populate table
+            var tempData = localStorage.foodData;
+            var ar = tempData.split('/');
+            var foodItem = [];
+            
+            for (var i = 1; i < ar.length; i++){
+                foodItem[i - 1] = JSON.parse(ar[i]);
+            }
+ 
+            for (var i = 0; i < foodItem.length; i++) {
+            //Insert data into HTML table
+
+                //foodItem[i] represents string/array of one individual entry
+                console.log(foodItem);
+                
+
+>>>>>>> 67b3916c64f2f31ca2ec7ff7dc275ed61c0636a6
                 var $tr = $("<tr>");
-                var $name = $("<td>");
-                var $Lname = $("<td>");
-                var $occupation = $("<td>");
-                $name.append(jsonObj.FirstName);
-                $Lname.append(jsonObj.LastName);
-                $occupation.append(jsonObj.MemberId);
-                $tr.append($name);
-                $tr.append($Lname);
-                $tr.append($occupation);
+                var $1 = $("<td>");
+                var $2 = $("<td>");
+                var $3 = $("<td>");
+                var $4 = $("<td>");
+                var $5 = $("<td>");
+                var $6 = $("<td>");
+                var $7 = $("<td>");
+                var $8 = $("<td>");
+                var $9 = $("<td>");
+                var $10 = $("<td>");
+
+                $1.append(foodItem[i][0]);
+                $2.append(foodItem[i][1]);
+                $3.append(foodItem[i][2]);
+                $4.append(foodItem[i][3]);
+                $5.append(foodItem[i][4]);
+                $6.append(foodItem[i][5]);
+                $7.append(foodItem[i][6]);
+                $8.append(foodItem[i][7]);
+                $9.append(foodItem[i][8]);
+                $10.append(foodItem[i][9]);
+
+                $tr.append($1);
+                $tr.append($2);
+                $tr.append($3);
+                $tr.append($4);
+                $tr.append($5);
+                $tr.append($6);
+                $tr.append($7);
+                $tr.append($8);
+                $tr.append($9);
+                $tr.append($10);
+            
                 $('#dataTable').append($tr);
+<<<<<<< HEAD
                 }
         });
 
@@ -280,10 +318,14 @@
 //        ('body').append(tableDataArray);
 //        localStorage.setItem("info", JSON.stringify(tableDataArray));
 
+=======
+            }   
+        });
+        
+        
+    
+>>>>>>> 67b3916c64f2f31ca2ec7ff7dc275ed61c0636a6
     </script>
-    <p></p>
-
-    <p></p>
 
 
     <button class="button4">Cancel Session</button>
