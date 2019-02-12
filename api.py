@@ -316,9 +316,9 @@ def get_percent_data(cat, yr):
     dollars = []
     # not filtered by year
     if yr == 'total':
-        query = 
+        query = ""
     else:
-        query = 
+        query = ""
     print(query)
 
     # todo: query should also take account of the years
