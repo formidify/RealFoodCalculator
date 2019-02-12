@@ -749,13 +749,13 @@ function updateChart(cat, yr){
           fill: false
           }],
       labels: results['items']
-    }
+    };
 
   mixedChart.data = data;
   mixedChart.options.title.text = "Hypothetical Increase for " + yr + " " + cat;
 
   mixedChart.update();
-    })
+    });
 };
 
 document.getElementById("increaseChart1").onclick = function(evt)
