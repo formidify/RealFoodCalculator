@@ -322,7 +322,7 @@ def get_percent_data(cat, yr):
         y = 'year = ' + str(yr) + ' AND'
 
     # if we convert all of the current non-real food purchases to real
-    query = """SELECT description, totalp, indp, dollars FROM 
+    query = """SELECT description, 100 * totalp AS totalp, 100 * indp AS indp, dollars FROM 
                 (SELECT COALESCE(D.description, A.description) AS description, (dollars / sum) AS totalp, (dollars / total_dollars) AS indp, dollars, 
                 MIN(dollars / sum) OVER () AS mintotalp, MAX(dollars / sum) OVER () - MIN(dollars / sum) OVER() AS rangetotalp,
                 MIN(dollars / total_dollars) OVER () AS minindp, MAX(dollars / total_dollars) OVER () - MIN(dollars / total_dollars) OVER() AS rangeindp,
