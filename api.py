@@ -366,7 +366,7 @@ def get_percent_data(cat, yr):
 # NOTE: items where all four categories (local, ecological, fair, humane) are null will not be included in the calculation
 @app.route("/visualization/time_data", defaults = {'cat': 'produce', 'yr': 'total'})
 @app.route("/visualization/time_data/<cat>+<yr>")
-def get_percent_data(cat, yr):
+def get_time_data(cat, yr):
     items = []
     total_percent = []
     ind_percent = []
