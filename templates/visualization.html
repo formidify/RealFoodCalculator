@@ -763,6 +763,90 @@ function updateChart(cat, yr){
     })
 };
 
+document.getElementById("increaseChart1").onclick = function(evt)
+{
+    var activePoints = myPieChart1.getElementsAtEvent(evt);
+
+    if(activePoints.length > 0)
+    {
+      //get the internal index of slice in pie chart
+      var clickedElementindex = activePoints[0]["_index"];
+
+      //get specific label by index
+      var label = myPieChart1.data.labels[clickedElementindex];
+
+      //get value by index
+      var value = myPieChart1.data.datasets[0].data[clickedElementindex];
+
+      var year = years[0];
+
+      updateChart(label, year);
+   }
+}
+
+document.getElementById("increaseChart3").onclick = function(evt)
+{
+    var activePoints = myPieChart2.getElementsAtEvent(evt);
+
+    if(activePoints.length > 0)
+    {
+      //get the internal index of slice in pie chart
+      var clickedElementindex = activePoints[0]["_index"];
+
+      //get specific label by index
+      var label = myPieChart2.data.labels[clickedElementindex];
+
+      //get value by index
+      var value = myPieChart2.data.datasets[0].data[clickedElementindex];
+
+      var year = years[1];
+
+      updateChart(label, year);
+   }
+}
+
+document.getElementById("increaseChart4").onclick = function(evt)
+{
+    var activePoints = myPieChart3.getElementsAtEvent(evt);
+
+    if(activePoints.length > 0)
+    {
+      //get the internal index of slice in pie chart
+      var clickedElementindex = activePoints[0]["_index"];
+
+      //get specific label by index
+      var label = myPieChart3.data.labels[clickedElementindex];
+
+      //get value by index
+      var value = myPieChart3.data.datasets[0].data[clickedElementindex];
+
+      var year = years[2];
+
+      updateChart(label, year);
+   }
+}
+
+document.getElementById("increaseChart5").onclick = function(evt)
+{
+    var activePoints = myPieChart4.getElementsAtEvent(evt);
+
+    if(activePoints.length > 0)
+    {
+      //get the internal index of slice in pie chart
+      var clickedElementindex = activePoints[0]["_index"];
+
+      //get specific label by index
+      var label = myPieChart4.data.labels[clickedElementindex];
+
+      //get value by index
+      var value = myPieChart4.data.datasets[0].data[clickedElementindex];
+
+      var year = years[3];
+
+      updateChart(label, year);
+   }
+}
+
 </script>
 
 <h1>Time Series of Real vs non-real food</h1>
