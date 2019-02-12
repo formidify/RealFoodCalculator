@@ -121,8 +121,8 @@
 Chart.defaults.global.plugins.datalabels.display = false
 // pie chart
 // load data from Flask; shows all categories
-var getData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/pie_data')
-var init;
+ getData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/pie_data')
+ init;
 
 getData.done(function(results) {
     years = results.labels
@@ -144,7 +144,7 @@ getData.done(function(results) {
         }
     };
 
-    var ctx1 = document.getElementById("percentChart1").getContext('2d');
+     ctx1 = document.getElementById("percentChart1").getContext('2d');
     myPieChart1 = new Chart(ctx1, {
         type: 'pie',
         data: data ,
@@ -176,7 +176,7 @@ getData.done(function(results) {
         }
     };
 
-    var ctx6 = document.getElementById("percentChart3").getContext('2d');
+     ctx6 = document.getElementById("percentChart3").getContext('2d');
     myPieChart2 = new Chart(ctx6, {
         type: 'pie',
         data: data ,
@@ -208,7 +208,7 @@ getData.done(function(results) {
         }
     };
 
-    var ctx7 = document.getElementById("percentChart4").getContext('2d');
+     ctx7 = document.getElementById("percentChart4").getContext('2d');
     myPieChart3 = new Chart(ctx7, {
         type: 'pie',
         data: data ,
@@ -240,7 +240,7 @@ getData.done(function(results) {
         }
     };
 
-    var ctx8 = document.getElementById("percentChart5").getContext('2d');
+     ctx8 = document.getElementById("percentChart5").getContext('2d');
     myPieChart4 = new Chart(ctx8, {
         type: 'pie',
         data: data ,
@@ -254,17 +254,17 @@ getData.done(function(results) {
     });
 })
 
-var barData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/bar_data/produce+total')
-var myBarChart;
+ barData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/bar_data/produce+total')
+ var myBarChart;
 
 barData.done(function(results) {
   // bar plot
-  var items = results.items // food items
-  var real_color = Array(items.length).fill('rgba(255, 99, 132, 0.2)')
-  var nonreal_color = Array(items.length).fill('rgba(255, 159, 64, 0.2)')
+   items = results.items // food items
+   real_color = Array(items.length).fill('rgba(255, 99, 132, 0.2)')
+   nonreal_color = Array(items.length).fill('rgba(255, 159, 64, 0.2)')
 
-  var real_border_color = Array(items.length).fill('rgba(255,99,132,1)')
-  var nonreal_border_color = Array(items.length).fill('rgba(255, 159, 64, 1)')
+   real_border_color = Array(items.length).fill('rgba(255,99,132,1)')
+   nonreal_border_color = Array(items.length).fill('rgba(255, 159, 64, 1)')
 
   data = {
       datasets: [{
@@ -289,7 +289,7 @@ barData.done(function(results) {
       }
   };
 
-  var ctx2 = document.getElementById("percentChart2").getContext('2d');
+   ctx2 = document.getElementById("percentChart2").getContext('2d');
   myBarChart = new Chart(ctx2, {
       type: 'bar',
       data: data,
@@ -312,13 +312,13 @@ barData.done(function(results) {
 
 // update bar chart
 function updateChart(cat, yr){
-  var updatedData = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/bar_data/" + cat + "+" + yr);
+   updatedData = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/bar_data/" + cat + "+" + yr);
   updatedData.done(function(results) {
-  var real_color = Array(results.items.length).fill('rgba(255, 99, 132, 0.2)')
-  var nonreal_color = Array(results.items.length).fill('rgba(255, 159, 64, 0.2)')
+   real_color = Array(results.items.length).fill('rgba(255, 99, 132, 0.2)')
+   nonreal_color = Array(results.items.length).fill('rgba(255, 159, 64, 0.2)')
 
-  var real_border_color = Array(results.items.length).fill('rgba(255,99,132,1)')
-  var nonreal_border_color = Array(results.items.length).fill('rgba(255, 159, 64, 1)')
+   real_border_color = Array(results.items.length).fill('rgba(255,99,132,1)')
+   nonreal_border_color = Array(results.items.length).fill('rgba(255, 159, 64, 1)')
 
   data = {
       datasets: [{
@@ -352,20 +352,20 @@ function updateChart(cat, yr){
 
 document.getElementById("percentChart1").onclick = function(evt)
 {
-    var activePoints = myPieChart1.getElementsAtEvent(evt);
+     activePoints = myPieChart1.getElementsAtEvent(evt);
 
     if(activePoints.length > 0)
     {
       //get the internal index of slice in pie chart
-      var clickedElementindex = activePoints[0]["_index"];
+       clickedElementindex = activePoints[0]["_index"];
 
       //get specific label by index
-      var label = myPieChart1.data.labels[clickedElementindex];
+       label = myPieChart1.data.labels[clickedElementindex];
 
       //get value by index
-      var value = myPieChart1.data.datasets[0].data[clickedElementindex];
+       value = myPieChart1.data.datasets[0].data[clickedElementindex];
 
-      var year = years[0];
+       year = years[0];
 
       updateChart(label, year);
    }
@@ -373,20 +373,20 @@ document.getElementById("percentChart1").onclick = function(evt)
 
 document.getElementById("percentChart3").onclick = function(evt)
 {
-    var activePoints = myPieChart2.getElementsAtEvent(evt);
+     activePoints = myPieChart2.getElementsAtEvent(evt);
 
     if(activePoints.length > 0)
     {
       //get the internal index of slice in pie chart
-      var clickedElementindex = activePoints[0]["_index"];
+       clickedElementindex = activePoints[0]["_index"];
 
       //get specific label by index
-      var label = myPieChart2.data.labels[clickedElementindex];
+       label = myPieChart2.data.labels[clickedElementindex];
 
       //get value by index
-      var value = myPieChart2.data.datasets[0].data[clickedElementindex];
+       value = myPieChart2.data.datasets[0].data[clickedElementindex];
 
-      var year = years[1];
+       year = years[1];
 
       updateChart(label, year);
    }
@@ -394,20 +394,20 @@ document.getElementById("percentChart3").onclick = function(evt)
 
 document.getElementById("percentChart4").onclick = function(evt)
 {
-    var activePoints = myPieChart3.getElementsAtEvent(evt);
+     activePoints = myPieChart3.getElementsAtEvent(evt);
 
     if(activePoints.length > 0)
     {
       //get the internal index of slice in pie chart
-      var clickedElementindex = activePoints[0]["_index"];
+       clickedElementindex = activePoints[0]["_index"];
 
       //get specific label by index
-      var label = myPieChart3.data.labels[clickedElementindex];
+       label = myPieChart3.data.labels[clickedElementindex];
 
       //get value by index
-      var value = myPieChart3.data.datasets[0].data[clickedElementindex];
+       value = myPieChart3.data.datasets[0].data[clickedElementindex];
 
-      var year = years[2];
+       year = years[2];
 
       updateChart(label, year);
    }
@@ -415,20 +415,20 @@ document.getElementById("percentChart4").onclick = function(evt)
 
 document.getElementById("percentChart5").onclick = function(evt)
 {
-    var activePoints = myPieChart4.getElementsAtEvent(evt);
+     activePoints = myPieChart4.getElementsAtEvent(evt);
 
     if(activePoints.length > 0)
     {
       //get the internal index of slice in pie chart
-      var clickedElementindex = activePoints[0]["_index"];
+       clickedElementindex = activePoints[0]["_index"];
 
       //get specific label by index
-      var label = myPieChart4.data.labels[clickedElementindex];
+       label = myPieChart4.data.labels[clickedElementindex];
 
       //get value by index
-      var value = myPieChart4.data.datasets[0].data[clickedElementindex];
+       value = myPieChart4.data.datasets[0].data[clickedElementindex];
 
-      var year = years[3];
+       year = years[3];
 
       updateChart(label, year);
    }
@@ -494,8 +494,8 @@ document.getElementById("percentChart5").onclick = function(evt)
 Chart.defaults.global.plugins.datalabels.display = false
 // pie chart
 // load data from Flask; shows all categories
-var getData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/pie_data')
-var init;
+ getData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/pie_data')
+ init;
 
 getData.done(function(results) {
     years = results.labels
@@ -517,7 +517,7 @@ getData.done(function(results) {
         }
     };
 
-    var ctx1 = document.getElementById("increaseChart1").getContext('2d');
+     ctx1 = document.getElementById("increaseChart1").getContext('2d');
     myPieChart1 = new Chart(ctx1, {
         type: 'pie',
         data: data ,
@@ -549,7 +549,7 @@ getData.done(function(results) {
         }
     };
 
-    var ctx6 = document.getElementById("increaseChart3").getContext('2d');
+     ctx6 = document.getElementById("increaseChart3").getContext('2d');
     myPieChart2 = new Chart(ctx6, {
         type: 'pie',
         data: data ,
@@ -581,7 +581,7 @@ getData.done(function(results) {
         }
     };
 
-    var ctx7 = document.getElementById("increaseChart4").getContext('2d');
+     ctx7 = document.getElementById("increaseChart4").getContext('2d');
     myPieChart3 = new Chart(ctx7, {
         type: 'pie',
         data: data ,
@@ -613,7 +613,7 @@ getData.done(function(results) {
         }
     };
 
-    var ctx8 = document.getElementById("increaseChart5").getContext('2d');
+     ctx8 = document.getElementById("increaseChart5").getContext('2d');
     myPieChart4 = new Chart(ctx8, {
         type: 'pie',
         data: data ,
@@ -627,12 +627,12 @@ getData.done(function(results) {
     });
 })
 
-var lineData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/percent_data/produce+total')
-var mixedChart;
+ lineData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/percent_data/produce+total')
+ var mixedChart;
 
 lineData.done(function(results) {
-  var ctx4 = document.getElementById("increaseChart2").getContext('2d');
-  var mixedChart = new Chart(ctx4, {
+   ctx4 = document.getElementById("increaseChart2").getContext('2d');
+   mixedChart = new Chart(ctx4, {
     type: 'bar',
     data: {
       datasets: [{
@@ -716,7 +716,7 @@ lineData.done(function(results) {
 
 // update bar chart
 function updateChart(cat, yr){
-  var updatedData = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/percent_data/" + cat + "+" + yr);
+   updatedData = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/percent_data/" + cat + "+" + yr);
   updatedData.done(function(results) {
 
   data = {
@@ -760,20 +760,20 @@ function updateChart(cat, yr){
 
 document.getElementById("increaseChart1").onclick = function(evt)
 {
-    var activePoints = myPieChart1.getElementsAtEvent(evt);
+     activePoints = myPieChart1.getElementsAtEvent(evt);
 
     if(activePoints.length > 0)
     {
       //get the internal index of slice in pie chart
-      var clickedElementindex = activePoints[0]["_index"];
+       clickedElementindex = activePoints[0]["_index"];
 
       //get specific label by index
-      var label = myPieChart1.data.labels[clickedElementindex];
+       label = myPieChart1.data.labels[clickedElementindex];
 
       //get value by index
-      var value = myPieChart1.data.datasets[0].data[clickedElementindex];
+       value = myPieChart1.data.datasets[0].data[clickedElementindex];
 
-      var year = years[0];
+       year = years[0];
 
       updateChart(label, year);
    }
@@ -781,20 +781,20 @@ document.getElementById("increaseChart1").onclick = function(evt)
 
 document.getElementById("increaseChart3").onclick = function(evt)
 {
-    var activePoints = myPieChart2.getElementsAtEvent(evt);
+     activePoints = myPieChart2.getElementsAtEvent(evt);
 
     if(activePoints.length > 0)
     {
       //get the internal index of slice in pie chart
-      var clickedElementindex = activePoints[0]["_index"];
+       clickedElementindex = activePoints[0]["_index"];
 
       //get specific label by index
-      var label = myPieChart2.data.labels[clickedElementindex];
+       label = myPieChart2.data.labels[clickedElementindex];
 
       //get value by index
-      var value = myPieChart2.data.datasets[0].data[clickedElementindex];
+       value = myPieChart2.data.datasets[0].data[clickedElementindex];
 
-      var year = years[1];
+       year = years[1];
 
       updateChart(label, year);
    }
@@ -802,20 +802,20 @@ document.getElementById("increaseChart3").onclick = function(evt)
 
 document.getElementById("increaseChart4").onclick = function(evt)
 {
-    var activePoints = myPieChart3.getElementsAtEvent(evt);
+     activePoints = myPieChart3.getElementsAtEvent(evt);
 
     if(activePoints.length > 0)
     {
       //get the internal index of slice in pie chart
-      var clickedElementindex = activePoints[0]["_index"];
+       clickedElementindex = activePoints[0]["_index"];
 
       //get specific label by index
-      var label = myPieChart3.data.labels[clickedElementindex];
+       label = myPieChart3.data.labels[clickedElementindex];
 
       //get value by index
-      var value = myPieChart3.data.datasets[0].data[clickedElementindex];
+       value = myPieChart3.data.datasets[0].data[clickedElementindex];
 
-      var year = years[2];
+       year = years[2];
 
       updateChart(label, year);
    }
@@ -823,20 +823,20 @@ document.getElementById("increaseChart4").onclick = function(evt)
 
 document.getElementById("increaseChart5").onclick = function(evt)
 {
-    var activePoints = myPieChart4.getElementsAtEvent(evt);
+     activePoints = myPieChart4.getElementsAtEvent(evt);
 
     if(activePoints.length > 0)
     {
       //get the internal index of slice in pie chart
-      var clickedElementindex = activePoints[0]["_index"];
+       clickedElementindex = activePoints[0]["_index"];
 
       //get specific label by index
-      var label = myPieChart4.data.labels[clickedElementindex];
+       label = myPieChart4.data.labels[clickedElementindex];
 
       //get value by index
-      var value = myPieChart4.data.datasets[0].data[clickedElementindex];
+       value = myPieChart4.data.datasets[0].data[clickedElementindex];
 
-      var year = years[3];
+       year = years[3];
 
       updateChart(label, year);
    }
@@ -873,15 +873,15 @@ lineChartData = {};
 lineChartData.labels  = ["June 2016", "June 2017", "June 2018"]; // time frame
 lineChartData.datasets = [];  //add 'datasets' array element to object
 
-var items = ['steak', 'chicken', 'carrots', 'peas', 'cheese']
-var colors = palette('tol', items.length).map(function(hex) {
+ items = ['steak', 'chicken', 'carrots', 'peas', 'cheese']
+ colors = palette('tol', items.length).map(function(hex) {
         return '#' + hex;
       })
-var types = ['total', 'real']
-var dashes = [[0, 0], [10, 5]]
+ types = ['total', 'real']
+ dashes = [[0, 0], [10, 5]]
 
 
-var data = [[[304, 407, 529], [1777, 2378, 3454], [665, 798, 300, 200], [234, 567, 987], [111, 222, 333]], // total
+ data = [[[304, 407, 529], [1777, 2378, 3454], [665, 798, 300, 200], [234, 567, 987], [111, 222, 333]], // total
 [[204, 40, 519], [1577, 2368, 3254], [635, 758, 20, 100], [134, 537, 947], [101, 202, 303]]] // real
 
 
@@ -905,7 +905,7 @@ for (i = 0; i < items.length; i++) {
 lineChartData.datasets = datasets
 
 
-var ctx5 = document.getElementById("timeSeriesChart").getContext('2d');
+ ctx5 = document.getElementById("timeSeriesChart").getContext('2d');
 myLineChart = new Chart(ctx5, {
     type: 'line',
     data: lineChartData,
@@ -915,13 +915,13 @@ myLineChart = new Chart(ctx5, {
                 fill: false
               }//,
 /*            legendCallback: function(chart) {
-              var text = [];
+               text = [];
               // legend for line color
               text.push('<ul class="' + chart.id + '-legend1">');
-              var data = chart.data;
-              var datasets = data.datasets;
+               data = chart.data;
+               datasets = data.datasets;
 
-              for (var i = 0; i < items.length; ++i) {
+              for ( i = 0; i < items.length; ++i) {
                 text.push('<li>');
                 text.push('<span '+ 'style="background-color:' + colors[i] + '"></span>');
                 text.push(items[i]);
@@ -931,7 +931,7 @@ myLineChart = new Chart(ctx5, {
               /*text.push('</ul>');
               // legend for line dash
               text.push('<ul class="' + chart.id + '-legend2">');
-              for (var i = 0; i < types.length; ++i) {
+              for ( i = 0; i < types.length; ++i) {
                 text.push('<li>');
                 text.push('<span '+'style="border-dash:' + dashes[i] + '"></span>');
                 text.push(types[i]);
