@@ -7,7 +7,7 @@ body{
     font-family: sans-serif
 }
 
-.login-wrapper{
+.loginbox{
     width: 320px;
     height: 420px;
     background: #000;
@@ -16,23 +16,22 @@ body{
     left: 50%;
     margin-top: -160px;
     margin-left: -210px;
-    position: absolute;
+    position: relative;
     transform: translate(-50%,-50%)
     box-sizing: border-box;
-    text-align: center;
 }
 
-.g-signin2{
-  display: inline-block;
-  text-align: center;
+.exampleText{
+  color:#fff;
 }
 
 .avatar{
   width: 100px;
   height: 100px;
-  margin-top: 75px;
-  display: inline-block;
-  position: relative;
+  border-radius: 50%;
+  position: absolute;
+  top: -50px;
+  left: calc(50%, -50px);
 }
 
 h1{
@@ -49,12 +48,12 @@ h1{
   font-weight: bold;
 }
 
-.login-wrapper input{
+.loginbox input{
   width: 100%;
   margin-bottom: 20px;
 }
 
-.login-wrapper input[type="text"], input[type="password"]{
+.loginbox input[type="text"], input[type="password"]{
   border: none;
   border-bottom: 1px solid #fff;
   background: transparent;
@@ -64,7 +63,7 @@ h1{
   font-size: 16px;
 }
 
-.login-wrapper input[type="submit"]{
+.loginbox input[type="button"]{
   border: none;
   outline:none;
   background: #fb2525;
@@ -73,20 +72,19 @@ h1{
   border-radius: 20px;
 }
 
-.login-wrapper input[type="submit"]:hover{
+.loginbox input[type="button"]:hover{
   cursor: pointer;
   background: #ffc107;
   color: #000;
-  text-align: center;
 }
 
-.login-wrapper a{
+.loginbox a{
   text-decoration: none;
   font-size: 12px;
   line-height:20px;
   color: darkgrey;
 }
 
-.login-wrapper a:hover{
+.loginbox a:hover{
   color: #ffc107;
 }

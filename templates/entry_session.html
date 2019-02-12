@@ -5,7 +5,9 @@
     <title> Entry Session</title>
    <!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}" />-->
    <!-- <script type="text/javascript" src="{{ url_for('static', filename='example.js') }}" defer></script> -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+   <link rel="stylesheet" type="text/css" href="../static/styles.css" />
+   <script type="text/javascript" src="../static/example.js" defer></script>
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 </head>
 <script>
 var entrySession = JSON.parse(localStorage.getItem('entrySession'));
@@ -28,7 +30,7 @@ window.onload = function (){
     <div class="topnav">
       <nav>
           <a id="home_btn" href="#">Home</a>
-          <a id="data_entry_btn" href="#">Data Entry</a>
+          <!--<a id="data_entry_btn" href="#">Data Entry</a>-->
           <a id="entry_session_btn" href="#">Entry Session</a>
           <a id="view_download_btn" href="#">View/Download Data</a>
           <a id="visualization_btn" href="#">Visualization</a>
@@ -98,7 +100,7 @@ window.onload = function (){
         }
     </style>
 
-     <button class="button">Add New Item</button>
+     <button class="button" onclick="window.open('http://cmc307-06.mathcs.carleton.edu:2019/data_entry');">Add New Item</button>
 
     <p></p>
 
@@ -123,7 +125,6 @@ window.onload = function (){
                         <th>Fair Notes</th>
                         <th>Humane Notes</th>
                         <th>Disqualifier Notes</th>
-
                         </tr>
 </table>
     
@@ -143,7 +144,7 @@ window.onload = function (){
                         <th>Fair Notes</th>
                         <th>Humane Notes</th>
                         <th>Disqualifier Notes</th>
-                        
+
                         </tr>
                     {% for item in entrySession %}
                        <tr>
@@ -151,37 +152,37 @@ window.onload = function (){
                        </tr>
                     {% endfor %}
                 </thead>
-                
+
 
     </table>
     <button class="button3 btn btn-default" id="loadBtn">Submit All</button>
 
     <script type="text/javascript">
-        //info from https://stackoverflow.com/questions/28206654/saving-table-data-to-html5-localstorage and 
+        //info from https://stackoverflow.com/questions/28206654/saving-table-data-to-html5-localstorage and
         //https://stackoverflow.com/questions/47559534/how-to-put-json-data-into-html-table
 
 
         $('#loadBtn').on('click', function() {
             console.log('Here');
 //            var jsonData2 = JSON.parse(localStorage.foodData);
-            
-            
-            
+
+
+
             //reading localStorage string and splitting into array format to populate table
             var tempData = localStorage.foodData;
             var ar = tempData.split('/');
             var foodItem = [];
-            
+
             for (var i = 1; i < ar.length; i++){
                 foodItem[i - 1] = JSON.parse(ar[i]);
             }
- 
+
             for (var i = 0; i < foodItem.length; i++) {
             //Insert data into HTML table
 
                 //foodItem[i] represents string/array of one individual entry
                 console.log(foodItem);
-                
+
 
                 var $tr = $("<tr>");
                 var $1 = $("<td>");
@@ -216,19 +217,16 @@ window.onload = function (){
                 $tr.append($8);
                 $tr.append($9);
                 $tr.append($10);
-            
+
                 $('#dataTable').append($tr);
-            }   
+            }
         });
-        
-        
-    
     </script>
 
-    
+
     <button class="button4">Cancel Session</button>
     <!--<button class="button3 btn btn-default" id="loadBtn">Submit All</button>-->
-   
+
 
 
 </body>
