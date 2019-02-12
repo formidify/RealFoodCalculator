@@ -865,6 +865,7 @@ document.getElementById("increaseChart5").onclick = function(evt)
   <option value="5">Real</option>
   <option value="10">Total</option>
 </select>
+
 <div id="chart-legends"></div>
 <canvas id="timeSeriesChart" style="display: block; width: 80%;"></canvas>
 <script>
@@ -915,33 +916,7 @@ myLineChart = new Chart(ctx5, {
               legend: {
                 display: true,
                 fill: false
-              }//,
-/*            legendCallback: function(chart) {
-               text = [];
-              // legend for line color
-              text.push('<ul class="' + chart.id + '-legend1">');
-               data = chart.data;
-               datasets = data.datasets;
-
-              for ( i = 0; i < items.length; ++i) {
-                text.push('<li>');
-                text.push('<span '+ 'style="background-color:' + colors[i] + '"></span>');
-                text.push(items[i]);
-                text.push('</li>');
               }
-
-              /*text.push('</ul>');
-              // legend for line dash
-              text.push('<ul class="' + chart.id + '-legend2">');
-              for ( i = 0; i < types.length; ++i) {
-                text.push('<li>');
-                text.push('<span '+'style="border-dash:' + dashes[i] + '"></span>');
-                text.push(types[i]);
-                text.push('</li>');
-              }
-              text.push('</ul>');
-              return text.join('');
-    }*/
   }
 });
 
