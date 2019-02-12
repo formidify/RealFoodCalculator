@@ -261,30 +261,23 @@ def get_bar_data(cat, yr):
     items = []
     real = []
     nonreal = []
-    print(cat)
-    # not filtered by year
-    if yr == 'total':
-        query = """SELECT COALESCE(Z.description, B.description) 
-                AS description, COALESCE(Z.real, 0) 
-                AS real, COALESCE(B.nonreal, 0) 
-                AS nonreal FROM (SELECT description, SUM(cost) 
-                AS real FROM test_data_large WHERE category = '{0}' AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't') 
-                GROUP BY description) Z FULL OUTER JOIN 
-                (SELECT description, SUM(cost) AS nonreal FROM test_data_large 
-                    WHERE category = '{1}' AND local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't' GROUP BY description) B 
-                    ON Z.description = B.description ORDER BY (COALESCE(real,0) + COALESCE(nonreal,0)) desc;""".format(cat, cat)
 
+    if yr == 'total':
+        y = ''
     else:
-        query = """SELECT COALESCE(Z.description, B.description) 
-                AS description, COALESCE(Z.real, 0) 
-                AS real, COALESCE(B.nonreal, 0) 
-                AS nonreal FROM (SELECT description, SUM(cost) 
-                AS real FROM test_data_large WHERE year = {0} AND category = '{1}' AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't') 
-                GROUP BY description) Z FULL OUTER JOIN (SELECT description, SUM(cost) AS nonreal FROM 
-                (SELECT COALESCE(local, 'f') AS local, COALESCE(fair, 'f') AS fair, COALESCE(ecological, 'f') AS ecological, COALESCE(humane, 'f') AS humane, 
-                description, cost, year, category FROM test_data_large) X
-                    WHERE year = {2} AND category = '{3}' AND local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't' GROUP BY description) B 
-                    ON Z.description = B.description ORDER BY (COALESCE(real,0) + COALESCE(nonreal,0)) desc;""".format(yr, cat, yr, cat)
+        y = 'year = ' + str(yr) + ' AND'
+        
+    # not filtered by year
+    query = """SELECT COALESCE(Z.description, B.description) 
+            AS description, COALESCE(Z.real, 0) 
+            AS real, COALESCE(B.nonreal, 0) 
+            AS nonreal FROM (SELECT description, SUM(cost) 
+            AS real FROM test_data_large WHERE {y} category = '{c}' AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't') 
+            GROUP BY description) Z FULL OUTER JOIN (SELECT description, SUM(cost) AS nonreal FROM 
+            (SELECT COALESCE(local, 'f') AS local, COALESCE(fair, 'f') AS fair, COALESCE(ecological, 'f') AS ecological, COALESCE(humane, 'f') AS humane, 
+            description, cost, year, category FROM test_data_large) X
+                WHERE {y} category = '{c}' AND local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't' GROUP BY description) B 
+                ON Z.description = B.description ORDER BY (COALESCE(real,0) + COALESCE(nonreal,0)) desc;""".format(y = y, c = cat)
     print(query)
 
     # todo: query should also take account of the years
