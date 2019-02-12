@@ -282,7 +282,7 @@ def get_bar_data(cat, yr):
                 AS real FROM test_data_large WHERE year = {0} AND category = '{1}' AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't') 
                 GROUP BY description) Z FULL OUTER JOIN (SELECT description, SUM(cost) AS nonreal FROM 
                 (SELECT COALESCE(local, 'f') AS local, COALESCE(fair, 'f') AS fair, COALESCE(ecological, 'f') AS ecological, COALESCE(humane, 'f') AS humane, 
-                description, cost FROM test_data_large) 
+                description, cost, year, category FROM test_data_large) X
                     WHERE year = {2} AND category = '{3}' AND local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't' GROUP BY description) B 
                     ON Z.description = B.description ORDER BY (COALESCE(real,0) + COALESCE(nonreal,0)) desc;""".format(yr, cat, yr, cat)
     print(query)
