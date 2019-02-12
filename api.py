@@ -338,8 +338,7 @@ def get_percent_data(cat, yr):
                 WHERE {y} category = '{c}' GROUP BY description) C ON B.description = C.description) D ON A.description = D.description) Y 
                 ORDER BY (1.00 * (totalp - mintotalp) * CASE WHEN rangetotalp = 0 THEN 0 ELSE (1 / rangetotalp)
                     + 1.00 * (indp - minindp) * CASE WHEN rangeindp = 0 THEN 0 ELSE (1 / rangeindp)
-                    - 1.00 * (dollars - mindp) * CASE WHEN rangedp = 0 THEN 0 ELSE (1 / rangedp)
-                    ) DESC;""".format(y = y, c = cat)
+                    - 1.00 * (dollars - mindp) * CASE WHEN rangedp = 0 THEN 0 ELSE (1 / rangedp)) DESC;""".format(y = y, c = cat)
     print(query)
 
     # todo: query should also take account of the years
