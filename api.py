@@ -336,8 +336,8 @@ def get_percent_data(cat, yr):
                 WHERE {y} category = '{c}' AND local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't' 
                 GROUP BY description) B FULL OUTER JOIN (SELECT description, sum(cost) AS total_dollars FROM test_data_large 
                 WHERE {y} category = '{c}' GROUP BY description) C ON B.description = C.description) D ON A.description = D.description) Y 
-                ORDER BY (1.00 * (totalp - mintotalp) * CASE WHEN rangetotalp = 0 THEN 0 ELSE (1 / rangetotalp) END
-                    - 1.00 * (indp - minindp) * CASE WHEN rangeindp = 0 THEN 0 ELSE (1 / rangeindp) END) DESC;""".format(y = y, c = cat)
+                ORDER BY (1.00 * (totalp - mintotalp) * CASE WHEN rangetotalp = 0 AND mintotalp = 0 THEN -Infinity WHEN rangetotalp = 0 THEN 0 ELSE (1 / rangetotalp) END
+                    - 1.00 * (indp - minindp) * CASE WHEN rangeindp = 0 AND minindp = 0 THEN -Infinity WHEN rangeindp = 0 THEN 0 ELSE (1 / rangeindp) END) DESC;""".format(y = y, c = cat)
     print(query)
 
     # todo: query should also take account of the years
@@ -357,10 +357,48 @@ def get_percent_data(cat, yr):
     print(items)
     print(total_percent)
     print(ind_percent)
-    # default ranking order is by a * norm(% in all) + b * norm(% in one) - c * norm($ spent) for a = b = c = 1, but the coefficients can be up to change
+    # default ranking order is by a * norm(% in all) - b * norm(% in one) for a = b = 1, but the coefficients can be up to change
     return flask.jsonify({"items": items[:8], "total_percent": total_percent[:8], "ind_percent": ind_percent[:8], "dollars": dollars[:8]})
 
 
+
+# get time series data for vis page (by category)
+# NOTE: items where all four categories (local, ecological, fair, humane) are null will not be included in the calculation
+@app.route("/visualization/time_data", defaults = {'cat': 'produce', 'yr': 'total'})
+@app.route("/visualization/time_data/<cat>+<yr>")
+def get_percent_data(cat, yr):
+    items = []
+    total_percent = []
+    ind_percent = []
+    dollars = []
+    # not filtered by year
+    if yr == 'total':
+        y = ''
+    else:
+        y = 'year = ' + str(yr) + ' AND'
+
+    # how do we query this?
+    query = """ """
+    print(query)
+
+    connection = get_connection()
+    if connection is not None:
+        try:
+            # either this or minimum items allowed to show
+            for row in get_select_query_results(connection, query):
+                items.append(row[0])
+                total_percent.append(row[1])
+                ind_percent.append(row[2])
+                dollars.append(row[3])
+        except Exception as e:
+            print(e)
+        connection.close()
+
+    print(items)
+    print(total_percent)
+    print(ind_percent)
+    # default ranking order is by a * norm(% in all) + b * norm(% in one) - c * norm($ spent) for a = b = c = 1, but the coefficients can be up to change
+    return flask.jsonify({"items": items[:8], "total_percent": total_percent[:8], "ind_percent": ind_percent[:8], "dollars": dollars[:8]})
 
 if __name__ == '__main__':
     """if len(sys.argv) != 3:
