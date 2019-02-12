@@ -698,7 +698,10 @@ lineData.done(function(results) {
         }, {
           id: 'bar',
           type: 'linear',
-          display: false
+          display: false,
+          ticks: {
+            beginAtZero: true
+          }
         }],
         plugins: {
           datalabels: {
