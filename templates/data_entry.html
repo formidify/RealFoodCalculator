@@ -10,6 +10,8 @@
             
             
     localStorage["foodData"] = [];
+    var initializeEntrySession = [];
+    localStorage["entrySession"] = initializeEntrySession;
     //every time this page is reloaded foodData will be cleared
             
     function toggleCheckbox(item){
@@ -45,13 +47,15 @@
         //storage at all...
         
         var thisEntry = [];
-        console.log(thisEntry);
+        console.log("thisEntry:", thisEntry);
         
 
         console.log("clearing/submitting...");
       //  document.getElementById("data-entry-form").reset();
         
+       //BUG: INPUTS DOES NOT HAVE COST 
         var inputs = document.querySelectorAll('input[type=text]');
+ 
         //apparently this only works on newer broswers- will this be a problem?
         
         var numInputs = document.querySelectorAll('input[type=number]');
@@ -103,6 +107,8 @@
             }
         }
         localStorage["foodData"] += "/" + JSON.stringify(thisEntry);
+        initializeEntrySession.push(thisEntry);
+        localStorage.setItem('entrySession', JSON.stringify(initializeEntrySession));
         //added '/' to later split string up, is there a better way to do this?
     }
             
@@ -135,8 +141,12 @@
             document.getElementById(dataLabel+"-na").checked = true;
             row = "none";
         }
-       document.getElementById(dataLabel).value = row;
+       console.log("row is", row);
+       console.log("dataLabel is", dataLabel);
+      if (!(row=="on") && !(row=="off") && !(row=="none")){ 
+          document.getElementById(dataLabel).value = row;
     }
+}
 </script>
     </head>
 <body>
