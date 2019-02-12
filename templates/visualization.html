@@ -677,8 +677,14 @@ lineData.done(function(results) {
             fontColor: 'rgba(255,99,132,1)',
             max: 102,
             min: -2,
-            stepSize: 10
-          },
+            stepSize: 10,
+            ,
+          afterBuildTicks: function(mixedChart) {    
+            mixedChart.ticks = [];
+            for (i = 0; i < 11; i++) {
+            mixedChart.ticks.push(i*10);  
+          }
+          }},
             scaleLabel: {
             display: true,
             labelString: 'Percent increase in single item'
