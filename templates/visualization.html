@@ -718,11 +718,6 @@ lineData.done(function(results) {
 function updateChart(cat, yr){
   var updatedData = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/percent_data/" + cat + "+" + yr);
   updatedData.done(function(results) {
-  var real_color = Array(results.items.length).fill('rgba(255, 99, 132, 0.2)')
-  var nonreal_color = Array(results.items.length).fill('rgba(255, 159, 64, 0.2)')
-
-  var real_border_color = Array(results.items.length).fill('rgba(255,99,132,1)')
-  var nonreal_border_color = Array(results.items.length).fill('rgba(255, 159, 64, 1)')
 
   data = {
       datasets: [{

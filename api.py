@@ -353,6 +353,9 @@ def get_percent_data(cat, yr):
             print(e)
         connection.close()
 
+    print(items)
+    print(total_percent)
+    print(ind_percent)
     # default ranking order is by a * norm(% in all) + b * norm(% in one) - c * norm($ spent) for a = b = c = 1, but the coefficients can be up to change
     return flask.jsonify({"items": items[:8], "total_percent": total_percent[:8], "ind_percent": ind_percent[:8], "dollars": dollars[:8]})
 
