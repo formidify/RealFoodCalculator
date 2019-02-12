@@ -307,6 +307,7 @@ def get_bar_data(cat, yr):
 
 
 # get percent data for vis page
+# NOTE: items where all four categories (local, ecological, fair, humane) are null will not be included in the calculation
 @app.route("/visualization/percent_data", defaults = {'cat': 'produce', 'yr': 'total'})
 @app.route("/visualization/percent_data/<cat>+<yr>")
 def get_percent_data(cat, yr):
@@ -316,9 +317,26 @@ def get_percent_data(cat, yr):
     dollars = []
     # not filtered by year
     if yr == 'total':
-        query = ""
+        y = ''
     else:
-        query = ""
+        y = 'year = ' + str(yr) + ' AND'
+
+    # if we convert all of the current non-real food purchases to real
+    query = """SELECT description, totalp, indp, dollars FROM 
+                (SELECT COALESCE(D.description, A.description) AS description, (dollars / sum) AS totalp, (dollars / total_dollars) AS indp, dollars, 
+                MIN(dollars / sum) OVER () AS mintotalp, MAX(dollars / sum) OVER () - MIN(dollars / sum) OVER() AS rangetotalp,
+                MIN(dollars / total_dollars) OVER () AS minindp, MAX(dollars / total_dollars) OVER () - MIN(dollars / total_dollars) OVER() AS rangeindp,
+                MIN(dollars) OVER () AS mindp, MAX(dollars) OVER () - MIN(dollars) OVER() AS rangedp
+                FROM (SELECT description, (SELECT SUM(cost) AS sum FROM test_data_large WHERE {y} category = {c} AND 
+                (local IS NOT NULL OR fair IS NOT NULL OR ecological IS NOT NULL OR humane IS NOT NULL)) 
+                AS sum FROM test_data_large WHERE {y} category = {c} GROUP BY description) A 
+                RIGHT JOIN (SELECT COALESCE(B.description, C.description) AS description, COALESCE(B.dollars, 0) AS dollars, C.total_dollars as total_dollars FROM 
+                (SELECT description, sum(cost) AS dollars FROM (SELECT COALESCE(local, 'f') AS local, COALESCE(fair, 'f') AS fair, COALESCE(ecological, 'f') 
+                AS ecological, COALESCE(humane, 'f') AS humane, description, cost, year, category FROM test_data_large) X 
+                WHERE {y} category = {c} AND local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't' 
+                GROUP BY description) B FULL OUTER JOIN (SELECT description, sum(cost) AS total_dollars FROM test_data_large 
+                WHERE {y} category = {c} GROUP BY description) C ON B.description = C.description) D ON A.description = D.description) Y 
+                ORDER BY (1.00 * (totalp - mintotalp) / rangetotalp + 1.00 * (indp - minindp) / rangeindp - 1.00 * (dollars - mindp) / rangedp) DESC;""".format(y = yr, c = cat)
     print(query)
 
     # todo: query should also take account of the years
