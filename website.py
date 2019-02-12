@@ -23,8 +23,12 @@ def login():
 def example():
     return render_template('example.html')
 
-@app.route('/entry_session')
+@app.route('/entry_session', methods=['POST','GET'])
 def entrySession():
+    api_url = 'http://cmc307-06.mathcs.carleton.edu:5001/test_data_large?'
+    if request.method == 'POST':
+        result = request.form
+        print(result)
     return render_template('entry_session.html')
 
 @app.route('/view_download') #, methods = ['POST', 'GET'])

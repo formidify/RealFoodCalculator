@@ -10,6 +10,7 @@
    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 </head>
 <script>
+var entrySessionString = localStorage.getItem('entrySession');
 var entrySession = JSON.parse(localStorage.getItem('entrySession'));
 window.onload = function (){
     var results = document.getElementById("sessionTable");
@@ -21,6 +22,7 @@ window.onload = function (){
               cell.innerHTML = entrySession[item][value];
               }
          }
+     document.getElementById("entrySessionData").value = entrySessionString;
      }
 </script>
 
@@ -155,8 +157,10 @@ window.onload = function (){
 
 
     </table>
-    <button class="button3 btn btn-default" id="loadBtn">Submit All</button>
-
+    <form action = "http://cmc307-06.mathcs.carleton.edu:2019/entry_session" method = "POST" id = "entry-session-form">
+ <input id="entrySessionData" name="entrySessionData" type="hidden"/>
+    <button type="submit" class="button3 btn btn-default" id="loadBtn">Submit All</button>
+    </form>
     <script type="text/javascript">
         //info from https://stackoverflow.com/questions/28206654/saving-table-data-to-html5-localstorage and
         //https://stackoverflow.com/questions/47559534/how-to-put-json-data-into-html-table
