@@ -5,22 +5,24 @@
         <title>data-entry</title>
         <meta charset="utf-8">
         <meta content="width=device-width, initial-scale=1" name="viewport">
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}" />
+        <!--<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}" />-->
         <script>
-            
-            
+
+
     localStorage["foodData"] = [];
+    var initializeEntrySession = [];
+    localStorage["entrySession"] = initializeEntrySession;
     //every time this page is reloaded foodData will be cleared
-            
+
     function toggleCheckbox(item){
          console.log("hi we're here");
          var inputID = item.id;
          console.log(inputID);
 
-        
+
          if (typeof(Storage) !== "undefined") {
               if (!document.getElementById(inputID).checked){
-                  //this may be backwards!! 
+                  //this may be backwards!!
                  sessionStorage.removeItem(inputID.slice(0, -6));
                  console.log("its gone!");
                 }
@@ -29,39 +31,41 @@
                 var thisInput = document.getElementById(inputID.slice(0, -6));
                 console.log(thisInput.value);
                 sessionStorage[inputID.slice(0, -6)] = thisInput.value;
-                
-                
+
+
             }
         }
          else {
             document.getElementById("result").innerHTML = "Sorry, your browser does not support web storage...";
          }
     }
-            
+
     function submit(){
         //bug is that if checkbox is already clicked and user changes value in input the old value (that existed
         //when the checkbox was originally clicked) resurfaces once form is cleared
         //--this could probably be fixed by just repopulating with what's in the input field instead of using session
         //storage at all...
-        
+
         var thisEntry = [];
-        console.log(thisEntry);
+        console.log("thisEntry:", thisEntry);
         
 
         console.log("clearing/submitting...");
       //  document.getElementById("data-entry-form").reset();
         
+       //BUG: INPUTS DOES NOT HAVE COST 
         var inputs = document.querySelectorAll('input[type=text]');
-        //apparently this only works on newer broswers- will this be a problem?
-        
-        var numInputs = document.querySelectorAll('input[type=number]');
-        console.log(numInputs);
-        numInputs[0].value = '';
-        
-        var categoryInputs = document.querySelectorAll('[name=category]');
-        
-        var radioInputs = document.querySelectorAll('[type=radio]');
  
+        //apparently this only works on newer broswers- will this be a problem?
+
+        var numInputs = document.querySelectorAll('input[type=number]');
+       console.log(numInputs);
+        numInputs[0].value = '';
+
+        var categoryInputs = document.querySelectorAll('[name=category]');
+
+        var radioInputs = document.querySelectorAll('[type=radio]');
+
         if (sessionStorage.category && (document.getElementById('category-check').checked)){
         //instead of loading from session storage, load the value that is in the field currently
             categoryInputs[0].value = sessionStorage.category;
@@ -69,32 +73,32 @@
         else{
             categoryInputs[0].value = '%';
         }
-     
-        
+
+
         for(var i = 0; i < inputs.length; i++) {
             console.log(inputs[i]);
             thisEntry.push(inputs[i].value);
-            
+
             inputID = inputs[i].id;
-            //set vendor to thing in session storage 
+            //set vendor to thing in session storage
             console.log(sessionStorage[inputID]);
-            
+
             //finds fields with defined session storage to repopulate fields (based on id tags)
             if (sessionStorage[inputID]) {
                 console.log('made it alllthewayhere')
                 var vendorValue = sessionStorage.getItem(inputID);
-                
-              
-                
+
+
+
                 if (document.getElementById(inputID + '-check').checked){
-                
+
                 document.getElementById(inputID).value = vendorValue;
                 }
                 else{
-                    
+
                     inputs[i].value = '';
                     sessionStorage.removeItem(inputID);
-                    
+
                 }
             }
             else {
@@ -103,11 +107,13 @@
             }
         }
         localStorage["foodData"] += "/" + JSON.stringify(thisEntry);
+        initializeEntrySession.push(thisEntry);
+        localStorage.setItem('entrySession', JSON.stringify(initializeEntrySession));
         //added '/' to later split string up, is there a better way to do this?
     }
-            
-            
-            
+
+
+
     function populateItem(description, category,productCode, brand,vendor,local,localDescription, fair, fairDescription, ecological, ecologicalDescription, humane, humaneDescription, disqualifier,disqualfierDescription, notes){
       console.log("Description Param:", description);
       console.log("Category param:", category);
@@ -135,13 +141,18 @@
             document.getElementById(dataLabel+"-na").checked = true;
             row = "none";
         }
-       document.getElementById(dataLabel).value = row;
+       console.log("row is", row);
+       console.log("dataLabel is", dataLabel);
+      if (!(row=="on") && !(row=="off") && !(row=="none")){ 
+          document.getElementById(dataLabel).value = row;
     }
+}
 </script>
+<script type="text/javascript" src="../static/example.js" defer></script>
     </head>
 <body>
     <h1>Real Food Calculator</h1>
-    <div class="topnav">
+    <!--<div class="topnav">
       <nav>
           <a id="home_btn" href="#">Home</a>
           <a id="data_entry_btn" href="#">Data Entry</a>
@@ -149,12 +160,7 @@
           <a id="view_download_btn" href="#">View/Download Data</a>
           <a id="visualization_btn" href="#">Visualization</a>
       </nav>
-    </div>
-    <!--
-    <a>Data Entry Session</a>
-    <a>Data Visualization</a>
-    <a>View/Download Files</a>
-  -->
+    </div> -->
     <h2>Adding Items to October 2018 with Rating Version 2</h2>
     {%if clear%}
     <script> //clearFields(); </script>
@@ -179,10 +185,10 @@
                   <input id="category-check" name="category-keep" type="checkbox" onclick="toggleCheckbox(this)">
         </div>
         <div>
-          
+
             <label for="vendor">Vendor</label>
             <input id="vendor" name="vendor" type="text">
-     
+
             <input id="vendor-check" name="vendor-keep" type="checkbox" onclick="toggleCheckbox(this)">
         </div>
         <div>
@@ -219,10 +225,10 @@
                 <input id="local-true" name="local" type="radio" value="on">Local</label>
             <label class="radio" for="local">
                 <input id="local-false" name="local" type="radio" value="off" checked>Not Local</label>
-                
+
             <input id="localDescription" name="localDescription" type="text" placeholder="local notes">
             <input id="local-check" name="local-keep" type="checkbox" onclick="toggleCheckbox(this)">
-            </div> 
+            </div>
 
             <div class="control">
             <label class="radio" for="fair">
@@ -266,10 +272,10 @@
 
         </fieldset>
         <button type="submit">Search</button>
-       
+
     </form>
     <button type="button" id="clear-submit" onclick="submit()">Submit</button>
-    
+
     <h3>Past Entries</h3>
     <table>
 	<tr>

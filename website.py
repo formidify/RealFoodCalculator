@@ -17,14 +17,18 @@ def homepage():
 
 @app.route('/login')
 def login():
-    return render_template("login_draft.html")
+    return render_template("login.html")
 
 @app.route('/example')
 def example():
     return render_template('example.html')
 
-@app.route('/entry_session')
+@app.route('/entry_session', methods=['POST','GET'])
 def entrySession():
+    api_url = 'http://cmc307-06.mathcs.carleton.edu:5001/test_data_large?'
+    if request.method == 'POST':
+        result = request.form
+        print(result)
     return render_template('entry_session.html')
 
 @app.route('/view_download') #, methods = ['POST', 'GET'])
@@ -78,4 +82,5 @@ if __name__ == '__main__':
 #
     host = 'cmc307-06.mathcs.carleton.edu'
 #    port = int(sys.argv[2])
-    app.run(host= host, port=2019, debug=True)
+#   PUT LOCALHOST HERE FOR TESTING - CHAE
+    app.run(host=host, port=2019, debug=True)

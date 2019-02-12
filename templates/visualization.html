@@ -9,7 +9,9 @@
         <script src="https://codepen.io/anon/pen/aWapBE.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <!--         <meta content="width=device-width, initial-scale=1" name="viewport"> -->
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}" />
+        <!--<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}" />-->
+        <link rel="stylesheet" type="text/css" href="../static/styles.css" />
+        <script type="text/javascript" src="../static/example.js" defer></script>
     </head>
 <body>
 
@@ -17,7 +19,7 @@
     <div class="topnav">
       <nav>
           <a id="home_btn" href="#">Home</a>
-          <a id="data_entry_btn" href="#">Data Entry</a>
+          <!--<a id="data_entry_btn" href="#">Data Entry</a>-->
           <a id="entry_session_btn" href="#">Entry Session</a>
           <a id="view_download_btn" href="#">View/Download Data</a>
           <a id="visualization_btn" href="#">Visualization</a>
@@ -71,7 +73,7 @@
 </div>
 
 <div>
-<form> 
+<form>
     <label for="add">Add item:</label>
     <input id="add" type="text" name="text">
     <input type="submit" value="Search">
@@ -167,6 +169,7 @@ getData.done(function(results) {
           })
         }],
 
+=======
         // These labels appear in the legend and in the tooltips when hovering different arcs
         labels: result.labels,
         options: {
@@ -303,7 +306,7 @@ barData.done(function(results) {
               display: true,
               text: "Purchase for total produce"
           }
-          
+
       }
   });
 })
@@ -349,7 +352,7 @@ function updateChart(cat, yr){
 }
 
 document.getElementById("percentChart1").onclick = function(evt)
-{   
+{
     var activePoints = myPieChart1.getElementsAtEvent(evt);
 
     if(activePoints.length > 0)
@@ -357,10 +360,10 @@ document.getElementById("percentChart1").onclick = function(evt)
       //get the internal index of slice in pie chart
       var clickedElementindex = activePoints[0]["_index"];
 
-      //get specific label by index 
+      //get specific label by index
       var label = myPieChart1.data.labels[clickedElementindex];
 
-      //get value by index      
+      //get value by index
       var value = myPieChart1.data.datasets[0].data[clickedElementindex];
 
       var year = years[0];
@@ -370,7 +373,7 @@ document.getElementById("percentChart1").onclick = function(evt)
 }
 
 document.getElementById("percentChart3").onclick = function(evt)
-{   
+{
     var activePoints = myPieChart2.getElementsAtEvent(evt);
 
     if(activePoints.length > 0)
@@ -378,10 +381,10 @@ document.getElementById("percentChart3").onclick = function(evt)
       //get the internal index of slice in pie chart
       var clickedElementindex = activePoints[0]["_index"];
 
-      //get specific label by index 
+      //get specific label by index
       var label = myPieChart2.data.labels[clickedElementindex];
 
-      //get value by index      
+      //get value by index
       var value = myPieChart2.data.datasets[0].data[clickedElementindex];
 
       var year = years[1];
@@ -391,7 +394,7 @@ document.getElementById("percentChart3").onclick = function(evt)
 }
 
 document.getElementById("percentChart4").onclick = function(evt)
-{   
+{
     var activePoints = myPieChart3.getElementsAtEvent(evt);
 
     if(activePoints.length > 0)
@@ -399,10 +402,10 @@ document.getElementById("percentChart4").onclick = function(evt)
       //get the internal index of slice in pie chart
       var clickedElementindex = activePoints[0]["_index"];
 
-      //get specific label by index 
+      //get specific label by index
       var label = myPieChart3.data.labels[clickedElementindex];
 
-      //get value by index      
+      //get value by index
       var value = myPieChart3.data.datasets[0].data[clickedElementindex];
 
       var year = years[2];
@@ -412,7 +415,7 @@ document.getElementById("percentChart4").onclick = function(evt)
 }
 
 document.getElementById("percentChart5").onclick = function(evt)
-{   
+{
     var activePoints = myPieChart4.getElementsAtEvent(evt);
 
     if(activePoints.length > 0)
@@ -420,10 +423,10 @@ document.getElementById("percentChart5").onclick = function(evt)
       //get the internal index of slice in pie chart
       var clickedElementindex = activePoints[0]["_index"];
 
-      //get specific label by index 
+      //get specific label by index
       var label = myPieChart4.data.labels[clickedElementindex];
 
-      //get value by index      
+      //get value by index
       var value = myPieChart4.data.datasets[0].data[clickedElementindex];
 
       var year = years[3];
@@ -727,7 +730,7 @@ var mixedChart = new Chart(ctx4, {
   <option value="10">Total</option>
 </select>
 <div id="chart-legends"></div>
-<canvas id="timeSeriesChart" style="display: block; width: 80%;"></canvas> 
+<canvas id="timeSeriesChart" style="display: block; width: 80%;"></canvas>
 <script>
 Chart.defaults.global.plugins.datalabels.display = false
 // insert data into the chart object
@@ -772,7 +775,7 @@ var ctx5 = document.getElementById("timeSeriesChart").getContext('2d');
 myLineChart = new Chart(ctx5, {
     type: 'line',
     data: lineChartData,
-    options: {scales: {yAxes:[{scaleLabel: {display: true, labelString: "Dollar purchases ($)"}}]}, 
+    options: {scales: {yAxes:[{scaleLabel: {display: true, labelString: "Dollar purchases ($)"}}]},
               legend: {
                 display: true,
                 fill: false
@@ -790,7 +793,7 @@ myLineChart = new Chart(ctx5, {
                 text.push(items[i]);
                 text.push('</li>');
               }
-              
+
               /*text.push('</ul>');
               // legend for line dash
               text.push('<ul class="' + chart.id + '-legend2">');
