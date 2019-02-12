@@ -188,6 +188,14 @@ def get_products():
         connection.close()
     return json.dumps(products_list)
 
+# insert one item into database
+@app.route("/add_entry")
+def insert_entry():
+    connection = get_connection()
+    if connection is not None:
+        return "Stub Function: Inserted Entry"
+    return "Stub Function: Could not get connection"
+
 # get pie chart data for vis page (for 3 most recent years plus in total)
 @app.route("/visualization/pie_data")
 def get_pie_data():

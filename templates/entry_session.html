@@ -105,62 +105,45 @@ window.onload = function (){
      <button class="button" onclick="window.open('http://cmc307-06.mathcs.carleton.edu:2019/data_entry');">Add New Item</button>
 
     <p></p>
+  <form action = "http://cmc307-06.mathcs.carleton.edu:2019/entry_session" method = "POST" id = "entry-session-form">
+ <input id="entrySessionData" name="entrySessionData" type="hidden"/>
+   
+    
 
-    <div>
-        Volunteer Name: <input type="text">
-        Vendor: <input type="text">
-        Date of Entry: <input type="text">
+	 <label for="month">Month</label>
+          <input id="month" name="month" type="text">
+	 <label for="year">Year</label>
+          <input id="year" name="year" type="text">
+ <button type="submit" class="button3 btn btn-default">Submit All</button>
 
+</form>
         <h3> March 2019 </h3>
 
 
-    </div>
+
 <table id="sessionTable">
 <tr>
-                        <th>Vendor</th>
+                        <th>Category</th>
+			<th>Vendor</th>
                         <th>Label/Brand</th>
                         <th>Description</th>
                         <th>Notes</th>
                         <th>Product Code</th>
                         <th>Cost</th>
+			<th>Local</th>
                         <th>Local Notes</th>
+			<th>Fair</th>
                         <th>Fair Notes</th>
+			<th>Ecological</th>
+			<th>Ecological Description</th>
+			<th>Humane</th>
                         <th>Humane Notes</th>
+			<th>Disqualifier</th>
                         <th>Disqualifier Notes</th>
                         </tr>
 </table>
     
-    <div class="row">
-
-        <div class="container">
-            <table class="table table-striped" id="dataTable">
-                <thead>
-                    <tr>
-                        <th>Vendor</th>
-                        <th>Label/Brand</th>
-                        <th>Description</th>
-                        <th>Notes</th>
-                        <th>Product Code</th>
-                        <th>Cost</th>
-                        <th>Local Notes</th>
-                        <th>Fair Notes</th>
-                        <th>Humane Notes</th>
-                        <th>Disqualifier Notes</th>
-
-                        </tr>
-                    {% for item in entrySession %}
-                       <tr>
-                       <td>{item[0]}</td>
-                       </tr>
-                    {% endfor %}
-                </thead>
-
-
-    </table>
-    <form action = "http://cmc307-06.mathcs.carleton.edu:2019/entry_session" method = "POST" id = "entry-session-form">
- <input id="entrySessionData" name="entrySessionData" type="hidden"/>
-    <button type="submit" class="button3 btn btn-default" id="loadBtn">Submit All</button>
-    </form>
+  
     <script type="text/javascript">
         //info from https://stackoverflow.com/questions/28206654/saving-table-data-to-html5-localstorage and
         //https://stackoverflow.com/questions/47559534/how-to-put-json-data-into-html-table

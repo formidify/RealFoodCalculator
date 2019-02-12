@@ -60,10 +60,9 @@
 
         var numInputs = document.querySelectorAll('input[type=number]');
        console.log(numInputs);
-        numInputs[0].value = '';
-
+	
         var categoryInputs = document.querySelectorAll('[name=category]');
-
+	thisEntry.push(categoryInputs[0].value);
         var radioInputs = document.querySelectorAll('[type=radio]');
 
         if (sessionStorage.category && (document.getElementById('category-check').checked)){
@@ -75,7 +74,7 @@
         }
 
 
-        for(var i = 0; i < inputs.length; i++) {
+        for(var i = 0; i < 5; i++) {
             console.log(inputs[i]);
             thisEntry.push(inputs[i].value);
 
@@ -106,6 +105,39 @@
                 inputs[i].value = '';
             }
         }
+	thisEntry.push(numInputs[0].value);
+
+	numInputs[0].value = '';
+	console.log("Local Value", document.getElementById('local-true').checked);
+	thisEntry.push(document.getElementById('local-true').checked);
+
+	
+	thisEntry.push(document.getElementById('localDescription').value);
+	
+	thisEntry.push(document.getElementById('fair-true').checked);
+
+
+        thisEntry.push(document.getElementById('fairDescription').value);
+
+	thisEntry.push(document.getElementById('ecological-true').checked);
+
+
+        thisEntry.push(document.getElementById('ecologicalDescription').value);
+
+	if (document.getElementById('humane-na').checked){
+
+		thisEntry.push('N/A');
+	}
+	else{
+		thisEntry.push(document.getElementById('humane-true').checked);
+	}
+	thisEntry.push(document.getElementById('humaneDescription').value);
+	thisEntry.push(document.getElementById('disqualifier-true').checked);
+
+
+        thisEntry.push(document.getElementById('disqualifierDescription').value);
+
+
         localStorage["foodData"] += "/" + JSON.stringify(thisEntry);
         initializeEntrySession.push(thisEntry);
         localStorage.setItem('entrySession', JSON.stringify(initializeEntrySession));
@@ -254,7 +286,7 @@
             <label class="radio" for="humane">
                 <input id="humane-true" name="humane" type="radio" value="on">Humane</label>
             <label class="radio" for="humane">
-                <input id="ecological-false" name="humane" type="radio" value="off">Not Humane</label>
+                <input id="humane-false" name="humane" type="radio" value="off">Not Humane</label>
             <label class="radio" for="humane">
                 <input id="humane-na" name="humane" type="radio" value="none" checked>Not Applicable</label>
             <input id="humaneDescription" name="humaneDescription" type="text" placeholder="humane notes">
