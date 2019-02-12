@@ -264,9 +264,27 @@ def get_bar_data(cat, yr):
     print(cat)
     # not filtered by year
     if yr == 'total':
-        query = """SELECT COALESCE(Z.description, B.description) AS description, COALESCE(Z.real, 0) AS real, COALESCE(B.nonreal, 0) AS nonreal FROM (SELECT description, SUM(cost) AS real FROM test_data_large WHERE category = '{0}' AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't') GROUP BY description) Z FULL OUTER JOIN (SELECT description, SUM(cost) AS nonreal FROM test_data_large WHERE category = '{1}' AND local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't' GROUP BY description) B ON Z.description = B.description ORDER BY (COALESCE(real,0) + COALESCE(nonreal,0)) desc;""".format(cat, cat)
+        query = """SELECT COALESCE(Z.description, B.description) 
+                AS description, COALESCE(Z.real, 0) 
+                AS real, COALESCE(B.nonreal, 0) 
+                AS nonreal FROM (SELECT description, SUM(cost) 
+                AS real FROM test_data_large WHERE category = '{0}' AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't') 
+                GROUP BY description) Z FULL OUTER JOIN 
+                (SELECT description, SUM(cost) AS nonreal FROM test_data_large 
+                    WHERE category = '{1}' AND local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't' GROUP BY description) B 
+                    ON Z.description = B.description ORDER BY (COALESCE(real,0) + COALESCE(nonreal,0)) desc;""".format(cat, cat)
+
     else:
-        query = """SELECT COALESCE(Z.description, B.description) AS description, COALESCE(Z.real, 0) AS real, COALESCE(B.nonreal, 0) AS nonreal FROM (SELECT description, SUM(cost) AS real FROM test_data_large WHERE year = {0} AND category = '{1}' AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't') GROUP BY description) Z FULL OUTER JOIN (SELECT description, SUM(cost) AS nonreal FROM test_data_large WHERE year = {2} AND category = '{3}' AND local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't' GROUP BY description) B ON Z.description = B.description ORDER BY (COALESCE(real,0) + COALESCE(nonreal,0)) desc;""".format(yr, cat, yr, cat)
+        query = """SELECT COALESCE(Z.description, B.description) 
+                AS description, COALESCE(Z.real, 0) 
+                AS real, COALESCE(B.nonreal, 0) 
+                AS nonreal FROM (SELECT description, SUM(cost) 
+                AS real FROM test_data_large WHERE year = {0} AND category = '{1}' AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't') 
+                GROUP BY description) Z FULL OUTER JOIN (SELECT description, SUM(cost) AS nonreal FROM 
+                (SELECT COALESCE(local, 'f') AS local, COALESCE(fair, 'f') AS fair, COALESCE(ecological, 'f') AS ecological, COALESCE(humane, 'f') AS humane, 
+                description, cost FROM test_data_large) 
+                    WHERE year = {2} AND category = '{3}' AND local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't' GROUP BY description) B 
+                    ON Z.description = B.description ORDER BY (COALESCE(real,0) + COALESCE(nonreal,0)) desc;""".format(yr, cat, yr, cat)
     print(query)
 
     # todo: query should also take account of the years
@@ -286,6 +304,39 @@ def get_bar_data(cat, yr):
     print(real)
     print(nonreal)
     return flask.jsonify({"items": items[:8], "real": real[:8], "nonreal": nonreal[:8]})
+
+
+# get percent data for vis page
+@app.route("/visualization/percent_data", defaults = {'cat': 'produce', 'yr': 'total'})
+@app.route("/visualization/percent_data/<cat>+<yr>")
+def get_percent_data(cat, yr):
+    items = []
+    total_percent = []
+    ind_percent = []
+    dollars = []
+    # not filtered by year
+    if yr == 'total':
+        query = 
+    else:
+        query = 
+    print(query)
+
+    # todo: query should also take account of the years
+    connection = get_connection()
+    if connection is not None:
+        try:
+            # either this or minimum items allowed to show
+            for row in get_select_query_results(connection, query):
+                items.append(row[0])
+                total_percent.append(row[1])
+                ind_percent.append(row[2])
+                dollars.append(row[3])
+        except Exception as e:
+            print(e)
+        connection.close()
+
+    # default ranking order is by a * norm(% in all) + b * norm(% in one) - c * norm($ spent) for a = b = c = 1, but the coefficients can be up to change
+    return flask.jsonify({"items": items[:8], "total_percent": total_percent[:8], "ind_percent": ind_percent[:8], "dollars": dollars[:8]})
 
 
 
