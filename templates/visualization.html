@@ -122,7 +122,6 @@ Chart.defaults.global.plugins.datalabels.display = false
 // pie chart
 // load data from Flask; shows all categories
  getData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/pie_data')
- init;
 
 getData.done(function(results) {
     years = results.labels
@@ -495,7 +494,6 @@ Chart.defaults.global.plugins.datalabels.display = false
 // pie chart
 // load data from Flask; shows all categories
  getData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/pie_data')
- init;
 
 getData.done(function(results) {
     years = results.labels
