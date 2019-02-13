@@ -320,7 +320,7 @@ def get_percent_data(cat, yr):
                 MIN(dollars / sum) OVER () AS mintotalp, MAX(dollars / sum) OVER () - MIN(dollars / sum) OVER() AS rangetotalp,
                 MIN(dollars / total_dollars) OVER () AS minindp, MAX(dollars / total_dollars) OVER () - MIN(dollars / total_dollars) OVER() AS rangeindp,
                 MIN(dollars) OVER () AS mindp, MAX(dollars) OVER () - MIN(dollars) OVER() AS rangedp
-                FROM (SELECT description, (SELECT SUM(cost) AS sum FROM test_data_large WHERE {y} category = '{c}' AND 
+                FROM (SELECT description, (SELECT SUM(cost) AS sum FROM test_data_large WHERE {y} 
                 (local IS NOT NULL OR fair IS NOT NULL OR ecological IS NOT NULL OR humane IS NOT NULL)) 
                 AS sum FROM test_data_large WHERE {y} category = '{c}' GROUP BY description) A 
                 RIGHT JOIN (SELECT COALESCE(B.description, C.description) AS description, COALESCE(B.dollars, 0) AS dollars, C.total_dollars as total_dollars FROM 
