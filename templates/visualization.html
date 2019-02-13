@@ -492,7 +492,7 @@ document.getElementById("percentChart5").onclick = function(evt)
 <script>
 Chart.defaults.global.plugins.datalabels.display = false
 Chart.Legend.prototype.afterFit = function() {
-    this.height = this.height + 50;
+    this.height = this.height + 20;
 };
 // pie chart
 // load data from Flask; shows all categories
@@ -678,8 +678,8 @@ lineData.done(function(results) {
           position: 'left',
           ticks: {
             fontColor: 'rgba(255,99,132,1)',
-            max: 100,
-            min: 0,
+            max: 100.5,
+            min: -0.5,
             stepSize: 10
           },
             scaleLabel: {
