@@ -680,7 +680,12 @@ lineData.done(function(results) {
             fontColor: 'rgba(255,99,132,1)',
             max: 100.5,
             min: -0.5,
-            stepSize: 10
+            stepSize: 10,
+            callback: function(value, index, values) {
+                           if (value !== 100.5 && value != -0.5) {
+                               return values[index]
+                           }
+                       }
           },
             scaleLabel: {
             display: true,
