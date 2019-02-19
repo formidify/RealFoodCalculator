@@ -254,9 +254,10 @@ def get_quick_data():
                 GROUP BY trim({g}) ORDER BY sum DESC;""".format(g = g, c = curr_year)
 
             if connection is not None:
-                for row in get_select_query_results(connection, query):
-                    labels.append(row[0])
-                    cost.append(row[1])
+                try:
+                    for row in get_select_query_results(connection, query):
+                        labels.append(row[0])
+                        cost.append(row[1])
                 except Exception as e:
                     print(e)
                 connection.close()
