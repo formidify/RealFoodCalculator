@@ -232,6 +232,7 @@ def get_quick_data():
     dic = {}
     curr_query = """SELECT MAX(year) AS maxyear FROM test_data_large;"""
     connection = get_connection()
+    
     if connection is not None:
         try:
             # either this or minimum items allowed to show

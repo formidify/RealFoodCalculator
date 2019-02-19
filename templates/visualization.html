@@ -94,8 +94,8 @@ type = ['real', 'nonreal']
 getData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/quick_data')
 getData.done(function(results) {
   year = results.year
-for (int i = 0; i < 4; i++) {
-  for (int j = 0; j < 2; j++) {
+for (i = 0; i < 4; i++) {
+  for (j = 0; j < 2; j++) {
 
     key = groups[i] + ":" + type[j]
     labels = results[key].labels
