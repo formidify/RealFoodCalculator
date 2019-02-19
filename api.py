@@ -266,6 +266,9 @@ def get_quick_data():
             dic[key] = {"labels": labels[:5], "cost": cost[:5]}
 
     dic['year'] = curr_year
+
+    print("is this printing?")
+    print(dic)
     return flask.jsonify(dic)
 
 # get pie chart data for vis page (for 3 most recent years plus in total)
