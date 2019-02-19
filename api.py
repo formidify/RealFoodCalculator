@@ -33,6 +33,7 @@ def get_connection():
                                       password='L00kB4uL3@p',
                                       host='localhost')
     except Exception as e:
+        print("This is exception")
         print(e)
     return connection
 
@@ -192,9 +193,38 @@ def get_products():
 @app.route("/add_entry")
 def insert_entry():
     connection = get_connection()
-    if connection is not None:
-        return "Stub Function: Inserted Entry"
-    return "Stub Function: Could not get connection"
+    month = flask.request.args.get('month', default='-1').lower()
+    year = flask.request.args.get('year', default='-1').lower()
+    description = flask.request.args.get('description', default='%').lower()
+    category = flask.request.args.get('category', default='%').lower()
+    productCode = flask.request.args.get('productCode', default='%').lower()
+    brand = flask.request.args.get('brand', default='%').lower()
+    vendor = flask.request.args.get('vendor', default='%').lower()
+    notes = flask.request.args.get('notes', default='%').lower()
+    cost  = flask.request.args.get('cost', type=float)
+    local = flask.request.args.get('local', default='-1')
+    localDescription = flask.request.args.get('localDescription', default='%').lower()
+    fair = flask.request.args.get('fair', default='-1')
+    fairDescription = flask.request.args.get('fairDescription', default='%').lower()
+    ecological = flask.request.args.get('ecological', default='-1')
+    ecologicalDescription = flask.request.args.get('ecologicalDescription', default='%').lower()
+    humane = flask.request.args.get('humane', default='-1')
+    humaneDescription = flask.request.args.get('humaneDescription', default='%').lower()
+    disqualifier = flask.request.args.get('disqualifier', default='-1')
+    disqualifierDescription = flask.request.args.get('disqualifierDescription', default ='%').lower()
+    productCodeType = ''
+    ratingVersion = flask.request.args.get('ratingVersion', default='-1').lower()
+    facility = ''
+
+    query = """
+            INSERT INTO test_data_large VALUES ({0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20},{21});
+            """.format(month, year, description, category, productCode, productCodeType, brand, vendor, ratingVersion, local, localDescription, fair, fairDescription, ecological, ecologicalDescription, humane, humaneDescription, disqualifier, disqualifierDescription, cost, notes, facility)
+    print("Entry: ", query)    
+
+    #if connection is not None:
+        #get_select_query_results(connection, query)
+    return "Stub Function: Inserted Entry"
+    #return "Stub Function: Could not get connection"
 
 # get pie chart data for vis page (for 3 most recent years plus in total)
 @app.route("/visualization/pie_data")

@@ -24,6 +24,13 @@ window.onload = function (){
          }
      document.getElementById("entrySessionData").value = entrySessionString;
      }
+
+function clearEntries(){
+   console.log("Clearing Entries"); 
+   entrySession = [];
+   localStorage.setItem('entrySession', '[]');
+   location.reload();
+}
 </script>
 
 <body>
@@ -111,12 +118,15 @@ window.onload = function (){
     
 
 	 <label for="month">Month</label>
-          <input id="month" name="month" type="text">
+          <input id="month" name="month" type="text" required>
 	 <label for="year">Year</label>
-          <input id="year" name="year" type="text">
+          <input id="year" name="year" type="text" required>
+         <label for="rating_version">Rating Version</label>
+         <input id="rating_version" name="rating_version" type="number" value="2.0" placeholder="2.0">
  <button type="submit" class="button3 btn btn-default">Submit All</button>
 
 </form>
+<button class="button4" onclick="clearEntries();">Cancel Session</button>
         <h3> March 2019 </h3>
 
 
@@ -211,7 +221,7 @@ window.onload = function (){
     </script>
 
 
-    <button class="button4">Cancel Session</button>
+   <!-- <button class="button4">Cancel Session</button>-->
     <!--<button class="button3 btn btn-default" id="loadBtn">Submit All</button>-->
 
 

@@ -40,11 +40,77 @@
          }
     }
 
+ function checkInvalidInputs(){
+	var invalid = false;
+        //if category == %
+        if (document.getElementById("category").value == '%'){
+            window.alert("No category selected");
+            invalid = true;
+        }
+        if (document.getElementById("vendor").value == ''){
+            window.alert("No vendor entered");
+            invalid = true;
+
+        }
+        if (document.getElementById("brand").value == ''){
+            window.alert("No label entered");
+            invalid = true;
+
+        }
+        if (document.getElementById("cost").value <= 0.00){
+            window.alert("Invalid cost");
+            invalid = true;
+
+        }
+       //these should be for localDescription, not local 
+        //if not real but has description, alert user. Should the opposite happen as well?
+      //  if (document.getElementById("local-false").checked && document.getElementById("vendor").value == null){
+          //  window.alert("Cannot have local description for non-local item");
+         //   invalid = true;
+
+       // }
+      //  if (document.getElementById("fair-false").checked && document.getElementById("fair").value == null){
+         //   window.alert("Cannot have fair description for non-fair item");
+         //   invalid = true;
+
+       // }
+      //  if (document.getElementById("ecological-false").checked && document.getElementById("ecological").value == NULL){
+         //   window.alert("Cannot have ecological description for non-ecological item");
+        //    invalid = true;
+
+      //  }
+      //  if (document.getElementById("humane-false").checked && document.getElementById("humane").value == NULL){
+         //   window.alert("Cannot have humane description for non-humane item");
+         //   invalid = true;
+
+       // }
+      //  if (document.getElementById("humane-false").checked && document.getElementById("humane-na").value == NULL){
+      //      window.alert("Cannot have humane description for non-humane item");
+       //     invalid = true;
+
+     //   }
+      //  if (document.getElementById("disqualifier-false").checked && document.getElementById("disqualifier").value == NULL){
+    //        window.alert("Cannot have disqualifier description for non-disqualified item");
+  //          invalid = true;
+
+//        }
+        return invalid;
+          
+    }
+
     function submit(){
         //bug is that if checkbox is already clicked and user changes value in input the old value (that existed
         //when the checkbox was originally clicked) resurfaces once form is cleared
         //--this could probably be fixed by just repopulating with what's in the input field instead of using session
         //storage at all...
+	
+	
+	if (!checkInvalidInputs()){
+		//checkInvalidInputs == true, means there is an invalid input
+	//	console.log("not valid input");
+		
+	
+
 
         var thisEntry = [];
         console.log("thisEntry:", thisEntry);
@@ -142,7 +208,7 @@
         initializeEntrySession.push(thisEntry);
         localStorage.setItem('entrySession', JSON.stringify(initializeEntrySession));
         //added '/' to later split string up, is there a better way to do this?
-    }
+    } }
 
 
 
