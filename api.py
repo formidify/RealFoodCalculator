@@ -225,7 +225,7 @@ def insert_entry():
         #get_select_query_results(connection, query)
     return "Stub Function: Inserted Entry"
     #return "Stub Function: Could not get connection"
-'''
+
 # get data for quick charts
 @app.route("/visualization/quick_data")
 def get_quick_data():
@@ -266,7 +266,6 @@ def get_quick_data():
 
     dic['year'] = curr_year
     return flask.jsonify(dic)
-'''
 
 # get pie chart data for vis page (for 3 most recent years plus in total)
 @app.route("/visualization/pie_data")
