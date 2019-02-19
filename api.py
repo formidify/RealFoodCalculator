@@ -257,7 +257,8 @@ def get_quick_data():
                 FROM (SELECT COALESCE(local, 'f') AS local, COALESCE(fair, 'f') AS fair, COALESCE(ecological, 'f') AS ecological, COALESCE(humane, 'f') AS humane, 
                 {g}, cost, year FROM test_data_large) X WHERE year = {c} AND local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't' 
                 GROUP BY trim({g}) ORDER BY sum DESC;""".format(g = g, c = curr_year)
-
+            
+            connection = get_connection()
             if connection is not None:
                 try:
                     for row in get_select_query_results(connection, query):
