@@ -128,7 +128,10 @@ function redirect_to_login(){
 }
 
 function getBaseApiURL() {
-  var baseURL = window.location.protocol + '//' + window.location.hostname + ':' + api_port;
+  // TODO : unhard-code this!!
+  var api_port = 5001;
+  var baseURL = window.location.protocol + '//' + 'cmc307-06.mathcs.carleton.edu' + ':' + api_port;
+  //var baseURL = window.location.protocol + '//' + window.location.hostname + ':' + api_port;
   //console.log(baseURL);
   return baseURL;
 }
@@ -138,6 +141,50 @@ function getBaseWebURL() {
   //console.log(baseWebURL);
   return baseWebURL;
 }
+
+function vd_go_btn() {
+  console.log("Go button pressed");
+  var inputDict = {};
+  var queryStrings = [];
+  var inputList = document.getElementsByTagName("input");
+  for (var i=0; i<inputList.length; i++){
+    var element = inputList[i];
+    if (element.value != ""){
+      inputDict[element.getAttribute("placeholder")]=element.value;
+      queryStrings.push(element.getAttribute("placeholder").toLowerCase()+"="+element.value+"&");
+    }
+  }
+  console.log("queryString -> " + queryStrings);
+  var query = getBaseApiURL()+"/test_data_large?";
+  for (var i=0; i<queryStrings.length; i++){
+    var str = queryStrings[i];
+    query = query+str;
+  }
+  var url = query.substring(0,query.length - 1);
+  console.log("url -> " + url);
+
+  fetch(url)
+    .then(res => res.json())
+    .then((out) => {
+      console.log('Checkout this JSON! ', out);
+      append_json(out);})
+    .catch(err => { throw err });
+}
+
+function append_json(data){
+  var table = document.getElementById('results');
+  console.log(table.getAttribute("id"));
+  data.forEach(function(object) {
+    var tr = document.createElement('tr');
+    tr.innerHTML = '<td>' + object.vendor + '</td>' +
+    '<td>' + object.description + '</td>' +
+    '<td>' + object.category + '</td>' +
+    '<td>' + object.fair + '</td>' +
+    '<td>' + object.year +'/'+ object.month + '</td>';
+    table.appendChild(tr);
+  });
+}
+
 
   /*
   var advanced_search_button = document.getElementById('visualization_page_btn')
