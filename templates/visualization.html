@@ -128,7 +128,7 @@ for (i = 0; i < 4; i++) {
           responsive: true
       }
   };
-  title = prefix + type[j] + " " + title_parts[i] + " " + year
+  title = prefix + title_parts[i] + " " + year + " in " + type[j] + " food"
   ctx = document.getElementById(divs[2*i + j]).getContext('2d');
   quickBarChart = new Chart(ctx, {
       type: 'bar',
