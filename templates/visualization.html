@@ -896,6 +896,8 @@ lineChartData.datasets = [];  //add 'datasets' array element to object
 [[204, 40, 519], [1577, 2368, 3254], [635, 758, 20, 100], [134, 537, 947], [101, 202, 303]]] // real
 
 
+total_configs = []
+
 datasets = []
 for (i = 0; i < items.length; i++) {
     for (j = 0; j < types.length; j++) {
@@ -903,6 +905,7 @@ for (i = 0; i < items.length; i++) {
         line.data = data[j][i]
         line.type = 'line'
         line.label = types[j] + " " + items[i]
+        total_configs.push(line.label)
         //line.backgroundColor = colors[i]
         line.borderColor = colors[i]
         line.fill = false
@@ -915,6 +918,33 @@ for (i = 0; i < items.length; i++) {
 
 lineChartData.datasets = datasets
 
+for (i = 0; i < items.length; i++) {
+    line = {}
+    line.data = 0 // arbitrary
+    line.type = 'line'
+    line.label = items[i]
+    line.backgroundColor = colors[i]
+    line.borderColor = colors[i]
+    //line.fillColor = colors[i]
+    line.fill = true
+    line.showLine = false
+    datasets.push(line)
+}
+
+for (i = 0; i < types.length; i++) {
+    line = {}
+    line.data = 0 // arbitrary
+    line.type = 'line'
+    line.label = types[i]
+    //line.backgroundColor = colors[i]
+    if (i > 0) {
+        line.borderDash = [10, 5]
+    }
+    line.fill = false
+    line.showLine = false
+    datasets.push(line)
+}
+
 
  ctx5 = document.getElementById("timeSeriesChart").getContext('2d');
 myLineChart = new Chart(ctx5, {
@@ -923,7 +953,13 @@ myLineChart = new Chart(ctx5, {
     options: {scales: {yAxes:[{scaleLabel: {display: true, labelString: "Dollar purchases ($)"}}]},
               legend: {
                 display: true,
-                fill: false
+                fill: false,
+                labels: {
+                  filter: function(legendItem, data) {
+                  //return legendItem.datasetIndex >= total_configs.length
+                  return !total_configs.includes(data.datasets[legendItem.datasetIndex].label)
+                }
+              }
               }
   }
 });
