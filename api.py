@@ -232,7 +232,7 @@ def get_quick_data():
     dic = {}
     curr_query = """SELECT MAX(year) AS maxyear FROM test_data_large;"""
     connection = get_connection()
-    
+    curr_year = 2018 # just as initialization
     if connection is not None:
         try:
             # either this or minimum items allowed to show
@@ -243,6 +243,8 @@ def get_quick_data():
 
     groups = ['category', 'description', 'vendor', 'label_brand']
     type = ['real', 'nonreal']
+
+    print(curr_year)
 
     for g in groups:
         for t in type:
