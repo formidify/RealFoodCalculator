@@ -100,6 +100,8 @@ type = ['real', 'nonreal']
 background = ["rgba(255, 159, 64, 0.2)", "rgba(54, 162, 235, 0.2)"]
 border = ["rgba(255, 159, 64)", "rgba(54, 162, 235)"]
 
+prefix = "Top 5 "
+title_parts = ['categories', 'items', 'vendors', 'labels/brands']
 // quick charts
 getData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/quick_data')
 getData.done(function(results) {
@@ -126,7 +128,7 @@ for (i = 0; i < 4; i++) {
           responsive: true
       }
   };
-  title = groups[i] + " : " + type[j]+ " " + year
+  title = prefix + type[j] + " " + title_parts[i] + " " + year
   ctx = document.getElementById(divs[2*i + j]).getContext('2d');
   quickBarChart = new Chart(ctx, {
       type: 'bar',
