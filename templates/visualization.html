@@ -490,7 +490,10 @@ document.getElementById("percentChart5").onclick = function(evt)
 </div>
 
 <script>
-//Chart.defaults.global.plugins.datalabels.display = false
+Chart.defaults.global.plugins.datalabels.display = false
+Chart.Legend.prototype.afterFit = function() {
+    this.height = this.height + 20;
+};
 // pie chart
 // load data from Flask; shows all categories
  getData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/pie_data')
@@ -643,7 +646,7 @@ lineData.done(function(results) {
             datalabels: {
             // display labels for this specific dataset
             display: true,
-            anchor: 'end'
+            anchor: 'center'
           }}, {
             label: 'Percent increase in single item',
             data: results['ind_percent'],
@@ -675,13 +678,18 @@ lineData.done(function(results) {
           position: 'left',
           ticks: {
             fontColor: 'rgba(255,99,132,1)',
-            max: 100,
-            min: 0,
-            stepSize: 10
+            max: 100.5,
+            min: -0.5,
+            stepSize: 10,
+            callback: function(value, index, values) {
+                           if (value !== 100.5 && value != -0.5) {
+                               return values[index]
+                           }
+                       }
           },
             scaleLabel: {
             display: true,
-            labelString: 'Percent increase in single item'
+            labelString: 'Percent increase in single item (%)'
           }
         }, {
           id: 'B',
@@ -693,13 +701,26 @@ lineData.done(function(results) {
           },
             scaleLabel: {
             display: true,
-            labelString: 'Percent increase for all purchases'
+            labelString: 'Percent increase for all purchases (%)'
           }
         }, {
           id: 'bar',
           type: 'linear',
-          display: false
-        }]
+          display: false,
+          ticks: {
+            beginAtZero: true
+          }
+        }],
+        plugins: {
+          datalabels: {
+             display: false,
+             font: {weight: 'bold'},
+             align: 'center',
+             anchor: 'center',
+             clamp: true
+          }
+
+        }
       }
     }
 })});
@@ -719,7 +740,7 @@ function updateMixedChart(cat, yr){
             datalabels: {
             // display labels for this specific dataset
             display: true,
-            anchor: 'end'
+            anchor: 'center'
           }}, {
             label: 'Percent increase in single item',
             data: results['ind_percent'],
@@ -852,6 +873,7 @@ document.getElementById("increaseChart5").onclick = function(evt)
   <option value="5">Real</option>
   <option value="10">Total</option>
 </select>
+
 <div id="chart-legends"></div>
 <canvas id="timeSeriesChart" style="display: block; width: 80%;"></canvas>
 <script>
@@ -902,33 +924,7 @@ myLineChart = new Chart(ctx5, {
               legend: {
                 display: true,
                 fill: false
-              }//,
-/*            legendCallback: function(chart) {
-               text = [];
-              // legend for line color
-              text.push('<ul class="' + chart.id + '-legend1">');
-               data = chart.data;
-               datasets = data.datasets;
-
-              for ( i = 0; i < items.length; ++i) {
-                text.push('<li>');
-                text.push('<span '+ 'style="background-color:' + colors[i] + '"></span>');
-                text.push(items[i]);
-                text.push('</li>');
               }
-
-              /*text.push('</ul>');
-              // legend for line dash
-              text.push('<ul class="' + chart.id + '-legend2">');
-              for ( i = 0; i < types.length; ++i) {
-                text.push('<li>');
-                text.push('<span '+'style="border-dash:' + dashes[i] + '"></span>');
-                text.push(types[i]);
-                text.push('</li>');
-              }
-              text.push('</ul>');
-              return text.join('');
-    }*/
   }
 });
 
