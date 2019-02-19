@@ -136,11 +136,11 @@ for (int i = 0; i < 4; i++) {
 
 
 
-<h1>Real vs non-real percantage</h1>
+<h1>Real vs non-real percentage</h1>
 
 <div class = "control">
 <a>Items to show:</a>
-<select id = "num_items" name="Show:">
+<select id = "num_items_percent" name="Show:">
   <option value="5">5</option>
   <option value="10">10</option>
   <option value="15">15</option>
@@ -154,6 +154,16 @@ for (int i = 0; i < 4; i++) {
     <input id="add" type="text" name="text">
     <input type="submit" value="Search">
 </form>
+</div>
+
+<div>
+<a>Ranked by (in decreasing order):</a>
+<select id = "rank_percent" name="Show:">
+  <option value="minus" selected>Nonreal $ minus Real $</option>
+  <option value="add">Total $ purchase</option>
+  <option value="real">Real $ purchase</option>
+  <option value="nonreal">Nonreal $ purchase</option>
+</select>
 </div>
 
 <div class="row">
@@ -195,9 +205,20 @@ for (int i = 0; i < 4; i++) {
 
 <script>
 Chart.defaults.global.plugins.datalabels.display = false
+
+let num_items = document.querySelector('#num_items_percent');
+let rank = document.querySelector('#rank_percent');
+
+// manually added items
+var new_real = [];
+var new_nonreal = [];
+var new_label = [];
+
+
+
 // pie chart
 // load data from Flask; shows all categories
- getData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/pie_data')
+getData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/pie_data')
 
 getData.done(function(results) {
     years = results.labels
@@ -514,16 +535,7 @@ document.getElementById("percentChart5").onclick = function(evt)
 
 
 <h1>Hypothetical Increase</h1>
-<a>Piecharts:</a>
-<label class="container">Show
-  <input type="checkbox" checked="checked">
-  <span class="checkmark"></span>
-</label>
 
-<label class="container">Hide
-  <input type="checkbox">
-  <span class="checkmark"></span>
-</label>
 <a>Items to show:</a>
 <select name="Show:">
   <option value="" disabled selected>Please Choose...</option>
@@ -533,23 +545,14 @@ document.getElementById("percentChart5").onclick = function(evt)
   <option value="20">20</option>
 </select>
 
-<a>Ranked by:</a>
-<select name="Show:">
-  <option value="" disabled selected>Please Choose...</option>
-  <option value="5">Dollar Increase</option>
-  <option value="10">Single Item % Increase</option>
-  <option value="15">Total Purchase % Increase</option>
-</select>
 
-<a>Rank order:</a>
-<select name="Show:">
-  <option value="" disabled selected>Please Choose...</option>
-  <option value="5">Increasing</option>
-  <option value="10">Decreasing</option>
-</select>
-
-<a>Add Item:</a>
-<input type="text" name="fname"><br>
+<div>
+<form>
+    <label for="add">Add item:</label>
+    <input id="add" type="text" name="text">
+    <input type="submit" value="Search">
+</form>
+</div>
 
 <div class="row">
   <div class="column" style = "width: 25%; height: 25%;  float: left">
@@ -563,6 +566,15 @@ document.getElementById("percentChart5").onclick = function(evt)
   <div class="column" style = "width: 50%; height: 50%; float: left">
     <canvas id="increaseChart2" style="display: block; height: 300px; width: 300px;"></canvas>
   </div>
+</div>
+
+<div class="onoffswitch">
+    <a>Show mixed bar/line chart data as table:</a>
+    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked>
+    <label class="onoffswitch-label" for="myonoffswitch">
+        <span class="onoffswitch-inner"></span>
+        <span class="onoffswitch-switch"></span>
+    </label>
 </div>
 
 <script>
@@ -931,29 +943,45 @@ document.getElementById("increaseChart5").onclick = function(evt)
 </script>
 
 <h1>Time Series of Real vs non-real food</h1>
-<a>Piecharts:</a>
-<label class="container">Show
-  <input type="checkbox">
-  <span class="checkmark"></span>
-</label>
 
-<label class="container">Hide
-  <input type="checkbox" checked="checked">
-  <span class="checkmark"></span>
-</label>
-<a>Add Item:</a>
-<input type="text" name="fname"><br>
-<a>Ranked by types of purchase:</a>
+<a>Items to show:</a>
 <select name="Show:">
   <option value="" disabled selected>Please Choose...</option>
-  <option value="5">Real</option>
-  <option value="10">Total</option>
+  <option value="5">5</option>
+  <option value="10">10</option>
+  <option value="15">15</option>
+  <option value="20">20</option>
 </select>
+
+<div>
+<form>
+    <label for="add">Add item:</label>
+    <input id="add" type="text" name="text">
+    <input type="submit" value="Search">
+</form>
+</div>
 
 <div id="chart-legends"></div>
 <canvas id="timeSeriesChart" style="display: block; width: 80%;"></canvas>
+
+<div class="onoffswitch">
+    <a>Show time series chart data as table:</a>
+    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked>
+    <label class="onoffswitch-label" for="myonoffswitch">
+        <span class="onoffswitch-inner"></span>
+        <span class="onoffswitch-switch"></span>
+    </label>
+</div>
+
 <script>
+
+
 Chart.defaults.global.plugins.datalabels.display = false
+
+ getData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/pie_data')
+
+
+
 // insert data into the chart object
 
 lineChartData = {};
@@ -1046,8 +1074,39 @@ myLineChart = new Chart(ctx5, {
 
 <h1>Item, Vendor and Label - The Exciting Love Trio</h1>
 
+<div>
+<form>
+    <label for="add">Search By item:</label>
+    <input id="add" type="text" name="text">
+    <input type="submit" value="item" onclick="addItem()">
+</form>
+<a> OR </a>
+<form>
+    <label for="add">By vendor:</label>
+    <input id="add" type="text" name="text">
+    <input type="submit" value="vendor" onclick="addVendor()">
+</form>
+<a> OR </a>
+<form>
+    <label for="add">By label/brand:</label>
+    <input id="add" type="text" name="text">
+    <input type="submit" value="brand" onclick="addBrand()">
+</form>
+</div>
+
 <script>
 
+function addItem() {
+
+}
+
+function addVendor() {
+
+}
+
+function addBrand() {
+
+}
 </script>
 </body>
 
