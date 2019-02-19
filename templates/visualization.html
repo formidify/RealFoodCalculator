@@ -84,13 +84,21 @@
 <script>
 Chart.defaults.global.plugins.datalabels.display = false
 
+Chart.types.Bar.extend({
+    name: "BarAlt",
+    draw: function(){
+        this.scale.endPoint = 200;
+        Chart.types.Bar.prototype.draw.apply(this, arguments);
+    }
+});
+
 divs = ["realCatChart", "nonCatChart", "realItemChart", "nonItemChart", 
         "realVendChart", "nonVendChart", "realBrandChart", "nonBrandChart"]
 
 groups = ['category', 'description', 'vendor', 'label_brand']
 type = ['real', 'nonreal']
-background = ["rgba(255, 99, 132, 0.2)", "rgba(54, 162, 235, 0.2)"]
-border = ["rgba(255, 99, 132)", "rgba(54, 162, 235)"]
+background = ["rgba(255, 159, 64, 0.2)", "rgba(54, 162, 235, 0.2)"]
+border = ["rgba(255, 159, 64)", "rgba(54, 162, 235)"]
 
 // quick charts
 getData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/quick_data')
@@ -118,7 +126,7 @@ for (i = 0; i < 4; i++) {
           responsive: true
       }
   };
-  title = key + " " + year
+  title = groups[i] + " : " + type[j]+ " " + year
   ctx = document.getElementById(divs[2*i + j]).getContext('2d');
   quickBarChart = new Chart(ctx, {
       type: 'bar',
