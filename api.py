@@ -197,7 +197,7 @@ def get_quick_data():
     if connection is not None:
         try:
             # either this or minimum items allowed to show
-            curr_year = get_select_query_results(connection, curr_query)[0][0]:
+            curr_year = get_select_query_results(connection, curr_query)[0][0]
         except Exception as e:
             print(e)
         connection.close()
@@ -209,7 +209,7 @@ def get_quick_data():
         for t in type:
             if t == 'real':
                 query = """SELECT trim({g}), SUM(cost) AS sum FROM test_data_large WHERE year = {c} AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't') GROUP BY trim({g}) ORDER BY sum DESC;""".format(g = g, c = curr_year)
-            else if t == 'nonreal':
+            else:
                 query = """SELECT trim({g}), SUM(cost) AS sum 
                 FROM (SELECT COALESCE(local, 'f') AS local, COALESCE(fair, 'f') AS fair, COALESCE(ecological, 'f') AS ecological, COALESCE(humane, 'f') AS humane, 
                 {g}, cost, year FROM test_data_large) X WHERE year = {c} AND local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't' 
@@ -401,41 +401,48 @@ def get_percent_data(cat, yr):
 
 # get time series data for vis page (by category)
 # NOTE: items where all four categories (local, ecological, fair, humane) are null will not be included in the calculation
-@app.route("/visualization/time_data", defaults = {'cat': 'produce', 'yr': 'total'})
-@app.route("/visualization/time_data/<cat>+<yr>")
-def get_time_data(cat, yr):
-    items = []
-    total_percent = []
-    ind_percent = []
-    dollars = []
-    # not filtered by year
-    if yr == 'total':
-        y = ''
-    else:
-        y = 'year = ' + str(yr) + ' AND'
+@app.route("/visualization/time_data", defaults = {'cat': 'produce'})
+@app.route("/visualization/time_data/<cat>")
+def get_time_data(cat):
 
-    # how do we query this?
-    query = """ """
-    print(query)
-
-    connection = get_connection()
-    if connection is not None:
-        try:
-            # either this or minimum items allowed to show
-            for row in get_select_query_results(connection, query):
-                items.append(row[0])
-                total_percent.append(row[1])
-                ind_percent.append(row[2])
-                dollars.append(row[3])
-        except Exception as e:
-            print(e)
-        connection.close()
-
-    print(items)
-    print(total_percent)
-    print(ind_percent)
     # default ranking order is by a * norm(% in all) + b * norm(% in one) - c * norm($ spent) for a = b = c = 1, but the coefficients can be up to change
     return flask.jsonify({"items": items[:8], "total_percent": total_percent[:8], "ind_percent": ind_percent[:8], "dollars": dollars[:8]})
+
+# get time series data for vis page (by category)
+# NOTE: items where all four categories (local, ecological, fair, humane) are null will not be included in the calculation
+@app.route("/visualization/item_data", defaults = {'item': '', 'type': ''})
+@app.route("/visualization/item_data/<item>+<type>")
+def get_item_data(item, type):
+
+    # add item for percent chart
+    if type == 'percent':
+        query = """SELECT SUM(cost) AS sum FROM test_data_large WHERE description = {d} AND (""".format(d = item)
+        return 
+
+    # add item for hypothetical increase chart
+    if type == 'increase':
+        return
+
+    # add item for item/label/vendor chart
+    if type == 'liv':
+        return
+
+### Need to have a separate function for time series data
+
+# get time series data for vis page (by category)
+# NOTE: items where all four categories (local, ecological, fair, humane) are null will not be included in the calculation
+@app.route("/visualization/brand_vendor_data", defaults = {'item': '', 'type': ''})
+@app.route("/visualization/brand_vendor_data/<item>+<type>")
+def get_brand_vendor_data(item, type):
+
+    # add brand/label
+    if type == 'brand':
+        return 
+
+    # add vendor
+    if type == 'vendor':
+        return
+
 
 if __name__ == '__main__':
     """if len(sys.argv) != 3:

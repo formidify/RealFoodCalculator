@@ -136,11 +136,11 @@ for (int i = 0; i < 4; i++) {
 
 
 
-<h1>Real vs non-real percantage</h1>
+<h1>Real vs non-real percentage</h1>
 
 <div class = "control">
 <a>Items to show:</a>
-<select id = "num_items" name="Show:">
+<select id = "num_items_percent" name="Show:">
   <option value="5">5</option>
   <option value="10">10</option>
   <option value="15">15</option>
@@ -156,13 +156,15 @@ for (int i = 0; i < 4; i++) {
 </form>
 </div>
 
+<div>
 <a>Ranked by (in decreasing order):</a>
-<select name="Show:">
+<select id = "rank_percent" name="Show:">
   <option value="minus" selected>Nonreal $ minus Real $</option>
   <option value="add">Total $ purchase</option>
   <option value="real">Real $ purchase</option>
   <option value="nonreal">Nonreal $ purchase</option>
 </select>
+</div>
 
 <div class="row">
   <div class="column" style = "width: 25%; height: 25%;  float: left">
@@ -203,9 +205,20 @@ for (int i = 0; i < 4; i++) {
 
 <script>
 Chart.defaults.global.plugins.datalabels.display = false
+
+let num_items = document.querySelector('#num_items_percent');
+let rank = document.querySelector('#rank_percent');
+
+// manually added items
+var new_real = [];
+var new_nonreal = [];
+var new_label = [];
+
+
+
 // pie chart
 // load data from Flask; shows all categories
- getData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/pie_data')
+getData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/pie_data')
 
 getData.done(function(results) {
     years = results.labels
@@ -931,6 +944,7 @@ document.getElementById("increaseChart5").onclick = function(evt)
 
 <h1>Time Series of Real vs non-real food</h1>
 
+<a>Items to show:</a>
 <select name="Show:">
   <option value="" disabled selected>Please Choose...</option>
   <option value="5">5</option>
@@ -963,6 +977,11 @@ document.getElementById("increaseChart5").onclick = function(evt)
 
 
 Chart.defaults.global.plugins.datalabels.display = false
+
+ getData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/pie_data')
+
+
+
 // insert data into the chart object
 
 lineChartData = {};
@@ -1055,8 +1074,39 @@ myLineChart = new Chart(ctx5, {
 
 <h1>Item, Vendor and Label - The Exciting Love Trio</h1>
 
+<div>
+<form>
+    <label for="add">Search By item:</label>
+    <input id="add" type="text" name="text">
+    <input type="submit" value="item" onclick="addItem()">
+</form>
+<a> OR </a>
+<form>
+    <label for="add">By vendor:</label>
+    <input id="add" type="text" name="text">
+    <input type="submit" value="vendor" onclick="addVendor()">
+</form>
+<a> OR </a>
+<form>
+    <label for="add">By label/brand:</label>
+    <input id="add" type="text" name="text">
+    <input type="submit" value="brand" onclick="addBrand()">
+</form>
+</div>
+
 <script>
 
+function addItem() {
+
+}
+
+function addVendor() {
+
+}
+
+function addBrand() {
+
+}
 </script>
 </body>
 
