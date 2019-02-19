@@ -104,6 +104,7 @@ for (i = 0; i < 4; i++) {
 
   data = {
       datasets: [{
+          label: "Purchase in dollars",
           data: cost,
           borderWidth: 2
       }],
@@ -123,7 +124,12 @@ for (i = 0; i < 4; i++) {
               title: {
               display: true,
               text: key + " " + year
-          }
+          },
+          xAxes: [{
+            ticks: {
+              autoSkip: false
+            }
+          }]
       }
   }});
 
