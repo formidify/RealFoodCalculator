@@ -225,6 +225,48 @@ def insert_entry():
         #get_select_query_results(connection, query)
     return "Stub Function: Inserted Entry"
     #return "Stub Function: Could not get connection"
+'''
+# get data for quick charts
+@app.route("/visualization/quick_data")
+def get_quick_data():
+    dic = {}
+    curr_query = """SELECT MAX(year) AS maxyear FROM test_data_large;"""
+    connection = get_connection()
+    if connection is not None:
+        try:
+            # either this or minimum items allowed to show
+            curr_year = get_select_query_results(connection, curr_query)[0][0]
+        except Exception as e:
+            print(e)
+        connection.close()
+
+    groups = ['category', 'description', 'vendor', 'label_brand']
+    type = ['real', 'nonreal']
+
+    for g in groups:
+        for t in type:
+            if t == 'real':
+                query = """SELECT trim({g}), SUM(cost) AS sum FROM test_data_large WHERE year = {c} AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't') GROUP BY trim({g}) ORDER BY sum DESC;""".format(g = g, c = curr_year)
+            elif t == 'nonreal':
+                query = """SELECT trim({g}), SUM(cost) AS sum 
+                FROM (SELECT COALESCE(local, 'f') AS local, COALESCE(fair, 'f') AS fair, COALESCE(ecological, 'f') AS ecological, COALESCE(humane, 'f') AS humane, 
+                {g}, cost, year FROM test_data_large) X WHERE year = {c} AND local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't' 
+                GROUP BY trim({g}) ORDER BY sum DESC;""".format(g = g, c = curr_year)
+
+            if connection is not None:
+                for row in get_select_query_results(connection, query):
+                    labels.append(row[0])
+                    cost.append(row[1])
+                except Exception as e:
+                    print(e)
+                connection.close()
+
+            key = g + ":" + t
+            dic[key] = {"labels": labels[:5], "cost": cost[:5]}
+
+    dic['year'] = curr_year
+    return flask.jsonify(dic)
+'''
 
 # get pie chart data for vis page (for 3 most recent years plus in total)
 @app.route("/visualization/pie_data")
