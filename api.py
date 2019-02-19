@@ -248,6 +248,8 @@ def get_quick_data():
 
     for g in groups:
         for t in type:
+            labels = []
+            cost = []
             if t == 'real':
                 query = """SELECT trim({g}), SUM(cost) AS sum FROM test_data_large WHERE year = {c} AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't') GROUP BY trim({g}) ORDER BY sum DESC;""".format(g = g, c = curr_year)
             else:
