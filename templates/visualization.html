@@ -171,7 +171,7 @@ for (i = 0; i < 4; i++) {
   <div class="column" style = "width: 50%; height: 50%; float: left">
     <div id = "container">
   
-  <div class = "control" style = "float:left; width: 16%;">
+  <div class = "control" style = "float:left">
 <a>Items to show:</a>
 <select id = "num_items_percent" name="Show:" style = "width: 5%">
   <option value="5">5</option>
@@ -181,15 +181,17 @@ for (i = 0; i < 4; i++) {
 </select>
 </div>
 
-<div style = "float:left; width: 34%;">
-<form style = "width: 15%">
+<div style = "float:left">
+<form>
     <label for="add">Add item:</label>
     <input id="add" type="text" name="text">
     <input type="submit" value="Search">
 </form>
 </div>
 
-<div style = "float:left; width: 50%;">
+</div>
+
+<div style = "float:left">
 <a>Ranked by (in decreasing order):</a>
 <select id = "rank_percent" name="Show:" style = "width: 22%">
   <option value="minus" selected>Nonreal $ minus Real $</option>
@@ -199,7 +201,6 @@ for (i = 0; i < 4; i++) {
 </select>
 </div>
 
-</div>
     <canvas id="percentChart2" style="display: block; height: 300px; width: 300px;"></canvas>
   </div>
 </div>
