@@ -1017,7 +1017,7 @@ Chart.defaults.global.plugins.datalabels.display = false
 
  getData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/pie_data')
 
- divs = ['timeChart1', 'timeChart2', 'timeChart3', 'timeChart4']
+ divs_time = ['timeChart1', 'timeChart2', 'timeChart3', 'timeChart4']
 
  getData.done(function(results) {
     years = results.labels
@@ -1039,7 +1039,7 @@ Chart.defaults.global.plugins.datalabels.display = false
         }
     }
 
-     ctx_time = document.getElementById(divs[i]).getContext('2d');
+     ctx_time = document.getElementById(divs_time[i]).getContext('2d');
     myPieChart = new Chart(ctx_time, {
         type: 'pie',
         data: data ,
