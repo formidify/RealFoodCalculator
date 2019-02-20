@@ -1039,8 +1039,8 @@ Chart.defaults.global.plugins.datalabels.display = false
         }
     }
 
-     ctx = document.getElementById(divs[i]).getContext('2d');
-    myPieChart = new Chart(ctx, {
+     ctx_time = document.getElementById(divs[i]).getContext('2d');
+    myPieChart = new Chart(ctx_time, {
         type: 'pie',
         data: data ,
         options: {
