@@ -967,25 +967,39 @@ document.getElementById("increaseChart5").onclick = function(evt)
 
 <h1>Time Series of Real vs non-real food</h1>
 
-<a>Items to show:</a>
-<select name="Show:">
-  <option value="" disabled selected>Please Choose...</option>
+</div>
+
+<div class="row">
+  <div class="column" style = "width: 25%; height: 25%;  float: left">
+    <canvas id="timeChart1" style="display: block; height: 75px; width: 75px;"></canvas>
+    <canvas id="timeChart3" style="display: block; height: 75px; width: 75px;"></canvas>
+  </div>
+  <div class="column" style = "width: 25%; height: 25%;  float: left">
+    <canvas id="timeChart2" style="display: block; height: 75px; width: 75px;"></canvas>
+    <canvas id="timeChart4" style="display: block; height: 75px; width: 75px;"></canvas>
+  </div>
+  <div class="column" style = "width: 50%; height: 50%; float: left">
+    <a>Items to show:</a>
+  <div class = "control" style = "display: inline-block">
+<select id = "num_items_percent" name="Show:" style = "width: 100%">
   <option value="5">5</option>
   <option value="10">10</option>
   <option value="15">15</option>
   <option value="20">20</option>
 </select>
+</div>
 
-<div>
+<div style = "display: inline-block; width: 50%">
 <form>
     <label for="add">Add item:</label>
     <input id="add" type="text" name="text">
     <input type="submit" value="Search">
 </form>
 </div>
+    <canvas id="timeSeriesChart" style="display: block; height: 300px; width: 300px;"></canvas>
+  </div>
+</div>
 
-<div id="chart-legends"></div>
-<canvas id="timeSeriesChart" style="display: block; width: 80%;"></canvas>
 
 <div class="onoffswitch">
     <a>Show time series chart data as table:</a>
@@ -1002,6 +1016,46 @@ document.getElementById("increaseChart5").onclick = function(evt)
 Chart.defaults.global.plugins.datalabels.display = false
 
  getData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/pie_data')
+
+ divs = ['timeSeries1', 'timeSeries2', 'timeSeries3', 'timeSeries4']
+
+ getData.done(function(result
+  s) {
+    years = results.labels
+    for (i = 0; i < years.length; i++) {
+      yr = years[i]
+        result = results[yr]
+          data = {
+        datasets: [{
+            data: result.data,
+            backgroundColor: palette('tol', result.data.length).map(function(hex) {
+            return '#' + hex;
+          })
+        }],
+
+        // These labels appear in the legend and in the tooltips when hovering different arcs
+        labels: result.labels,
+        options: {
+            responsive: true
+        }
+    };
+
+     ctx = document.getElementById(divs[i]).getContext('2d');
+    myPieChart = new Chart(ctx, {
+        type: 'pie',
+        data: data ,
+        options: {
+          title: {
+              display: true,
+              position: 'bottom',
+              text: yr
+          }
+      }
+    });
+    }
+ });
+
+
 
 
 
