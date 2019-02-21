@@ -224,7 +224,7 @@ def insert_entry():
         ecologicalDescription = ''
     humane = flask.request.args.get('humane', default='')
     if (humane ==('N/A')):
-        humane = 'NULL'
+        humane = None
     humaneDescription = flask.request.args.get('humaneDescription', default='')
     if humaneDescription  == 'NONE': 
         humaneDescription = ''

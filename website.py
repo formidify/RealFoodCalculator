@@ -41,9 +41,10 @@ def entrySession():
                          if category == '':
                              category = 'NONE'
                          print("labels[index]", labels[index], category)
+                         print("type of category: ", type(category))
                          if isinstance(category, str):
-                             category.replace('#', 'lb')
-                             #print("Replaced pound:", category)
+                             category=category.replace("#","%23")
+                             print("Replaced pound:", category)
                          api_url_item += (labels[index] + '=' + str(category) + '&')
                          index += 1
                      api_url_item += ('month='+result['month']+'&')
@@ -107,4 +108,4 @@ if __name__ == '__main__':
     host = 'cmc307-06.mathcs.carleton.edu'
 #    port = int(sys.argv[2])
 #   PUT LOCALHOST HERE FOR TESTING - CHAE
-    app.run(host="localhost", port=2019, debug=True)
+    app.run(host=host, port=2019, debug=True)
