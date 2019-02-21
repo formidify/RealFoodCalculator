@@ -11,7 +11,7 @@ function initialize() {
   // TODO : change logged_in from true back to false if wanting to develop
   //    functionality.
   if (logged_in == null) {logged_in = true;}
-  if (!window.location.href.includes("/login") && !(logged_in)){
+  if (!window.location.href.includes("/login") && !window.location.href.includes("/home") && !(logged_in)){
     console.log("Getting false in line 15")
     redirect_to_login();
   }
@@ -128,7 +128,10 @@ function redirect_to_login(){
 }
 
 function getBaseApiURL() {
-  var baseURL = window.location.protocol + '//' + window.location.hostname + ':' + api_port;
+  // TODO : unhard-code this!!
+  var api_port = 5001;
+  var baseURL = window.location.protocol + '//' + 'cmc307-06.mathcs.carleton.edu' + ':' + api_port;
+  //var baseURL = window.location.protocol + '//' + window.location.hostname + ':' + api_port;
   //console.log(baseURL);
   return baseURL;
 }
@@ -138,6 +141,200 @@ function getBaseWebURL() {
   //console.log(baseWebURL);
   return baseWebURL;
 }
+
+function vd_go_btn() {
+  console.log("Go button pressed");
+  var table = document.getElementById('results');
+  var table_len = table.getElementsByTagName('tr').length;
+  console.log(table_len);
+  for (var row=table_len-1; row>0; row--){
+    //console.log("row: "+row.toString());
+    table.deleteRow(row);
+  }
+
+  var inputDict = {};
+  var queryStrings = [];
+  var inputList = document.getElementsByTagName("input");
+  for (var i=0; i<inputList.length; i++){
+    var element = inputList[i];
+    if (element.value != ""){
+      inputDict[element.getAttribute("placeholder")]=element.value;
+      queryStrings.push(element.getAttribute("placeholder").toLowerCase()+"="+element.value+"&");
+    }
+  }
+  // TODO : PUT IN SOMETHING ABOUT SORTING
+  console.log("queryString -> " + queryStrings);
+  var query = getBaseApiURL()+"/test_data_large?";
+  for (var i=0; i<queryStrings.length; i++){
+    var str = queryStrings[i];
+    query = query+str;
+  }
+  var url = query.substring(0,query.length - 1);
+  console.log("url -> " + url);
+
+  var search_result={};
+
+  fetch(url)
+    .then(res => res.json())
+    .then((out) => {
+      search_result=out;
+      // TODO : figure out how to transfer json data
+      append_json(out);})
+    .catch(err => { throw err });
+
+  console.log('Checkout this search result! ', search_result)
+}
+
+function append_json(data){
+  var table = document.getElementById('results');
+  console.log(table.getAttribute("id"));
+  var cur_row = 0;
+  data.forEach(function(object) {
+    var tr = document.createElement('tr');
+    tr.innerHTML =
+    '<td>'+'<button class="editbtn" onclick="editbtn(' +
+    cur_row.toString()+');">' + 'edit</button></td>' +
+    '<td contenteditable=false>' + object.vendor + '</td>' +
+    '<td contenteditable=false>' + object.description + '</td>' +
+    '<td contenteditable=false>' + object.category + '</td>' +
+    '<td contenteditable=false>' + object.fair + '</td>' +
+    '<td contenteditable=false>' + object.year +'/'+ object.month + '</td>';
+    table.appendChild(tr);
+    tr.setAttribute("id",'cur_row'+cur_row.toString());
+    // TODO : might not need class = can_updt
+    tr.setAttribute("class", "can_updt");
+    cur_row++;
+  });
+}
+
+function editbtn(cur_row){
+  //console.log('current row = ' + cur_row);
+  //console.log('current id = ' + document.getElementById('cur_row'+cur_row).getAttribute("id"));
+  // TODO : before letting edit, save the json for this whole row and save it to query later
+  var edit_cells = document.getElementById('cur_row'+cur_row).getElementsByTagName('td');
+  var parent = document.getElementById('cur_row'+cur_row);
+  var child = parent.getElementsByTagName('td')[0];
+  for (var i=1; i<edit_cells.length; i++){
+    edit_cells[i].setAttribute('contenteditable', 'true');
+  }
+  child.remove();
+
+  var cell = document.createElement('td');
+  var para = document.createElement("button");
+  para.innerHTML='save';
+  para.setAttribute('class','savebtn');
+  para.setAttribute('onclick', 'savebtn('+cur_row.toString()+');');
+  cell.appendChild(para);
+
+  var new_child = document.getElementsByTagName('td')[0];
+  parent.insertBefore(cell, new_child);
+}
+
+function savebtn(cur_row){
+  // TODO : CHANGE THE ACTUAL DATABASE
+  var edit_cells = document.getElementById('cur_row'+cur_row).getElementsByTagName('td');
+  var parent = document.getElementById('cur_row'+cur_row);
+  var child = parent.getElementsByTagName('td')[0];
+  for (var i=1; i<edit_cells.length; i++){
+    edit_cells[i].setAttribute('contenteditable', 'false');
+  }
+  child.remove();
+
+  var cell = document.createElement('td');
+  var para = document.createElement("button");
+  para.innerHTML='edit';
+  para.setAttribute('class','editbtn');
+  para.setAttribute('onclick', 'editbtn('+cur_row.toString()+');');
+  cell.appendChild(para);
+
+  var new_child = document.getElementsByTagName('td')[0];
+  parent.insertBefore(cell, new_child);
+}
+
+function downloadCSV(csv, filename) {
+    var csvFile;
+    var downloadLink;
+
+    // CSV file
+    csvFile = new Blob([csv], {type: "text/csv"});
+
+    // Download link
+    downloadLink = document.createElement("a");
+
+    // File name
+    downloadLink.download = filename;
+
+    // Create a link to the file
+    downloadLink.href = window.URL.createObjectURL(csvFile);
+
+    // Hide download link
+    downloadLink.style.display = "none";
+
+    // Add the link to DOM
+    document.body.appendChild(downloadLink);
+
+    // Click download link
+    downloadLink.click();
+}
+
+function exportTableToCSV(filename) {
+    var csv = [];
+    var rows = document.querySelectorAll("table tr");
+
+    for (var i = 0; i < rows.length; i++) {
+        var row = [], cols = rows[i].querySelectorAll("td, th");
+
+        for (var j = 0; j < cols.length; j++)
+            row.push(cols[j].innerText);
+
+        csv.push(row.join(","));
+    }
+
+    // Download CSV file
+    downloadCSV(csv.join("\n"), filename);
+}
+
+/*
+function exportTableToCSV($table, filename) {
+  var $rows = $table.find('tr:has(td),tr:has(th)'),
+  // Temporary delimiter characters unlikely to be typed by keyboard
+  // This is to avoid accidentally splitting the actual contents
+  tmpColDelim = String.fromCharCode(11), // vertical tab character
+  tmpRowDelim = String.fromCharCode(0), // null character
+
+  // actual delimiter characters for CSV format
+  colDelim = '","',
+  rowDelim = '"\r\n"',
+
+  // Grab text from table into CSV formatted string
+  csv = '"' + $rows.map(function (i, row) {
+    var $row = $(row), $cols = $row.find('td,th');
+    return $cols.map(function (j, col) {
+      var $col = $(col), text = $col.text();
+      return text.replace(/"/g, '""'); // escape double quotes
+    }).get().join(tmpColDelim);
+  }).get().join(tmpRowDelim)
+  .split(tmpRowDelim).join(rowDelim)
+  .split(tmpColDelim).join(colDelim) + '"',
+  // Data URI
+  csvData = 'data:application/csv;charset=utf-8,' + encodeURIComponent(csv);
+  console.log(csv);
+  if (window.navigator.msSaveBlob) { // IE 10+
+    //alert('IE' + csv);
+    window.navigator.msSaveOrOpenBlob(new Blob([csv], {type: "text/plain;charset=utf-8;"}), "csvname.csv")
+  }else {
+    $(this).attr({ 'download': filename, 'href': csvData, 'target': '_blank' });
+  }
+}
+
+// This must be a hyperlink
+$("#xx").on('click', function (event) {
+  exportTableToCSV.apply(this, [$('#projectSpreadsheet'), 'export.csv']);
+  // IF CSV, don't do event.preventDefault() or return false
+  // We actually need this to be a typical hyperlink
+});
+*/
+
 
   /*
   var advanced_search_button = document.getElementById('visualization_page_btn')
