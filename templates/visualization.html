@@ -60,25 +60,104 @@
  *
  * Options: add/remove existing graph chunk, as well as download.
  */ -->
-<h1>Real vs non-real percantage</h1>
+ <align>
+<h1>Quick Look @ This Year's Data</h1>
 
-<div class = "control">
-<a>Items to show:</a>
-<select id = "num_items" name="Show:">
-  <option value="5">5</option>
-  <option value="10">10</option>
-  <option value="15">15</option>
-  <option value="20">20</option>
-</select>
+<div class="row">
+  <div class="column" style = "width: 25%; height: 25%;  float: left">
+    <canvas id="realCatChart" style="display: block; height: 75px; width: 75px;"></canvas>
+    <canvas id="realVendChart" style="display: block; height: 75px; width: 75px;"></canvas>
+  </div>
+  <div class="column" style = "width: 25%; height: 25%;  float: left">
+    <canvas id="nonCatChart" style="display: block; height: 75px; width: 75px;"></canvas>
+    <canvas id="nonVendChart" style="display: block; height: 75px; width: 75px;"></canvas>
+  </div>
+  <div class="column" style = "width: 25%; height: 25%;  float: left">
+    <canvas id="realItemChart" style="display: block; height: 75px; width: 75px;"></canvas>
+    <canvas id="realBrandChart" style="display: block; height: 75px; width: 75px;"></canvas>
+  </div>
+  <div class="column" style = "width: 25%; height: 25%;  float: left">
+    <canvas id="nonItemChart" style="display: block; height: 75px; width: 75px;"></canvas>
+    <canvas id="nonBrandChart" style="display: block; height: 75px; width: 75px;"></canvas>
+  </div>
 </div>
+</align>
 
-<div>
-<form>
-    <label for="add">Add item:</label>
-    <input id="add" type="text" name="text">
-    <input type="submit" value="Search">
-</form>
-</div>
+<script>
+Chart.defaults.global.plugins.datalabels.display = false
+
+Chart.DatasetController.extend({
+    name: "BarAlt",
+    draw: function(){
+        this.scale.endPoint = 200;
+        Chart.types.Bar.prototype.draw.apply(this, arguments);
+    }
+});
+
+divs = ["realCatChart", "nonCatChart", "realItemChart", "nonItemChart", 
+        "realVendChart", "nonVendChart", "realBrandChart", "nonBrandChart"]
+
+groups = ['category', 'description', 'vendor', 'label_brand']
+type = ['real', 'nonreal']
+background = ["rgba(255, 159, 64, 0.2)", "rgba(54, 162, 235, 0.2)"]
+border = ["rgba(255, 159, 64)", "rgba(54, 162, 235)"]
+
+prefix = "Top 5 "
+title_parts = ['categories', 'items', 'vendors', 'labels/brands']
+// quick charts
+getData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/quick_data')
+getData.done(function(results) {
+  year = results.year
+for (i = 0; i < 4; i++) {
+  for (j = 0; j < 2; j++) {
+
+    key = groups[i] + ":" + type[j]
+    labels = results[key].labels
+    cost = results[key].cost
+
+
+  data = {
+      datasets: [{
+          label: "Purchase in dollars",
+          data: cost,
+          borderWidth: 2,
+          backgroundColor: background[j],
+          borderColor: border[j]
+      }],
+      // These labels appear in the legend and in the tooltips when hovering different arcs
+      labels: labels,
+      options: {
+          responsive: true
+      }
+  };
+  title = prefix + title_parts[i] + " " + year + " in " + type[j] + " food"
+  ctx = document.getElementById(divs[2*i + j]).getContext('2d');
+  quickBarChart = new Chart(ctx, {
+      type: 'bar',
+      data: data,
+      options: {
+        title: {
+              display: true,
+              text: title
+          },
+          scales: {
+          xAxes: [{
+            ticks: {
+              autoSkip: false
+            }
+          }]
+      }
+  }});
+
+  }
+}
+});
+</script>
+
+
+
+<h1>Real vs non-real percentage</h1>
+
 
 <div class="row">
   <div class="column" style = "width: 25%; height: 25%;  float: left">
@@ -89,8 +168,39 @@
     <canvas id="percentChart3" style="display: block; height: 75px; width: 75px;"></canvas>
     <canvas id="percentChart5" style="display: block; height: 75px; width: 75px;"></canvas>
   </div>
-  <div class="column" style = "width: 50%; height: 50%; float: left">
-    <canvas id="percentChart2" style="display: block; height: 300px; width: 300px;"></canvas>
+  <div class="column" style = "width: 50%; height: 20%; float: left">
+  
+<a>Items to show:</a>
+  <div class = "control" style = "display: inline-block">
+<select id = "num_items_percent" name="Show:" style = "width: 100%">
+  <option value="5">5</option>
+  <option value="10">10</option>
+  <option value="15">15</option>
+  <option value="20">20</option>
+</select>
+</div>
+
+<div style = "display: inline-block; width: 50%">
+<form>
+    <label for="add">Add item:</label>
+    <input id="add" type="text" name="text">
+    <input type="submit" value="Search">
+</form>
+</div>
+
+
+<div style = "display: block">
+<a>Ranked by (in decreasing order):</a>
+<select id = "rank_percent" name="Show:" style = "width: 22%">
+  <option value="minus" selected>Nonreal $ minus Real $</option>
+  <option value="add">Total $ purchase</option>
+  <option value="real">Real $ purchase</option>
+  <option value="nonreal">Nonreal $ purchase</option>
+</select>
+</div>
+
+
+    <canvas id="percentChart2" style="display: block; height: 100px; width: 100px;"></canvas>
   </div>
 </div>
 
@@ -119,9 +229,20 @@
 
 <script>
 Chart.defaults.global.plugins.datalabels.display = false
+
+let num_items = document.querySelector('#num_items_percent');
+let rank = document.querySelector('#rank_percent');
+
+// manually added items
+var new_real = [];
+var new_nonreal = [];
+var new_label = [];
+
+
+
 // pie chart
 // load data from Flask; shows all categories
- getData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/pie_data')
+getData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/pie_data')
 
 getData.done(function(results) {
     years = results.labels
@@ -438,42 +559,6 @@ document.getElementById("percentChart5").onclick = function(evt)
 
 
 <h1>Hypothetical Increase</h1>
-<a>Piecharts:</a>
-<label class="container">Show
-  <input type="checkbox" checked="checked">
-  <span class="checkmark"></span>
-</label>
-
-<label class="container">Hide
-  <input type="checkbox">
-  <span class="checkmark"></span>
-</label>
-<a>Items to show:</a>
-<select name="Show:">
-  <option value="" disabled selected>Please Choose...</option>
-  <option value="5">5</option>
-  <option value="10">10</option>
-  <option value="15">15</option>
-  <option value="20">20</option>
-</select>
-
-<a>Ranked by:</a>
-<select name="Show:">
-  <option value="" disabled selected>Please Choose...</option>
-  <option value="5">Dollar Increase</option>
-  <option value="10">Single Item % Increase</option>
-  <option value="15">Total Purchase % Increase</option>
-</select>
-
-<a>Rank order:</a>
-<select name="Show:">
-  <option value="" disabled selected>Please Choose...</option>
-  <option value="5">Increasing</option>
-  <option value="10">Decreasing</option>
-</select>
-
-<a>Add Item:</a>
-<input type="text" name="fname"><br>
 
 <div class="row">
   <div class="column" style = "width: 25%; height: 25%;  float: left">
@@ -485,8 +570,34 @@ document.getElementById("percentChart5").onclick = function(evt)
     <canvas id="increaseChart5" style="display: block; height: 75px; width: 75px;"></canvas>
   </div>
   <div class="column" style = "width: 50%; height: 50%; float: left">
+    <a>Items to show:</a>
+  <div class = "control" style = "display: inline-block">
+<select id = "num_items_percent" name="Show:" style = "width: 100%">
+  <option value="5">5</option>
+  <option value="10">10</option>
+  <option value="15">15</option>
+  <option value="20">20</option>
+</select>
+</div>
+
+<div style = "display: inline-block; width: 50%">
+<form>
+    <label for="add">Add item:</label>
+    <input id="add" type="text" name="text">
+    <input type="submit" value="Search">
+</form>
+</div>
     <canvas id="increaseChart2" style="display: block; height: 300px; width: 300px;"></canvas>
   </div>
+</div>
+
+<div class="onoffswitch">
+    <a>Show mixed bar/line chart data as table:</a>
+    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked>
+    <label class="onoffswitch-label" for="myonoffswitch">
+        <span class="onoffswitch-inner"></span>
+        <span class="onoffswitch-switch"></span>
+    </label>
 </div>
 
 <script>
@@ -855,29 +966,98 @@ document.getElementById("increaseChart5").onclick = function(evt)
 </script>
 
 <h1>Time Series of Real vs non-real food</h1>
-<a>Piecharts:</a>
-<label class="container">Show
-  <input type="checkbox">
-  <span class="checkmark"></span>
-</label>
 
-<label class="container">Hide
-  <input type="checkbox" checked="checked">
-  <span class="checkmark"></span>
-</label>
-<a>Add Item:</a>
-<input type="text" name="fname"><br>
-<a>Ranked by types of purchase:</a>
-<select name="Show:">
-  <option value="" disabled selected>Please Choose...</option>
-  <option value="5">Real</option>
-  <option value="10">Total</option>
+</div>
+
+<div class="row">
+  <div class="column" style = "width: 25%; height: 25%;  float: left">
+    <canvas id="timeChart1" style="display: block; height: 75px; width: 75px;"></canvas>
+    <canvas id="timeChart3" style="display: block; height: 75px; width: 75px;"></canvas>
+  </div>
+  <div class="column" style = "width: 25%; height: 25%;  float: left">
+    <canvas id="timeChart2" style="display: block; height: 75px; width: 75px;"></canvas>
+    <canvas id="timeChart4" style="display: block; height: 75px; width: 75px;"></canvas>
+  </div>
+  <div class="column" style = "width: 50%; height: 50%; float: left">
+    <a>Items to show:</a>
+  <div class = "control" style = "display: inline-block">
+<select id = "num_items_percent" name="Show:" style = "width: 100%">
+  <option value="5">5</option>
+  <option value="10">10</option>
+  <option value="15">15</option>
+  <option value="20">20</option>
 </select>
+</div>
 
-<div id="chart-legends"></div>
-<canvas id="timeSeriesChart" style="display: block; width: 80%;"></canvas>
+<div style = "display: inline-block; width: 50%">
+<form>
+    <label for="add">Add item:</label>
+    <input id="add" type="text" name="text">
+    <input type="submit" value="Search">
+</form>
+</div>
+    <canvas id="timeSeriesChart" style="display: block; height: 300px; width: 300px;"></canvas>
+  </div>
+</div>
+
+
+<div class="onoffswitch">
+    <a>Show time series chart data as table:</a>
+    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked>
+    <label class="onoffswitch-label" for="myonoffswitch">
+        <span class="onoffswitch-inner"></span>
+        <span class="onoffswitch-switch"></span>
+    </label>
+</div>
+
 <script>
+
+
 Chart.defaults.global.plugins.datalabels.display = false
+
+ getData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/pie_data')
+
+ divs_time = ['timeChart1', 'timeChart2', 'timeChart3', 'timeChart4']
+
+ getData.done(function(results) {
+    years = results.labels
+    for (i = 0; i < years.length; i++) {
+      yr = years[i]
+        result = results[yr]
+          data = {
+        datasets: [{
+            data: result.data,
+            backgroundColor: palette('tol', result.data.length).map(function(hex) {
+            return '#' + hex;
+          })
+        }],
+
+        // These labels appear in the legend and in the tooltips when hovering different arcs
+        labels: result.labels,
+        options: {
+            responsive: true
+        }
+    }
+
+     ctx_time = document.getElementById(divs_time[i]).getContext('2d');
+    myPieChart = new Chart(ctx_time, {
+        type: 'pie',
+        data: data ,
+        options: {
+          title: {
+              display: true,
+              position: 'bottom',
+              text: yr
+          }
+      }
+    });
+    };
+ });
+
+
+
+
+
 // insert data into the chart object
 
 lineChartData = {};
@@ -896,6 +1076,8 @@ lineChartData.datasets = [];  //add 'datasets' array element to object
 [[204, 40, 519], [1577, 2368, 3254], [635, 758, 20, 100], [134, 537, 947], [101, 202, 303]]] // real
 
 
+total_configs = []
+
 datasets = []
 for (i = 0; i < items.length; i++) {
     for (j = 0; j < types.length; j++) {
@@ -903,6 +1085,7 @@ for (i = 0; i < items.length; i++) {
         line.data = data[j][i]
         line.type = 'line'
         line.label = types[j] + " " + items[i]
+        total_configs.push(line.label)
         //line.backgroundColor = colors[i]
         line.borderColor = colors[i]
         line.fill = false
@@ -915,6 +1098,33 @@ for (i = 0; i < items.length; i++) {
 
 lineChartData.datasets = datasets
 
+for (i = 0; i < items.length; i++) {
+    line = {}
+    line.data = 0 // arbitrary
+    line.type = 'line'
+    line.label = items[i]
+    line.backgroundColor = colors[i]
+    line.borderColor = colors[i]
+    //line.fillColor = colors[i]
+    line.fill = true
+    line.showLine = false
+    datasets.push(line)
+}
+
+for (i = 0; i < types.length; i++) {
+    line = {}
+    line.data = 0 // arbitrary
+    line.type = 'line'
+    line.label = types[i]
+    //line.backgroundColor = colors[i]
+    if (i > 0) {
+        line.borderDash = [10, 5]
+    }
+    line.fill = false
+    line.showLine = false
+    datasets.push(line)
+}
+
 
  ctx5 = document.getElementById("timeSeriesChart").getContext('2d');
 myLineChart = new Chart(ctx5, {
@@ -923,7 +1133,13 @@ myLineChart = new Chart(ctx5, {
     options: {scales: {yAxes:[{scaleLabel: {display: true, labelString: "Dollar purchases ($)"}}]},
               legend: {
                 display: true,
-                fill: false
+                fill: false,
+                labels: {
+                  filter: function(legendItem, data) {
+                  //return legendItem.datasetIndex >= total_configs.length
+                  return !total_configs.includes(data.datasets[legendItem.datasetIndex].label)
+                }
+              }
               }
   }
 });
@@ -932,6 +1148,42 @@ myLineChart = new Chart(ctx5, {
 
 </script>
 
+<h1>Item, Vendor and Label - The Exciting Love Trio</h1>
+
+<div>
+<form>
+    <label for="add">Search By item:</label>
+    <input id="add" type="text" name="text">
+    <input type="submit" value="item" onclick="addItem()">
+</form>
+<a> OR </a>
+<form>
+    <label for="add">By vendor:</label>
+    <input id="add" type="text" name="text">
+    <input type="submit" value="vendor" onclick="addVendor()">
+</form>
+<a> OR </a>
+<form>
+    <label for="add">By label/brand:</label>
+    <input id="add" type="text" name="text">
+    <input type="submit" value="brand" onclick="addBrand()">
+</form>
+</div>
+
+<script>
+
+function addItem() {
+
+}
+
+function addVendor() {
+
+}
+
+function addBrand() {
+
+}
+</script>
 </body>
 
 

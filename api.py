@@ -33,6 +33,7 @@ def get_connection():
                                       password='L00kB4uL3@p',
                                       host='localhost')
     except Exception as e:
+        print("This is exception")
         print(e)
     return connection
 
@@ -187,6 +188,94 @@ def get_products():
             print(e)
         connection.close()
     return json.dumps(products_list)
+
+# insert one item into database
+@app.route("/add_entry")
+def insert_entry():
+    connection = get_connection()
+    month = flask.request.args.get('month', default='-1').lower()
+    year = flask.request.args.get('year', default='-1').lower()
+    description = flask.request.args.get('description', default='%').lower()
+    category = flask.request.args.get('category', default='%').lower()
+    productCode = flask.request.args.get('productCode', default='%').lower()
+    brand = flask.request.args.get('brand', default='%').lower()
+    vendor = flask.request.args.get('vendor', default='%').lower()
+    notes = flask.request.args.get('notes', default='%').lower()
+    cost  = flask.request.args.get('cost', type=float)
+    local = flask.request.args.get('local', default='-1')
+    localDescription = flask.request.args.get('localDescription', default='%').lower()
+    fair = flask.request.args.get('fair', default='-1')
+    fairDescription = flask.request.args.get('fairDescription', default='%').lower()
+    ecological = flask.request.args.get('ecological', default='-1')
+    ecologicalDescription = flask.request.args.get('ecologicalDescription', default='%').lower()
+    humane = flask.request.args.get('humane', default='-1')
+    humaneDescription = flask.request.args.get('humaneDescription', default='%').lower()
+    disqualifier = flask.request.args.get('disqualifier', default='-1')
+    disqualifierDescription = flask.request.args.get('disqualifierDescription', default ='%').lower()
+    productCodeType = ''
+    ratingVersion = flask.request.args.get('ratingVersion', default='-1').lower()
+    facility = ''
+
+    query = """
+            INSERT INTO test_data_large VALUES ({0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20},{21});
+            """.format(month, year, description, category, productCode, productCodeType, brand, vendor, ratingVersion, local, localDescription, fair, fairDescription, ecological, ecologicalDescription, humane, humaneDescription, disqualifier, disqualifierDescription, cost, notes, facility)
+    print("Entry: ", query)    
+
+    #if connection is not None:
+        #get_select_query_results(connection, query)
+    return "Stub Function: Inserted Entry"
+    #return "Stub Function: Could not get connection"
+
+# get data for quick charts
+@app.route("/visualization/quick_data")
+def get_quick_data():
+    dic = {}
+    curr_query = """SELECT MAX(year) AS maxyear FROM test_data_large;"""
+    connection = get_connection()
+    curr_year = 2018 # just as initialization
+    if connection is not None:
+        try:
+            # either this or minimum items allowed to show
+            curr_year = get_select_query_results(connection, curr_query)[0][0]
+        except Exception as e:
+            print(e)
+        connection.close()
+
+    groups = ['category', 'description', 'vendor', 'label_brand']
+    type = ['real', 'nonreal']
+
+    print(curr_year)
+
+    for g in groups:
+        for t in type:
+            labels = []
+            cost = []
+            if t == 'real':
+                query = """SELECT trim({g}), SUM(cost) AS sum FROM test_data_large WHERE year = {c} AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't') GROUP BY trim({g}) ORDER BY sum DESC;""".format(g = g, c = curr_year)
+            else:
+                query = """SELECT trim({g}), SUM(cost) AS sum 
+                FROM (SELECT COALESCE(local, 'f') AS local, COALESCE(fair, 'f') AS fair, COALESCE(ecological, 'f') AS ecological, COALESCE(humane, 'f') AS humane, 
+                {g}, cost, year FROM test_data_large) X WHERE year = {c} AND local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't' 
+                GROUP BY trim({g}) ORDER BY sum DESC;""".format(g = g, c = curr_year)
+            
+            connection = get_connection()
+            if connection is not None:
+                try:
+                    for row in get_select_query_results(connection, query):
+                        labels.append(row[0])
+                        cost.append(row[1])
+                except Exception as e:
+                    print(e)
+                connection.close()
+
+            key = g + ":" + t
+            dic[key] = {"labels": labels[:5], "cost": cost[:5]}
+
+    dic['year'] = curr_year
+
+    print("is this printing?")
+    print(dic)
+    return flask.jsonify(dic)
 
 # get pie chart data for vis page (for 3 most recent years plus in total)
 @app.route("/visualization/pie_data")
@@ -359,41 +448,48 @@ def get_percent_data(cat, yr):
 
 # get time series data for vis page (by category)
 # NOTE: items where all four categories (local, ecological, fair, humane) are null will not be included in the calculation
-@app.route("/visualization/time_data", defaults = {'cat': 'produce', 'yr': 'total'})
-@app.route("/visualization/time_data/<cat>+<yr>")
-def get_time_data(cat, yr):
-    items = []
-    total_percent = []
-    ind_percent = []
-    dollars = []
-    # not filtered by year
-    if yr == 'total':
-        y = ''
-    else:
-        y = 'year = ' + str(yr) + ' AND'
+@app.route("/visualization/time_data", defaults = {'cat': 'produce'})
+@app.route("/visualization/time_data/<cat>")
+def get_time_data(cat):
 
-    # how do we query this?
-    query = """ """
-    print(query)
-
-    connection = get_connection()
-    if connection is not None:
-        try:
-            # either this or minimum items allowed to show
-            for row in get_select_query_results(connection, query):
-                items.append(row[0])
-                total_percent.append(row[1])
-                ind_percent.append(row[2])
-                dollars.append(row[3])
-        except Exception as e:
-            print(e)
-        connection.close()
-
-    print(items)
-    print(total_percent)
-    print(ind_percent)
     # default ranking order is by a * norm(% in all) + b * norm(% in one) - c * norm($ spent) for a = b = c = 1, but the coefficients can be up to change
     return flask.jsonify({"items": items[:8], "total_percent": total_percent[:8], "ind_percent": ind_percent[:8], "dollars": dollars[:8]})
+
+# get time series data for vis page (by category)
+# NOTE: items where all four categories (local, ecological, fair, humane) are null will not be included in the calculation
+@app.route("/visualization/item_data", defaults = {'item': '', 'type': ''})
+@app.route("/visualization/item_data/<item>+<type>")
+def get_item_data(item, type):
+
+    # add item for percent chart
+    if type == 'percent':
+        query = """SELECT SUM(cost) AS sum FROM test_data_large WHERE description = {d} AND (""".format(d = item)
+        return 
+
+    # add item for hypothetical increase chart
+    if type == 'increase':
+        return
+
+    # add item for item/label/vendor chart
+    if type == 'liv':
+        return
+
+### Need to have a separate function for time series data
+
+# get time series data for vis page (by category)
+# NOTE: items where all four categories (local, ecological, fair, humane) are null will not be included in the calculation
+@app.route("/visualization/brand_vendor_data", defaults = {'item': '', 'type': ''})
+@app.route("/visualization/brand_vendor_data/<item>+<type>")
+def get_brand_vendor_data(item, type):
+
+    # add brand/label
+    if type == 'brand':
+        return 
+
+    # add vendor
+    if type == 'vendor':
+        return
+
 
 if __name__ == '__main__':
     """if len(sys.argv) != 3:

@@ -25,10 +25,26 @@ def example():
 
 @app.route('/entry_session', methods=['POST','GET'])
 def entrySession():
-    api_url = 'http://cmc307-06.mathcs.carleton.edu:5001/test_data_large?'
+    labels = ['category','vendor', 'brand','description','notes','productCode', 'cost','local','localDescription', 'fair', 'fairDescription','ecological','ecologicalDescription','humane','humaneDescription','disqualifier','disqualifierDescription']
+    api_url = 'http://cmc307-06.mathcs.carleton.edu:5001/add_entry?'
     if request.method == 'POST':
         result = request.form
-        print(result)
+        for key, value in result.items():
+            if (key == 'entrySessionData') and (value != '[]') and (value != ''):
+                value = json.loads(value)
+                for item in value: 
+                     api_url_item = api_url
+                     for category in item:
+                         index = item.index(category)
+                         if category == '':
+                             category = 'NONE'
+                         api_url_item += (labels[index] + '=' + str(category) + '&')
+                     api_url_item += ('month='+result['month']+'&')
+                     api_url_item += ('year='+result['year']+'&')
+                     api_url_item += ('rating_version='+result['rating_version'])
+                     r = requests.get(api_url)
+                     print(api_url_item)    
+                     print(r)
     return render_template('entry_session.html')
 
 @app.route('/view_download') #, methods = ['POST', 'GET'])
@@ -52,17 +68,17 @@ def result():
     if request.method == 'POST':
         result = request.form
         #result = request.form.get('description', 'default_description')
-        print("This is request.form.get: ")
-        print(result)
+        # print("This is request.form.get: ")
+        #print(result)
         for key, value in result.items():
-            print('Key:', key)
-            print('Value:', value)
+            #print('Key:', key)
+            #print('Value:', value)
             if (value):
                 api_url += (key + '=' + value + '&')
         api_url += 'year=year'
-        print(api_url)
+        #print(api_url)
         r = requests.get(api_url).json()
-        print(r)
+        #print(r)
         # print(json.loads(r.text))
         return render_template("data_entry.html",result = r)
 
