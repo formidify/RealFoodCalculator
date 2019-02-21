@@ -1,19 +1,36 @@
 <!DOCTYPE html>
-<html>
+<html lang=eng>
 <head>
-<title>Real Food Calculator</title>
-<!--<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}" />
-<script type="text/javascript" src="{{ url_for('static', filename='example.js') }}" defer></script>-->
-  <link rel="stylesheet" type="text/css" href="../static/styles.css" />
+  <title>Real Food Calculator</title>
+  <!--<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}" />
+  <script type="text/javascript" src="{{ url_for('static', filename='example.js') }}" defer></script>-->
+  <!--<link rel="stylesheet" type="text/css" href="../static/styles.css" />-->
+  <link rel="stylesheet" type="text/css" href="../static/home.css" />
   <script type="text/javascript" src="../static/example.js" defer></script>
 </head>
 <body>
 
 <h1>Real Food Calculator</h1>
+<div class="home_top_holder">
+  <div class="home_top_content">
+    <div id="home_title">Carleton College RFC</div>
+    <button class="home_login" onclick"redirect_to_login();">Login</button>
+  </div>
+</div>
 <div class="topnav">
   <nav>
       <a id="home_btn" href="#">Home</a>
-      <!-- <a id="data_entry_btn" href="#">Data Entry</a>-->
+      <!--<a id="data_entry_btn" href="#">Data Entry</a>-->
+      <a id="entry_session_btn" href="#">Entry Session</a>
+      <a id="view_download_btn" href="#">View/Download Data</a>
+      <a id="visualization_btn" href="#">Visualization</a>
+  </nav>
+</div>
+
+<!--<div class="topnav">
+  <nav>
+      <a id="home_btn" href="#">Home</a>
+      //comment this out <a id="data_entry_btn" href="#">Data Entry</a>
       <a id="entry_session_btn" href="#">Entry Session</a>
       <a id="view_download_btn" href="#">View/Download Data</a>
       <a id="visualization_btn" href="#">Visualization</a>
@@ -51,7 +68,8 @@
     <td>data 3</td>
     <td>data 4</td>
   </tr>
-</table>
+</table>-->
+
 
 </body>
 </html>

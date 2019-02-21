@@ -5,6 +5,7 @@
     <title> View/Download Data </title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}" />
     <script type="text/javascript" src="{{ url_for('static', filename='example.js') }}" defer></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
 
 <body>
@@ -73,16 +74,23 @@
                 <option value="cost">Cost</option>
             </select>
 
-    <p></p>
+    <br><br>
 
     <div>
-    Showing data for: <input type="text" placeholder="Month">
+        <input type="text" placeholder="Month">
         <input type="text" placeholder="Year">
-        <button class="Button">Go</button>
+        <input type="text" placeholder="Vendor">
+        <input type="text" placeholder="Description">
+        <input type="text" placeholder="Category">
+        <button class="Button" onclick="vd_go_btn();">Go</button>
 
     </div>
-    <table>
+
+    <br>
+
+    <table id="results">
         <tr>
+            <th>Edit</th>
             <th>Vendor</th>
             <th>Desc.</th>
             <th>Category</th>
@@ -91,30 +99,21 @@
         </tr>
         <tbody>
             <!-- enter items here -->
-            <td>Sysco</td>
+            <!-- <td>Sysco</td>
             <td>Apple</td>
             <td>Produce</td>
             <td>Organic</td>
-            <td>10/1/18</td>
+            <td>10/1/18</td> -->
         </tbody>
     </table>
-    <p></p>
-    <div>
-    Search for:
-      <input type="text" placeholder="Vendor">
-      <input type="text" placeholder="Description">
-      <input type="text" placeholder="Category">
-    <button class="Button">Go</button>
-
-    </div>
-    <p></p>
+    <br>
 
     <div class="dropdown">
-      <button class="dropbtn">Download as:</button>
-      <div class="dropdown-content">
+      <button class="dropbtn" onclick="exportTableToCSV('RFC.csv')">Download CSV</button>
+      <!--<div class="dropdown-content">
         <a href="#">.csv</a>
         <a href="#">.xlsx</a>
-      </div>
+      </div>-->
     </div>
 
 
