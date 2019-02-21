@@ -34,17 +34,25 @@ def entrySession():
                 value = json.loads(value)
                 for item in value: 
                      api_url_item = api_url
+                     index = 0
                      for category in item:
-                         index = item.index(category)
+                         #index = item.index(category)
+                         print("Index", index)
                          if category == '':
                              category = 'NONE'
+                         print("labels[index]", labels[index], category)
+                         if isinstance(category, str):
+                             category.replace('#', 'lb')
+                             #print("Replaced pound:", category)
                          api_url_item += (labels[index] + '=' + str(category) + '&')
+                         index += 1
                      api_url_item += ('month='+result['month']+'&')
                      api_url_item += ('year='+result['year']+'&')
                      api_url_item += ('rating_version='+result['rating_version'])
-                     r = requests.get(api_url)
-                     print(api_url_item)    
+                     r = requests.get(api_url_item)
+                     print("API URL IN WEBSITE:", api_url_item)    
                      print(r)
+                     
     return render_template('entry_session.html')
 
 @app.route('/view_download') #, methods = ['POST', 'GET'])

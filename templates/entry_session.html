@@ -30,7 +30,14 @@ function clearEntries(){
    entrySession = [];
    localStorage.setItem('entrySession', '[]');
    location.reload();
+} 
+function makeEditable(){
+	var table = document.getElementById("sessionTable");
+	table.insertRow();	
+	table.contenteditable='true';
+
 }
+
 </script>
 
 <body>
@@ -118,9 +125,9 @@ function clearEntries(){
     
 
 	 <label for="month">Month</label>
-          <input id="month" name="month" type="text" required>
+          <input id="month" name="month" type="number" required>
 	 <label for="year">Year</label>
-          <input id="year" name="year" type="text" required>
+          <input id="year" name="year" type="number" required>
          <label for="rating_version">Rating Version</label>
          <input id="rating_version" name="rating_version" type="number" value="2.0" placeholder="2.0">
  <button type="submit" class="button3 btn btn-default">Submit All</button>
@@ -129,7 +136,7 @@ function clearEntries(){
 <button class="button4" onclick="clearEntries();">Cancel Session</button>
         <h3> March 2019 </h3>
 
-
+<button onclick="makeEditable();">Edit Entries</button>
 
 <table id="sessionTable">
 <tr>

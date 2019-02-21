@@ -42,24 +42,23 @@
 
  function checkInvalidInputs(){
 	var invalid = false;
+        var alert = "Please Select: ";
         //if category == %
         if (document.getElementById("category").value == '%'){
-            window.alert("No category selected");
+           // window.alert("No category selected");
+            alert += "a category, ";
             invalid = true;
         }
         if (document.getElementById("vendor").value == ''){
-            window.alert("No vendor entered");
-            invalid = true;
-
-        }
-        if (document.getElementById("brand").value == ''){
-            window.alert("No label entered");
-            invalid = true;
+            //window.alert("No vendor entered");
+            alert += "a vendor, ";
+             invalid = true;
 
         }
         if (document.getElementById("cost").value <= 0.00){
-            window.alert("Invalid cost");
-            invalid = true;
+            //window.alert("Invalid cost");
+              alert += "a valid cost.";
+              invalid = true;
 
         }
        //these should be for localDescription, not local 
@@ -94,6 +93,9 @@
   //          invalid = true;
 
 //        }
+        if (alert != "Please Select: "){
+        window.alert(alert);
+        }
         return invalid;
           
     }
@@ -106,26 +108,12 @@
 	
 	
 	if (!checkInvalidInputs()){
-		//checkInvalidInputs == true, means there is an invalid input
-	//	console.log("not valid input");
-		
-	
-
-
         var thisEntry = [];
-        console.log("thisEntry:", thisEntry);
-        
-
-        console.log("clearing/submitting...");
-      //  document.getElementById("data-entry-form").reset();
-        
-       //BUG: INPUTS DOES NOT HAVE COST 
+        console.log("thisEntry:", thisEntry); 
         var inputs = document.querySelectorAll('input[type=text]');
  
-        //apparently this only works on newer broswers- will this be a problem?
-
         var numInputs = document.querySelectorAll('input[type=number]');
-       console.log(numInputs);
+        console.log(numInputs);
 	
         var categoryInputs = document.querySelectorAll('[name=category]');
 	thisEntry.push(categoryInputs[0].value);
@@ -152,8 +140,6 @@
             if (sessionStorage[inputID]) {
                 console.log('made it alllthewayhere')
                 var vendorValue = sessionStorage.getItem(inputID);
-
-
 
                 if (document.getElementById(inputID + '-check').checked){
 
@@ -260,9 +246,6 @@
       </nav>
     </div> -->
     <h2>Adding Items to October 2018 with Rating Version 2</h2>
-    {%if clear%}
-    <script> //clearFields(); </script>
-    {%endif%}
     <form action = "http://cmc307-06.mathcs.carleton.edu:2019/data_entry" method = "POST" id = "data-entry-form">
         <fieldset>
         <div>
