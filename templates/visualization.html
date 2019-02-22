@@ -1032,7 +1032,7 @@ function searchItem() {
   searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/get_item/" + x);
   searches.done(function(results) {
     search = results.search
-    for (i = 0; i < seasrch.length; i++) {
+    for (i = 0; i < search.length; i++) {
     s = search[i]
     $("items_time").append( $("<option>")
     .val(s)
