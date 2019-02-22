@@ -984,8 +984,7 @@ document.getElementById("increaseChart5").onclick = function(evt)
     <input type="submit" value="Search">
 </form>
 <a> OR </a>
-<select id = "categories">
-</select>
+<select id = "categories"></select>
 
 
 
@@ -1008,17 +1007,17 @@ document.getElementById("increaseChart5").onclick = function(evt)
 
 <script>
 
-var select = document.getElementById("categoeis");
+//var select = document.getElementById("categoeis");
 c = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/get_categories/");
 
 c.done(function(results) {
   cats = results.cats;
   for (i = 0; i < cats.length; i++) {
     cat = cats[i]
-    opt = document.createElement("option");
-    opt.value = cat;
-    opt.textContent = cat;
-    select.appendChild(opt);
+    $("select#categories").append( $("<option>")
+    .val(cat)
+    .html(cat)
+);
   }
 })
 
