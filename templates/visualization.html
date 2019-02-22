@@ -1027,7 +1027,9 @@ var myLineChart = new Chart(ctx5, {
                   return !total_configs.includes(data.datasets[legendItem.datasetIndex].label)
                 }
               }
-              }
+              },
+              responsive: true,
+              maintainAspectRatio: false
   }
 });
 
