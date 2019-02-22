@@ -994,7 +994,7 @@ document.getElementById("increaseChart5").onclick = function(evt)
 
 <div class="row">
   <div class="column" style = "width: 60%; height: 10%;  float: left">
-    <canvas id="timeSeriesChart" style="display: block; height: 300px; width: 300px;"></canvas>
+    <canvas id="timeSeriesChart" style="display: block; height: 554px"></canvas>
   </div>
   <div class="column" style = "width: 40%; height: 10%;  float: left">
   </div>
@@ -1028,7 +1028,8 @@ var myLineChart = new Chart(ctx5, {
                 }
               }
               },
-              responsive: true
+              responsive: true,
+              maintainAspectRatio: false
   }
 });
 
@@ -1105,6 +1106,7 @@ for (i = 0; i < types.length; i++) {
 }
 
   myLineChart.data =lineChartData;
+  myLineChart.options.maintainAspectRatio = true;
 
   myLineChart.update();
     });
