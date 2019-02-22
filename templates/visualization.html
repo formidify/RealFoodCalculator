@@ -967,18 +967,7 @@ document.getElementById("increaseChart5").onclick = function(evt)
 
 <h1>Time Series of Real vs non-real food</h1>
 
-</div>
 
-<div class="row">
-  <div class="column" style = "width: 25%; height: 25%;  float: left">
-    <canvas id="timeChart1" style="display: block; height: 75px; width: 75px;"></canvas>
-    <canvas id="timeChart3" style="display: block; height: 75px; width: 75px;"></canvas>
-  </div>
-  <div class="column" style = "width: 25%; height: 25%;  float: left">
-    <canvas id="timeChart2" style="display: block; height: 75px; width: 75px;"></canvas>
-    <canvas id="timeChart4" style="display: block; height: 75px; width: 75px;"></canvas>
-  </div>
-  <div class="column" style = "width: 50%; height: 50%; float: left">
     <a>Items to show:</a>
   <div class = "control" style = "display: inline-block">
 <select id = "num_items_percent" name="Show:" style = "width: 100%">
@@ -989,17 +978,27 @@ document.getElementById("increaseChart5").onclick = function(evt)
 </select>
 </div>
 
-<div style = "display: inline-block; width: 50%">
 <form>
-    <label for="add">Add item:</label>
+    <label for="add">Add by item:</label>
     <input id="add" type="text" name="text">
     <input type="submit" value="Search">
 </form>
-</div>
+<a> OR </a>
+<form>
+    <label for="add">Add by category:</label>
+    <input id="add" type="text" name="text">
+    <input type="submit" value="vendor">
+</form>
+
+
+
+<div class="row">
+  <div class="column" style = "width: 60%; height: 25%;  float: left">
     <canvas id="timeSeriesChart" style="display: block; height: 300px; width: 300px;"></canvas>
   </div>
+  <div class="column" style = "width: 40%; height: 25%;  float: left">
+  </div>
 </div>
-
 
 <div class="onoffswitch">
     <a>Show time series chart data as table:</a>
