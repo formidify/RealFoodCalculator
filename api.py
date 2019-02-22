@@ -277,11 +277,12 @@ def get_quick_data():
             labels = []
             cost = []
             if t == 'real':
-                query = """SELECT trim({g}), SUM(cost) AS sum FROM test_data_large WHERE year = {c} AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't') GROUP BY trim({g}) ORDER BY sum DESC;""".format(g = g, c = curr_year)
+                query = """SELECT trim({g}), SUM(cost) AS sum FROM test_data_large WHERE year = {c} AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't') 
+                AND COALESCE(trim({g}), '') <> '' GROUP BY trim({g}) ORDER BY sum DESC;""".format(g = g, c = curr_year)
             else:
                 query = """SELECT trim({g}), SUM(cost) AS sum 
                 FROM (SELECT COALESCE(local, 'f') AS local, COALESCE(fair, 'f') AS fair, COALESCE(ecological, 'f') AS ecological, COALESCE(humane, 'f') AS humane, 
-                {g}, cost, year FROM test_data_large) X WHERE year = {c} AND local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't' 
+                {g}, cost, year FROM test_data_large WHERE COALESCE(trim({g}), '') <> '') X WHERE year = {c} AND local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't' 
                 GROUP BY trim({g}) ORDER BY sum DESC;""".format(g = g, c = curr_year)
             
             connection = get_connection()
