@@ -1017,7 +1017,7 @@ Chart.defaults.global.plugins.datalabels.display = false;
 ctx5 = document.getElementById("timeSeriesChart").getContext('2d');
 var myLineChart = new Chart(ctx5, {
     type: 'line',
-    options: {scales: {yAxes:[{scaleLabel: {display: true, labelString: "Dollar purchases ($)"}}]},
+    options: {scales: {yAxes:[{scaleLabel: {display: true, labelString: "Dollar purchases ($)"}, ticks: {min: 0}}]},
               legend: {
                 display: true,
                 fill: false,
