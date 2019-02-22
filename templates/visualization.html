@@ -987,7 +987,7 @@ document.getElementById("increaseChart5").onclick = function(evt)
 <form>
     <label for="add">Add by category:</label>
     <input id="add" type="text" name="text">
-    <input type="submit" value="vendor">
+    <input type="submit" value="Search">
 </form>
 
 
@@ -1052,8 +1052,8 @@ lineChartData.datasets = [];  //add 'datasets' array element to object
 
  data = results.data
 
- [[[304, 407, 529], [1777, 2378, 3454], [665, 798, 300, 200], [234, 567, 987], [111, 222, 333]], // total
-[[204, 40, 519], [1577, 2368, 3254], [635, 758, 20, 100], [134, 537, 947], [101, 202, 303]]] // real
+ //[[[304, 407, 529], [1777, 2378, 3454], [665, 798, 300, 200], [234, 567, 987], [111, 222, 333]], // total
+//[[204, 40, 519], [1577, 2368, 3254], [635, 758, 20, 100], [134, 537, 947], [101, 202, 303]]] // real
 
 
 total_configs = []
@@ -1114,6 +1114,8 @@ for (i = 0; i < types.length; i++) {
 
 </script>
 
+<div>
+
 <h1>Item, Vendor and Label - The Exciting Love Trio</h1>
 
 <div>
@@ -1134,6 +1136,8 @@ for (i = 0; i < types.length; i++) {
     <input id="add" type="text" name="text">
     <input type="submit" value="brand" onclick="addBrand()">
 </form>
+</div>
+
 </div>
 
 <script>
