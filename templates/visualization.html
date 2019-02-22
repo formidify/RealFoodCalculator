@@ -980,7 +980,7 @@ document.getElementById("increaseChart5").onclick = function(evt)
 
 <form>
     <label for="add">Add by item:</label>
-    <input id="add_time" type="text" name="text" list = "items_true" onkeyup = "searchItem()">
+    <input id="add_time" type="text" name="text" list = "items_true" onkeyup = "searchItem()" autocomplete="off">
     <datalist id="items_time"></datalist>
     <input type="submit" value="submit">
 </form>
@@ -1035,7 +1035,8 @@ function searchItem() {
       dataList.empty();
       if(results.search.length) {
         for(var i=0; i<results.search.length; i++) {
-          var opt = $("<option></option>").attr("value", results.search[i]);
+          item = results.search[i];
+          var opt = $("<option></option>").attr("value", item).attr("text", item);
           dataList.append(opt);
         }
       }
