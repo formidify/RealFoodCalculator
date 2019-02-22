@@ -1019,6 +1019,8 @@ Chart.defaults.global.plugins.datalabels.display = false
 
  divs_time = ['timeChart1', 'timeChart2', 'timeChart3', 'timeChart4']
 
+ piecharts = []
+
  getData.done(function(results) {
     years = results.labels
     for (i = 0; i < years.length; i++) {
@@ -1051,20 +1053,22 @@ Chart.defaults.global.plugins.datalabels.display = false
           }
       }
     });
+
+    piecharts.push(myPieChart)
     };
  });
 
-
-
-
-
+var myLineChart;
 // insert data into the chart object
 
+getData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/time_data')
+
+getData.done(function(results) {
 lineChartData = {};
-lineChartData.labels  = ["June 2016", "June 2017", "June 2018"]; // time frame
+lineChartData.labels  = results.labels; // time frame
 lineChartData.datasets = [];  //add 'datasets' array element to object
 
- items = ['steak', 'chicken', 'carrots', 'peas', 'cheese']
+ items = results.item
  colors = palette('tol', items.length).map(function(hex) {
         return '#' + hex;
       })
@@ -1072,7 +1076,9 @@ lineChartData.datasets = [];  //add 'datasets' array element to object
  dashes = [[0, 0], [10, 5]]
 
 
- data = [[[304, 407, 529], [1777, 2378, 3454], [665, 798, 300, 200], [234, 567, 987], [111, 222, 333]], // total
+ data = results.data
+
+ [[[304, 407, 529], [1777, 2378, 3454], [665, 798, 300, 200], [234, 567, 987], [111, 222, 333]], // total
 [[204, 40, 519], [1577, 2368, 3254], [635, 758, 20, 100], [134, 537, 947], [101, 202, 303]]] // real
 
 
@@ -1143,6 +1149,175 @@ myLineChart = new Chart(ctx5, {
               }
   }
 });
+}
+
+
+function updateTimeChart(cat){
+   updatedData = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/percent_data/" + cat);
+  updatedData.done(function(results) {
+
+lineChartData = {};
+lineChartData.labels  = results.labels; // time frame
+lineChartData.datasets = [];  //add 'datasets' array element to object
+
+ items = results.item
+ colors = palette('tol', items.length).map(function(hex) {
+        return '#' + hex;
+      })
+ types = ['total', 'real']
+ dashes = [[0, 0], [10, 5]]
+
+
+ data = results.data
+
+ [[[304, 407, 529], [1777, 2378, 3454], [665, 798, 300, 200], [234, 567, 987], [111, 222, 333]], // total
+[[204, 40, 519], [1577, 2368, 3254], [635, 758, 20, 100], [134, 537, 947], [101, 202, 303]]] // real
+
+
+total_configs = []
+
+datasets = []
+for (i = 0; i < items.length; i++) {
+    for (j = 0; j < types.length; j++) {
+        line = {}
+        line.data = data[j][i]
+        line.type = 'line'
+        line.label = types[j] + " " + items[i]
+        total_configs.push(line.label)
+        //line.backgroundColor = colors[i]
+        line.borderColor = colors[i]
+        line.fill = false
+        if (j > 0) {
+            line.borderDash = [10, 5]
+        }
+        datasets.push(line)
+    }
+}
+
+lineChartData.datasets = datasets
+
+for (i = 0; i < items.length; i++) {
+    line = {}
+    line.data = 0 // arbitrary
+    line.type = 'line'
+    line.label = items[i]
+    line.backgroundColor = colors[i]
+    line.borderColor = colors[i]
+    //line.fillColor = colors[i]
+    line.fill = true
+    line.showLine = false
+    datasets.push(line)
+}
+
+for (i = 0; i < types.length; i++) {
+    line = {}
+    line.data = 0 // arbitrary
+    line.type = 'line'
+    line.label = types[i]
+    //line.backgroundColor = colors[i]
+    if (i > 0) {
+        line.borderDash = [10, 5]
+    }
+    line.fill = false
+    line.showLine = false
+    datasets.push(line)
+}
+
+  myLineChart.data =lineChartData;
+
+  myLineChart.update();
+    });
+};
+
+
+document.getElementById("timeChart1").onclick = function(evt)
+{
+    myPieChart1 = piecharts[0]
+     activePoints = myPieChart1.getElementsAtEvent(evt);
+
+    if(activePoints.length > 0)
+    {
+      //get the internal index of slice in pie chart
+       clickedElementindex = activePoints[0]["_index"];
+
+      //get specific label by index
+       label = myPieChart1.data.labels[clickedElementindex];
+
+      //get value by index
+       value = myPieChart1.data.datasets[0].data[clickedElementindex];
+
+       year = years[0];
+
+      updateTimeChart(label, year);
+   }
+}
+
+document.getElementById("timeChart2").onclick = function(evt)
+{
+  myPieChart1 = piecharts[1]
+     activePoints = myPieChart2.getElementsAtEvent(evt);
+
+    if(activePoints.length > 0)
+    {
+      //get the internal index of slice in pie chart
+       clickedElementindex = activePoints[0]["_index"];
+
+      //get specific label by index
+       label = myPieChart2.data.labels[clickedElementindex];
+
+      //get value by index
+       value = myPieChart2.data.datasets[0].data[clickedElementindex];
+
+       year = years[1];
+
+      updateTimeChart(label, year);
+   }
+}
+
+document.getElementById("timeChart3").onclick = function(evt)
+{
+  myPieChart1 = piecharts[2]
+     activePoints = myPieChart3.getElementsAtEvent(evt);
+
+    if(activePoints.length > 0)
+    {
+      //get the internal index of slice in pie chart
+       clickedElementindex = activePoints[0]["_index"];
+
+      //get specific label by index
+       label = myPieChart3.data.labels[clickedElementindex];
+
+      //get value by index
+       value = myPieChart3.data.datasets[0].data[clickedElementindex];
+
+       year = years[2];
+
+      updateTimeChart(label, year);
+   }
+}
+
+document.getElementById("timeChart4").onclick = function(evt)
+{
+  myPieChart1 = piecharts[3]
+     activePoints = myPieChart4.getElementsAtEvent(evt);
+
+    if(activePoints.length > 0)
+    {
+      //get the internal index of slice in pie chart
+       clickedElementindex = activePoints[0]["_index"];
+
+      //get specific label by index
+       label = myPieChart4.data.labels[clickedElementindex];
+
+      //get value by index
+       value = myPieChart4.data.datasets[0].data[clickedElementindex];
+
+       year = years[3];
+
+      updateTimeChart(label, year);
+   }
+}
+;
 
 // document.getElementById('chart-legends').innerHTML = myLineChart.generateLegend();
 
