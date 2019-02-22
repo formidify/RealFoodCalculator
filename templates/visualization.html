@@ -980,13 +980,14 @@ document.getElementById("increaseChart5").onclick = function(evt)
 
 <form>
     <label for="add">Add by item:</label>
-    <input id="add" type="text" name="text">
+    <input id="add_time" type="text" name="text" onkeyup = "searchItem()">
+    <datalist id="items_time"></datalist>
     <input type="submit" value="Search">
 </form>
 <a> OR </a>
 <a> Add by category: </a>
 <select id = "categories">
-  <option disabled selected value> -- select an option -- </option>
+  <option disabled selected value> select an option </option>
 </select>
 
 </div>
@@ -1024,7 +1025,24 @@ c.done(function(results) {
     .html(cat)
 );
   }
-})
+});
+
+function searchItem() {
+  x = document.getElementById("add_item").value;
+  searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/get_item/" + x);
+  searches.done(function(results) {
+    search = results.search
+    for (i = 0; i < seasrch.length; i++) {
+    s = search[i]
+    $("items_time").append( $("<option>")
+    .val(s)
+    .html(s)
+);
+  }
+  })
+  //document.getElementById("demo").innerHTML = x;
+  // print at the select dropdown menu
+}
 
 Chart.defaults.global.plugins.datalabels.display = false;
 
@@ -1136,19 +1154,19 @@ for (i = 0; i < types.length; i++) {
 <form>
     <label for="add">Search By item:</label>
     <input id="add" type="text" name="text">
-    <input type="submit" value="item" onclick="addItem()">
+    <input type="submit" value="Search" onclick="addItem()">
 </form>
 <a> OR </a>
 <form>
     <label for="add">By vendor:</label>
     <input id="add" type="text" name="text">
-    <input type="submit" value="vendor" onclick="addVendor()">
+    <input type="submit" value="Search" onclick="addVendor()">
 </form>
 <a> OR </a>
 <form>
     <label for="add">By label/brand:</label>
     <input id="add" type="text" name="text">
-    <input type="submit" value="brand" onclick="addBrand()">
+    <input type="submit" value="Search" onclick="addBrand()">
 </form>
 </div>
 
