@@ -1012,52 +1012,24 @@ document.getElementById("increaseChart5").onclick = function(evt)
 <script>
 
 
-Chart.defaults.global.plugins.datalabels.display = false
+Chart.defaults.global.plugins.datalabels.display = false;
 
- getData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/pie_data')
-
- divs_time = ['timeChart1', 'timeChart2', 'timeChart3', 'timeChart4']
-
- piecharts = []
-
- getData.done(function(results) {
-    years = results.labels
-    for (i = 0; i < years.length; i++) {
-      yr = years[i]
-        result = results[yr]
-          data = {
-        datasets: [{
-            data: result.data,
-            backgroundColor: palette('tol', result.data.length).map(function(hex) {
-            return '#' + hex;
-          })
-        }],
-
-        // These labels appear in the legend and in the tooltips when hovering different arcs
-        labels: result.labels,
-        options: {
-            responsive: true
-        }
-    }
-
-     ctx_time = document.getElementById(divs_time[i]).getContext('2d');
-    myPieChart = new Chart(ctx_time, {
-        type: 'pie',
-        data: data ,
-        options: {
-          title: {
-              display: true,
-              position: 'bottom',
-              text: yr
-          }
-      }
-    });
-
-    piecharts.push(myPieChart)
-    };
- });
-
-var myLineChart;
+ctx5 = document.getElementById("timeSeriesChart").getContext('2d');
+var myLineChart = new Chart(ctx5, {
+    type: 'line',
+    options: {scales: {yAxes:[{scaleLabel: {display: true, labelString: "Dollar purchases ($)"}}]},
+              legend: {
+                display: true,
+                fill: false,
+                labels: {
+                  filter: function(legendItem, data) {
+                  //return legendItem.datasetIndex >= total_configs.length
+                  return !total_configs.includes(data.datasets[legendItem.datasetIndex].label)
+                }
+              }
+              }
+  }
+});
 
 
 function updateTimeChart(cat){
@@ -1136,98 +1108,6 @@ for (i = 0; i < types.length; i++) {
   myLineChart.update();
     });
 };
-
-
-document.getElementById("timeChart1").onclick = function(evt)
-{
-    myPieChart1 = piecharts[0]
-     activePoints = myPieChart1.getElementsAtEvent(evt);
-
-    if(activePoints.length > 0)
-    {
-      //get the internal index of slice in pie chart
-       clickedElementindex = activePoints[0]["_index"];
-
-      //get specific label by index
-       label = myPieChart1.data.labels[clickedElementindex];
-
-      //get value by index
-       value = myPieChart1.data.datasets[0].data[clickedElementindex];
-
-       year = years[0];
-
-      updateTimeChart(label, year);
-   }
-}
-
-document.getElementById("timeChart2").onclick = function(evt)
-{
-  myPieChart1 = piecharts[1]
-     activePoints = myPieChart2.getElementsAtEvent(evt);
-
-    if(activePoints.length > 0)
-    {
-      //get the internal index of slice in pie chart
-       clickedElementindex = activePoints[0]["_index"];
-
-      //get specific label by index
-       label = myPieChart2.data.labels[clickedElementindex];
-
-      //get value by index
-       value = myPieChart2.data.datasets[0].data[clickedElementindex];
-
-       year = years[1];
-
-      updateTimeChart(label, year);
-   }
-}
-
-document.getElementById("timeChart3").onclick = function(evt)
-{
-  myPieChart1 = piecharts[2]
-     activePoints = myPieChart3.getElementsAtEvent(evt);
-
-    if(activePoints.length > 0)
-    {
-      //get the internal index of slice in pie chart
-       clickedElementindex = activePoints[0]["_index"];
-
-      //get specific label by index
-       label = myPieChart3.data.labels[clickedElementindex];
-
-      //get value by index
-       value = myPieChart3.data.datasets[0].data[clickedElementindex];
-
-       year = years[2];
-
-      updateTimeChart(label, year);
-   }
-}
-
-document.getElementById("timeChart4").onclick = function(evt)
-{
-  myPieChart1 = piecharts[3]
-     activePoints = myPieChart4.getElementsAtEvent(evt);
-
-    if(activePoints.length > 0)
-    {
-      //get the internal index of slice in pie chart
-       clickedElementindex = activePoints[0]["_index"];
-
-      //get specific label by index
-       label = myPieChart4.data.labels[clickedElementindex];
-
-      //get value by index
-       value = myPieChart4.data.datasets[0].data[clickedElementindex];
-
-       year = years[3];
-
-      updateTimeChart(label, year);
-   }
-}
-;
-
-// document.getElementById('chart-legends').innerHTML = myLineChart.generateLegend();
 
 </script>
 
