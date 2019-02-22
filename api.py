@@ -271,7 +271,6 @@ def get_quick_data():
     groups = ['category', 'description', 'vendor', 'label_brand']
     type = ['real', 'nonreal']
 
-    print(curr_year)
 
     for g in groups:
         for t in type:
@@ -301,8 +300,6 @@ def get_quick_data():
 
     dic['year'] = curr_year
 
-    print("is this printing?")
-    print(dic)
     return flask.jsonify(dic)
 
 # get pie chart data for vis page (for 3 most recent years plus in total)
@@ -395,7 +392,6 @@ def get_bar_data(cat, yr):
             description, cost, year, category FROM test_data_large) X
                 WHERE {y} category = '{c}' AND local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't' GROUP BY description) B 
                 ON Z.description = B.description ORDER BY (COALESCE(real,0) + COALESCE(nonreal,0)) desc;""".format(y = y, c = cat)
-    print(query)
 
     # todo: query should also take account of the years
     connection = get_connection()
@@ -410,9 +406,6 @@ def get_bar_data(cat, yr):
             print(e)
         connection.close()
 
-    print(items)
-    print(real)
-    print(nonreal)
     return flask.jsonify({"items": items[:8], "real": real[:8], "nonreal": nonreal[:8]})
 
 
@@ -450,7 +443,6 @@ def get_percent_data(cat, yr):
                 -  CASE WHEN rangeindp = 0 OR indp = minindp THEN 1.00 * (minindp + rangeindp) ELSE (1.00 * (indp - minindp) / rangeindp) END) 
                 DESC;""".format(y = y, c = cat)
 
-    print(query)
 
     # todo: query should also take account of the years
     connection = get_connection()
@@ -466,9 +458,6 @@ def get_percent_data(cat, yr):
             print(e)
         connection.close()
 
-    print(items)
-    print(total_percent)
-    print(ind_percent)
     # default ranking order is by a * norm(% in all) - b * norm(% in one) for a = b = 1, but the coefficients can be up to change
     return flask.jsonify({"items": items[:8], "total_percent": total_percent[:8], "ind_percent": ind_percent[:8], "dollars": dollars[:8]})
 
@@ -506,7 +495,7 @@ def get_item_data(item, type):
 @app.route("/visualization/get_categories/")
 def get_categories():
     cats = []
-    query = """SELECT DISTINCT ON (category) category FROM test_data_large;"""
+    query = """SELECT DISTINCT ON (trim(category)) category FROM test_data_large;"""
 
     connection = get_connection()
     if connection is not None:
@@ -518,6 +507,7 @@ def get_categories():
             print(e)
         connection.close()
 
+    print(cats)
     return flask.jsonify({"cats": cats})
 
 
