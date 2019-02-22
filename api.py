@@ -258,11 +258,12 @@ def get_quick_data():
     dic = {}
     curr_query = """SELECT MAX(year) AS maxyear FROM test_data_large;"""
     connection = get_connection()
-    curr_year = 2018 # just as initialization
+    curr_year = 2018 # just as initialization 
+    # (but what if we have 2019 but we want to look at 2018? have a button on top saying Not quite the year you are looking for? Go back or move front by 1 year)
     if connection is not None:
         try:
-            # either this or minimum items allowed to show
-            curr_year = get_select_query_results(connection, curr_query)[0][0]
+            for row in get_select_query_results(connection, curr_query):
+                curr_year = row[0]
         except Exception as e:
             print(e)
         connection.close()

@@ -63,6 +63,7 @@
  <align>
 <h1>Quick Look @ This Year's Data</h1>
 
+<a>Not quite the year you are looking for? Go more recent or historical.</a>
 <div class="row">
   <div class="column" style = "width: 25%; height: 25%;  float: left">
     <canvas id="realCatChart" style="display: block; height: 75px; width: 75px;"></canvas>
@@ -464,7 +465,7 @@ function updateBarChart(cat, yr){
   };
 
   myBarChart.data = data;
-  myBarChart.options.title.text = "Purchase for " + yr + " " + cat;
+  myBarChart.options.title.text = yr + "purchase for " + " " + cat;
 
   myBarChart.update();
     })
@@ -1059,97 +1060,6 @@ Chart.defaults.global.plugins.datalabels.display = false
  });
 
 var myLineChart;
-// insert data into the chart object
-
-getData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/time_data')
-
-getData.done(function(results) {
-lineChartData = {};
-lineChartData.labels  = results.labels; // time frame
-lineChartData.datasets = [];  //add 'datasets' array element to object
-
- items = results.item
- colors = palette('tol', items.length).map(function(hex) {
-        return '#' + hex;
-      })
- types = ['total', 'real']
- dashes = [[0, 0], [10, 5]]
-
-
- data = results.data
-
- [[[304, 407, 529], [1777, 2378, 3454], [665, 798, 300, 200], [234, 567, 987], [111, 222, 333]], // total
-[[204, 40, 519], [1577, 2368, 3254], [635, 758, 20, 100], [134, 537, 947], [101, 202, 303]]] // real
-
-
-total_configs = []
-
-datasets = []
-for (i = 0; i < items.length; i++) {
-    for (j = 0; j < types.length; j++) {
-        line = {}
-        line.data = data[j][i]
-        line.type = 'line'
-        line.label = types[j] + " " + items[i]
-        total_configs.push(line.label)
-        //line.backgroundColor = colors[i]
-        line.borderColor = colors[i]
-        line.fill = false
-        if (j > 0) {
-            line.borderDash = [10, 5]
-        }
-        datasets.push(line)
-    }
-}
-
-lineChartData.datasets = datasets
-
-for (i = 0; i < items.length; i++) {
-    line = {}
-    line.data = 0 // arbitrary
-    line.type = 'line'
-    line.label = items[i]
-    line.backgroundColor = colors[i]
-    line.borderColor = colors[i]
-    //line.fillColor = colors[i]
-    line.fill = true
-    line.showLine = false
-    datasets.push(line)
-}
-
-for (i = 0; i < types.length; i++) {
-    line = {}
-    line.data = 0 // arbitrary
-    line.type = 'line'
-    line.label = types[i]
-    //line.backgroundColor = colors[i]
-    if (i > 0) {
-        line.borderDash = [10, 5]
-    }
-    line.fill = false
-    line.showLine = false
-    datasets.push(line)
-}
-
-
- ctx5 = document.getElementById("timeSeriesChart").getContext('2d');
-myLineChart = new Chart(ctx5, {
-    type: 'line',
-    data: lineChartData,
-    options: {scales: {yAxes:[{scaleLabel: {display: true, labelString: "Dollar purchases ($)"}}]},
-              legend: {
-                display: true,
-                fill: false,
-                labels: {
-                  filter: function(legendItem, data) {
-                  //return legendItem.datasetIndex >= total_configs.length
-                  return !total_configs.includes(data.datasets[legendItem.datasetIndex].label)
-                }
-              }
-              }
-  }
-});
-}
 
 
 function updateTimeChart(cat){
