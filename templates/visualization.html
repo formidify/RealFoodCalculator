@@ -984,11 +984,8 @@ document.getElementById("increaseChart5").onclick = function(evt)
     <input type="submit" value="Search">
 </form>
 <a> OR </a>
-<form>
-    <label for="add">Add by category:</label>
-    <input id="add" type="text" name="text">
-    <input type="submit" value="Search">
-</form>
+<select id = "categories">
+</select>
 
 
 
@@ -1011,6 +1008,19 @@ document.getElementById("increaseChart5").onclick = function(evt)
 
 <script>
 
+var select = document.getElementById("categoeis");
+c = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/get_categories/");
+
+c.done(function(results) {
+  cats = results.cats;
+  for (i = 0; i < cats.length; i++) {
+    cat = cats[i]
+    opt = document.createElement("option");
+    opt.value = cat;
+    opt.textContent = cat;
+    select.appendChild(opt);
+  }
+})
 
 Chart.defaults.global.plugins.datalabels.display = false;
 

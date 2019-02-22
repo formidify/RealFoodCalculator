@@ -502,6 +502,26 @@ def get_item_data(item, type):
     if type == 'liv':
         return
 
+
+@app.route("/visualization/get_categories/")
+def get_categories():
+    cats = []
+    query = """SELECT DISTINCT ON (category) category FROM test_data_large;"""
+
+    connection = get_connection()
+    if connection is not None:
+        try:
+            # either this or minimum items allowed to show
+            for row in get_select_query_results(connection, query):
+                cats.append(row[0])
+        except Exception as e:
+            print(e)
+        connection.close()
+
+    return flask.jsonify({"cats": cats})
+
+
+
 ### Need to have a separate function for time series data
 
 # get time series data for vis page (by category)
