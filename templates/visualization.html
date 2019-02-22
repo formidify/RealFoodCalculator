@@ -1038,18 +1038,23 @@ c.done(function(results) {
   }
 });
 
+sessionStorage.setItem("timeSearch", []);
+
 function searchItem() {
   x = document.getElementById("add_time").value;
   if (x.length > 1) {
   searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/get_item/" + x);
-  if (!arraysEqual(searches_time, searches)) {
-    searches_time = searches
+
+  old_searches = sessionStorage.timeSearch;
+
+  if (!arraysEqual(old_searches, searches)) {
+    sessionStorage.setItem("timeSearch", searches);
 
     searches.done(function(results) {
       var dataList = $("#items_time");
         dataList.empty();
         if(results.search.length) {
-          for(var i=0; i<results.search.length; i++) {
+          for(i=0; i<results.search.length; i++) {
             item = results.search[i];
             var opt = $("<option></option>").attr("value", item).attr("text", item);
             dataList.append(opt);
