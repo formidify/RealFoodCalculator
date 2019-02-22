@@ -980,8 +980,9 @@ document.getElementById("increaseChart5").onclick = function(evt)
 
 <form>
     <label for="add">Add by item:</label>
-    <input id="add_time" type="text" name="text" list = "items_time" onkeyup = "searchItem()">
+    <input id="add_time" type="text" name="text" list = "items_true" onkeyup = "searchItem()">
     <datalist id="items_time"></datalist>
+    <input type="submit" value="submit">
 </form>
 <a> OR </a>
 <a> Add by category: </a>
@@ -1030,18 +1031,19 @@ function searchItem() {
   x = document.getElementById("add_time").value;
   searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/get_item/" + x);
   searches.done(function(results) {
-    search = results.search
-    for (i = 0; i < search.length; i++) {
-    s = search[i]
-    $("items_time").append( $("<option>")
-    .val(s)
-    .html(s)
-);
-  }
+    var dataList = $("#items_time");
+      dataList.empty();
+      if(results.search.length) {
+        for(var i=0; i<results.search.length; i++) {
+          var opt = $("<option></option>").attr("value", results.search[i]);
+          dataList.append(opt);
+        }
+      }
   })
   //document.getElementById("demo").innerHTML = x;
   // print at the select dropdown menu
 }
+
 
 Chart.defaults.global.plugins.datalabels.display = false;
 
