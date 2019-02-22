@@ -980,7 +980,7 @@ document.getElementById("increaseChart5").onclick = function(evt)
 
 <form>
     <label for="add">Add by item:</label>
-    <input id="add_time" type="text" name="text" value = "type.." onkeyup = "searchItem()">
+    <input id="add_time" type="text" name="text" onkeyup = "searchItem()">
     <datalist id="items_time"></datalist>
     <input type="submit" value="Search">
 </form>
@@ -1028,7 +1028,7 @@ c.done(function(results) {
 });
 
 function searchItem() {
-  x = document.getElementById("add_item").value;
+  x = document.getElementById("add_time").value;
   searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/get_item/" + x);
   searches.done(function(results) {
     search = results.search
