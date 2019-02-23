@@ -311,7 +311,7 @@ def get_pie_data():
     labels = []
 
     # take the most recent 3 years from current Python session if already there
-    if session.get('yrs') == True:
+    if 'yrs' in session:
         yrs = session.get('yrs')
 
     else:
