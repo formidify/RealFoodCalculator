@@ -6,7 +6,7 @@ TO DO:
 - make a separate config.py file for password security
 - change table from "test_data" to other name
 '''
-from flask import Flask, render_template
+from flask import Flask, render_template, session
 import sys
 import flask
 import simplejson as json
@@ -309,29 +309,28 @@ def get_pie_data():
 
     data = []
     labels = []
-    yrs = []
 
-    yr_query = """SELECT DISTINCT ON (year) year FROM test_data_large ORDER BY year DESC;"""
+    # take the most recent 3 years from current Python session if already there
+    if session.get('yrs') == True:
+        yrs = session.get('yrs')
 
-    connection = get_connection()
-    if connection is not None:
-        try:
-            # either this or minimum items allowed to show
-            for row in get_select_query_results(connection, yr_query):
-                yrs.append(row[0])
-        except Exception as e:
-            print(e)
-        connection.close()
+    else:
+        yrs = []
+
+        yr_query = """SELECT DISTINCT ON (year) year FROM test_data_large ORDER BY year DESC;"""
+
+        connection = get_connection()
+        if connection is not None:
+            try:
+                # either this or minimum items allowed to show
+                for row in get_select_query_results(connection, yr_query):
+                    yrs.append(row[0])
+            except Exception as e:
+                print(e)
+            connection.close()
 
 
     query = """SELECT trim(category), SUM(cost) AS c_cost FROM test_data_large GROUP BY trim(category) ORDER BY trim(category) DESC;"""
-
-    # make sure we pick most recent years of ascending order TODO
-
-    # DELETE later!
-    if len(yrs) < 3:
-        yrs.append('2016')
-
 
     for i in range(3): # 3 most recent years
 
@@ -491,6 +490,15 @@ def get_item_data(item, type):
     if type == 'liv':
         return
 
+    if type == 'year':
+        yrs = session.get('yrs').reverse()
+
+        query = """ """
+
+        print(item)
+
+        return flask.jsonify({})
+
 
 @app.route("/visualization/get_categories/")
 def get_categories():
@@ -511,6 +519,7 @@ def get_categories():
     return flask.jsonify({"cats": cats})
 
 
+# return results that match the input item
 @app.route("/visualization/get_item", defaults = {'search': ''})
 @app.route("/visualization/get_item/<search>")
 def get_item(search):
@@ -527,6 +536,8 @@ def get_item(search):
         connection.close()
     print(results)
     return flask.jsonify({"search": results})
+
+
 ### Need to have a separate function for time series data
 
 # get time series data for vis page (by category)
