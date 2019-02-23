@@ -1044,7 +1044,8 @@ function searchItem() {
   searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/get_item/" + x);
 
   old_searches = sessionStorage.timeSearch;
-
+  console.log(searches)
+  console.log(old_searches)
   if (!arraysEqual(old_searches, searches.search)) {
     sessionStorage.setItem("timeSearch", searches.search);
 
