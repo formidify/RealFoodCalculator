@@ -1044,12 +1044,12 @@ function searchItem() {
   searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/get_item/" + x);
 
   old_searches = JSON.parse(sessionStorage.timeSearch);
-  console.log(searches.search)
-  console.log(old_searches)
-  if (!arraysEqual(old_searches, searches.search)) {
-    sessionStorage.setItem("timeSearch", JSON.stringify(searches.search));
 
     searches.done(function(results) {
+      console.log(old_searches);
+      console.log(results.search)
+    if (!arraysEqual(old_searches, results.search)) {
+    sessionStorage.setItem("timeSearch", JSON.stringify(results.search));
       var dataList = $("#items_time");
         dataList.empty();
         if(results.search.length) {
@@ -1059,10 +1059,9 @@ function searchItem() {
             dataList.append(opt);
           }
         }
-    });
+    }});
 }
-}
-}
+};
 
 function addItemData() {
   y = document.getElementById("add_time").value;
