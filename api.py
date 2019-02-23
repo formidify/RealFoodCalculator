@@ -252,6 +252,23 @@ def insert_entry():
     else:
         return "Stub Function: Could not get connection"
 
+def get_all_years():
+    yrs = []
+
+    yr_query = """SELECT DISTINCT ON (year) year FROM test_data_large ORDER BY year DESC;"""
+
+    connection = get_connection()
+    if connection is not None:
+        try:
+            # either this or minimum items allowed to show
+            for row in get_select_query_results(connection, yr_query):
+                yrs.append(row[0])
+        except Exception as e:
+            print(e)
+        connection.close()
+
+    return yrs
+
 # get data for quick charts
 @app.route("/visualization/quick_data")
 def get_quick_data():
@@ -310,27 +327,7 @@ def get_pie_data():
     data = []
     labels = []
 
-    # take the most recent 3 years from current Python session if already there
-    if 'yrs' in session:
-        yrs = session['yrs']
-
-    else:
-        yrs = []
-
-        yr_query = """SELECT DISTINCT ON (year) year FROM test_data_large ORDER BY year DESC;"""
-
-        connection = get_connection()
-        if connection is not None:
-            try:
-                # either this or minimum items allowed to show
-                for row in get_select_query_results(connection, yr_query):
-                    yrs.append(row[0])
-            except Exception as e:
-                print(e)
-            connection.close()
-
-        session['yrs'] = yrs
-
+    yrs = get_all_years()
 
     query = """SELECT trim(category), SUM(cost) AS c_cost FROM test_data_large GROUP BY trim(category) ORDER BY trim(category) DESC;"""
 
@@ -493,7 +490,7 @@ def get_item_data(item, type):
         return
 
     if type == 'year':
-        yrs = session['yrs'].reverse()
+        yrs = get_all_years()
 
         query = """ """
 
@@ -569,6 +566,4 @@ if __name__ == '__main__':
 #   host=host
     port= 5001
     print('Using Port: '+ sys.argv[0])
-    app.config['SESSION_TYPE'] = 'memcached'
-    app.config['SECRET_KEY'] = 'L00kB4uL3@p'
     app.run(host=host,port=port, debug=True)
