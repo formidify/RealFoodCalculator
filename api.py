@@ -312,7 +312,7 @@ def get_pie_data():
 
     # take the most recent 3 years from current Python session if already there
     if 'yrs' in session:
-        yrs = session.get('yrs')
+        yrs = session['yrs']
 
     else:
         yrs = []
@@ -493,7 +493,7 @@ def get_item_data(item, type):
         return
 
     if type == 'year':
-        yrs = session.get('yrs').reverse()
+        yrs = session['yrs'].reverse()
 
         query = """ """
 
