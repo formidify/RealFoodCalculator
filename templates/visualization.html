@@ -978,20 +978,16 @@ document.getElementById("increaseChart5").onclick = function(evt)
 </select>
 </div>
 
-<form method="post">
     <label for="add">Add by item:</label>
     <input id="add_time" type="text" name="text" list = "items_time" onkeyup = "searchItem()" autocomplete="off">
     <datalist id="items_time"></datalist>
     <input id = "submit_item_time" type="submit" value="submit" onclick = "addItemData()">
-</form>
 <a> OR </a>
-<form method="post">
 <a> Add by category: </a>
 <select id = "categories">
   <option disabled selected value> select an option </option>
 </select>
 <input id = "submit_cat_time" type="submit" value="submit" onclick = "addCatData()">
-</form>
 </div>
 
 
@@ -1014,6 +1010,7 @@ document.getElementById("increaseChart5").onclick = function(evt)
 </div>
 
 <script>
+
 function arraysEqual(arr1, arr2) {
     if(arr1.length !== arr2.length)
         return false;
