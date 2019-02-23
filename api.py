@@ -569,4 +569,7 @@ if __name__ == '__main__':
 #   host=host
     port= 5001
     print('Using Port: '+ sys.argv[0])
+    app.config['SESSION_TYPE'] = 'memcached'
+    app.config['SECRET_KEY'] = 'L00kB4uL3@p'
+    session = Session()
     app.run(host=host,port=port, debug=True)
