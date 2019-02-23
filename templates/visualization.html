@@ -1067,7 +1067,7 @@ function searchItem() {
 function addItemData() {
   y = document.getElementById("add_time").value;
   if (y.length > 1) {
-    searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/get_item/" + x + "+year");
+    searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/get_item_data/" + x + "+year");
   }
 }
 
