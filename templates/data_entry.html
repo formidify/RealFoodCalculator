@@ -6,8 +6,8 @@
         <meta charset="utf-8">
         <meta content="width=device-width, initial-scale=1" name="viewport">
         <!--<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}" />-->
-        <script>
-
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>       
+ <script>
 
     localStorage["foodData"] = [];
     var initializeEntrySession = [];
@@ -42,58 +42,39 @@
 
  function checkInvalidInputs(){
 	var invalid = false;
-        var alert = "Please Select: ";
-        //if category == %
+        var alertIssues = [];
         if (document.getElementById("category").value == '%'){
-           // window.alert("No category selected");
-            alert += "a category, ";
             invalid = true;
+            alertIssues.push("Choose a category.");
         }
         if (document.getElementById("vendor").value == ''){
-            //window.alert("No vendor entered");
-            alert += "a vendor, ";
              invalid = true;
+            alertIssues.push("Enter a vendor");
 
         }
         if (document.getElementById("cost").value <= 0.00){
-            //window.alert("Invalid cost");
-              alert += "a valid cost.";
               invalid = true;
-
+              alertIssues.push("Enter a valid cost.");
         }
-       //these should be for localDescription, not local 
-        //if not real but has description, alert user. Should the opposite happen as well?
-      //  if (document.getElementById("local-false").checked && document.getElementById("vendor").value == null){
-          //  window.alert("Cannot have local description for non-local item");
-         //   invalid = true;
-
-       // }
-      //  if (document.getElementById("fair-false").checked && document.getElementById("fair").value == null){
-         //   window.alert("Cannot have fair description for non-fair item");
-         //   invalid = true;
-
-       // }
-      //  if (document.getElementById("ecological-false").checked && document.getElementById("ecological").value == NULL){
-         //   window.alert("Cannot have ecological description for non-ecological item");
-        //    invalid = true;
-
-      //  }
-      //  if (document.getElementById("humane-false").checked && document.getElementById("humane").value == NULL){
-         //   window.alert("Cannot have humane description for non-humane item");
-         //   invalid = true;
-
-       // }
-      //  if (document.getElementById("humane-false").checked && document.getElementById("humane-na").value == NULL){
-      //      window.alert("Cannot have humane description for non-humane item");
-       //     invalid = true;
-
-     //   }
-      //  if (document.getElementById("disqualifier-false").checked && document.getElementById("disqualifier").value == NULL){
-    //        window.alert("Cannot have disqualifier description for non-disqualified item");
-  //          invalid = true;
-
-//        }
-        if (alert != "Please Select: "){
+       var descriptions = ["local", "fair", "humane", "ecological", "disqualifier"];
+       
+       for (qualification in descriptions){
+       var tag = descriptions[qualification]+"Description";
+       var trueTag = descriptions[qualification]+"-true";
+       console.log("tag is: ", tag);
+       var falseTag = qualification+"-false";
+        if (((document.getElementById(tag).value == "")) && (document.getElementById(trueTag).checked)){
+         // if ((!(document.getElementById(tag).value == ""))){
+            alertQualification = (descriptions[qualification].charAt(0).toUpperCase() +descriptions[qualification].slice(1)+ " notes do not match "+ descriptions[qualification]+" status.");
+           alertIssues.push(alertQualification);
+           invalid = true;
+      }
+}
+if (invalid == true){
+        var  alert = "";
+        for (issue in alertIssues){
+             alert += (alertIssues[issue] + "\r\n");
+        }
         window.alert(alert);
         }
         return invalid;
@@ -209,8 +190,7 @@
     }
     }
     function populateForm(dataLabel, row){
-        console.log(row);
-        // data = row.eq(0).html();
+        
         if (row=="False") {
             document.getElementById(dataLabel+"-false").checked = true;
             console.log("False thing");
@@ -225,8 +205,27 @@
             document.getElementById(dataLabel+"-na").checked = true;
             row = "none";
         }
-       console.log("row is", row);
-       console.log("dataLabel is", dataLabel);
+        if (dataLabel.includes("Description")){
+           var optionValues = [];
+           var optionList = ('#'+dataLabel+' option');
+           $(optionList).each(function() {
+           optionValues.push($(this).val());
+           });
+           var optionStrings = [];
+           for (item in optionValues){
+               var lowerItem = optionValues[item].toLowerCase(); 
+               optionStrings.push(optionValues[item]);
+               if (row == lowerItem){
+                  document.getElementById(dataLabel).value = optionValues[item];
+                  return;
+               }
+           
+        }
+        if (!optionStrings.includes(row)){
+               alertMsg = (row + " for " + dataLabel.replace("Description", "") + " notes is outdated. Please manually select "+ dataLabel.replace("Description","")+" notes.");
+               window.alert(alertMsg);
+      }
+      }
       if (!(row=="on") && !(row=="off") && !(row=="none")){ 
           document.getElementById(dataLabel).value = row;
     }
@@ -307,7 +306,14 @@
             <label class="radio" for="local">
                 <input id="local-false" name="local" type="radio" value="off" checked>Not Local</label>
 
-            <input id="localDescription" name="localDescription" type="text" placeholder="local notes">
+            <select id="localDescription" name="localDescription">
+    <option value="">Not Local</option>
+    <option value="Independently or Cooperatively Owned within 250 mi, < $5 million">Independently or Cooperatively Owned within 250 mi, < $5 million</option>
+    <option value="Independently or Cooperatively Owned within 250 mi, < $50 million"> Independently or Cooperatively Owned within 250 mi, < $50 million </option>
+    <option value="Meat within 500 mi, < $50 million">Meat within 500 mi, < $50 million</option>
+    <option value="Multi-ingredient Product, 50% within 250 mi">Multi-ingredient Product, 50% within 250 mi</option>
+    <option value="Aggregated Product, 75% within 250 mi">Aggregated Product, 75% within 250 mi</option>
+ </select>
             <input id="local-check" name="local-keep" type="checkbox" onclick="toggleCheckbox(this)">
             </div>
 
@@ -316,8 +322,22 @@
                 <input id="fair-true" name="fair" type="radio" value="on">Fair</label>
             <label class="radio" for="fair">
                 <input id="fair-false" name="fair" type="radio" value="off" checked>Not Fair</label>
-            <input id="fairDescription" name="fairDescription" type="text" placeholder="fair notes">
-            <input id="fair-check" name="fair-keep" type="checkbox" onclick="toggleCheckbox(this)">
+          <select id="fairDescription" name="fairDescription">
+    <option value="">Not Fair</option>
+    <option value="Ecocert Fair Trade Certified">Ecocert Fair Trade Certified</option>
+    <option value="Equitable Food Initiative">Equitable Food Initiative</option>
+    <option value="Fair Food Program by the Coalition of Immokalee Workers">Fair Food Program by the Coalition of Immokalee Workers</option>
+    <option value="Fair for Life Certified by Institute for Marketecology (IMO)">Fair for Life Certified by Institute for Marketecology (IMO)</option>
+    <option value="Fairtrade International Certified by Fair Labeling Organization (FLO)">Fairtrade International Certified by Fair Labeling Organization (FLO)</option>
+    <option value="Fair Trade Certified by Fair Trade USA">Fair Trade Certified by Fair Trade USA</option>
+    <option value="FairWild">FairWild</option>
+    <option value="Fair Trade Certified Ingredient by Fair Trade USA">Fair Trade Certified Ingredient by Fair Trade USA</option>
+    <option value="Food Justice Certified by Agricultural Justice Project">Food Justice Certified by Agricultural Justice Project</option>
+    <option value="Hand in Hand">Hand in Hand</option>
+    <option value="Milk with Dignity by Migrant Justice">Milk with Dignity by Migrant Justice</option>
+    <option value="Multi-ingredient product, 50% fair ingredients">Multi-ingredient product, 50% fair ingredients</option>
+ </select>  
+          <input id="fair-check" name="fair-keep" type="checkbox" onclick="toggleCheckbox(this)">
 
             </div>
 
@@ -326,8 +346,27 @@
                 <input id="ecological-true" name="ecological" type="radio" value="on">Ecological</label>
             <label class="radio" for="ecological">
                 <input id="ecological-false" name="ecological" type="radio" value="off" checked>Not Ecological</label>
-            <input id="ecologicalDescription" name="ecologicalDescription" type="text" placeholder="ecological notes">
-            <input id="ecological-check" name="ecological-keep" type="checkbox" onclick="toggleCheckbox(this)">
+            <select id="ecologicalDescription" name="ecologicalDescription">
+    <option value="">Not Ecological</option>
+    <option value="ANSI/LEO-4000">ANSI/LEO-4000</option>
+    <option value="Biodynamic Certified by Demeter">Biodynamic Certified by Demeter</option>
+    <option value="Bird Friendly by Smithsonian">Bird Friendly by Smithsonian</option>
+    <option value="Campus farm or garden">Campus farm or garden</option>
+    <option value="Certified Sustainably Grown">Certified Sustainably Grown</option>
+    <option value="FairWild">FairWild</option>
+    <option value="Fair Trade USA Certified">Fair Trade USA Certified</option>
+    <option value="Food Alliance Certified">Food Alliance Certified</option>
+    <option value="LEAF (Linking Environment and Farming)">LEAF (Linking Environment and Farming)</option>
+    <option value="Marine Stewardship Council (MSC)">Marine Stewardship Council (MSC)</option>
+    <option value="Monterey Bay Aquarium Seafood Watch Guide “Best Choices"">Monterey Bay Aquarium Seafood Watch Guide “Best Choices"</option>
+    <option value="Multi-ingredient product, 50% ecologically sound ingredients">Multi-ingredient product, 50% ecologically sound ingredients</option>
+    <option value="Protected Harvest Certified">Protected Harvest Certified</option>
+    <option value="Salmon Safe">Salmon Safe</option>
+    <option value="Rainforest Alliance Certified">Rainforest Alliance Certified</option>
+    <option value="USDA Organic">USDA Organic</option>
+    <option value="USDA Transitional Organic">USDA Transitional Organic</option>
+  </select> 
+           <input id="ecological-check" name="ecological-keep" type="checkbox" onclick="toggleCheckbox(this)">
 
             </div>
 
@@ -338,7 +377,21 @@
                 <input id="humane-false" name="humane" type="radio" value="off">Not Humane</label>
             <label class="radio" for="humane">
                 <input id="humane-na" name="humane" type="radio" value="none" checked>Not Applicable</label>
-            <input id="humaneDescription" name="humaneDescription" type="text" placeholder="humane notes">
+             <select id="humaneDescription" name="humaneDescription">
+    <option value="">Not Humane or Not an Animal Product</option>
+    <option value="AGA Grasfed by American Grassfed Association (ruminants only)">AGA Grasfed by American Grassfed Association (ruminants only)</option>
+    <option value="American Humane Certified [Cage Free and Enriched Colony] (Egg-layers only)">American Humane Certified [Cage Free and Enriched Colony] (Egg-layers only)</option>
+    <option value="American Humane Certified [Free Range] (Egg-layers only)">American Humane Certified [Free Range] (Egg-layers only)</option>
+    <option value="Animal Welfare Approved by Animal Welfare Institute">Animal Welfare Approved by Animal Welfare Institute</option>
+    <option value="Animal Welfare Approved by Animal Welfare Institute / AWA Certified Grassfed">Animal Welfare Approved by Animal Welfare Institute / AWA Certified Grassfed</option>
+    <option value="Biodynamic Certified by Demeter">Biodynamic Certified by Demeter</option>
+    <option value="Certified Humane by Humane Farm Animal Care (all species except swine)">Certified Humane by Humane Farm Animal Care (all species except swine)</option>
+    <option value="Certified Humane by Humane Farm Animal Care (swine only)">Certified Humane by Humane Farm Animal Care (swine only)</option>
+    <option value="Food Alliance Certified">Food Alliance Certified</option>
+    <option value="Global Animal Partnership Step 3">Global Animal Partnership Step 3</option>
+    <option value="Global Animal Partnership steps 4-5+">Global Animal Partnership steps 4-5+</option>
+    <option value="Pennsylvania Certified Organic 100% Grassfed by USDA">Pennsylvania Certified Organic 100% Grassfed by USDA</option>
+  </select>
             <input id="humane-check" name="humane-keep" type="checkbox" onclick="toggleCheckbox(this)">
 
             </div>
@@ -347,8 +400,16 @@
                 <input id="disqualifier-true" name="disqualifier"type="radio" value="on" >Disqualifier</label>
             <label class="radio" for="disqualifier">
                 <input id="disqualifier-false" name="disqualifier" type="radio" value="off" checked>No Disqualifier</label>
-            <input id="disqualifierDescription" name="disqualifierDescription" type="text" placeholder="disqualifier notes">
+ <select id="disqualifierDescription" name="disqualifierDescription">
+    <option value="">No Disqualifier</option>
+    <option value="Concentrated Animal Feeding Operation">Concentrated Animal Feeding Operation</option>
+    <option value="Genetically Modified Organisms">Genetically Modified Organisms</option>
+    <option value="Guilty of Criminal Charges of Forced Labor">Guilty of Criminal Charges of Forced Labor</option>
+    <option value="Labor Violations">Labor Violations</option>
+    <option value="Ultra-Processed Foods">Ultra-Processed Food</option>
+  </select>
             <input id="disqualifier-check" name="disqualifier-keep" type="checkbox" onclick="toggleCheckbox(this)">
+
             </div>
 
         </fieldset>

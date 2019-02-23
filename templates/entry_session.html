@@ -14,15 +14,21 @@ var entrySessionString = localStorage.getItem('entrySession');
 var entrySession = JSON.parse(localStorage.getItem('entrySession'));
 window.onload = function (){
     var results = document.getElementById("sessionTable");
+    var rowNum = 0;
     for (item in entrySession){
          var row = results.insertRow(-1);
+	 rowNum++;
+	 row.setAttribute("id",'cur_row'+rowNum.toString());
          console.log(entrySession[item]);
          for (value in entrySession[item]){
               var cell = row.insertCell(-1);
               cell.innerHTML = entrySession[item][value];
               }
+	 var newCell = row.insertCell(-1);
+	 newCell.innerHTML = '<button class="editbtn" onclick="editButton(' + rowNum + ');">' + 'edit</button>';
          }
      document.getElementById("entrySessionData").value = entrySessionString;
+     rowNum = 0;
      }
 
 function clearEntries(){
@@ -36,6 +42,62 @@ function makeEditable(){
 	table.insertRow();	
 	table.contenteditable='true';
 
+}
+function editButton(cur_row){
+   console.log(cur_row);
+   var edit_cells = document.getElementById('cur_row'+cur_row).getElementsByTagName('td');
+   var parent = document.getElementById('cur_row'+cur_row);
+   var child = parent.getElementsByTagName('td')[17];
+ //  var new_child = document.getElementsByTagName('td')[17];
+   for (var i=1; i<edit_cells.length; i++){
+     edit_cells[i].setAttribute('contenteditable', 'true');
+   }
+//   child.remove();
+
+  var cell = document.createElement('td');
+  var newButton = document.createElement("button");
+  newButton.innerHTML='save';
+  newButton.setAttribute('class','savebtn');
+  newButton.setAttribute('onclick', 'saveButton('+cur_row.toString()+');');
+  cell.appendChild(newButton);
+
+  var new_child = document.getElementsByTagName('td')[17];
+  parent.insertBefore(cell, new_child);
+ var remChild = parent.getElementsByTagName('td')[18];
+remChild.remove();
+}
+
+function saveButton(cur_row){
+	//still needs to update storage
+  var edit_cells = document.getElementById('cur_row'+cur_row).getElementsByTagName('td');
+  var parent = document.getElementById('cur_row'+cur_row);
+  var child = parent.getElementsByTagName('td')[17];
+  for (var i=1; i<edit_cells.length; i++){
+    edit_cells[i].setAttribute('contenteditable', 'false');
+  }
+  child.remove();
+
+  var cell = document.createElement('td');
+  var para = document.createElement("button");
+  para.innerHTML='edit';
+  para.setAttribute('class','editbtn');
+  para.setAttribute('onclick', 'editButton('+cur_row.toString()+');');
+  cell.appendChild(para);
+
+  var new_child = document.getElementsByTagName('td')[17];
+  parent.insertBefore(cell, new_child);
+}
+
+
+function submitEntries(){
+    if(confirm('Are you sure you want to submit the entries?')){
+        console.log("Confirmed Entries");
+        document.getElementById("entry-session-form").submit();
+        clearEntries();
+    }
+    else{
+        return false;
+    }
 }
 
 </script>
@@ -121,16 +183,29 @@ function makeEditable(){
     <p></p>
   <form action = "http://cmc307-06.mathcs.carleton.edu:2019/entry_session" method = "POST" id = "entry-session-form">
  <input id="entrySessionData" name="entrySessionData" type="hidden"/>
-   
+  <label for="month">Month</label>
+<select id="month" name="month" required>
+    <option value="1">January</option>
+    <option value="2">February</option>
+    <option value="3">March</option>
+    <option value="4">April</option>
+    <option value="5">May</option>
+    <option value="6">June</option>
+    <option value="7">July</option>
+    <option value="8">August</option>
+    <option value="9">September</option>
+    <option value="10">October</option>
+    <option value="11">November</option>
+    <option value="12">December</option>
+</select>
+
+<label for="year">Year</label>
+<input id="year" name="year" type="number" default=2019  placeholder="2019" required> 
     
 
-	 <label for="month">Month</label>
-          <input id="month" name="month" type="number" required>
-	 <label for="year">Year</label>
-          <input id="year" name="year" type="number" required>
          <label for="rating_version">Rating Version</label>
          <input id="rating_version" name="rating_version" type="number" value="2.0" placeholder="2.0">
- <button type="submit" class="button3 btn btn-default">Submit All</button>
+ <input type="submit" onclick="return submitEntries();" class="button3 btn btn-default" value="Submit All"/>
 
 </form>
 <button class="button4" onclick="clearEntries();">Cancel Session</button>
@@ -157,7 +232,8 @@ function makeEditable(){
                         <th>Humane Notes</th>
 			<th>Disqualifier</th>
                         <th>Disqualifier Notes</th>
-                        </tr>
+                        <th>Edit</th>
+			 </tr>
 </table>
     
   
