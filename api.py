@@ -329,6 +329,8 @@ def get_pie_data():
                 print(e)
             connection.close()
 
+        session['yrs'] = yrs
+
 
     query = """SELECT trim(category), SUM(cost) AS c_cost FROM test_data_large GROUP BY trim(category) ORDER BY trim(category) DESC;"""
 
