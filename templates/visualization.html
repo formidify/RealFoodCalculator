@@ -1035,19 +1035,19 @@ c.done(function(results) {
 );
   }
 });
-a = []
-sessionStorage.setItem("timeSearch", a);
+
+sessionStorage.setItem("timeSearch", JSON.stringify([]));
 
 function searchItem() {
   x = document.getElementById("add_time").value;
   if (x.length > 1) {
   searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/get_item/" + x);
 
-  old_searches = sessionStorage.timeSearch;
+  old_searches = JSON.parse(sessionStorage.timeSearch);
   console.log(searches.search)
   console.log(old_searches)
   if (!arraysEqual(old_searches, searches.search)) {
-    sessionStorage.setItem("timeSearch", searches.search);
+    sessionStorage.setItem("timeSearch", JSON.stringify(searches.search));
 
     searches.done(function(results) {
       var dataList = $("#items_time");
