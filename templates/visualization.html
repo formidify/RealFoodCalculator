@@ -1046,8 +1046,6 @@ function searchItem() {
   old_searches = JSON.parse(sessionStorage.timeSearch);
 
     searches.done(function(results) {
-      console.log(old_searches);
-      console.log(results.search)
     if (!arraysEqual(old_searches, results.search)) {
     sessionStorage.setItem("timeSearch", JSON.stringify(results.search));
       var dataList = $("#items_time");
