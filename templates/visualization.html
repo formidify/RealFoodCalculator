@@ -1178,10 +1178,11 @@ console.log(datasets.toString())
 
     data.datasets = datasets
       myLineChart.data =data;
-
+console.log(datasets.toString())
   myLineChart.update();
 
-sessionStorage.setItem("timeConfigs", total_configs);
+sessionStorage.setItem("timeConfigs", JSON.stringify(total_configs));
+console.log(datasets.toString())
 
     })
 
