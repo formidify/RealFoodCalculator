@@ -531,10 +531,11 @@ def get_item_data(item, type):
                 print(e)
             connection.close()
 
+        yrs.reverse()
         print(real)
         print(non_real)
-        print(yrs.reverse())
-        return flask.jsonify({"cost": [real, non_real], "yrs": yrs.reverse()})
+        print(yrs)
+        return flask.jsonify({"cost": [real, non_real], "yrs": yrs})
 
 
 @app.route("/visualization/get_categories/")
