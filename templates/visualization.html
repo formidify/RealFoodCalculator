@@ -1061,6 +1061,7 @@ c.done(function(results) {
 
 sessionStorage.setItem("timeSearch", JSON.stringify([]));
 sessionStorage.setItem("timeCurrent", JSON.stringify([]));
+sessionStorage.setItem("timeConfigs", JSON.stringify([]));
 
 function searchItem() {
   x = document.getElementById("add_time").value;
@@ -1144,6 +1145,8 @@ function addItemData() {
       cost = results.cost
 
 
+total_configs = JSON.parse(sessionStorage.timeConfigs)
+
     for (j = 0; j < types.length; j++) {
         line = {}
         line.data = cost[j]
@@ -1177,7 +1180,7 @@ function addItemData() {
 
   myLineChart.update();
 
-
+sessionStorage.setItem("timeConfigs", total_configs);
 
     })
 
