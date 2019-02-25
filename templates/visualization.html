@@ -1110,7 +1110,8 @@ for (i = 0; i < types.length; i++) {
 
 total_configs = JSON.parse(sessionStorage.timeConfigs)
 ctx5 = document.getElementById("timeSeriesChart").getContext('2d');
-var myLineChart = new Chart(ctx5, {data: lineChartData,
+var myLineChart;
+myLineChart = new Chart(ctx5, {data: lineChartData,
     type: 'line',
     options: {scales: {yAxes:[{scaleLabel: {display: true, labelString: "Dollar purchases ($)"}, ticks: {min: 0}}]},
               legend: {
@@ -1177,7 +1178,8 @@ console.log(datasets.toString())
     datasets.push(line)
 
     data.datasets = datasets
-      myLineChart.data =data;
+      myLineChart.data = data;
+console.log(data.labels.toString())
 console.log(datasets.toString())
   myLineChart.update();
 
