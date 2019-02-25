@@ -252,6 +252,7 @@ def insert_entry():
     else:
         return "Stub Function: Could not get connection"
 
+# get all years in reverse order
 def get_all_years():
     yrs = []
 
@@ -489,14 +490,51 @@ def get_item_data(item, type):
     if type == 'liv':
         return
 
+    # add single item for one year
     if type == 'year':
         yrs = get_all_years()
-
-        query = """ """
-
         print(item)
 
-        return flask.jsonify({})
+        query_real = """SELECT s, year FROM (SELECT {y0} AS year, COALESCE(SUM(cost),0) AS s FROM test_data_large WHERE year = {y0} AND trim(description) = '{i}' 
+        AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't') UNION
+        SELECT {y1} AS year, COALESCE(SUM(cost),0) AS s FROM test_data_large WHERE year = {y1} AND trim(description) = '{i}' 
+        AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't') UNION
+        SELECT {y2} AS year, COALESCE(SUM(cost),0) AS s FROM test_data_large WHERE year = {y2} AND trim(description) = '{i}'
+        AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't')) AS X ORDER BY year;
+        """.format(y0 = yrs[0], y1 = yrs[1], y2 = yrs[2], i = item)
+
+        query_nonreal = """SELECT s, year FROM (SELECT {y0} AS year, COALESCE(SUM(cost),0) AS s FROM 
+        (SELECT COALESCE(local, 'f') AS local, COALESCE(fair, 'f') AS fair, COALESCE(ecological, 'f') AS ecological, COALESCE(humane, 'f') AS humane, 
+        trim(description), cost, year FROM test_data_large) X WHERE local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't' 
+        AND year = {y0} AND trim(description) = '{i}' UNION
+        SELECT {y1} AS year, COALESCE(SUM(cost),0) AS s FROM 
+        (SELECT COALESCE(local, 'f') AS local, COALESCE(fair, 'f') AS fair, COALESCE(ecological, 'f') AS ecological, COALESCE(humane, 'f') AS humane, 
+        trim(description), cost, year FROM test_data_large) X WHERE local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't' 
+        AND year = {y1} AND trim(description) = '{i}' UNION
+        SELECT {y2} AS year, COALESCE(SUM(cost),0) AS s FROM 
+        (SELECT COALESCE(local, 'f') AS local, COALESCE(fair, 'f') AS fair, COALESCE(ecological, 'f') AS ecological, COALESCE(humane, 'f') AS humane, 
+        trim(description), cost, year FROM test_data_large) X WHERE local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't' 
+        AND year = {y2} AND trim(description) = '{i}') AS X ORDER BY year;
+        """.format(y0 = yrs[0], y1 = yrs[1], y2 = yrs[2], i = item)
+
+        real = []
+        non_real = []
+        connection = get_connection()
+        if connection is not None:
+            try:
+                # either this or minimum items allowed to show
+                for row1 in get_select_query_results(connection, query_real):
+                    real.append(row1[0])
+                for row2 in get_select_query_results(connection, query_nonreal):
+                    non_real.append(row2[0])
+            except Exception as e:
+                print(e)
+            connection.close()
+
+        print(real)
+        print(non_real)
+        print(yrs.reverse())
+        return flask.jsonify({"cost": [real, non_real], "yrs": yrs.reverse()})
 
 
 @app.route("/visualization/get_categories/")
