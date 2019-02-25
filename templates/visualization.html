@@ -1138,7 +1138,7 @@ function addItemData() {
 
     searches.done(function(results) {
       types = ['total', 'real']
-      d = myLineChart.data
+      d = {}
       d.labels = results.yrs
       datasets = d.datasets
       console.log(y)
@@ -1178,7 +1178,7 @@ console.log(datasets.toString())
     datasets.push(line)
 
     d.datasets = datasets
-      myLineChart.data = d;
+      myLineChart.data = d
 console.log(d.labels.toString())
 console.log(datasets.toString())
   myLineChart.update();
