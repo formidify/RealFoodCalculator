@@ -531,6 +531,7 @@ def get_item_data(item, type):
                 print(e)
             connection.close()
 
+        yrs = yrs[:3]
         yrs.reverse()
         print(real)
         print(non_real)
