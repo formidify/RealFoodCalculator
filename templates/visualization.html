@@ -1141,7 +1141,7 @@ function addItemData() {
       data.labels = results.yrs
       datasets = data.datasets
       console.log(y)
-      color = intToARGB(hashCode(y))
+      color = "#" + intToARGB(hashCode(y))
       console.log(color)
       console.log(types.toString())
       cost = results.cost
@@ -1163,7 +1163,7 @@ total_configs = JSON.parse(sessionStorage.timeConfigs)
         }
         datasets.push(line)
     }
-
+console.log(datasets.toString())
 // add legend for each item
     line = {}
     line.data = 0 // arbitrary
