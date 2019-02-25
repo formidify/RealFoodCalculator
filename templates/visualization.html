@@ -1108,8 +1108,8 @@ for (i = 0; i < types.length; i++) {
     lineChartData.datasets.push(line)
 }
 
-total_configs = JSON.parse(sessionStorage.timeConfigs)
-ctx5 = document.getElementById("timeSeriesChart").getContext('2d');
+var total_configs = JSON.parse(sessionStorage.timeConfigs)
+var ctx5 = document.getElementById("timeSeriesChart").getContext('2d');
 var myLineChart;
 myLineChart = new Chart(ctx5, {data: lineChartData,
     type: 'line',
@@ -1138,13 +1138,10 @@ function addItemData() {
 
     searches.done(function(results) {
       types = ['total', 'real']
-      d = myLineChart.data
-      d.labels = results.yrs
-      datasets = []
-      console.log(y)
+      myLineChart.data.labels = results.yrs
+      //datasets = []
       color = "#" + intToARGB(hashCode(y))
-      console.log(color)
-      console.log(types.toString())
+
       cost = results.cost
 
 
@@ -1162,9 +1159,9 @@ total_configs = JSON.parse(sessionStorage.timeConfigs)
         if (j > 0) {
             line.borderDash = [10, 5]
         }
-        datasets.push(line)
+        myLineChart.data.datasets.push(line)
     }
-console.log(datasets.toString())
+// console.log(datasets.toString())
 // add legend for each item
     line = {}
     line.data = 0 // arbitrary
@@ -1175,12 +1172,8 @@ console.log(datasets.toString())
     //line.fillColor = colors[i]
     line.fill = true
     line.showLine = false
-    datasets.push(line)
+    myLineChart.data.datasets.push(line)
 
-    d.datasets = datasets
-      myLineChart.data = d
-console.log(d.labels.toString())
-console.log(datasets.toString())
   myLineChart.update();
 
 sessionStorage.setItem("timeConfigs", JSON.stringify(total_configs));
