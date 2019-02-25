@@ -473,7 +473,7 @@ def get_time_data(cat):
 # get time series data for vis page (by category)
 # NOTE: items where all four categories (local, ecological, fair, humane) are null will not be included in the calculation
 @app.route("/visualization/item_data", defaults = {'item': '', 'type': ''})
-@app.route("/visualization/item_data/<path:item>/<path:type>")
+@app.route("/visualization/item_data/<path:item>+<path:type>")
 def get_item_data(item, type):
 
     # add item for percent chart
