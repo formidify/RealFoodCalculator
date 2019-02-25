@@ -1142,7 +1142,8 @@ function addItemData() {
       datasets = data.datasets
       console.log(y)
       color = intToARGB(hashCode(y))
-
+      console.log(color)
+      console.log(types.toString())
       cost = results.cost
 
 
@@ -1177,7 +1178,6 @@ total_configs = JSON.parse(sessionStorage.timeConfigs)
 
     data.datasets = datasets
       myLineChart.data =data;
-  myLineChart.options.maintainAspectRatio = true;
 
   myLineChart.update();
 
