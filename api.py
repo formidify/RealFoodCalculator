@@ -505,15 +505,15 @@ def get_item_data(item, type):
 
         query_nonreal = """SELECT s, year FROM (SELECT {y0} AS year, COALESCE(SUM(cost),0) AS s FROM 
         (SELECT COALESCE(local, 'f') AS local, COALESCE(fair, 'f') AS fair, COALESCE(ecological, 'f') AS ecological, COALESCE(humane, 'f') AS humane, 
-        trim(description), cost, year FROM test_data_large) X WHERE local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't' 
+        description, cost, year FROM test_data_large) X WHERE local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't' 
         AND year = {y0} AND trim(description) = '{i}' UNION
         SELECT {y1} AS year, COALESCE(SUM(cost),0) AS s FROM 
         (SELECT COALESCE(local, 'f') AS local, COALESCE(fair, 'f') AS fair, COALESCE(ecological, 'f') AS ecological, COALESCE(humane, 'f') AS humane, 
-        trim(description), cost, year FROM test_data_large) X WHERE local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't' 
+        description, cost, year FROM test_data_large) X WHERE local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't' 
         AND year = {y1} AND trim(description) = '{i}' UNION
         SELECT {y2} AS year, COALESCE(SUM(cost),0) AS s FROM 
         (SELECT COALESCE(local, 'f') AS local, COALESCE(fair, 'f') AS fair, COALESCE(ecological, 'f') AS ecological, COALESCE(humane, 'f') AS humane, 
-        trim(description), cost, year FROM test_data_large) X WHERE local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't' 
+        description, cost, year FROM test_data_large) X WHERE local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't' 
         AND year = {y2} AND trim(description) = '{i}') AS X ORDER BY year;
         """.format(y0 = yrs[0], y1 = yrs[1], y2 = yrs[2], i = item)
 
