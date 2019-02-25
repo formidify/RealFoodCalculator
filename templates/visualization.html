@@ -1108,6 +1108,7 @@ for (i = 0; i < types.length; i++) {
     lineChartData.datasets.push(line)
 }
 
+total_configs = JSON.parse(sessionStorage.timeConfigs)
 ctx5 = document.getElementById("timeSeriesChart").getContext('2d');
 var myLineChart = new Chart(ctx5, {data: lineChartData,
     type: 'line',
