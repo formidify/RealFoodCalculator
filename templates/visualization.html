@@ -1294,6 +1294,15 @@ sessionStorage.setItem("itemsLivSearch", JSON.stringify([]));
 sessionStorage.setItem("vendorSearch", JSON.stringify([]));
 sessionStorage.setItem("labelSearch", JSON.stringify([]));
 
+var ctx10 = document.getElementById("livChart1").getContext('2d');
+var ctx11 = document.getElementById("livChart2").getContext('2d');
+var ctx12 = document.getElementById("livChart3").getContext('2d');
+var ctx13 = document.getElementById("livChart4").getContext('2d');
+
+var myLivChart1;
+var myLivChart2;
+var myLivChart3;
+var myLivChart4;
 
 function searchLivItem() {
   x = document.getElementById("item_liv").value;
@@ -1365,15 +1374,24 @@ function searchLivLabel() {
 }
 
 function addLivItem() {
-
+myLivChart1.destroy();
+myLivChart2.destroy();
+myLivChart3.destroy();
+myLivChart4.destroy();
 }
 
 function addLivVendor() {
-
+myLivChart1.destroy();
+myLivChart2.destroy();
+myLivChart3.destroy();
+myLivChart4.destroy();
 }
 
 function addLivLabel() {
-
+myLivChart1.destroy();
+myLivChart2.destroy();
+myLivChart3.destroy();
+myLivChart4.destroy();
 }
 </script>
 </body>
