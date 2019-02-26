@@ -367,7 +367,7 @@ $("percentChart1").click(function(evt)
 }
 )
 
-document.getElementById("percentChart3").onclick = function(evt)
+$("percentChart3").click(function(evt)
 {
      activePoints = myPieChart2.getElementsAtEvent(evt);
 
@@ -386,9 +386,9 @@ document.getElementById("percentChart3").onclick = function(evt)
 
       updateBarChart(label, year);
    }
-}
+})
 
-document.getElementById("percentChart4").onclick = function(evt)
+$("percentChart4").click(function(evt)
 {
      activePoints = myPieChart3.getElementsAtEvent(evt);
 
@@ -407,9 +407,9 @@ document.getElementById("percentChart4").onclick = function(evt)
 
       updateBarChart(label, year);
    }
-}
+})
 
-document.getElementById("percentChart5").onclick = function(evt)
+ $("percentChart5").click(function(evt)
 {
      activePoints = myPieChart4.getElementsAtEvent(evt);
 
@@ -428,7 +428,7 @@ document.getElementById("percentChart5").onclick = function(evt)
 
       updateBarChart(label, year);
    }
-}
+})
 
 /// HYPOTHETICAL INCREASE CHART
 
@@ -460,7 +460,7 @@ getData.done(function(results) {
     };
 
      ctx1 = document.getElementById("increaseChart1").getContext('2d');
-    myPieChart1 = new Chart(ctx1, {
+    myPieChart5 = new Chart(ctx1, {
         type: 'pie',
         data: data ,
         options: {
@@ -492,7 +492,7 @@ getData.done(function(results) {
     };
 
      ctx6 = document.getElementById("increaseChart3").getContext('2d');
-    myPieChart2 = new Chart(ctx6, {
+    myPieChart6 = new Chart(ctx6, {
         type: 'pie',
         data: data ,
         options: {
@@ -524,7 +524,7 @@ getData.done(function(results) {
     };
 
      ctx7 = document.getElementById("increaseChart4").getContext('2d');
-    myPieChart3 = new Chart(ctx7, {
+    myPieChart7 = new Chart(ctx7, {
         type: 'pie',
         data: data ,
         options: {
@@ -556,7 +556,7 @@ getData.done(function(results) {
     };
 
      ctx8 = document.getElementById("increaseChart5").getContext('2d');
-    myPieChart4 = new Chart(ctx8, {
+    myPieChart8 = new Chart(ctx8, {
         type: 'pie',
         data: data ,
         options: {
@@ -709,9 +709,9 @@ function updateMixedChart(cat, yr){
     });
 };
 
-document.getElementById("increaseChart1").onclick = function(evt)
+$("increaseChart1").click(function(evt)
 {
-     activePoints = myPieChart1.getElementsAtEvent(evt);
+     activePoints = myPieChart5.getElementsAtEvent(evt);
 
     if(activePoints.length > 0)
     {
@@ -728,11 +728,11 @@ document.getElementById("increaseChart1").onclick = function(evt)
 
       updateMixedChart(label, year);
    }
-}
+})
 
-document.getElementById("increaseChart3").onclick = function(evt)
+$("increaseChart3").click(function(evt)
 {
-     activePoints = myPieChart2.getElementsAtEvent(evt);
+     activePoints = myPieChart6.getElementsAtEvent(evt);
 
     if(activePoints.length > 0)
     {
@@ -749,11 +749,11 @@ document.getElementById("increaseChart3").onclick = function(evt)
 
       updateMixedChart(label, year);
    }
-}
+})
 
-document.getElementById("increaseChart4").onclick = function(evt)
+$("increaseChart4").click(function(evt)
 {
-     activePoints = myPieChart3.getElementsAtEvent(evt);
+     activePoints = myPieChart7.getElementsAtEvent(evt);
 
     if(activePoints.length > 0)
     {
@@ -770,11 +770,11 @@ document.getElementById("increaseChart4").onclick = function(evt)
 
       updateMixedChart(label, year);
    }
-}
+})
 
-document.getElementById("increaseChart5").onclick = function(evt)
+$("increaseChart5").click(function(evt)
 {
-     activePoints = myPieChart4.getElementsAtEvent(evt);
+     activePoints = myPieChart8.getElementsAtEvent(evt);
 
     if(activePoints.length > 0)
     {
@@ -791,7 +791,7 @@ document.getElementById("increaseChart5").onclick = function(evt)
 
       updateMixedChart(label, year);
    }
-}
+})
 
 /// TIME SERIES CHART
 
