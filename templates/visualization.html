@@ -1206,7 +1206,9 @@ $("select#categoriesTime").change(function(){
         line.data = cost[j][i]
         line.type = 'line'
         line.label = types[j] + " " + items[i]
+
         total_configs.push(line.label)
+        
         //line.backgroundColor = colors[i]
         color = "#" + intToARGB(hashCode(items[i]))
         colors.push(color)
@@ -1217,25 +1219,22 @@ $("select#categoriesTime").change(function(){
         }
         myLineChart.data.datasets.push(line)
     }
-    current_list = current_list.concat([items[i]])
-  }
-  }
-
-// add legend for each item
-for (i = 0; i < items.length; i++) {
-  if (!current_list.includes(items[i])) {
+    // legend line
     line = {}
     line.data = 0 // arbitrary
     line.type = 'line'
     line.label = items[i]
-    line.backgroundColor = colors[i]
-    line.borderColor = colors[i]
+    line.backgroundColor = color
+    line.borderColor = color
     //line.fillColor = colors[i]
     line.fill = true
     line.showLine = false
     myLineChart.data.datasets.push(line)
+
+    current_list = current_list.concat([items[i]])
   }
-}
+  }
+
 
   myLineChart.update();
   sessionStorage.setItem("timeConfigs", JSON.stringify(total_configs));
