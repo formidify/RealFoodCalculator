@@ -474,7 +474,7 @@ def get_time_data(cat):
     # default ranking order is by a * norm(% in all) + b * norm(% in one) - c * norm($ spent) for a = b = c = 1, but the coefficients can be up to change
     return flask.jsonify({"items": items[:8], "total_percent": total_percent[:8], "ind_percent": ind_percent[:8], "dollars": dollars[:8]})
 
-def get_item_time(years, item):
+def get_item_time(yrs, item):
     query_real = """SELECT s, year FROM (SELECT {y0} AS year, COALESCE(SUM(cost),0) AS s FROM test_data_large WHERE year = {y0} AND trim(description) = '{i}' 
         AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't') UNION
         SELECT {y1} AS year, COALESCE(SUM(cost),0) AS s FROM test_data_large WHERE year = {y1} AND trim(description) = '{i}' 
