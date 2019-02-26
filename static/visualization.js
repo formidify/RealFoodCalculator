@@ -342,7 +342,7 @@ function updateBarChart(cat, yr){
     })
 }
 
-document.getElementById("percentChart1").onclick = function(evt)
+function pc1click(evt)
 {
      activePoints = myPieChart1.getElementsAtEvent(evt);
 
