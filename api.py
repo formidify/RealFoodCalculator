@@ -474,6 +474,39 @@ def get_time_data(cat):
     # default ranking order is by a * norm(% in all) + b * norm(% in one) - c * norm($ spent) for a = b = c = 1, but the coefficients can be up to change
     return flask.jsonify({"items": items[:8], "total_percent": total_percent[:8], "ind_percent": ind_percent[:8], "dollars": dollars[:8]})
 
+def get_item_time(years, item):
+    query_real = """SELECT s, year FROM (SELECT {y0} AS year, COALESCE(SUM(cost),0) AS s FROM test_data_large WHERE year = {y0} AND trim(description) = '{i}' 
+        AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't') UNION
+        SELECT {y1} AS year, COALESCE(SUM(cost),0) AS s FROM test_data_large WHERE year = {y1} AND trim(description) = '{i}' 
+        AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't') UNION
+        SELECT {y2} AS year, COALESCE(SUM(cost),0) AS s FROM test_data_large WHERE year = {y2} AND trim(description) = '{i}'
+        AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't')) AS X ORDER BY year;
+        """.format(y0 = yrs[0], y1 = yrs[1], y2 = yrs[2], i = item)
+
+    query_total = """SELECT s, year FROM (SELECT {y0} AS year, COALESCE(SUM(cost),0) AS s FROM 
+        test_data_large WHERE year = {y0} AND trim(description) = '{i}' UNION
+        SELECT {y1} AS year, COALESCE(SUM(cost),0) AS s FROM 
+        test_data_large WHERE year = {y1} AND trim(description) = '{i}' UNION
+        SELECT {y2} AS year, COALESCE(SUM(cost),0) AS s FROM 
+        test_data_large WHERE year = {y2} AND trim(description) = '{i}') AS X ORDER BY year;
+        """.format(y0 = yrs[0], y1 = yrs[1], y2 = yrs[2], i = item)
+
+    real = []
+    total = []
+    connection = get_connection()
+    if connection is not None:
+        try:
+            # either this or minimum items allowed to show
+            for row1 in get_select_query_results(connection, query_real):
+                real.append(row1[0])
+            for row2 in get_select_query_results(connection, query_total):
+                total.append(row2[0])
+        except Exception as e:
+            print(e)
+        connection.close()
+
+    return total, real
+
 # get time series data for vis page (by category)
 # NOTE: items where all four categories (local, ecological, fair, humane) are null will not be included in the calculation
 @app.route("/visualization/item_data", defaults = {'item': '', 'type': ''})
@@ -498,35 +531,7 @@ def get_item_data(item, type):
         yrs = get_all_years()
         print(item)
 
-        query_real = """SELECT s, year FROM (SELECT {y0} AS year, COALESCE(SUM(cost),0) AS s FROM test_data_large WHERE year = {y0} AND trim(description) = '{i}' 
-        AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't') UNION
-        SELECT {y1} AS year, COALESCE(SUM(cost),0) AS s FROM test_data_large WHERE year = {y1} AND trim(description) = '{i}' 
-        AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't') UNION
-        SELECT {y2} AS year, COALESCE(SUM(cost),0) AS s FROM test_data_large WHERE year = {y2} AND trim(description) = '{i}'
-        AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't')) AS X ORDER BY year;
-        """.format(y0 = yrs[0], y1 = yrs[1], y2 = yrs[2], i = item)
-
-        query_total = """SELECT s, year FROM (SELECT {y0} AS year, COALESCE(SUM(cost),0) AS s FROM 
-        test_data_large WHERE year = {y0} AND trim(description) = '{i}' UNION
-        SELECT {y1} AS year, COALESCE(SUM(cost),0) AS s FROM 
-        test_data_large WHERE year = {y1} AND trim(description) = '{i}' UNION
-        SELECT {y2} AS year, COALESCE(SUM(cost),0) AS s FROM 
-        test_data_large WHERE year = {y2} AND trim(description) = '{i}') AS X ORDER BY year;
-        """.format(y0 = yrs[0], y1 = yrs[1], y2 = yrs[2], i = item)
-
-        real = []
-        total = []
-        connection = get_connection()
-        if connection is not None:
-            try:
-                # either this or minimum items allowed to show
-                for row1 in get_select_query_results(connection, query_real):
-                    real.append(row1[0])
-                for row2 in get_select_query_results(connection, query_total):
-                    total.append(row2[0])
-            except Exception as e:
-                print(e)
-            connection.close()
+        total, real = get_item_time(yrs, item)
 
         yrs = yrs[:3]
         yrs.reverse()
@@ -550,6 +555,36 @@ def get_categories():
 
     print(cats)
     return flask.jsonify({"cats": cats})
+
+@app.route("/visualization/get_categories_time/", defaults = {'cat': ''})
+@app.route("/visualization/get_categories_time/<cat>")
+def get_categories_time(cat):
+    items = [] # all of the distinct item in the category
+    query = """SELECT trim(description), SUM(cost) AS s FROM test_data_large WHERE trim(category) = '{p}' GROUP BY description ORDER BY s DESC;""".format(p = cat)
+    yrs = get_all_years()
+
+    connection = get_connection()
+    if connection is not None:
+        try:
+            # either this or minimum items allowed to show
+            for row in get_select_query_results(connection, query):
+                items.append(row[0])
+        except Exception as e:
+            print(e)
+        connection.close()
+
+    total = []
+    real = []
+
+    for item in items:
+        t, r = get_item_time(yrs, item)
+        total.append(t)
+        real.append(r)
+
+    yrs = yrs[:3]
+    yrs.reverse()
+    return flask.jsonify({"cost": [total, real], "yrs": yrs, "items": items})
+
 
 
 # return results that match the input item

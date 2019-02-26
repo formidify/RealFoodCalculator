@@ -983,7 +983,7 @@ document.getElementById("increaseChart5").onclick = function(evt)
     <input id = "submit_item_time" type="submit" value="submit" onclick = "addItemData()">
 <a> OR </a>
 <a> Add by category: </a>
-<select id = "categories">
+<select id = "categoriesTime">
   <option disabled selected value> select an option </option>
 </select>
 <input id = "submit_cat_time" type="submit" value="submit" onclick = "addCatData()">
@@ -1052,7 +1052,7 @@ c.done(function(results) {
   cats = results.cats;
   for (i = 0; i < cats.length; i++) {
     cat = cats[i]
-    $("select#categories").append( $("<option>")
+    $("select#categoriesTime").append( $("<option>")
     .val(cat)
     .html(cat)
 );
@@ -1185,46 +1185,41 @@ sessionStorage.setItem("timeConfigs", JSON.stringify(total_configs));
   }
 }
 
+$("select#categoriesTime").change(function(){
+  current_list = JSON.parse(sessionStorage.timeCurrent);
+  cat = $("select#categoriesTime").val();
+  searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/get_categories_time/" + cat);
+  searches.done(function(results) {
+    cost = results.cost
+    items = results.items
+    types = ['total', 'real']
+    myLineChart.data.labels = results.yrs
 
-function updateTimeChart(cat){
-   updatedData = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/percent_data/" + cat);
-  updatedData.done(function(results) {
+    total_configs = JSON.parse(sessionStorage.timeConfigs)
 
-lineChartData = {};
-lineChartData.labels  = results.labels; // time frame
-lineChartData.datasets = [];  //add 'datasets' array element to object
+    colors = []
 
- items = results.item
- colors = palette('tol', items.length).map(function(hex) {
-        return '#' + hex;
-      })
-
-
- data = results.data
-
- //[[[304, 407, 529], [1777, 2378, 3454], [665, 798, 300, 200], [234, 567, 987], [111, 222, 333]], // total
-//[[204, 40, 519], [1577, 2368, 3254], [635, 758, 20, 100], [134, 537, 947], [101, 202, 303]]] // real
-
-
-total_configs = []
-
-datasets = []
-for (i = 0; i < items.length; i++) {
+    for (i = 0; i < items.length; i++) {
+      if (!current_list.includes(items[i])) {
     for (j = 0; j < types.length; j++) {
         line = {}
-        line.data = data[j][i]
+        line.data = cost[j][i]
         line.type = 'line'
         line.label = types[j] + " " + items[i]
         total_configs.push(line.label)
         //line.backgroundColor = colors[i]
-        line.borderColor = colors[i]
+        color = "#" + intToARGB(hashCode(items[i]))
+        colors.push(color)
+        line.borderColor = color
         line.fill = false
         if (j > 0) {
             line.borderDash = [10, 5]
         }
-        datasets.push(line)
+        myLineChart.data.datasets.push(line)
     }
-}
+    current_list = current_list.concat([items[i]])
+  }
+  }
 
 // add legend for each item
 for (i = 0; i < items.length; i++) {
@@ -1237,17 +1232,17 @@ for (i = 0; i < items.length; i++) {
     //line.fillColor = colors[i]
     line.fill = true
     line.showLine = false
-    datasets.push(line)
+    myLineChart.data.datasets.push(line)
 }
 
-lineChartData.datasets = datasets
-
-  myLineChart.data =lineChartData;
-  myLineChart.options.maintainAspectRatio = true;
-
   myLineChart.update();
-    });
-};
+
+
+  })
+  sessionStorage.setItem("timeConfigs", JSON.stringify(total_configs));
+  sessionStorage.setItem("timeCurrent", JSON.stringify(current_list.concat([y])));
+
+});
 
 </script>
 
