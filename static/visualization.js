@@ -137,7 +137,7 @@ getData.done(function(results) {
     };
 
      ctx1 = document.getElementById("percentChart1").getContext('2d');
-    myPieChart1 = new Chart(ctx1, {
+    var myPieChart1 = new Chart(ctx1, {
         type: 'pie',
         data: data ,
         options: {
@@ -169,7 +169,7 @@ getData.done(function(results) {
     };
 
      ctx6 = document.getElementById("percentChart3").getContext('2d');
-    myPieChart2 = new Chart(ctx6, {
+    var myPieChart2 = new Chart(ctx6, {
         type: 'pie',
         data: data ,
         options: {
@@ -201,7 +201,7 @@ getData.done(function(results) {
     };
 
      ctx7 = document.getElementById("percentChart4").getContext('2d');
-    myPieChart3 = new Chart(ctx7, {
+    var myPieChart3 = new Chart(ctx7, {
         type: 'pie',
         data: data ,
         options: {
@@ -233,7 +233,7 @@ getData.done(function(results) {
     };
 
      ctx8 = document.getElementById("percentChart5").getContext('2d');
-    myPieChart4 = new Chart(ctx8, {
+    var myPieChart4 = new Chart(ctx8, {
         type: 'pie',
         data: data ,
         options: {
