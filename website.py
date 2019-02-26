@@ -71,7 +71,8 @@ def viewDownload():
 
 @app.route('/data_entry', methods = ['POST', 'GET'])
 def result():
-    result =[ {"description": "test description"}]
+    result =[{}]
+    formData = {"category": "dairy"}
     api_url = 'http://cmc307-06.mathcs.carleton.edu:5001/test_data_large?'
 
     if request.method == 'POST':
@@ -89,9 +90,8 @@ def result():
         r = requests.get(api_url).json()
         #print(r)
         # print(json.loads(r.text))
-        return render_template("data_entry.html",result = r)
-
-    return render_template("data_entry.html", result = result, clear = True, disqualifier="on")
+        return render_template("data_entry.html",result = r, formData = result)
+    return render_template("data_entry.html", result = result, clear = True, disqualifier="on", formData = formData)
 
 
 @app.route('/visualization')
