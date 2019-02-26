@@ -1307,7 +1307,7 @@ function searchLivItem() {
 function searchLivVendor() {
   x = document.getElementById("vendor_liv").value;
   if (x.length > 1) {
-  searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/get_item/" + x);
+  searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/get_vendor/" + x);
 
   old_searches = JSON.parse(sessionStorage.vendorSearch);
 
