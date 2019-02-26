@@ -302,8 +302,9 @@ function populateSavedItems(items){
             <input id="brand" name="brand" type="text">
             <input id="brand-check" name="brand-keep" type="checkbox">
           </div>
-          <button type="submit">Search</button>
-          <button type="button" id="clear-submit" onclick="submit()">Submit</button>
+          <input type="submit" onclick="return searchMatches();" value="Search for Similar Items"/>
+          <!--<button type="submit">Search</button>
+          <button type="button" id="clear-submit" onclick="submit()">Submit</button>-->
         </div> <!--TODO :div wasn't originally here -->
       </fieldset>
       <fieldset>
@@ -436,7 +437,7 @@ function populateSavedItems(items){
           </div>
         </div> <!-- TODO : added div here -->
       </fieldset>
-      <input type="submit" onclick="return searchMatches();" value="Search for Similar Items"/>
+      <!-- <input type="submit" onclick="return searchMatches();" value="Search for Similar Items"/> -->
     </form>
     <button type="button" id="clear-submit" onclick="submit()">Submit Item to Entry Session</button>
 

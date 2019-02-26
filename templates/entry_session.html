@@ -32,14 +32,14 @@ window.onload = function (){
      }
 
 function clearEntries(){
-   console.log("Clearing Entries"); 
+   console.log("Clearing Entries");
    entrySession = [];
    localStorage.setItem('entrySession', '[]');
    location.reload();
-} 
+}
 function makeEditable(){
 	var table = document.getElementById("sessionTable");
-	table.insertRow();	
+	table.insertRow();
 	table.contenteditable='true';
 
 }
@@ -104,16 +104,16 @@ function submitEntries(){
 
 <body>
     <h1>Real Food Calculator</h1>
+    <nav>
+    <div id="navBar">
 
-    <div class="topnav">
-      <nav>
           <a id="home_btn" href="#">Home</a>
           <!--<a id="data_entry_btn" href="#">Data Entry</a>-->
           <a id="entry_session_btn" href="#">Entry Session</a>
           <a id="view_download_btn" href="#">View/Download Data</a>
           <a id="visualization_btn" href="#">Visualization</a>
-      </nav>
     </div>
+    </nav>
 
 
 
@@ -200,8 +200,8 @@ function submitEntries(){
 </select>
 
 <label for="year">Year</label>
-<input id="year" name="year" type="number" default=2019  placeholder="2019" required> 
-    
+<input id="year" name="year" type="number" default=2019  placeholder="2019" required>
+
 
          <label for="rating_version">Rating Version</label>
          <input id="rating_version" name="rating_version" type="number" value="2.0" placeholder="2.0">
@@ -235,8 +235,8 @@ function submitEntries(){
                         <th>Edit</th>
 			 </tr>
 </table>
-    
-  
+
+
     <script type="text/javascript">
         //info from https://stackoverflow.com/questions/28206654/saving-table-data-to-html5-localstorage and
         //https://stackoverflow.com/questions/47559534/how-to-put-json-data-into-html-table
