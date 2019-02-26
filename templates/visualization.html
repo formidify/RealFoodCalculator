@@ -1276,12 +1276,21 @@ $("select#categoriesTime").change(function(){
 
 <script>
 
+sessionStorage.setItem("itemsLivSearch", JSON.stringify([]));
+sessionStorage.setItem("vendorSearch", JSON.stringify([]));
+sessionStorage.setItem("labelSearch", JSON.stringify([]));
+
+
 function searchLivItem() {
   x = document.getElementById("item_liv").value;
   if (x.length > 1) {
   searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/get_item/" + x);
 
+  old_searches = JSON.parse(sessionStorage.itemsLivSearch);
+
     searches.done(function(results) {
+    if (!arraysEqual(old_searches, results.search)) {
+    sessionStorage.setItem("itemsLivSearch", JSON.stringify(results.search));
       var dataList = $("#items_list");
         dataList.empty();
         if(results.search.length) {
@@ -1291,18 +1300,20 @@ function searchLivItem() {
             dataList.append(opt);
           }
         }
-    });
+    }});
 }
 }
 
 function searchLivVendor() {
   x = document.getElementById("vendor_liv").value;
   if (x.length > 1) {
-  searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/get_vendor/" + x);
+  searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/get_item/" + x);
 
+  old_searches = JSON.parse(sessionStorage.vendorSearch);
 
     searches.done(function(results) {
-
+    if (!arraysEqual(old_searches, results.search)) {
+    sessionStorage.setItem("vendorSearch", JSON.stringify(results.search));
       var dataList = $("#vendor_list");
         dataList.empty();
         if(results.search.length) {
@@ -1312,7 +1323,7 @@ function searchLivVendor() {
             dataList.append(opt);
           }
         }
-    });
+    }});
 }
 }
 
@@ -1321,9 +1332,11 @@ function searchLivLabel() {
   if (x.length > 1) {
   searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/get_label/" + x);
 
-  old_searches = JSON.parse(sessionStorage.timeSearch);
+  old_searches = JSON.parse(sessionStorage.labelSearch);
 
     searches.done(function(results) {
+    if (!arraysEqual(old_searches, results.search)) {
+    sessionStorage.setItem("labelSearch", JSON.stringify(results.search));
       var dataList = $("#label_list");
         dataList.empty();
         if(results.search.length) {
@@ -1333,7 +1346,7 @@ function searchLivLabel() {
             dataList.append(opt);
           }
         }
-    });
+    }});
 }
 }
 

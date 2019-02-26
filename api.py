@@ -592,7 +592,7 @@ def get_categories_time(cat):
 @app.route("/visualization/get_item/<search>")
 def get_item(search):
     results = []
-    query = """SELECT DISTINCT ON (trim(description)) description FROM test_data_large WHERE trim(description) LIKE lower('%{s}%');""".format(s = search)
+    query = """SELECT DISTINCT ON (trim(description)) description FROM test_data_large WHERE lower(trim(description)) LIKE lower('%{s}%');""".format(s = search)
     connection = get_connection()
     if connection is not None:
         try:
@@ -610,7 +610,7 @@ def get_item(search):
 @app.route("/visualization/get_vendor/<search>")
 def get_vendor(search):
     results = []
-    query = """SELECT DISTINCT ON (trim(vendor)) vendor FROM test_data_large WHERE trim(vendor) LIKE lower('%{s}%');""".format(s = search)
+    query = """SELECT DISTINCT ON (trim(vendor)) vendor FROM test_data_large WHERE lower(trim(vendor)) LIKE lower('c');""".format(s = search)
     connection = get_connection()
     if connection is not None:
         try:
@@ -628,7 +628,7 @@ def get_vendor(search):
 @app.route("/visualization/get_label/<search>")
 def get_label(search):
     results = []
-    query = """SELECT DISTINCT ON (trim(label_brand)) label_brand FROM test_data_large WHERE trim(label_brand) LIKE lower('%{s}%');""".format(s = search)
+    query = """SELECT DISTINCT ON (trim(label_brand)) label_brand FROM test_data_large WHERE lower(trim(label_brand)) LIKE lower('%{s}%');""".format(s = search)
     connection = get_connection()
     if connection is not None:
         try:
