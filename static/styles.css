@@ -35,3 +35,70 @@ select{
     margin: 5px, 5px, 5px, 5px;
     border-radius: 5px;
 }
+#col1{
+    flex-direction: column;
+    order: 1;
+}
+#col2{
+    flex-direction: column;
+    order: 2;
+}
+#col3{
+    flex-direction: column;
+    order: 3;
+}
+#data-entry-form{
+    display:flex;
+    justify-content: center;
+}
+#entryBox{
+    flex-direction: column;
+}
+#navBar{
+    display: flex;
+    flex-direction: row;
+    background-color: white;
+}
+h1{
+    color:#ffbfc6;
+    width:98%;
+    padding-top: 14px;
+    padding-bottom: 14px;
+    padding-left: 2%;
+    background-color:white;
+    /*border: 1px solid black;*/
+    display: inline-block;
+    margin:0;
+    opacity:1;
+}
+body{
+    background-image: url("cherryImage.jpg");
+    background-size:100%;
+    background-color: grey;
+}
+
+a{
+    text-decoration:none;
+    font-family:Arial,sans-serif;
+    font-size: large;
+    font-weight: bold;
+    background-color: white;
+    color: #ffbfc6;
+    width:25%;
+    padding-top:10px;
+    padding-bottom:5px;
+    text-align:center;
+    text-decoration: none;
+    display: inline-block;
+    white-space: nowrap;
+    /*border: 1px solid #cbf435;*/
+    opacity:1;
+}
+a:hover{
+    color:white;
+    background-color:#86898e;
+}
+a:active{
+    color:white;
+    background-color: #86898e;
+}
