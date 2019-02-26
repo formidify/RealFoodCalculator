@@ -8,7 +8,16 @@
         <!--<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}" />-->
  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>       
  <script>
-
+window.onload = function (){
+//var savedEntryString = localStorage.getItem("savedEntry");
+var savedEntry = JSON.parse(localStorage.getItem('savedEntry')); 
+if (savedEntry!= null){
+console.log("savedEntry:", savedEntry);
+populateSavedItems(savedEntry);
+localStorage["isSavedEntry"] = false;
+localStorage["savedEntry"] = {};
+}
+}
     localStorage["foodData"] = [];
     var initializeEntrySession = [];
     localStorage["entrySession"] = initializeEntrySession;
@@ -82,19 +91,13 @@ if (invalid == true){
     }
 
     function submit(){
-        //bug is that if checkbox is already clicked and user changes value in input the old value (that existed
-        //when the checkbox was originally clicked) resurfaces once form is cleared
-        //--this could probably be fixed by just repopulating with what's in the input field instead of using session
-        //storage at all...
-	
 	
 	if (!checkInvalidInputs()){
+         var itemsToSave = getItemsToSave();
         var thisEntry = [];
-        console.log("thisEntry:", thisEntry); 
         var inputs = document.querySelectorAll('input[type=text]');
  
         var numInputs = document.querySelectorAll('input[type=number]');
-        console.log(numInputs);
 	
         var categoryInputs = document.querySelectorAll('[name=category]');
 	thisEntry.push(categoryInputs[0].value);
@@ -110,16 +113,13 @@ if (invalid == true){
 
 
         for(var i = 0; i < 5; i++) {
-            console.log(inputs[i]);
             thisEntry.push(inputs[i].value);
 
             inputID = inputs[i].id;
             //set vendor to thing in session storage
-            console.log(sessionStorage[inputID]);
 
             //finds fields with defined session storage to repopulate fields (based on id tags)
             if (sessionStorage[inputID]) {
-                console.log('made it alllthewayhere')
                 var vendorValue = sessionStorage.getItem(inputID);
 
                 if (document.getElementById(inputID + '-check').checked){
@@ -141,7 +141,6 @@ if (invalid == true){
 	thisEntry.push(numInputs[0].value);
 
 	numInputs[0].value = '';
-	console.log("Local Value", document.getElementById('local-true').checked);
 	thisEntry.push(document.getElementById('local-true').checked);
 
 	
@@ -174,8 +173,8 @@ if (invalid == true){
         localStorage["foodData"] += "/" + JSON.stringify(thisEntry);
         initializeEntrySession.push(thisEntry);
         localStorage.setItem('entrySession', JSON.stringify(initializeEntrySession));
-        //added '/' to later split string up, is there a better way to do this?
-    } }
+        populateSavedItems(itemsToSave);    
+} }
 
 
 
@@ -230,6 +229,32 @@ if (invalid == true){
           document.getElementById(dataLabel).value = row;
     }
 }
+function searchMatches(){
+    var itemsToSave = getItemsToSave();
+    $("#data-entry-form").submit();
+    return false;
+}
+function getItemsToSave(){
+    itemsToSave = {}
+    $("input:checkbox:checked").each(function() {
+           item = ($(this).attr("name"));
+           itemName = item.slice(0, -5);
+           itemValue = document.getElementById(itemName).value;
+           itemsToSave[itemName] = itemValue;
+           });
+    
+console.log("itemsToSave", JSON.stringify(itemsToSave));
+    localStorage.setItem('savedEntry', JSON.stringify(itemsToSave));
+    return itemsToSave;
+}
+function populateSavedItems(items){
+    for (key in items){
+        document.getElementById(key).value = items[key];
+        console.log("Updated", key, " to ", items[key]);
+        checkbox = (key+ "-check");
+        document.getElementById(checkbox).checked = true;
+}
+}
 </script>
 <script type="text/javascript" src="../static/example.js" defer></script>
     </head>
@@ -262,36 +287,36 @@ if (invalid == true){
                 <option value="fish">fish</option>
                 <option value="teacoffee">tea or coffee</option>
             </select>
-                  <input id="category-check" name="category-keep" type="checkbox" onclick="toggleCheckbox(this)">
+                  <input id="category-check" name="category-keep" type="checkbox">
         </div>
         <div>
 
             <label for="vendor">Vendor</label>
             <input id="vendor" name="vendor" type="text">
 
-            <input id="vendor-check" name="vendor-keep" type="checkbox" onclick="toggleCheckbox(this)">
+            <input id="vendor-check" name="vendor-keep" type="checkbox">
         </div>
         <div>
             <label for="brand">Label/Brand</label>
             <input id="brand" name="brand" type="text">
-            <input id="brand-check" name="brand-keep" type="checkbox" onclick="toggleCheckbox(this)">
+            <input id="brand-check" name="brand-keep" type="checkbox">
         </div>
         </fieldset>
         <fieldset>
         <div>
             <label for="description">Description</label>
             <input id="description" name="description" type="text" placeholder="one to two words">
-            <input id="description-check" name="description-keep" type="checkbox" onclick="toggleCheckbox(this)">
+            <input id="description-check" name="description-keep" type="checkbox">
         </div>
         <div>
             <label for="notes">Notes</label>
             <input id="notes" name="notes" type="text" placeholder="as labeled on invoice">
-            <input id="notes-check" name="notes-keep" type="checkbox" onclick="toggleCheckbox(this)">
+            <input id="notes-check" name="notes-keep" type="checkbox">
         </div>
         <div>
                 <label for="productCode">Product Code</label>
                 <input id="productCode" name="productCode" type="text">
-                <input id="productCode-check" name="productCode-keep" type="checkbox" onclick="toggleCheckbox(this)">
+                <input id="productCode-check" name="productCode-keep" type="checkbox">
             </div>
         <div>
             <label for="cost">Cost</label>
@@ -314,7 +339,7 @@ if (invalid == true){
     <option value="Multi-ingredient Product, 50% within 250 mi">Multi-ingredient Product, 50% within 250 mi</option>
     <option value="Aggregated Product, 75% within 250 mi">Aggregated Product, 75% within 250 mi</option>
  </select>
-            <input id="local-check" name="local-keep" type="checkbox" onclick="toggleCheckbox(this)">
+            <input id="real-check" name="real-keep" type="checkbox">
             </div>
 
             <div class="control">
@@ -337,7 +362,6 @@ if (invalid == true){
     <option value="Milk with Dignity by Migrant Justice">Milk with Dignity by Migrant Justice</option>
     <option value="Multi-ingredient product, 50% fair ingredients">Multi-ingredient product, 50% fair ingredients</option>
  </select>  
-          <input id="fair-check" name="fair-keep" type="checkbox" onclick="toggleCheckbox(this)">
 
             </div>
 
@@ -366,7 +390,6 @@ if (invalid == true){
     <option value="USDA Organic">USDA Organic</option>
     <option value="USDA Transitional Organic">USDA Transitional Organic</option>
   </select> 
-           <input id="ecological-check" name="ecological-keep" type="checkbox" onclick="toggleCheckbox(this)">
 
             </div>
 
@@ -392,7 +415,6 @@ if (invalid == true){
     <option value="Global Animal Partnership steps 4-5+">Global Animal Partnership steps 4-5+</option>
     <option value="Pennsylvania Certified Organic 100% Grassfed by USDA">Pennsylvania Certified Organic 100% Grassfed by USDA</option>
   </select>
-            <input id="humane-check" name="humane-keep" type="checkbox" onclick="toggleCheckbox(this)">
 
             </div>
             <div class="control">
@@ -408,15 +430,14 @@ if (invalid == true){
     <option value="Labor Violations">Labor Violations</option>
     <option value="Ultra-Processed Foods">Ultra-Processed Food</option>
   </select>
-            <input id="disqualifier-check" name="disqualifier-keep" type="checkbox" onclick="toggleCheckbox(this)">
 
             </div>
 
         </fieldset>
-        <button type="submit">Search</button>
+        <input type="submit" onclick="return searchMatches();" value="Search for Similar Items"/>
 
     </form>
-    <button type="button" id="clear-submit" onclick="submit()">Submit</button>
+    <button type="button" id="clear-submit" onclick="submit()">Submit Item to Entry Session</button>
 
     <h3>Past Entries</h3>
     <table>
