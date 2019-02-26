@@ -345,6 +345,7 @@ function updateBarChart(cat, yr){
 $("percentChart1").click(function(evt)
 {
      activePoints = myPieChart1.getElementsAtEvent(evt);
+     console.log(activePoints)
 
     if(activePoints.length > 0)
     {
