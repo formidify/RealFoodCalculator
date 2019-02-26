@@ -610,7 +610,7 @@ def get_item(search):
 @app.route("/visualization/get_vendor/<search>")
 def get_vendor(search):
     results = []
-    query = """SELECT DISTINCT ON (trim(vendor)) vendor FROM test_data_large WHERE lower(trim(vendor)) LIKE lower('c');""".format(s = search)
+    query = """SELECT DISTINCT ON (trim(vendor)) vendor FROM test_data_large WHERE lower(trim(vendor)) LIKE lower('%{s}%');""".format(s = search)
     connection = get_connection()
     if connection is not None:
         try:
