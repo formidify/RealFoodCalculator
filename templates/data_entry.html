@@ -15,8 +15,8 @@ if (savedEntry!= null){
 console.log("savedEntry:", savedEntry);
 populateSavedItems(savedEntry);
 localStorage["isSavedEntry"] = false;
-localStorage["savedEntry"] = {};
-  }
+localStorage["savedEntry"] = null;
+}
 }
     localStorage["foodData"] = [];
     var initializeEntrySession = [];
@@ -142,19 +142,24 @@ if (invalid == true){
 
 	numInputs[0].value = '';
 	thisEntry.push(document.getElementById('local-true').checked);
+        document.getElementById('local-false').checked = true;
 
 
 	thisEntry.push(document.getElementById('localDescription').value);
-
+        document.getElementById('localDescription').value = "";
 	thisEntry.push(document.getElementById('fair-true').checked);
+        document.getElementById('fair-false').checked = true;
 
 
         thisEntry.push(document.getElementById('fairDescription').value);
+        document.getElementById('fairDescription').value = "";
 
 	thisEntry.push(document.getElementById('ecological-true').checked);
+        document.getElementById('ecological-false').checked = true;
 
 
         thisEntry.push(document.getElementById('ecologicalDescription').value);
+        document.getElementById('ecologicalDescription').value = "";
 
 	if (document.getElementById('humane-na').checked){
 
@@ -163,11 +168,16 @@ if (invalid == true){
 	else{
 		thisEntry.push(document.getElementById('humane-true').checked);
 	}
-	thisEntry.push(document.getElementById('humaneDescription').value);
-	thisEntry.push(document.getElementById('disqualifier-true').checked);
+        document.getElementById('humane-na').checked = true;
 
+	thisEntry.push(document.getElementById('humaneDescription').value);
+        document.getElementById('humaneDescription').value = "";
+
+	thisEntry.push(document.getElementById('disqualifier-true').checked);
+        document.getElementById('disqualifier-false').checked = true;
 
         thisEntry.push(document.getElementById('disqualifierDescription').value);
+        document.getElementById('disqualifierDescription').value = "";
 
 
         localStorage["foodData"] += "/" + JSON.stringify(thisEntry);
@@ -239,18 +249,60 @@ function getItemsToSave(){
     $("input:checkbox:checked").each(function() {
            item = ($(this).attr("name"));
            itemName = item.slice(0, -5);
+           if (itemName == "real"){
+               var realNames = ["local","fair","ecological","humane","disqualifier"];
+               var saveReal = {};
+               for (real in realNames){
+                   console.log(realNames[real]+"-true");
+                   itemValue = document.getElementById(realNames[real]+"-true").checked;
+                   if (realNames[real]=="humane"){
+                       humaneNaValue = document.getElementById(realNames[real]+"-na").checked;
+                       saveReal[realNames[real]+"-na"]=itemValue;
+                   }
+                   itemDescription = document.getElementById(realNames[real]+"Description").value;
+                   saveReal[realNames[real]]=itemValue;
+                   saveReal[realNames[real]+"Description"]=itemDescription;
+               }
+           itemsToSave[itemName] = saveReal;
+           }else{
            itemValue = document.getElementById(itemName).value;
            itemsToSave[itemName] = itemValue;
-           });
-
+          }
+    });    
 console.log("itemsToSave", JSON.stringify(itemsToSave));
     localStorage.setItem('savedEntry', JSON.stringify(itemsToSave));
     return itemsToSave;
 }
 function populateSavedItems(items){
     for (key in items){
+        if (key == "real"){
+            for (realKey in items["real"]){
+               console.log("realKey", realKey, "key", key);
+               console.log("items[key][realKey]", items[key][realKey]);
+               if (!(realKey.includes("Description"))){ 
+                   if (realKey == "humane-na"){
+                      console.log("Inside Humane");
+                      if (items[key][realKey]=true){
+                           document.getElementById(realKey).checked = items[key][realKey];
+                      }
+                      document.getElementById("humane-true").checked = items[key]["humane"];
+                     if (items[key]["humane"]!= true && items[key][realKey]!=true){
+                      document.getElementById("humane-false").checked = true;
+               }
+               }
+               else{
+               if (!(realKey.includes("humane"))){
+               document.getElementById(realKey+"-true").checked = items[key][realKey];
+               document.getElementById(realKey+"-false").checked = !(items[key][realKey]);
+               }
+             } }else{
+               document.getElementById(realKey).value = items[key][realKey];
+            }
+          }
+        }else{
         document.getElementById(key).value = items[key];
         console.log("Updated", key, " to ", items[key]);
+        }
         checkbox = (key+ "-check");
         document.getElementById(checkbox).checked = true;
 }
@@ -426,6 +478,21 @@ function populateSavedItems(items){
             <label class="radio" for="disqualifier">
               <input id="disqualifier-true" name="disqualifier"type="radio" value="on" >Disqualifier</label>
             <label class="radio" for="disqualifier">
+<!-- TODO : changed here because of merge conflict
+ <input id="disqualifier-false" name="disqualifier" type="radio" value="off" checked>No Disqualifier</label>
+ <select id="disqualifierDescription" name="disqualifierDescription">
+    <option value="">No Disqualifier</option>
+    <option value="Concentrated Animal Feeding Operation">Concentrated Animal Feeding Operation</option>
+    <option value="Genetically Modified Organisms">Genetically Modified Organisms</option>
+    <option value="Guilty of Criminal Charges of Forced Labor">Guilty of Criminal Charges of Forced Labor</option>
+    <option value="Labor Violations">Labor Violations</option>
+    <option value="Ultra-Processed Foods">Ultra-Processed Food</option>
+  </select>
+
+            </div>
+
+        </fieldset>
+        <input type="submit" onclick="return searchMatches();" value="Search for Similar Items"/> -->
               <input id="disqualifier-false" name="disqualifier" type="radio" value="off" checked>No Disqualifier</label>
             <select id="disqualifierDescription" name="disqualifierDescription">
               <option value="">No Disqualifier</option>
@@ -485,7 +552,6 @@ function populateSavedItems(items){
         </tr>
 {% endfor %}
     </table>
-
 </body>
 
 </html>

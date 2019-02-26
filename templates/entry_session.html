@@ -12,6 +12,7 @@
 <script>
 var entrySessionString = localStorage.getItem('entrySession');
 var entrySession = JSON.parse(localStorage.getItem('entrySession'));
+
 window.onload = function (){
     var results = document.getElementById("sessionTable");
     var rowNum = 0;
@@ -41,30 +42,31 @@ function makeEditable(){
 	var table = document.getElementById("sessionTable");
 	table.insertRow();
 	table.contenteditable='true';
-
 }
 function editButton(cur_row){
    console.log(cur_row);
    var edit_cells = document.getElementById('cur_row'+cur_row).getElementsByTagName('td');
    var parent = document.getElementById('cur_row'+cur_row);
    var child = parent.getElementsByTagName('td')[17];
- //  var new_child = document.getElementsByTagName('td')[17];
-   for (var i=1; i<edit_cells.length; i++){
+   for (var i=0; i<edit_cells.length; i++){
      edit_cells[i].setAttribute('contenteditable', 'true');
+     edit_cells[i].style.backgroundColor = '#d5ddea';
    }
-//   child.remove();
 
+  //make delete row button
+  var newChild = parent.getElementsByTagName('td')[18];
   var cell = document.createElement('td');
-  var newButton = document.createElement("button");
-  newButton.innerHTML='save';
-  newButton.setAttribute('class','savebtn');
-  newButton.setAttribute('onclick', 'saveButton('+cur_row.toString()+');');
-  cell.appendChild(newButton);
+  cell.style.backgroundColor = '#ff5c33';
+  var delBtn = document.createElement("button");
+  delBtn.innerHTML = 'Delete Entry';
+  delBtn.setAttribute('class', 'deletebtn');
+  delBtn.setAttribute('onclick', 'deleteRow('+cur_row.toString()+');');
+  cell.appendChild(delBtn);
+  parent.insertBefore(cell, newChild);
 
-  var new_child = document.getElementsByTagName('td')[17];
-  parent.insertBefore(cell, new_child);
- var remChild = parent.getElementsByTagName('td')[18];
-remChild.remove();
+  child.firstChild.innerHTML = 'save';
+  child.firstChild.setAttribute('class', 'savebtn');
+  child.firstChild.setAttribute('onclick', 'saveButton('+cur_row.toString()+');');
 }
 
 function saveButton(cur_row){
@@ -72,22 +74,30 @@ function saveButton(cur_row){
   var edit_cells = document.getElementById('cur_row'+cur_row).getElementsByTagName('td');
   var parent = document.getElementById('cur_row'+cur_row);
   var child = parent.getElementsByTagName('td')[17];
-  for (var i=1; i<edit_cells.length; i++){
+  for (var i=0; i<edit_cells.length; i++){
     edit_cells[i].setAttribute('contenteditable', 'false');
+    edit_cells[i].style.backgroundColor = '#ffffff';
   }
-  child.remove();
 
-  var cell = document.createElement('td');
-  var para = document.createElement("button");
-  para.innerHTML='edit';
-  para.setAttribute('class','editbtn');
-  para.setAttribute('onclick', 'editButton('+cur_row.toString()+');');
-  cell.appendChild(para);
+  //remove deleteRow button
+  var deleteCell = parent.getElementsByTagName('td')[18];
+  parent.removeChild(deleteCell);
 
-  var new_child = document.getElementsByTagName('td')[17];
-  parent.insertBefore(cell, new_child);
+  child.firstChild.innerHTML = 'edit';
+  child.firstChild.setAttribute('class', 'editbtn');
+  child.firstChild.setAttribute('onclick', 'editButton('+cur_row.toString()+');');
 }
 
+function deleteRow(cur_row){
+   if(confirm('Are you sure you want to delete this entry?')){
+     console.log('delete this row');
+     var row = document.getElementById('cur_row'+cur_row);
+     row.parentNode.removeChild(row);
+   }
+   else{
+     console.log('do nothing');
+   }
+}
 
 function submitEntries(){
     if(confirm('Are you sure you want to submit the entries?')){
@@ -212,8 +222,6 @@ function submitEntries(){
 <button class="button4" onclick="clearEntries();">Cancel Session</button>
         <h3> March 2019 </h3>
 
-<button onclick="makeEditable();">Edit Entries</button>
-
 <table id="sessionTable">
 <tr>
                         <th>Category</th>
@@ -244,6 +252,7 @@ function submitEntries(){
 
 
         $('#loadBtn').on('click', function() {
+//all of the following code is no longer needed?
             console.log('Here');
 //            var jsonData2 = JSON.parse(localStorage.foodData);
 
