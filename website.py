@@ -105,7 +105,7 @@ if __name__ == '__main__':
 #        print('  Example: {0} perlman.mathcs.carleton.edu 5101'.format(sys.argv[0]))
 #        exit()
 #
-    host = 'cmc307-06.mathcs.carleton.edu'
+#    host = 'cmc307-06.mathcs.carleton.edu'
 #    port = int(sys.argv[2])
-#   PUT LOCALHOST HERE FOR TESTING - CHAE
+    host='realfoodnetwork.carleton.edu'
     app.run(host=host, port=2019, debug=True)
