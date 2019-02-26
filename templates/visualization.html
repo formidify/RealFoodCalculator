@@ -1223,6 +1223,7 @@ $("select#categoriesTime").change(function(){
 
 // add legend for each item
 for (i = 0; i < items.length; i++) {
+  if (!current_list.includes(items[i])) {
     line = {}
     line.data = 0 // arbitrary
     line.type = 'line'
@@ -1233,13 +1234,14 @@ for (i = 0; i < items.length; i++) {
     line.fill = true
     line.showLine = false
     myLineChart.data.datasets.push(line)
+  }
 }
 
   myLineChart.update();
+  sessionStorage.setItem("timeConfigs", JSON.stringify(total_configs));
 
 
   })
-  sessionStorage.setItem("timeConfigs", JSON.stringify(total_configs));
   sessionStorage.setItem("timeCurrent", JSON.stringify(current_list));
 
 });
