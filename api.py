@@ -364,6 +364,9 @@ def get_pie_data():
     dic['total'] = {"data": data, "labels": labels}
     dic['labels'] = yrs[:3] + ['total'] # add labels to the dictionary
 
+    print(data)
+    print(labels)
+
     return flask.jsonify(dic)
 
 
