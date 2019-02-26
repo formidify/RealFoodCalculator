@@ -359,6 +359,8 @@ $("percentChart1").click(function(evt)
 
        year = years[0];
 
+       console.log(label)
+       console.log(year)
       updateBarChart(label, year);
    }
 }
