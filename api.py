@@ -585,7 +585,7 @@ def get_categories_time(cat):
     yrs.reverse()
     return flask.jsonify({"cost": [total, real], "yrs": yrs, "items": items})
 
-
+## combine the below 3 methods into one
 
 # return results that match the input item
 @app.route("/visualization/get_item", defaults = {'search': ''})
@@ -593,6 +593,42 @@ def get_categories_time(cat):
 def get_item(search):
     results = []
     query = """SELECT DISTINCT ON (trim(description)) description FROM test_data_large WHERE trim(description) LIKE lower('%{s}%');""".format(s = search)
+    connection = get_connection()
+    if connection is not None:
+        try:
+            # either this or minimum items allowed to show
+            for row in get_select_query_results(connection, query):
+                results.append(row[0])
+        except Exception as e:
+            print(e)
+        connection.close()
+    print(results)
+    return flask.jsonify({"search": results})
+
+# return results that match the input vendor
+@app.route("/visualization/get_vendor", defaults = {'search': ''})
+@app.route("/visualization/get_vendor/<search>")
+def get_vendor(search):
+    results = []
+    query = """SELECT DISTINCT ON (trim(vendor)) vendor FROM test_data_large WHERE trim(vendor) LIKE lower('%{s}%');""".format(s = search)
+    connection = get_connection()
+    if connection is not None:
+        try:
+            # either this or minimum items allowed to show
+            for row in get_select_query_results(connection, query):
+                results.append(row[0])
+        except Exception as e:
+            print(e)
+        connection.close()
+    print(results)
+    return flask.jsonify({"search": results})
+
+# return results that match the input label/brand
+@app.route("/visualization/get_label", defaults = {'search': ''})
+@app.route("/visualization/get_label/<search>")
+def get_label(search):
+    results = []
+    query = """SELECT DISTINCT ON (trim(label_brand)) label_brand FROM test_data_large WHERE trim(label_brand) LIKE lower('%{s}%');""".format(s = search)
     connection = get_connection()
     if connection is not None:
         try:
