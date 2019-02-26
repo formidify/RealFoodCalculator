@@ -1252,38 +1252,53 @@ $("select#categoriesTime").change(function(){
 <h1>Item, Vendor and Label - The Exciting Love Trio</h1>
 
 <div>
-<form>
+
     <label for="add">Search By item:</label>
-    <input id="add" type="text" name="text">
-    <input type="submit" value="Search" onclick="addItem()">
-</form>
+    <input id="item_liv" type="text" name="text" list = "items_list" onkeyup = "searchLivItem()" autocomplete="off">
+    <datalist id="items_list"></datalist>
+    <input id = "submit_item_liv" type="submit" value="submit" onclick = "addLivItem()">
+
 <a> OR </a>
-<form>
+
     <label for="add">By vendor:</label>
-    <input id="add" type="text" name="text">
-    <input type="submit" value="Search" onclick="addVendor()">
-</form>
+    <input id="vendor_liv" type="text" name="text" list = "vendor_list" onkeyup = "searchLivVendor()" autocomplete="off">
+    <datalist id="vendor_list"></datalist>
+    <input id = "submit_vendor_liv" type="submit" value="submit" onclick = "addLivVendor()">
+
 <a> OR </a>
-<form>
+
     <label for="add">By label/brand:</label>
-    <input id="add" type="text" name="text">
-    <input type="submit" value="Search" onclick="addBrand()">
-</form>
+    <input id="label_liv" type="text" name="text" list = "label_list" onkeyup = "searchLivLabel()" autocomplete="off">
+    <datalist id="label_list"></datalist>
+    <input id = "submit_label_liv" type="submit" value="submit" onclick = "addLivLabel()">
+
 </div>
 
 </div>
 
 <script>
 
-function addItem() {
+function searchLivItem() {
 
 }
 
-function addVendor() {
+function searchLivVendor() {
 
 }
 
-function addBrand() {
+function searchLivLabel() {
+
+}
+
+function addLivItem() {
+
+}
+
+function addLivVendor() {
+
+}
+
+function addLivLabel() {
 
 }
 </script>
