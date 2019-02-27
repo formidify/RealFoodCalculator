@@ -995,7 +995,8 @@ document.getElementById("increaseChart5").onclick = function(evt)
   <div class="column" style = "width: 60%;  height: 100%; float: left">
     <canvas id="timeSeriesChart" style="display: block; width: 60%; height: 800px"></canvas>
   </div>
-  <div class="column" style = "width: 40%;  height: 100%; float: left">
+</div>
+
     <div class="onoffswitch">
     <a>Show time series chart data as table:</a>
     <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked>
@@ -1003,9 +1004,7 @@ document.getElementById("increaseChart5").onclick = function(evt)
         <span class="onoffswitch-inner"></span>
         <span class="onoffswitch-switch"></span>
     </label>
-</div> </div>
 </div>
-
 
 
 <script>
@@ -1588,8 +1587,24 @@ function addLivItem() {
     dr = dr[0].map((col, i) => dr.map(row => row[i]));
     dn = dn[0].map((col, i) => dn.map(row => row[i]));
 
-    plotByYear("label/brand", y, dr.slice(0, 3), dn.slice(0,3), results['label_brand'], myLivChart1, ctx10);
-    plotByAll("label/brand", y, dr[3], dn[3], results['label_brand'], myLivChart3, ctx12);
+    l_label = results['label_brand']
+    l_vendor = results['vendor']
+
+    // replace empty string with NA
+    for (i = 0; i < l_label.length; i++) {
+      if (l_label[i] == "") {
+        l_label[i] = "NA"
+      }
+    }
+
+    for (i = 0; i < l_vendor.length; i++) {
+      if (l_vendor[i] == "") {
+        l_vendor[i] = "NA"
+      }
+    }
+
+    plotByYear("label/brand", y, dr.slice(0, 3), dn.slice(0,3), l_label, myLivChart1, ctx10);
+    plotByAll("label/brand", y, dr[3], dn[3], l_label, myLivChart3, ctx12);
 
     vr = results['vendor real']
     vn = results['vendor nonreal']
@@ -1597,8 +1612,8 @@ function addLivItem() {
     vr = vr[0].map((col, i) => vr.map(row => row[i]));
     vn = vn[0].map((col, i) => vn.map(row => row[i]));
 
-    plotByYear("vendor", y, vr.slice(0, 3), vn.slice(0,3), results['vendor'], myLivChart2, ctx11);
-    plotByAll("vendor", y, vr[3], vn[3], results['vendor'], myLivChart4, ctx13);
+    plotByYear("vendor", y, vr.slice(0, 3), vn.slice(0,3), l_vendor, myLivChart2, ctx11);
+    plotByAll("vendor", y, vr[3], vn[3], l_vendor, myLivChart4, ctx13);
 
   })
 }
