@@ -1452,13 +1452,13 @@ datasets = []
 for (i = 0; i < year_offset.length; i++) {
   bar = {}
   bar.label = "real"
-  bar.backgroundColor = real_color //+ year_offset[i]
+  bar.backgroundColor = real_color + year_offset[i]
   bar.data = r[i]
   bar.stack = i+1
 
   bar2 = {}
   bar2.label = "nonreal"
-  bar2.backgroundColor = nonreal_color //+ year_offset[i]
+  bar2.backgroundColor = nonreal_color + year_offset[i]
   bar2.data = n[i]
   bar2.stack = i+1
 
