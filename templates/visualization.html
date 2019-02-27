@@ -1485,7 +1485,7 @@ LivCharts[v] = new Chart(ctx1x[c], {
               anchor: 'end',
               clamp: true,
               display: function(context) {
-              return context.datasetIndex % 2; // display labels with an odd index
+              return (context.datasetIndex % 2) && (context.dataset.data[context.dataIndex] > 0); // display labels with an odd index
                 },
                 formatter: function(value, context) {
                     return yrs[(context.datasetIndex-1)/2];
