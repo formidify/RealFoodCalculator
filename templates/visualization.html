@@ -1453,12 +1453,14 @@ for (i = 0; i < year_offset.length; i++) {
   bar = {}
   bar.label = "real"
   bar.backgroundColor = real_color + year_offset[i]
+  bar.borderColor = real_color + year_offset[i]
   bar.data = r[i]
   bar.stack = i+1
 
   bar2 = {}
   bar2.label = "nonreal"
   bar2.backgroundColor = nonreal_color + year_offset[i]
+  bar2.borderColor = nonreal_color + year_offset[i]
   bar2.data = n[i]
   bar2.stack = i+1
 
@@ -1484,7 +1486,7 @@ v = new Chart(c, {
       labels: {
         generateLabels: function(chart) {
           return Chart.defaults.global.legend.labels.generateLabels.apply(this, [chart]).filter(function(item, i){
-              return i <= 2;
+              return i <= 1;
           });
         }
       }
