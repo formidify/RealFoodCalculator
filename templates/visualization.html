@@ -1485,6 +1485,7 @@ LivCharts[v] = new Chart(ctx1x[c], {
               anchor: 'end',
               clamp: true,
               display: function(context) {
+                console.log(context.dataset.data[context.dataIndex] > 0)
               return (context.datasetIndex % 2) && (context.dataset.data[context.dataIndex] > 0); // display labels with an odd index
                 },
                 formatter: function(value, context) {
