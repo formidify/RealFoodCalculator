@@ -1289,6 +1289,77 @@ $("select#categoriesTime").change(function(){
 </div>
 
 <script>
+// create new chart type for stacked grouped bar chart
+Chart.defaults.groupableBar = Chart.helpers.clone(Chart.defaults.bar);
+
+var helpers = Chart.helpers;
+Chart.controllers.groupableBar = Chart.controllers.bar.extend({
+  calculateBarX: function (index, datasetIndex) {
+    // position the bars based on the stack index
+    var stackIndex = this.getMeta().stackIndex;
+    return Chart.controllers.bar.prototype.calculateBarX.apply(this, [index, stackIndex]);
+  },
+
+  hideOtherStacks: function (datasetIndex) {
+    var meta = this.getMeta();
+    var stackIndex = meta.stackIndex;
+
+    this.hiddens = [];
+    for (var i = 0; i < datasetIndex; i++) {
+      var dsMeta = this.chart.getDatasetMeta(i);
+      if (dsMeta.stackIndex !== stackIndex) {
+        this.hiddens.push(dsMeta.hidden);
+        dsMeta.hidden = true;
+      }
+    }
+  },
+
+  unhideOtherStacks: function (datasetIndex) {
+    var meta = this.getMeta();
+    var stackIndex = meta.stackIndex;
+
+    for (var i = 0; i < datasetIndex; i++) {
+      var dsMeta = this.chart.getDatasetMeta(i);
+      if (dsMeta.stackIndex !== stackIndex) {
+        dsMeta.hidden = this.hiddens.unshift();
+      }
+    }
+  },
+
+  calculateBarY: function (index, datasetIndex) {
+    this.hideOtherStacks(datasetIndex);
+    var barY = Chart.controllers.bar.prototype.calculateBarY.apply(this, [index, datasetIndex]);
+    this.unhideOtherStacks(datasetIndex);
+    return barY;
+  },
+
+  calculateBarBase: function (datasetIndex, index) {
+    this.hideOtherStacks(datasetIndex);
+    var barBase = Chart.controllers.bar.prototype.calculateBarBase.apply(this, [datasetIndex, index]);
+    this.unhideOtherStacks(datasetIndex);
+    return barBase;
+  },
+
+  getBarCount: function () {
+    var stacks = [];
+
+    // put the stack index in the dataset meta
+    Chart.helpers.each(this.chart.data.datasets, function (dataset, datasetIndex) {
+      var meta = this.chart.getDatasetMeta(datasetIndex);
+      if (meta.bar && this.chart.isDatasetVisible(datasetIndex)) {
+        var stackIndex = stacks.indexOf(dataset.stack);
+        if (stackIndex === -1) {
+          stackIndex = stacks.length;
+          stacks.push(dataset.stack);
+        }
+        meta.stackIndex = stackIndex;
+      }
+    }, this);
+
+    this.getMeta().stacks = stacks;
+    return stacks.length;
+  },
+});
 
 sessionStorage.setItem("itemsLivSearch", JSON.stringify([]));
 sessionStorage.setItem("vendorSearch", JSON.stringify([]));
@@ -1372,26 +1443,194 @@ function searchLivLabel() {
     }});
 }
 }
+var real_color = "rgba(99,132,255," 
+var nonreal_color = "rgba(255,99,132,"
+var year_offset = ["0.2)", "0.6)", "1.0)"]
 
+function plotByYear(r, n, l, v, c) {
+data = {}
+data.labels = l
+datasets = {}
+
+for (i = 0; i < year_offset.length; i++) {
+  bar = {}
+  bar.label = "real"
+  bar.backgroundColor = real_color + year_offset[i]
+  bar.data = r[i]
+  bar.stack = i+1
+
+  bar2 = {}
+  bar2.label = "nonreal"
+  bar2.backgroundColor = nonreal_color + year_offset[i]
+  bar2.data = r[i]
+  bar2.stack = i+1
+
+  datasets.push(bar)
+  datasets.push(bar2)
+
+}
+
+data.datasets = datasets
+v = new Chart(c, {
+  type: 'groupableBar',
+  data: data,
+  options: {
+  tooltips: {
+          callbacks: {
+            label: function(tooltipItem, data){
+              // data for manipulation
+              //return tr[Math.floor(tooltipItem.datasetIndex / 3)];
+            },
+          },
+        },
+    legend: {
+      labels: {
+        generateLabels: function(chart) {
+          return Chart.defaults.global.legend.labels.generateLabels.apply(this, [chart]).filter(function(item, i){
+              return i <= 2;
+          });
+        }
+      }
+    },
+    scales: {
+      yAxes: [{
+        ticks: {
+          max: 160,
+        },
+        stacked: true,
+      }]
+    },
+            title: {
+              display: true,
+              text: "Distribution of " + t + " for " + s + " by 3 most recent years"
+          }
+  }
+})
+};
+
+function plotByAll(t, s, r, n, l, v, c) {
+   data = {
+      datasets: [{
+          label: "real",
+          data: r,
+          borderWidth: 2,
+          backgroundColor: real_color + year_offset[2],
+          borderColor: real_color + year_offset[2]
+      },
+      {
+          label: "non-real",
+          data: n,
+          borderWidth: 2,
+          backgroundColor: nonreal_color + year_offset[2],
+          borderColor: nonreal_color + year_offset[2]
+        }
+      ],
+      // These labels appear in the legend and in the tooltips when hovering different arcs
+      labels: l,
+      options: {
+          responsive: true
+      }
+  };
+
+  v = new Chart(c, {
+      type: 'bar',
+      data: data,
+      options: {
+          scales: {
+              xAxes: [{
+                  stacked: true
+              }],
+              yAxes: [{
+                  stacked: true
+              }]},
+              title: {
+              display: true,
+              text: "Distribution of " + t + " for " + s + " for all time"
+          }
+
+      }
+    })
+}
+// below functions read in user submitted data and re-draw all the plots
 function addLivItem() {
-myLivChart1.destroy();
-myLivChart2.destroy();
-myLivChart3.destroy();
-myLivChart4.destroy();
+  myLivChart1.destroy();
+  myLivChart2.destroy();
+  myLivChart3.destroy();
+  myLivChart4.destroy();
+
+  y = document.getElementById("item_liv").value;
+
+  searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/brand_vendor_data/" + x + "+item");
+
+  searches.done(function(results) {
+    label_brand = results.label_brand
+    vendor = results.vendor
+    yrs = results.yrs
+
+    data_label_year = {}
+    data_label_all = {}
+    data_vendor_year = {}
+    data_vendor_all = {}
+
+    data_label_year.labels = label_brand
+    data_label_all.labels = label_brand
+    data_vendor_year.labels = vendor
+    data_vendor_all.labels = vendor
+
+
+    datasets1 = {}
+    datasets2 = {}
+
+
+    dr = results['label_brand real']
+    dn = results['label_brand nonreal']
+
+    dr = dr[0].map((col, i) => dr.map(row => row[i]));
+    dn = dn[0].map((col, i) => dn.map(row => row[i]));
+
+    plotByYear("item", y, dr.slice(0, 3), dn.slice(0,3), results['label_brand'], myLivChart1, ctx10);
+    plotByAll("item", y, dr[3], dn[3], results['label_brand'], myLivChart3, ctx12);
+
+    vr = results['vendor real']
+    vn = results['vendor nonreal']
+
+    vr = vr[0].map((col, i) => vr.map(row => row[i]));
+    vn = vn[0].map((col, i) => vn.map(row => row[i]));
+
+    plotByYear("item", y, vr.slice(0, 3), vn.slice(0,3), results['vendor'], myLivChart2, ctx11);
+    plotByAll("item", y, vr[3], vn[3], results['vendor'], myLivChart4, ctx13);
+
+  })
 }
 
 function addLivVendor() {
-myLivChart1.destroy();
-myLivChart2.destroy();
-myLivChart3.destroy();
-myLivChart4.destroy();
+  myLivChart1.destroy();
+  myLivChart2.destroy();
+  myLivChart3.destroy();
+  myLivChart4.destroy();
+
+  y = document.getElementById("vendor_liv").value;
+
+  searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/brand_vendor_data/" + x + "+vendor");
+
+  searches.done(function(results) {
+    
+  })
 }
 
 function addLivLabel() {
-myLivChart1.destroy();
-myLivChart2.destroy();
-myLivChart3.destroy();
-myLivChart4.destroy();
+  myLivChart1.destroy();
+  myLivChart2.destroy();
+  myLivChart3.destroy();
+  myLivChart4.destroy();
+
+  y = document.getElementById("label_liv").value;
+
+  searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/brand_vendor_data/" + x + "+brand");
+
+  searches.done(function(results) {
+    
+  })
 }
 </script>
 </body>
