@@ -32,7 +32,7 @@ def entrySession():
         for key, value in result.items():
             if (key == 'entrySessionData') and (value != '[]') and (value != ''):
                 value = json.loads(value)
-                for item in value: 
+                for item in value:
                      api_url_item = api_url
                      index = 0
                      for category in item:
@@ -51,9 +51,9 @@ def entrySession():
                      api_url_item += ('year='+result['year']+'&')
                      api_url_item += ('rating_version='+result['rating_version'])
                      r = requests.get(api_url_item)
-                     print("API URL IN WEBSITE:", api_url_item)    
+                     print("API URL IN WEBSITE:", api_url_item)
                      print(r)
-                     
+
     return render_template('entry_session.html')
 
 @app.route('/view_download') #, methods = ['POST', 'GET'])
@@ -105,7 +105,7 @@ if __name__ == '__main__':
 #        print('  Example: {0} perlman.mathcs.carleton.edu 5101'.format(sys.argv[0]))
 #        exit()
 #
-    host = 'cmc307-06.mathcs.carleton.edu'
+#    host = 'cmc307-06.mathcs.carleton.edu'
 #    port = int(sys.argv[2])
-#   PUT LOCALHOST HERE FOR TESTING - CHAE
+    host='realfoodnetwork.carleton.edu'
     app.run(host=host, port=2019, debug=True)

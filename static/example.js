@@ -194,11 +194,24 @@ function append_json(data){
     tr.innerHTML =
     '<td>'+'<button class="editbtn" onclick="editbtn(' +
     cur_row.toString()+');">' + 'edit</button></td>' +
-    '<td contenteditable=false>' + object.vendor + '</td>' +
+    '<td contenteditable=false>' + object.month + '</td>' +
+    '<td contenteditable=false>' + object.year + '</td>' +
     '<td contenteditable=false>' + object.description + '</td>' +
     '<td contenteditable=false>' + object.category + '</td>' +
+    '<td contenteditable=false>' + object.productCode + '</td>' +
+    '<td contenteditable=false>' + object.brand + '</td>' +
+    '<td contenteditable=false>' + object.vendor + '</td>' +
+    '<td contenteditable=false>' + object.local + '</td>' +
+    '<td contenteditable=false>' + object.localDescription + '</td>' +
     '<td contenteditable=false>' + object.fair + '</td>' +
-    '<td contenteditable=false>' + object.year +'/'+ object.month + '</td>';
+    '<td contenteditable=false>' + object.fairDescription + '</td>' +
+    '<td contenteditable=false>' + object.ecological + '</td>' +
+    '<td contenteditable=false>' + object.ecologicalDescription + '</td>' +
+    '<td contenteditable=false>' + object.humane + '</td>' +
+    '<td contenteditable=false>' + object.humaneDescription + '</td>' +
+    '<td contenteditable=false>' + object.disqualifier + '</td>' +
+    '<td contenteditable=false>' + object.disqualifierDescription + '</td>' +
+    '<td contenteditable=false>' + object.notes + '</td>';
     table.appendChild(tr);
     tr.setAttribute("id",'cur_row'+cur_row.toString());
     // TODO : might not need class = can_updt
@@ -226,7 +239,8 @@ function editbtn(cur_row){
   para.setAttribute('onclick', 'savebtn('+cur_row.toString()+');');
   cell.appendChild(para);
 
-  var new_child = document.getElementsByTagName('td')[0];
+  var new_child = parent.getElementsByTagName('td')[0];
+  console.log(new_child.innerHTML);
   parent.insertBefore(cell, new_child);
 }
 
@@ -247,7 +261,7 @@ function savebtn(cur_row){
   para.setAttribute('onclick', 'editbtn('+cur_row.toString()+');');
   cell.appendChild(para);
 
-  var new_child = document.getElementsByTagName('td')[0];
+  var new_child = parent.getElementsByTagName('td')[0];
   parent.insertBefore(cell, new_child);
 }
 
