@@ -1555,10 +1555,10 @@ function plotByAll(t, s, r, n, l, v, c) {
 }
 // below functions read in user submitted data and re-draw all the plots
 function addLivItem() {
-  myLivChart1.destroy();
-  myLivChart2.destroy();
-  myLivChart3.destroy();
-  myLivChart4.destroy();
+  LivCharts[0].destroy();
+  LivCharts[1].destroy();
+  LivCharts[2].destroy();
+  LivCharts[3].destroy();
 
   y = document.getElementById("item_liv").value;
 
