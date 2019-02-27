@@ -693,13 +693,13 @@ def get_brand_vendor_data(item, type):
             for row in get_select_query_results(connection, query2):
                 l2.append(row[0])
 
-            query_real = """SELECT s, year FROM (SELECT {y0} AS year, COALESCE(SUM(cost),0) AS s FROM test_data_large WHERE year = {y0} AND trim({k}) = '{i}' AND trim({a}) = '{l}'
+            query_real = """SELECT s, year FROM (SELECT {y0} AS year, COALESCE(SUM(cost),0) AS s FROM test_data_large WHERE year = {y0} AND trim({k}) = '{i}' AND trim({a}) = '%s'
         AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't') UNION
-        SELECT {y1} AS year, COALESCE(SUM(cost),0) AS s FROM test_data_large WHERE year = {y1} AND trim({k}) = '{i}' AND trim({a}) = '{l}'
+        SELECT {y1} AS year, COALESCE(SUM(cost),0) AS s FROM test_data_large WHERE year = {y1} AND trim({k}) = '{i}' AND trim({a}) = '%s'
         AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't') UNION
-        SELECT {y2} AS year, COALESCE(SUM(cost),0) AS s FROM test_data_large WHERE year = {y2} AND trim({k}) = '{i}' AND trim({a}) = '{l}'
+        SELECT {y2} AS year, COALESCE(SUM(cost),0) AS s FROM test_data_large WHERE year = {y2} AND trim({k}) = '{i}' AND trim({a}) = '%s'
         AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't') UNION
-        SELECT 9999 AS year, COALESCE(SUM(cost),0) AS s FROM test_data_large WHERE trim({k}) = '{i}' AND trim({a}) = '{l}'
+        SELECT 9999 AS year, COALESCE(SUM(cost),0) AS s FROM test_data_large WHERE trim({k}) = '{i}' AND trim({a}) = '%s'
         AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't')) AS X ORDER BY year;
         """
             query_nonreal = """SELECT s, year FROM (SELECT {y0} AS year, COALESCE(SUM(cost),0) AS s 
@@ -722,7 +722,7 @@ def get_brand_vendor_data(item, type):
                 # 9999 is for all years
                 r1 = []
                 r2 = []
-                query_a = query_real.format(y0 = yrs[0], y1 = yrs[1], y2 = yrs[2], i = item, k = key, a = key_a, l = l)
+                query_a = query_real.format(y0 = yrs[0], y1 = yrs[1], y2 = yrs[2], i = item, k = key, a = key_a, s = l)
 
                 query_a_nonreal = query_nonreal.format(y0 = yrs[0], y1 = yrs[1], y2 = yrs[2], i = item, k = key, a = key_a, l = l)
 
@@ -737,7 +737,7 @@ def get_brand_vendor_data(item, type):
             for l in l2:
                 n1 = []
                 n2 = []
-                query_b = query_real.format(y0 = yrs[0], y1 = yrs[1], y2 = yrs[2], i = item, k = key, a = key_b, l = l)
+                query_b = query_real.format(y0 = yrs[0], y1 = yrs[1], y2 = yrs[2], i = item, k = key, a = key_b, s = l)
 
                 query_b_nonreal = query_nonreal.format(y0 = yrs[0], y1 = yrs[1], y2 = yrs[2], i = item, k = key, a = key_b, l = l)
 
