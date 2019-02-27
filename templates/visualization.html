@@ -1488,9 +1488,9 @@ LivCharts[v] = new Chart(ctx1x[c], {
         ctx.textAlign = "center";
         ctx.textBaseline = "bottom";*/
           console.log(yrs)
-            for (i = 0; i < this.datasets.length; i++) {
+            for (i = 0; i < this.data.datasets.length; i++) {
               if (i % 2 == 1) {
-              bars = this.datasets[i].bars;
+              bars = this.data.datasets[i].bars;
               for (j = 0; j < bars.length; j++) {
               bar = bars[j]
               console.log(yrs[(i-1)/2])
