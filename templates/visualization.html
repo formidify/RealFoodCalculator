@@ -1477,7 +1477,7 @@ console.log(yrs)
 
 data.datasets = datasets
 
-d = datasets
+var d = datasets
 LivCharts[v] = new Chart(ctx1x[c], {
   type: 'groupableBar',
   data: data,
@@ -1487,6 +1487,7 @@ LivCharts[v] = new Chart(ctx1x[c], {
               anchor: 'end',
               clamp: true,
               display: function(context) {
+                console.log(d)
                 non_real_data = d[context.datasetIndex - 1].data[context.dataIndex]
               return (context.datasetIndex % 2 || non_real_data == 0) && (context.dataset.data[context.dataIndex] > 0); // display labels with an odd index
                 },
