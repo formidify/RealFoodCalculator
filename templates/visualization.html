@@ -1478,8 +1478,9 @@ LivCharts[v] = new Chart(ctx1x[c], {
   type: 'groupableBar',
   data: data,
   options: {
+    animation: {
         // print out years on top of the graph
-        onAnimationComplete: function () {
+        onComplete: function () {
 
         var ctx = this.chart.ctx;
         ctx.font = this.scale.font;
@@ -1497,7 +1498,7 @@ LivCharts[v] = new Chart(ctx1x[c], {
                 }
         }
       }
-    },
+    }},
 
     legend: {
       labels: {
