@@ -1485,7 +1485,7 @@ LivCharts[v] = new Chart(ctx1x[c], {
               anchor: 'end',
               clamp: true,
               display: function(context) {
-                non_real_data = context.chart.data.datasets[context.datasetIndex - 1].data[context.dataIndex]
+                non_real_data = datasets[context.datasetIndex - 1].data[context.dataIndex]
               return (context.datasetIndex % 2 || non_real_data == 0) && (context.dataset.data[context.dataIndex] > 0); // display labels with an odd index
                 },
                 formatter: function(value, context) {
