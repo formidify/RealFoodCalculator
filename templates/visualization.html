@@ -1365,10 +1365,14 @@ var ctx11 = document.getElementById("livChart2").getContext('2d');
 var ctx12 = document.getElementById("livChart3").getContext('2d');
 var ctx13 = document.getElementById("livChart4").getContext('2d');
 
+var ctx1x = [ctx10, ctx11, ctx12, ctx13]
+
 var myLivChart1 = new Chart(ctx10, {});
 var myLivChart2 = new Chart(ctx11, {});
 var myLivChart3 = new Chart(ctx12, {});
 var myLivChart4 = new Chart(ctx13, {});
+
+var LivCharts = [myLivChart1, myLivChart2, myLivChart3, myLivChart4]
 
 var yrs;
 
@@ -1470,7 +1474,7 @@ for (i = 0; i < year_offset.length; i++) {
 }
 
 data.datasets = datasets
-v = new Chart(c, {
+LivCharts[v] = new Chart(ctx1x[c], {
   type: 'groupableBar',
   data: data,
   options: {
@@ -1530,7 +1534,7 @@ function plotByAll(t, s, r, n, l, v, c) {
       }
   };
 
-  v = new Chart(c, {
+  LivCharts[v] = new Chart(ctx1x[c], {
       type: 'bar',
       data: data,
       options: {
@@ -1602,8 +1606,8 @@ function addLivItem() {
       }
     }
 
-    plotByYear("label/brand", y, dr.slice(0, 3), dn.slice(0,3), l_label, myLivChart1, ctx10);
-    plotByAll("label/brand", y, dr[3], dn[3], l_label, myLivChart2, ctx11);
+    plotByYear("label/brand", y, dr.slice(0, 3), dn.slice(0,3), l_label, 0, 0);
+    plotByAll("label/brand", y, dr[3], dn[3], l_label, 1, 1);
 
     vr = results['vendor real']
     vn = results['vendor nonreal']
@@ -1611,8 +1615,8 @@ function addLivItem() {
     vr = vr[0].map((col, i) => vr.map(row => row[i]));
     vn = vn[0].map((col, i) => vn.map(row => row[i]));
 
-    plotByYear("vendor", y, vr.slice(0, 3), vn.slice(0,3), l_vendor, myLivChart3, ctx12);
-    plotByAll("vendor", y, vr[3], vn[3], l_vendor, myLivChart4, ctx13);
+    plotByYear("vendor", y, vr.slice(0, 3), vn.slice(0,3), l_vendor, 2, 2);
+    plotByAll("vendor", y, vr[3], vn[3], l_vendor, 3, 3);
 
   })
 }
