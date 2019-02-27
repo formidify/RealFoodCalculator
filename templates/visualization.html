@@ -1505,6 +1505,7 @@ LivCharts[v] = new Chart(ctx1x[c], {
     scales: {
       yAxes: [{
         ticks: {
+          autoSkip: false
         },
         stacked: true,
       }]
@@ -1547,10 +1548,16 @@ function plotByAll(t, s, r, n, l, v, c) {
       options: {
           scales: {
               xAxes: [{
-                  stacked: true
+                  stacked: true,
+                  ticks: {
+                    autoSkip: false
+                  }
               }],
               yAxes: [{
-                  stacked: true
+                  stacked: true,
+                  ticks: {
+                    min: 0
+                  }
               }]},
               title: {
               display: true,
