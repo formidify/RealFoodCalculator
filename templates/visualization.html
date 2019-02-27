@@ -1478,6 +1478,18 @@ LivCharts[v] = new Chart(ctx1x[c], {
   type: 'groupableBar',
   data: data,
   options: {
+    plugins: {
+            datalabels: {
+              anchor: 'end',
+              clamp: true,
+              display: function(context) {
+              return context.dataIndex % 2; // display labels with an odd index
+                },
+                formatter: function(value, context) {
+                    return yrs[(context.datasetIndex-1)/2];
+                }
+            }
+        }
     animation: {
         // print out years on top of the graph
         onComplete: function () {
