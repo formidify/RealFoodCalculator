@@ -1374,7 +1374,7 @@ var myLivChart4 = new Chart(ctx13, {});
 
 var LivCharts = [myLivChart1, myLivChart2, myLivChart3, myLivChart4]
 
-var yrs;
+var yrs = [];
 
 function searchLivItem() {
   x = document.getElementById("item_liv").value;
@@ -1486,12 +1486,13 @@ LivCharts[v] = new Chart(ctx1x[c], {
         ctx.fillStyle = this.scale.textColor
         ctx.textAlign = "center";
         ctx.textBaseline = "bottom";
-
+          console.log(yrs)
             for (i = 0; i < this.datasets.length; i++) {
               if (i % 2 == 1) {
               bars = this.datasets[i].bars;
               for (j = 0; j < bars.length; j++) {
               bar = bars[j]
+              console.log(yrs[(i-1)/2])
                 ctx.fillText(yrs[(i-1)/2], bar.x, bar.y - 5);
                 }
         }
