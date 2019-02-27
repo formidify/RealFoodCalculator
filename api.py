@@ -749,6 +749,10 @@ def get_brand_vendor_data(item, type):
                 N1.append(n1)
                 N2.append(n2)
 
+            print(R1)
+            print(R2)
+            print(N1)
+            print(N2)
             print(l1)
             print(l2)
 
