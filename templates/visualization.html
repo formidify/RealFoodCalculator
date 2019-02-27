@@ -1489,28 +1489,7 @@ LivCharts[v] = new Chart(ctx1x[c], {
                     return yrs[(context.datasetIndex-1)/2];
                 }
             }
-        }
-    animation: {
-        // print out years on top of the graph
-        onComplete: function () {
-
-/*        var ctx = this.chart.ctx;
-        ctx.font = this.scale.font;
-        ctx.fillStyle = this.scale.textColor
-        ctx.textAlign = "center";
-        ctx.textBaseline = "bottom";*/
-          console.log(yrs)
-            for (i = 0; i < this.data.datasets.length; i++) {
-              if (i % 2 == 1) {
-              bars = this.data.datasets[i].bars;
-              for (j = 0; j < bars.length; j++) {
-              bar = bars[j]
-              console.log(yrs[(i-1)/2])
-                ctx1x[c].fillText(yrs[(i-1)/2], bar.x, bar.y - 5);
-                }
-        }
-      }
-    }},
+        },
 
     legend: {
       labels: {
