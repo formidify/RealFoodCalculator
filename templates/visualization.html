@@ -1588,8 +1588,8 @@ function addLivItem() {
     dr = dr[0].map((col, i) => dr.map(row => row[i]));
     dn = dn[0].map((col, i) => dn.map(row => row[i]));
 
-    plotByYear("item", y, dr.slice(0, 3), dn.slice(0,3), results['label_brand'], myLivChart1, ctx10);
-    plotByAll("item", y, dr[3], dn[3], results['label_brand'], myLivChart3, ctx12);
+    plotByYear("label/brand", y, dr.slice(0, 3), dn.slice(0,3), results['label_brand'], myLivChart1, ctx10);
+    plotByAll("label/brand", y, dr[3], dn[3], results['label_brand'], myLivChart3, ctx12);
 
     vr = results['vendor real']
     vn = results['vendor nonreal']
@@ -1597,8 +1597,8 @@ function addLivItem() {
     vr = vr[0].map((col, i) => vr.map(row => row[i]));
     vn = vn[0].map((col, i) => vn.map(row => row[i]));
 
-    plotByYear("item", y, vr.slice(0, 3), vn.slice(0,3), results['vendor'], myLivChart2, ctx11);
-    plotByAll("item", y, vr[3], vn[3], results['vendor'], myLivChart4, ctx13);
+    plotByYear("vendor", y, vr.slice(0, 3), vn.slice(0,3), results['vendor'], myLivChart2, ctx11);
+    plotByAll("vendor", y, vr[3], vn[3], results['vendor'], myLivChart4, ctx13);
 
   })
 }
