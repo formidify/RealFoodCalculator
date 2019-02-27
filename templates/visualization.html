@@ -1505,9 +1505,14 @@ LivCharts[v] = new Chart(ctx1x[c], {
     scales: {
       yAxes: [{
         ticks: {
-          autoSkip: false
+          min: 0
         },
         stacked: true,
+      }],
+      xAxes: [{
+        ticks: {
+          autoSkip: false
+        }
       }]
     },
             title: {
