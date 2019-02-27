@@ -1,4 +1,5 @@
-button, input, select {
+@font-face { font-family: Delicious; src: url('Modeka.otf'); }
+/*button, input, select {
 	font-family: inherit;
     font-size: 100%;
 }
@@ -7,12 +8,14 @@ input, select {
     box-sizing: border-box;
     margin-bottom: 20px;
 }
+*/
 input[type="text"], input[type="number"]{
     width: 150px;
     padding: 5px;
     margin: 5px, 5px, 5px, 5px;
     border-radius: 5px;
 }
+/*
 
 input[type="checkbox"]{
     width: 30px;
@@ -24,66 +27,102 @@ div{
     display: inline;
 }
 fieldset {
-    border-width: 0;
-    padding: 0;
-    display: block;
+    width: 33%;
 }
+*/
 select{
-    display: inline;
-    width: 150px;
-    padding: 5px;
+    width: 400px;
+    /*padding: 5px;
     margin: 5px, 5px, 5px, 5px;
-    border-radius: 5px;
+    border-radius: 5px;*/
 }
-#col1{
+
+
+.col2{
+    display: flex;
     flex-direction: column;
-    order: 1;
+    /*margin: 5px, 5px, 5px, 5px;
+    padding: 5%;*/
 }
-#col2{
-    flex-direction: column;
-    order: 2;
+
+.row1{
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
-#col3{
+.col1{
     flex-direction: column;
-    order: 3;
+    width:100%;
+}
+.firstTwoCols {
+    width: 25%;
+}
+/*#category {
+    width: 150px;
+}*/
+#categoryCheck {
+    margin-left: 30px;
 }
 #data-entry-form{
-    display:flex;
-    justify-content: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    font-size: large;
 }
-#entryBox{
-    flex-direction: column;
+div{
+    display: inline-block;
 }
 #navBar{
     display: flex;
     flex-direction: row;
     background-color: white;
 }
+
+#missionStatement{
+    text-align: center;
+    padding: 100px;
+    font-size: 250%;
+}
+
+.home{
+    background-image: url("apricot.jpeg");
+    background-size:100%;
+}
+
+.data_entry{
+    background-image: url("back3.png");
+    background-size:100%;
+}
+
 h1{
-    color:#ffbfc6;
+    color:white;
     width:98%;
     padding-top: 14px;
     padding-bottom: 14px;
     padding-left: 2%;
-    background-color:white;
-    /*border: 1px solid black;*/
+    background-color: #ba7e46;
+    font-family:Delicious,bold;
     display: inline-block;
     margin:0;
     opacity:1;
 }
 body{
-    background-image: url("cherryImage.jpg");
+    background-image: url("back2.jpg");
     background-size:100%;
     background-color: grey;
 }
 
+img{
+    opacity: .1;
+}
+
 a{
     text-decoration:none;
-    font-family:Arial,sans-serif;
+    background-color: #ba7e46;
+    font-family:Delicious, sans-serif;
     font-size: large;
     font-weight: bold;
-    background-color: white;
-    color: #ffbfc6;
+    color: white;
     width:25%;
     padding-top:10px;
     padding-bottom:5px;
@@ -96,7 +135,7 @@ a{
 }
 a:hover{
     color:white;
-    background-color:#86898e;
+    background-color:#511e03;
 }
 a:active{
     color:white;

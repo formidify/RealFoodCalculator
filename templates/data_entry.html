@@ -258,7 +258,7 @@ function populateSavedItems(items){
 </script>
 <script type="text/javascript" src="../static/example.js" defer></script>
     </head>
-<body>
+<body class = "data_entry">
     <h1>Real Food Calculator</h1>
     <!--<div class="topnav">
       <nav>
@@ -271,10 +271,13 @@ function populateSavedItems(items){
     </div> -->
     <h2>Adding Items to October 2018 with Rating Version 2</h2>
     <form action = "http://cmc307-06.mathcs.carleton.edu:2019/data_entry" method = "POST" id = "data-entry-form">
-      <fieldset>
-        <div id="col1">
-          <div id="entryBox">
-            <label for="category">Category</label>
+      <fieldset class = "firstTwoCols">
+        <div class="col1">
+          <div>
+            <div class = "row1">
+              <label for="category">Category</label>
+              <input id="category-check" name="category-keep" type="checkbox">
+            </div id = "category">
             <select id="category" name="category">
               <option value="%">Choose a Category</option>
               <option value="dairy">dairy</option>
@@ -289,55 +292,68 @@ function populateSavedItems(items){
               <option value="teacoffee">tea or coffee</option>
             </select>
           </div>
-          <input id="category-check" name="category-keep" type="checkbox">
-          <div>
-            <div id="entryBox">
-                <label for="vendor">Vendor</label>
-                <input id="vendor" name="vendor" type="text">
+          <div class="col1">
+            <div class = "row1">
+              <label for="vendor">Vendor</label>
+              <input id="vendor-check" name="vendor-keep" type="checkbox">
             </div>
-            <input id="vendor-check" name="vendor-keep" type="checkbox">
+            <input id="vendor" name="vendor" type="text">
           </div>
-          <div>
-            <label for="brand">Label/Brand</label>
+          <div class="col1">
+            <div class = "row1">
+              <label for="brand">Label/Brand</label>
+              <input id="brand-check" name="brand-keep" type="checkbox">
+            </div>
             <input id="brand" name="brand" type="text">
-            <input id="brand-check" name="brand-keep" type="checkbox">
           </div>
-          <input type="submit" onclick="return searchMatches();" value="Search for Similar Items"/>
+        </div>
+        <input type="submit" onclick="return searchMatches();" value="Search for Similar Items"/>
+        <button type="button" id="clear-submit" onclick="submit()">Submit Item to Entry Session</button>
           <!--<button type="submit">Search</button>
           <button type="button" id="clear-submit" onclick="submit()">Submit</button>-->
-        </div> <!--TODO :div wasn't originally here -->
       </fieldset>
-      <fieldset>
-        <div id="col2">
-          <div>
-            <label for="description">Description</label>
+      <fieldset >
+        <div class="col1">
+          <div class = "col2">
+            <div class = "row1">
+              <label for="description">Description</label>
+              <input id="description-check" name="description-keep" type="checkbox">
+            </div>
             <input id="description" name="description" type="text" placeholder="one to two words">
-            <input id="description-check" name="description-keep" type="checkbox">
           </div>
-          <div>
-            <label for="notes">Notes</label>
+          <div class = "col2">
+            <div class = "row1">
+              <label for="notes">Notes</label>
+              <input id="notes-check" name="notes-keep" type="checkbox">
+            </div>
             <input id="notes" name="notes" type="text" placeholder="as labeled on invoice">
-            <input id="notes-check" name="notes-keep" type="checkbox">
           </div>
-          <div>
-            <label for="productCode">Product Code</label>
+          <div class = "col2">
+            <div class = "row1">
+              <label for="productCode">Product Code</label>
+              <input id="productCode-check" name="productCode-keep" type="checkbox">
+            </div>
             <input id="productCode" name="productCode" type="text">
-            <input id="productCode-check" name="productCode-keep" type="checkbox">
           </div>
           <div>
-            <label for="cost">Cost</label>
+            <label class = "row1" for="cost">Cost</label>
             <input id="cost" name="cost" type="number" step="any" placeholder="0.00">
           </div>
         </div> <!--TODO :div wasn't originally here -->
       </fieldset>
 
       <fieldset id = "real-qualifications">
-        <div id="col3">
+        <div class="col1">
           <div class="control">
-            <label class="radio" for="local">
-              <input id="local-true" name="local" type="radio" value="on">Local</label>
-            <label class="radio" for="local">
-              <input id="local-false" name="local" type="radio" value="off" checked>Not Local</label>
+            <div class = "row1">
+              <div>
+                <label class="radio" for="local">
+                  <input id="local-true" name="local" type="radio" value="on">Local</label>
+                <label class="radio" for="local">
+                  <input id="local-false" name="local" type="radio" value="off" checked>Not Local</label>
+                </div>
+                <input id="real-check" name="real-keep" type="checkbox">
+            </div>
             <select id="localDescription" name="localDescription">
               <option value="">Not Local</option>
               <option value="Independently or Cooperatively Owned within 250 mi, < $5 million">Independently or Cooperatively Owned within 250 mi, < $5 million</option>
@@ -346,13 +362,17 @@ function populateSavedItems(items){
               <option value="Multi-ingredient Product, 50% within 250 mi">Multi-ingredient Product, 50% within 250 mi</option>
               <option value="Aggregated Product, 75% within 250 mi">Aggregated Product, 75% within 250 mi</option>
             </select>
-              <input id="real-check" name="real-keep" type="checkbox">
           </div>
-            <div class="control">
-            <label class="radio" for="fair">
-              <input id="fair-true" name="fair" type="radio" value="on">Fair</label>
-            <label class="radio" for="fair">
-              <input id="fair-false" name="fair" type="radio" value="off" checked>Not Fair</label>
+
+          <div class="control">
+            <div class = "row1">
+              <div>
+                <label class="radio" for="fair">
+                  <input id="fair-true" name="fair" type="radio" value="on">Fair</label>
+                <label class="radio" for="fair">
+                  <input id="fair-false" name="fair" type="radio" value="off" checked>Not Fair</label>
+              </div>
+            </div>
             <select id="fairDescription" name="fairDescription">
               <option value="">Not Fair</option>
               <option value="Ecocert Fair Trade Certified">Ecocert Fair Trade Certified</option>
@@ -371,10 +391,14 @@ function populateSavedItems(items){
           </div>
 
           <div class="control">
-            <label class="radio" for="ecological">
-              <input id="ecological-true" name="ecological" type="radio" value="on">Ecological</label>
-            <label class="radio" for="ecological">
-              <input id="ecological-false" name="ecological" type="radio" value="off" checked>Not Ecological</label>
+            <div class = "row1">
+              <div>
+                <label class="radio" for="ecological">
+                  <input id="ecological-true" name="ecological" type="radio" value="on">Ecological</label>
+                <label class="radio" for="ecological">
+                  <input id="ecological-false" name="ecological" type="radio" value="off" checked>Not Ecological</label>
+              </div>
+            </div>
             <select id="ecologicalDescription" name="ecologicalDescription">
               <option value="">Not Ecological</option>
               <option value="ANSI/LEO-4000">ANSI/LEO-4000</option>
@@ -398,12 +422,16 @@ function populateSavedItems(items){
           </div>
 
           <div class="control">
-            <label class="radio" for="humane">
-              <input id="humane-true" name="humane" type="radio" value="on">Humane</label>
-            <label class="radio" for="humane">
-              <input id="humane-false" name="humane" type="radio" value="off">Not Humane</label>
-            <label class="radio" for="humane">
-              <input id="humane-na" name="humane" type="radio" value="none" checked>Not Applicable</label>
+            <div class = "row1">
+              <div>
+                <label class="radio" for="humane">
+                  <input id="humane-true" name="humane" type="radio" value="on">Humane</label>
+                <label class="radio" for="humane">
+                  <input id="humane-false" name="humane" type="radio" value="off">Not Humane</label>
+                <label class="radio" for="humane">
+                <input id="humane-na" name="humane" type="radio" value="none" checked>Not Applicable</label>
+              </div>
+            </div>  
             <select id="humaneDescription" name="humaneDescription">
               <option value="">Not Humane or Not an Animal Product</option>
               <option value="AGA Grasfed by American Grassfed Association (ruminants only)">AGA Grasfed by American Grassfed Association (ruminants only)</option>
@@ -422,10 +450,14 @@ function populateSavedItems(items){
           </div>
 
           <div class="control">
-            <label class="radio" for="disqualifier">
-              <input id="disqualifier-true" name="disqualifier"type="radio" value="on" >Disqualifier</label>
-            <label class="radio" for="disqualifier">
-              <input id="disqualifier-false" name="disqualifier" type="radio" value="off" checked>No Disqualifier</label>
+            <div class = "row1">
+              <div>
+                <label class="radio" for="disqualifier">
+                  <input id="disqualifier-true" name="disqualifier"type="radio" value="on" >Disqualifier</label>
+                <label class="radio" for="disqualifier">
+                  <input id="disqualifier-false" name="disqualifier" type="radio" value="off" checked>No Disqualifier</label>
+              </div>
+            </div>
             <select id="disqualifierDescription" name="disqualifierDescription">
               <option value="">No Disqualifier</option>
               <option value="Concentrated Animal Feeding Operation">Concentrated Animal Feeding Operation</option>
@@ -439,7 +471,6 @@ function populateSavedItems(items){
       </fieldset>
       <!-- <input type="submit" onclick="return searchMatches();" value="Search for Similar Items"/> -->
     </form>
-    <button type="button" id="clear-submit" onclick="submit()">Submit Item to Entry Session</button>
 
     <h3>Past Entries</h3>
     <table>
