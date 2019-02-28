@@ -77,7 +77,10 @@ div{
     flex-direction: row;
     background-color: white;
 }
-
+.cur_page{
+    color:white;
+    background-color: #86898e;
+}
 #missionStatement{
     text-align: center;
     padding: 100px;
@@ -93,7 +96,6 @@ div{
     background-image: url("back3.png");
     background-size:100%;
 }
-
 h1{
     color:white;
     width:98%;
@@ -140,4 +142,33 @@ a:hover{
 a:active{
     color:white;
     background-color: #86898e;
+}
+.entry{
+   display:flex;
+   flex-direction: row;
+   justify-content: space-between;
+}
+.button{
+  display: inline-block;
+  *display: inline;
+  zoom: 1;
+  padding: 6px 20px;
+  margin: 0;
+  cursor: pointer;
+  border: 1px solid #bbb;
+  overflow: visible;
+  text-decoration: none;
+  white-space: nowrap;
+  /*color: #555;*/
+  
+  /*background-color: #ddd;*/
+} 
+#rating_version{
+width: 100px;
+}
+#year{
+width:100px;
+}
+#month{
+width:100px;
 }
