@@ -59,6 +59,10 @@ select{
     flex-direction: row;
     background-color: white;
 }
+.cur_page{
+    color:white;
+    background-color: #86898e;
+}
 h1{
     color:#ffbfc6;
     width:98%;
@@ -72,7 +76,6 @@ h1{
     opacity:1;
 }
 body{
-    background-image: url("cherryImage.jpg");
     background-size:100%;
     background-color: grey;
 }
@@ -101,4 +104,33 @@ a:hover{
 a:active{
     color:white;
     background-color: #86898e;
+}
+.entry{
+   display:flex;
+   flex-direction: row;
+   justify-content: space-between;
+}
+.button{
+  display: inline-block;
+  *display: inline;
+  zoom: 1;
+  padding: 6px 20px;
+  margin: 0;
+  cursor: pointer;
+  border: 1px solid #bbb;
+  overflow: visible;
+  text-decoration: none;
+  white-space: nowrap;
+  /*color: #555;*/
+  
+  /*background-color: #ddd;*/
+} 
+#rating_version{
+width: 100px;
+}
+#year{
+width:100px;
+}
+#month{
+width:100px;
 }
