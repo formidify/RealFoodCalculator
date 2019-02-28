@@ -1182,7 +1182,7 @@ sessionStorage.setItem("timeConfigs", JSON.stringify(total_configs));
   }
 }
 
-$("select#categoriesTime").change(function(){
+function addCatData() {
   current_list = JSON.parse(sessionStorage.timeCurrent);
   cat = $("select#categoriesTime").val();
   searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/get_categories_time/" + cat);

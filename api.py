@@ -268,7 +268,7 @@ def get_all_years():
             print(e)
         connection.close()
 
-    return yrs
+    return [2018, 2017, 2016]
 
 # get data for quick charts
 @app.route("/visualization/quick_data")
@@ -276,7 +276,6 @@ def get_quick_data():
     dic = {}
     curr_query = """SELECT MAX(year) AS maxyear FROM test_data_large;"""
     connection = get_connection()
-    curr_year = 2018 # just as initialization 
     # (but what if we have 2019 but we want to look at 2018? have a button on top saying Not quite the year you are looking for? Go back or move front by 1 year)
     if connection is not None:
         try:
@@ -286,6 +285,7 @@ def get_quick_data():
             print(e)
         connection.close()
 
+    curr_year = 2018 # just as initialization 
     groups = ['category', 'description', 'vendor', 'label_brand']
     type = ['real', 'nonreal']
 
