@@ -16,29 +16,43 @@ var entrySession = JSON.parse(localStorage.getItem('entrySession'));
 window.onload = function (){
     var results = document.getElementById("sessionTable");
     var rowNum = 0;
+    var totalCost = 0;
     for (item in entrySession){
          var row = results.insertRow(-1);
 	 rowNum++;
 	 row.setAttribute("id",'cur_row'+rowNum.toString());
          console.log(entrySession[item]);
+	 var colNum = 0;
          for (value in entrySession[item]){
               var cell = row.insertCell(-1);
               cell.innerHTML = entrySession[item][value];
+	      if (colNum == 6){
+		//cost column, sum for total cost
+		totalCost = totalCost + parseInt(entrySession[item][value]);
+	      }
+	      colNum++;
               }
 	 var newCell = row.insertCell(-1);
 	 newCell.innerHTML = '<button class="editbtn" onclick="editButton(' + rowNum + ');">' + 'edit</button>';
          }
+     document.getElementById("costDesc").innerHTML = "Total Cost = $" + totalCost;
      document.getElementById("entrySessionData").value = entrySessionString;
      rowNum = 0;
      }
 
-function clearEntries(){
+function clearEntries(alert){
+ if (!alert){
+console.log("Clearing Entries");
+entrySession = [];
+   localStorage.setItem('entrySession', '[]');
+   location.reload();
+}else{
    if (window.confirm("Are you sure you want to clear all entries?")){
    console.log("Clearing Entries");   
 entrySession = [];
    localStorage.setItem('entrySession', '[]');
    location.reload();
-}
+}}
 }
 function makeEditable(){
 	var table = document.getElementById("sessionTable");
@@ -109,6 +123,10 @@ function saveButton(cur_row){
 	newString = newString + ']';
   localStorage['entrySession'] = newString;
 
+  //update cost sum
+  document.getElementById("costDesc").innerHTML = "Total Cost = $" + totalCost;
+
+
   //remove deleteRow button
   var deleteCell = parent.getElementsByTagName('td')[18];
   parent.removeChild(deleteCell);
@@ -160,8 +178,9 @@ function deleteRow(cur_row){
 function submitEntries(){
     if(confirm('Are you sure you want to submit the entries?')){
         console.log("Confirmed Entries");
-        document.getElementById("entry-session-form").submit();
-        clearEntries();
+        //document.getElementById("entry-session-form").submit();
+        $("#entry-session-form").submit();
+        clearEntries(false);
     }
     else{
         return false;
@@ -213,7 +232,7 @@ function submitEntries(){
 <button class="button" onclick="go_to_data_entry();">Add New Item</button>
 <input type="submit" onclick="return submitEntries();" class="button" value="Submit All"/>
 </form>
-<button class="button" onclick="clearEntries();">Cancel Session</button>
+<button class="button" onclick="clearEntries(true);">Cancel Session</button>
 </div>
 </div>
 
@@ -240,7 +259,7 @@ function submitEntries(){
 			 </tr>
 </table>
 
-
+<p id="costDesc"> </p>
     <script type="text/javascript">
         //info from https://stackoverflow.com/questions/28206654/saving-table-data-to-html5-localstorage and
         //https://stackoverflow.com/questions/47559534/how-to-put-json-data-into-html-table

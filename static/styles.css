@@ -69,6 +69,11 @@ select{
     justify-content: left;
     font-size: large;
 }
+#missionStatement{
+width: 300px;
+font-family: Delicious;
+font-size: 10px;
+}
 div{
     display: inline-block;
 }
@@ -79,7 +84,7 @@ div{
 }
 .cur_page{
     color:white;
-    background-color: #86898e;
+   /* background-color: #86898e;*/
 }
 #missionStatement{
     text-align: center;
@@ -93,8 +98,9 @@ div{
 }
 
 .data_entry{
-    background-image: url("back3.png");
+    /*background-image: url("back3.png");*/
     background-size:100%;
+    background-color: #F5F5DC';
 }
 h1{
     color:white;
@@ -109,9 +115,9 @@ h1{
     opacity:1;
 }
 body{
-    background-image: url("back2.jpg");
+    /*background-image: url("back2.jpg");*/
     background-size:100%;
-    background-color: grey;
+    background-color: #FAFDFD;
 }
 
 img{
@@ -171,4 +177,7 @@ width:100px;
 }
 #month{
 width:100px;
+}
+.table{
+border: 1px solid black;
 }
