@@ -296,14 +296,14 @@ function populateSavedItems(items){
               <option value="teacoffee">tea or coffee</option>
             </select>
           </div>
-          <div class="col1">
+          <div class="col2">
             <div class = "row1">
               <label for="vendor">Vendor</label>
               <input id="vendor-check" name="vendor-keep" type="checkbox">
             </div>
             <input id="vendor" name="vendor" type="text">
           </div>
-          <div class="col1">
+          <div class="col2">
             <div class = "row1">
               <label for="brand">Label/Brand</label>
               <input id="brand-check" name="brand-keep" type="checkbox">
@@ -311,10 +311,6 @@ function populateSavedItems(items){
             <input id="brand" name="brand" type="text">
           </div>
         </div>
-        <input type="submit" onclick="return searchMatches();" value="Search for Similar Items"/>
-        <!--<button type="button" id="clear-submit" onclick="submit()">Submit Item to Entry Session</button>
-          <button type="submit">Search</button>
-          <button type="button" id="clear-submit" onclick="submit()">Submit</button>-->
       </fieldset>
       <fieldset >
         <div class="col1">
@@ -343,7 +339,7 @@ function populateSavedItems(items){
             <label class = "row1" for="cost">Cost</label>
             <input id="cost" name="cost" type="number" step="any" placeholder="0.00">
           </div>
-        </div> <!--TODO :div wasn't originally here -->
+        </div>
       </fieldset>
 
       <fieldset id = "real-qualifications">
@@ -471,6 +467,7 @@ function populateSavedItems(items){
               <option value="Ultra-Processed Foods">Ultra-Processed Food</option>
             </select>
           </div>
+          <input id = "searchSimItems" type="submit" onclick="return searchMatches();" value="Search for Similar Items"/>
         </div> <!-- TODO : added div here -->
       </fieldset>
       <!-- <input type="submit" onclick="return searchMatches();" value="Search for Similar Items"/> -->
