@@ -10,8 +10,8 @@ function initialize() {
   console.log(logged_in);
   // TODO : change logged_in from true back to false if wanting to develop
   //    functionality.
-  if (logged_in == null) {logged_in = true;}
-  if (!window.location.href.includes("/login") && !window.location.href.includes("/home") && !(logged_in)){
+  if (logged_in == null) {logged_in = false;}
+  if (!window.location.href.includes("/login") && !(logged_in)){
     console.log("Getting false in line 15")
     redirect_to_login();
   }

@@ -268,7 +268,7 @@ def get_all_years():
             print(e)
         connection.close()
 
-    return yrs
+    return [2018, 2017, 2016]
 
 # get data for quick charts
 @app.route("/visualization/quick_data")
@@ -276,7 +276,6 @@ def get_quick_data():
     dic = {}
     curr_query = """SELECT MAX(year) AS maxyear FROM test_data_large;"""
     connection = get_connection()
-    curr_year = 2018 # just as initialization 
     # (but what if we have 2019 but we want to look at 2018? have a button on top saying Not quite the year you are looking for? Go back or move front by 1 year)
     if connection is not None:
         try:
@@ -286,6 +285,7 @@ def get_quick_data():
             print(e)
         connection.close()
 
+    curr_year = 2018 # just as initialization 
     groups = ['category', 'description', 'vendor', 'label_brand']
     type = ['real', 'nonreal']
 
@@ -642,21 +642,130 @@ def get_label(search):
     return flask.jsonify({"search": results})
 
 
-### Need to have a separate function for time series data
-
-# get time series data for vis page (by category)
-# NOTE: items where all four categories (local, ecological, fair, humane) are null will not be included in the calculation
+# get data for brand, label, item trio visualization
 @app.route("/visualization/brand_vendor_data", defaults = {'item': '', 'type': ''})
 @app.route("/visualization/brand_vendor_data/<item>+<type>")
 def get_brand_vendor_data(item, type):
+    yrs = get_all_years()
+
+    # add individual items
+    if type == 'item':
+        # query for all labels
+        query1 = """SELECT DISTINCT ON (trim(label_brand)) label_brand FROM test_data_large WHERE trim(description) = '{i}';""".format(i = item)
+        # query for all brands
+        query2 = """SELECT DISTINCT ON (trim(vendor)) vendor FROM test_data_large WHERE trim(description) = '{i}';""".format(i = item)
+        # query for all years for the specific item per brand real
+
+        # query for all years for the specific item per brand nonreal
+
+        key = 'description'
+        key_a = 'label_brand'
+        key_b = 'vendor'
 
     # add brand/label
     if type == 'brand':
-        return 
+        # query for all labels
+        query1 = """SELECT DISTINCT ON (trim(description)) description FROM test_data_large WHERE trim(label_brand) = '{i}';""".format(i = item)
+        # query for all brands
+        query2 = """SELECT DISTINCT ON (trim(vendor)) vendor FROM test_data_large WHERE trim(label_brand) = '{i}';""".format(i = item)
 
+        key = 'label_brand'
+        key_a = 'description'
+        key_b = 'vendor'
     # add vendor
     if type == 'vendor':
-        return
+        # query for all labels
+        query1 = """SELECT DISTINCT ON (trim(description)) description FROM test_data_large WHERE trim(vendor) = '{i}';""".format(i = item)
+        # query for all brands
+        query2 = """SELECT DISTINCT ON (trim(label_brand)) label_brand FROM test_data_large WHERE trim(vendor) = '{i}';""".format(i = item)
+
+        key = 'vendor'
+        key_a = 'description'
+        key_b = 'label_brand'
+
+    l1, l2, R1, R2, N1, N2 = [], [], [], [], [], []
+    connection = get_connection()
+    if connection is not None:
+        try:
+            # either this or minimum items allowed to show
+            for row in get_select_query_results(connection, query1):
+                l1.append(row[0])
+            for row in get_select_query_results(connection, query2):
+                l2.append(row[0])
+
+            query_real = """SELECT s, year FROM (SELECT {y0} AS year, COALESCE(SUM(cost),0) AS s FROM test_data_large WHERE year = {y0} AND trim({k}) = '{i}' AND trim({a}) = '{l}'
+        AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't') UNION
+        SELECT {y1} AS year, COALESCE(SUM(cost),0) AS s FROM test_data_large WHERE year = {y1} AND trim({k}) = '{i}' AND trim({a}) = '{l}'
+        AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't') UNION
+        SELECT {y2} AS year, COALESCE(SUM(cost),0) AS s FROM test_data_large WHERE year = {y2} AND trim({k}) = '{i}' AND trim({a}) = '{l}'
+        AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't') UNION
+        SELECT 9999 AS year, COALESCE(SUM(cost),0) AS s FROM test_data_large WHERE trim({k}) = '{i}' AND trim({a}) = '{l}'
+        AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't')) AS X ORDER BY year;
+        """
+            query_nonreal = """SELECT s, year FROM (SELECT {y0} AS year, COALESCE(SUM(cost),0) AS s 
+            FROM (SELECT COALESCE(local, 'f') AS local, COALESCE(fair, 'f') AS fair, COALESCE(ecological, 'f') 
+            AS ecological, COALESCE(humane, 'f') AS humane, cost, year, {k}, {a} FROM test_data_large) A WHERE year = {y0} AND trim({k}) = '{i}' AND trim({a}) = '{l}'
+        AND local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't' UNION
+        SELECT {y1} AS year, COALESCE(SUM(cost),0) AS s FROM (SELECT COALESCE(local, 'f') AS local, COALESCE(fair, 'f') AS fair, COALESCE(ecological, 'f') 
+            AS ecological, COALESCE(humane, 'f') AS humane, cost, year, {k}, {a} FROM test_data_large) B WHERE year = {y1} AND trim({k}) = '{i}' AND trim({a}) = '{l}'
+        AND local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't' UNION
+        SELECT {y2} AS year, COALESCE(SUM(cost),0) AS s FROM (SELECT COALESCE(local, 'f') AS local, COALESCE(fair, 'f') AS fair, COALESCE(ecological, 'f') 
+            AS ecological, COALESCE(humane, 'f') AS humane, cost, year, {k}, {a} FROM test_data_large) C WHERE year = {y2} AND trim({k}) = '{i}' AND trim({a}) = '{l}'
+        AND local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't' UNION
+        SELECT 9999 AS year, COALESCE(SUM(cost),0) AS s FROM (SELECT COALESCE(local, 'f') AS local, COALESCE(fair, 'f') AS fair, COALESCE(ecological, 'f') 
+            AS ecological, COALESCE(humane, 'f') AS humane, cost, year, {k}, {a} FROM test_data_large) D WHERE trim({k}) = '{i}' AND trim({a}) = '{l}'
+        AND local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't') AS X ORDER BY year;
+        """
+
+
+            for l in l1:
+                # 9999 is for all years
+                r1 = []
+                r2 = []
+                query_a = query_real.format(y0 = yrs[0], y1 = yrs[1], y2 = yrs[2], i = item, k = key, a = key_a, l = l)
+
+                query_a_nonreal = query_nonreal.format(y0 = yrs[0], y1 = yrs[1], y2 = yrs[2], i = item, k = key, a = key_a, l = l)
+
+                for row in get_select_query_results(connection, query_a):
+                    r1.append(row[0])
+                for row in get_select_query_results(connection, query_a_nonreal):
+                    r2.append(row[0])
+
+                R1.append(r1)
+                R2.append(r2)
+
+            for l in l2:
+                n1 = []
+                n2 = []
+                query_b = query_real.format(y0 = yrs[0], y1 = yrs[1], y2 = yrs[2], i = item, k = key, a = key_b, l = l)
+
+                query_b_nonreal = query_nonreal.format(y0 = yrs[0], y1 = yrs[1], y2 = yrs[2], i = item, k = key, a = key_b, l = l)
+
+                for row in get_select_query_results(connection, query_b):
+                    n1.append(row[0])
+                for row in get_select_query_results(connection, query_b_nonreal):
+                    n2.append(row[0])
+
+                N1.append(n1)
+                N2.append(n2)
+
+            print(R1)
+            print(R2)
+            print(N1)
+            print(N2)
+            print(l1)
+            print(l2)
+
+
+
+
+        except Exception as e:
+            print(e)
+        connection.close()
+
+    yrs = yrs[:3]
+    yrs.reverse()
+    return flask.jsonify({"yrs": yrs, key_a: l1, key_b: l2, key_a + " real": R1, key_a + " nonreal": R2, key_b + " real": N1, key_b + " nonreal": N2})
 
 
 if __name__ == '__main__':
