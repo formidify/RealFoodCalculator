@@ -648,6 +648,9 @@ def get_label(search):
 def get_brand_vendor_data(item, type):
     yrs = get_all_years()
 
+
+    if "'" in item:
+        item = item.replace("'", "''")
     # add individual items
     if type == 'item':
         # query for all labels
