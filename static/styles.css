@@ -1,3 +1,6 @@
+@font-face { font-family: Delicious; src: url('Modeka.otf'); }
+/*@font-face { font-family: Delicious; font-weight: bold; src: url('Modeka.otf');}*/
+
 button, input, select {
 	font-family: inherit;
     font-size: 100%;
@@ -60,30 +63,36 @@ select{
     background-color: white;
 }
 h1{
-    color:#ffbfc6;
+    /*color:#ffbfc6;*/
+		color:white;
     width:98%;
     padding-top: 14px;
     padding-bottom: 14px;
     padding-left: 2%;
-    background-color:white;
+    /*background-color:white;*/
+		background-color: #ba7e46;
+		font-family:Delicious,bold;
     /*border: 1px solid black;*/
     display: inline-block;
     margin:0;
     opacity:1;
 }
 body{
-    background-image: url("cherryImage.jpg");
+    background-image: url("apricot-background.jpg");
     background-size:100%;
     background-color: grey;
 }
 
 a{
     text-decoration:none;
-    font-family:Arial,sans-serif;
+    /*font-family:Arial,sans-serif;*/
+		font-family:Delicious,sans-serif;
     font-size: large;
     font-weight: bold;
-    background-color: white;
-    color: #ffbfc6;
+    /*background-color: white;*/
+		background-color: #ba7e46;
+    /*color: #ffbfc6;*/
+		color:white;
     width:25%;
     padding-top:10px;
     padding-bottom:5px;
@@ -96,9 +105,9 @@ a{
 }
 a:hover{
     color:white;
-    background-color:#86898e;
+    background-color:#511e03;
 }
 a:active{
     color:white;
-    background-color: #86898e;
+    background-color: #511e03;
 }
