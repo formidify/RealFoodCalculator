@@ -15,6 +15,9 @@ input[type="text"], input[type="number"]{
     margin: 5px, 5px, 5px, 5px;
     border-radius: 5px;
 }
+#real-qualifications{
+    width:600px;
+}
 /*
 
 input[type="checkbox"]{
@@ -30,13 +33,22 @@ fieldset {
     width: 33%;
 }
 */
-select{
+#localDescription, #fairDescription, #ecologicalDescription, #humaneDescription, #disqualifierDescription{
     width: 400px;
-    /*padding: 5px;
-    margin: 5px, 5px, 5px, 5px;
-    border-radius: 5px;*/
 }
 
+#category{
+    width: 165px;
+}
+
+#searchSimItems{
+    margin-left: 50px;
+}
+
+.col1{
+    flex-direction: column;
+    width: 100%;
+}
 
 .col2{
     display: flex;
@@ -50,46 +62,56 @@ select{
     flex-direction: row;
     justify-content: space-between;
 }
-.col1{
-    flex-direction: column;
-    width:100%;
-}
-.firstTwoCols {
-    width: 25%;
-}
-/*#category {
-    width: 150px;
-}*/
+
 #categoryCheck {
     margin-left: 30px;
 }
+
 #data-entry-form{
     display: flex;
     flex-direction: row;
     justify-content: left;
     font-size: large;
 }
+
 #missionStatement{
-width: 300px;
-font-family: Delicious;
-font-size: 10px;
+    font-family: Delicious;
+    font-size: 28px;
+    text-align: center;
+    width: 400px;
 }
+
+#missionBackground{
+    margin: auto;
+    margin-left: 2%;
+    margin-top: 2%;
+    background-color: #ffffff;
+    border: 1px solid black;
+    opacity: 0.6;
+    filter: alpha(opacity=60);
+}
+
+#disclaimer{
+    font-family: Delicious;
+    font-size: 11px;
+    text-align: center;
+    width: 400px;
+
+}
+
 div{
     display: inline-block;
 }
+
 #navBar{
     display: flex;
     flex-direction: row;
     background-color: white;
 }
+
 .cur_page{
     color:white;
    /* background-color: #86898e;*/
-}
-#missionStatement{
-    text-align: center;
-    padding: 100px;
-    font-size: 250%;
 }
 
 .home{
@@ -102,6 +124,7 @@ div{
     background-size:100%;
     background-color: #F5F5DC';
 }
+
 h1{
     color:white;
     width:98%;
@@ -114,6 +137,7 @@ h1{
     margin:0;
     opacity:1;
 }
+
 body{
     /*background-image: url("back2.jpg");*/
     background-size:100%;
@@ -141,19 +165,23 @@ a{
     /*border: 1px solid #cbf435;*/
     opacity:1;
 }
+
 a:hover{
     color:white;
     background-color:#511e03;
 }
+
 a:active{
     color:white;
     background-color: #511e03;
 }
+
 .entry{
    display:flex;
    flex-direction: row;
    justify-content: space-between;
 }
+
 .button{
   display: inline-block;
   *display: inline;
@@ -169,15 +197,19 @@ a:active{
 
   /*background-color: #ddd;*/
 }
+
 #rating_version{
 width: 100px;
 }
+
 #year{
 width:100px;
 }
+
 #month{
 width:100px;
 }
+
 .table{
 border: 1px solid black;
 }
