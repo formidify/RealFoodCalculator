@@ -1,4 +1,5 @@
 @font-face { font-family: Delicious; src: url('Modeka.otf'); }
+@font-face { font-family: Yummy; src: url('Montserrat-Light.ttf'); }
 /*button, input, select {
 	font-family: inherit;
     font-size: 100%;
@@ -41,10 +42,6 @@ fieldset {
     width: 165px;
 }
 
-#searchSimItems{
-    margin-left: 50px;
-}
-
 .col1{
     flex-direction: column;
     width: 100%;
@@ -68,10 +65,13 @@ fieldset {
 }
 
 #data-entry-form{
+    font-family: Yummy;
     display: flex;
     flex-direction: row;
     justify-content: left;
     font-size: large;
+    padding-top: 15px;
+    padding-bottom: 15px
 }
 
 #missionStatement{
@@ -132,7 +132,8 @@ h1{
     padding-bottom: 14px;
     padding-left: 2%;
     background-color: #ba7e46;
-    font-family:Delicious,bold;
+    font-family: Delicious;
+    /*font-family:Yummy,bold;*/
     display: inline-block;
     margin:0;
     opacity:1;
@@ -142,6 +143,7 @@ body{
     /*background-image: url("back2.jpg");*/
     background-size:100%;
     background-color: #FAFDFD;
+    font-family: Yummy;
 }
 
 img{
@@ -151,7 +153,7 @@ img{
 a{
     text-decoration:none;
     background-color: #ba7e46;
-    font-family:Delicious, sans-serif;
+    font-family:Yummy;
     font-size: large;
     font-weight: bold;
     color: white;
@@ -209,33 +211,35 @@ width:100px;
 #month{
 width:100px;
 }
-
+#padBelow {
+    margin-bottom: 10px;
+}
 button#EScancel{
    border-radius:4px;
 }
 button#EScancel:hover{
     background-color: #F1A19B;
-  border: 2px solid #F1A19B;
-   color:#ffffff; 
-box-shadow: 0 1px 2px 0 rgba(0,0,0,0.24), 0 2px 5px 0 rgba(0,0,0,0.19);
+    color:#ffffff; 
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.24), 0 2px 5px 0 rgba(0,0,0,0.19);
 }
 input#ESsubmit{
-   border-radius:4px;
+    border-radius:4px;
 }
 input#ESsubmit:hover {
-   background-color: #8CD3BA;
-     border: 2px solid #8CD3BA; /* Green */
-   color:#ffffff;
-box-shadow: 0 1px 2px 0 rgba(0,0,0,0.24), 0 2px 5px 0 rgba(0,0,0,0.19);
+    background-color: #8CD3BA;
+    color:#ffffff;
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.24), 0 2px 5px 0 rgba(0,0,0,0.19);
 }
 button#ESenter{
-   border-radius:4px;
+    border-radius:4px;
 }
 button#ESenter:hover{
     background-color: #A3C1E5;
-    border: 2px solid #A3C1E5;
     color: #ffffff;
-box-shadow: 0 1px 2px 0 rgba(0,0,0,0.24), 0 2px 5px 0 rgba(0,0,0,0.19);
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.24), 0 2px 5px 0 rgba(0,0,0,0.19);
+}
+.searchSubmit{
+    padding: 6px 15px;
 }
 
 /* spacing */

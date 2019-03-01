@@ -10,13 +10,13 @@
  <script>
 window.onload = function (){
 //console.log(localStorage.getItem("savedEntry"));
-if (localStorage.getItem('savedEntry')!=""){
-var savedEntry = JSON.parse(localStorage.getItem('savedEntry'));
-console.log("savedEntry:", savedEntry);
-populateSavedItems(savedEntry);
-localStorage["isSavedEntry"] = false;
-localStorage["savedEntry"] = {};
-}
+  if (localStorage.getItem('savedEntry')!=""){
+  var savedEntry = JSON.parse(localStorage.getItem('savedEntry'));
+  console.log("savedEntry:", savedEntry);
+  populateSavedItems(savedEntry);
+  localStorage["isSavedEntry"] = false;
+  localStorage["savedEntry"] = {};
+  }
 }
 
 
@@ -272,7 +272,7 @@ function populateSavedItems(items){
 <script type="text/javascript" src="../static/example.js" defer></script>
     </head>
 <body class = "data_entry">
-    <h1>Real Food Calculator</h1>
+    <h1>Carleton RFC</h1>
     <!--<div class="topnav">
       <nav>
           <a id="home_btn" href="#">Home</a>
@@ -477,12 +477,12 @@ function populateSavedItems(items){
               <option value="Ultra-Processed Foods">Ultra-Processed Food</option>
             </select>
           </div>
-          <input id = "searchSimItems" type="submit" onclick="return searchMatches();" value="Search for Similar Items"/>
+          <input class = "searchSubmit" id = "ESsubmit" type="submit" onclick="return searchMatches();" value="Search for Similar Items"/>
         </div> <!-- TODO : added div here -->
       </fieldset>
       <!-- <input type="submit" onclick="return searchMatches();" value="Search for Similar Items"/> -->
     </form>
-<button type="button" id="clear-submit" onclick="submit()">Submit Item to Entry Session</button>
+<button class = "searchSubmit" type="button" id="ESenter" onclick="submit()">Submit Item to Entry Session</button>
 
     <h3>Past Entries</h3>
     <table>
