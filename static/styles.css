@@ -237,6 +237,64 @@ button#ESenter:hover{
     color: #ffffff;
 box-shadow: 0 1px 2px 0 rgba(0,0,0,0.24), 0 2px 5px 0 rgba(0,0,0,0.19);
 }
-.table{
-border: 1px solid black;
+
+/* spacing */
+
+table {
+  table-layout: fixed;
+  width: 100%;
+  border-collapse: collapse;
+  cursor:pointer;
 }
+
+thead th:nth-child(1), th:nth-child(2), th:nth-child(3) {
+  width: 4%;
+}
+thead th:nth-child(3), th:nth-child(5),th:nth-child(6), th:nth-child(7),th:nth-child(8) {
+ width: 6%
+}
+thead th:nth-child(4){
+width: 8%
+}
+th{
+  padding: 20px;
+}
+td{
+  padding: 5px;
+  font-size: 15px;
+}
+th {
+  letter-spacing: 2px;
+  color: white;
+}
+td:nth-child(10), td:nth-child(12), td:nth-child(14),td:nth-child(16),td:nth-child(18){
+font-size: 10px;
+}
+thead th:nth-child(10), th:nth-child(12), th:nth-child(14),th:nth-child(16),th:nth-child(18){
+   width: 5%;
+}
+thead th:nth-child(9), th:nth-child(11), th:nth-child(13),th:nth-child(15),th:nth-child(17){
+    width: 3%;
+}
+td {
+  letter-spacing: 1px;
+}
+
+tbody td {
+  text-align: center;
+}
+
+tfoot th {
+  text-align: right;
+}
+tbody tr:nth-child(odd) {
+  background-color: #e2e2e2 ;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #efefef;
+}
+thead th {
+background-color: #736481;
+}
+td:hover {font-weight: bold;}
