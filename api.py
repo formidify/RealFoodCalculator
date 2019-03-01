@@ -79,6 +79,7 @@ def get_products():
     humaneDescription = flask.request.args.get('humaneDescription', default='%').lower()
     disqualifier = flask.request.args.get('disqualifier', default='-1')
     disqualifierDescription = flask.request.args.get('disqualifierDescription', default ='%').lower()
+    orderBy = flask.request.args.get('orderBy', default='label_brand').lower()
 
     if month == "-1" and year == "-1":
         month = " "
@@ -111,6 +112,8 @@ def get_products():
     else:
        disqualifier = ""
 
+    if orderBy=="year,month":
+        orderBy="year, test_data_large.month DESC"
 
     query = """
             SELECT  test_data_large.month,
@@ -153,8 +156,8 @@ def get_products():
                     AND lower(test_data_large.ecological_description) LIKE lower( '%{14}%')
                     AND lower(test_data_large.humane_description) LIKE lower('%{15}%')
                     AND lower(test_data_large.disqualifier_description) LIKE lower('%{16}%')
-            ORDER BY test_data_large.label_brand
-            """.format(month, description, category, productCode, brand, vendor, notes, local, fair, ecological, humane, disqualifier, localDescription, fairDescription, ecologicalDescription,humaneDescription, disqualifierDescription)
+            ORDER BY test_data_large.{17}
+            """.format(month, description, category, productCode, brand, vendor, notes,local, fair, ecological, humane, disqualifier, localDescription, fairDescription, ecologicalDescription,humaneDescription, disqualifierDescription,orderBy)
 
     products_list = []
     connection = get_connection()
