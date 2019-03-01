@@ -7,8 +7,7 @@
    <!-- <script type="text/javascript" src="{{ url_for('static', filename='example.js') }}" defer></script> -->
    <link rel="stylesheet" type="text/css" href="../static/styles.css" />
    <script type="text/javascript" src="../static/example.js" defer></script>
-<!--   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
--->
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 </head>
 <script>
 var entrySessionString = localStorage.getItem('entrySession');
@@ -37,29 +36,38 @@ window.onload = function (){
 	 newCell.innerHTML = '<button class="editbtn" onclick="editButton(' + rowNum + ');">' + 'edit</button>';
          }
      document.getElementById("costDesc").innerHTML = "Total Cost = $" + totalCost.toFixed(2);
-     document.getElementById("entrySessionData").value = entrySessionString;
+	 document.getElementById("EScostBox").style.backgroundColor= '#A3C1E5';
+
+	 document.getElementById("EScostBox").style.opacity='.8';
+	 document.getElementById("EScostBox").style.border='5px solid #A3C1E5';
+	 document.getElementById("EScostBox").style.paddingTop='0px';
+	 document.getElementById("EScostBox").style.paddingLeft='4px';
+	 document.getElementById("EScostBox").style.paddingRight='4px';
+	 document.getElementById("EScostBox").style.margin='18px';
+     
+	 document.getElementById("EScostBox").style.borderRadius='4px';
+	 document.getElementById("EScostBox").style.color='black';
+
+	 document.getElementById("entrySessionData").value = entrySessionString;
      rowNum = 0;
      }
 
 function clearEntries(alert){
- if (!alert){
-console.log("Clearing Entries");
-entrySession = [];
-   localStorage.setItem('entrySession', '[]');
-   location.reload();
-}else{
-   if (window.confirm("Are you sure you want to clear all entries?")){
-   console.log("Clearing Entries");   
-entrySession = [];
-   localStorage.setItem('entrySession', '[]');
-   location.reload();
-}}
+	if (!alert){
+		console.log("Clearing Entries");
+		entrySession = [];
+		localStorage.setItem('entrySession', '[]');
+		location.reload();
+	}else{
+		if (window.confirm("Are you sure you want to clear all entries?")){
+   			console.log("Clearing Entries");   
+			entrySession = [];
+   			localStorage.setItem('entrySession', '[]');
+   			location.reload();
+		}
+	}
 }
-function makeEditable(){
-	var table = document.getElementById("sessionTable");
-	table.insertRow();
-	table.contenteditable='true';
-}
+
 function editButton(cur_row){
    console.log(cur_row);
    var edit_cells = document.getElementById('cur_row'+cur_row).getElementsByTagName('td');
@@ -131,11 +139,11 @@ function checkData(colNum, dataValue){
 }
 
 function saveButton(cur_row){
-	//still needs to update storage
-  var edit_cells = document.getElementById('cur_row'+cur_row).getElementsByTagName('td');
-  var parent = document.getElementById('cur_row'+cur_row);
-  var child = parent.getElementsByTagName('td')[17];
-	var totalCost = 0;  
+  	var edit_cells = document.getElementById('cur_row'+cur_row).getElementsByTagName('td');
+  	var parent = document.getElementById('cur_row'+cur_row);
+	var child = parent.getElementsByTagName('td')[17];
+	var totalCost = 0;
+  
 	//update local storage with new data:
 	var newString = '[';
 	var table = document.getElementById("sessionTable");
@@ -143,7 +151,6 @@ function saveButton(cur_row){
 		newString = newString + '['; 
 		for (var j = 0; j < 17; j++){
 			var dataItem = table.rows[i].cells[j].innerHTML;
-			//var dataItem = col.value;
 			if (!checkData(j, dataItem)){
 				//if checkData returns false, there is an invalid input, stop function
 				return;
@@ -161,7 +168,7 @@ function saveButton(cur_row){
 			    newString = newString + '"';
 			}
 		}
-        	if (i != table.rows.length - 1){
+        if (i != table.rows.length - 1){
 			newString = newString + '],';
 		} else{
 			newString = newString + ']';
@@ -169,61 +176,59 @@ function saveButton(cur_row){
 	}
         
 	newString = newString + ']';
-  localStorage['entrySession'] = newString;
+  	localStorage['entrySession'] = newString;
+	for (var i=0; i<edit_cells.length; i++){
+  		edit_cells[i].setAttribute('contenteditable', 'false');
+  		edit_cells[i].style.backgroundColor = '#ffffff';
+	}
+  	//update cost sum
+  	document.getElementById("costDesc").innerHTML = "Total Cost = $" + totalCost.toFixed(2);
 
-  for (var i=0; i<edit_cells.length; i++){
-  	edit_cells[i].setAttribute('contenteditable', 'false');
-  	edit_cells[i].style.backgroundColor = '#ffffff';
-  }
-  //update cost sum
-  document.getElementById("costDesc").innerHTML = "Total Cost = $" + totalCost.toFixed(2);
 
+  	//remove deleteRow button
+  	var deleteCell = parent.getElementsByTagName('td')[18];
+  	parent.removeChild(deleteCell);
 
-  //remove deleteRow button
-  var deleteCell = parent.getElementsByTagName('td')[18];
-  parent.removeChild(deleteCell);
-
-  child.firstChild.innerHTML = 'edit';
-  child.firstChild.setAttribute('class', 'editbtn');
-  child.firstChild.setAttribute('onclick', 'editButton('+cur_row.toString()+');');
+  	child.firstChild.innerHTML = 'edit';
+  	child.firstChild.setAttribute('class', 'editbtn');
+  	child.firstChild.setAttribute('onclick', 'editButton('+cur_row.toString()+');');
 }
 
 function deleteRow(cur_row){
-   if(confirm('Are you sure you want to delete this entry?')){
-     console.log('delete this row');
-     var row = document.getElementById('cur_row'+cur_row);
-     row.parentNode.removeChild(row);
+	if(confirm('Are you sure you want to delete this entry?')){
+    	console.log('delete this row');
+     	var row = document.getElementById('cur_row'+cur_row);
+     	row.parentNode.removeChild(row);
 
-    //update local storage by accessing table without the deleted row:
-    //update local storage with new data:
-        var newString = '[';
-	var totalCost = 0;
+    	//update local storage by accessing table without the deleted row:
+    	//update local storage with new data:
+		var newString = '[';
+		var totalCost = 0;
         var table = document.getElementById("sessionTable");
         for (var i = 1; i < table.rows.length; i++){
                 newString = newString + '[';
                 for (var j = 0; j < 17; j++){
-                        var dataItem = table.rows[i].cells[j].innerHTML;
-                        //var dataItem = col.value;
-			if (j == 6){
-				totalCost = totalCost + parseFloat(dataItem);
-			}
+                    var dataItem = table.rows[i].cells[j].innerHTML;
+					if (j == 6){
+						totalCost = totalCost + parseFloat(dataItem);
+					}
+                    newString = newString + '"';
+                    newString = newString + dataItem;
+                    if (j != 16){
+                        newString = newString + '",';
+                    }else{
+                       //if the column is the final column in the entry, don't add comma
                         newString = newString + '"';
-                        newString = newString + dataItem;
-                        if (j != 16){
-                            newString = newString + '",';
-                        }else{
-                           //if the column is the final column in the entry, don't add comma
-                            newString = newString + '"';
-                        }
+                    }
                 }
 		if (i != table.rows.length - 1){
-            		newString = newString + '],';
+            newString = newString + '],';
         	} else{
-            		newString = newString + ']';
+            newString = newString + ']';
         	}
         }	
-	document.getElementById("costDesc").innerHTML = "Total Cost = $" + totalCost.toFixed(2);
-        newString = newString + ']';
+		document.getElementById("costDesc").innerHTML = "Total Cost = $" + totalCost.toFixed(2);
+    	newString = newString + ']';
         localStorage['entrySession'] = newString;
    }
    else{
@@ -232,6 +237,7 @@ function deleteRow(cur_row){
 }
 
 function submitEntries(){
+    console.log("in submit");
     if(confirm('Are you sure you want to submit the entries?')){
         console.log("Confirmed Entries");
         //document.getElementById("entry-session-form").submit();
@@ -246,10 +252,9 @@ function submitEntries(){
 </script>
 
 <body>
-    <h1>Real Food Calculator</h1>
+    <h1>Carleton RFC</h1>
     <nav>
     <div id="navBar">
-
           <a id="home_btn" href="#">Home</a>
           <!--<a id="data_entry_btn" href="#">Data Entry</a>-->
           <a class="cur_page" id="entry_session_btn" href="#">Entry Session</a>
@@ -294,28 +299,29 @@ function submitEntries(){
 
 <table id="sessionTable">
 <tr>
-                        <th>Category</th>
-			<th>Vendor</th>
+                   		<th>Category</th>
+						<th>Vendor</th>
                         <th>Label/Brand</th>
                         <th>Description</th>
                         <th>Notes</th>
                         <th>Product Code</th>
                         <th>Cost</th>
-			<th>Local</th>
+						<th>Local</th>
                         <th>Local Notes</th>
-			<th>Fair</th>
+						<th>Fair</th>
                         <th>Fair Notes</th>
-			<th>Ecological</th>
-			<th>Ecological Description</th>
-			<th>Humane</th>
+						<th>Ecological</th>
+						<th>Ecological Description</th>
+						<th>Humane</th>
                         <th>Humane Notes</th>
-			<th>Disqualifier</th>
+						<th>Disqualifier</th>
                         <th>Disqualifier Notes</th>
                         <th>Edit</th>
 			 </tr>
 </table>
-
-<p id="costDesc"> </p>
+<div id = 'EScostBox'>
+	<p id="costDesc"> </p>
+</div>
 
 </body>
 

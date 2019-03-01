@@ -1,4 +1,5 @@
 @font-face { font-family: Delicious; src: url('Modeka.otf'); }
+@font-face { font-family: Yummy; src: url('Montserrat-Light.ttf'); }
 /*button, input, select {
 	font-family: inherit;
     font-size: 100%;
@@ -41,10 +42,6 @@ fieldset {
     width: 165px;
 }
 
-#searchSimItems{
-    margin-left: 50px;
-}
-
 .col1{
     flex-direction: column;
     width: 100%;
@@ -68,17 +65,21 @@ fieldset {
 }
 
 #data-entry-form{
+    font-family: Yummy;
     display: flex;
     flex-direction: row;
     justify-content: left;
     font-size: large;
+    padding-top: 15px;
+    padding-bottom: 15px
 }
 
 #missionStatement{
     font-family: Delicious;
     font-size: 28px;
     text-align: center;
-    width: 400px;
+    width: 390px;
+    margin:10px;
 }
 
 #missionBackground{
@@ -125,6 +126,14 @@ div{
     background-color: #F5F5DC';
 }
 
+#urlLink{
+    text-decoration:none;
+    background-color: #FAFDFD;
+    color: black;
+    text-decoration: underline;
+    padding: 0px 128px 0px 0px;
+}
+
 h1{
     color:white;
     width:98%;
@@ -132,7 +141,8 @@ h1{
     padding-bottom: 14px;
     padding-left: 2%;
     background-color: #ba7e46;
-    font-family:Delicious,bold;
+    font-family: Delicious;
+    /*font-family:Yummy,bold;*/
     display: inline-block;
     margin:0;
     opacity:1;
@@ -142,6 +152,7 @@ body{
     /*background-image: url("back2.jpg");*/
     background-size:100%;
     background-color: #FAFDFD;
+    font-family: Yummy;
 }
 
 img{
@@ -151,7 +162,7 @@ img{
 a{
     text-decoration:none;
     background-color: #ba7e46;
-    font-family:Delicious, sans-serif;
+    font-family:Yummy;
     font-size: large;
     font-weight: bold;
     color: white;
@@ -162,8 +173,9 @@ a{
     text-decoration: none;
     display: inline-block;
     white-space: nowrap;
-    /*border: 1px solid #cbf435;*/
     opacity:1;
+    border-top:1px solid white;
+    border-right:1px solid white;
 }
 
 a:hover{
@@ -209,34 +221,94 @@ width:100px;
 #month{
 width:100px;
 }
-
+#padBelow {
+    margin-bottom: 10px;
+}
 button#EScancel{
    border-radius:4px;
 }
 button#EScancel:hover{
     background-color: #F1A19B;
-  border: 2px solid #F1A19B;
-   color:#ffffff; 
-box-shadow: 0 1px 2px 0 rgba(0,0,0,0.24), 0 2px 5px 0 rgba(0,0,0,0.19);
+    color:#ffffff; 
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.24), 0 2px 5px 0 rgba(0,0,0,0.19);
 }
 input#ESsubmit{
-   border-radius:4px;
+    border-radius:4px;
 }
 input#ESsubmit:hover {
-   background-color: #8CD3BA;
-     border: 2px solid #8CD3BA; /* Green */
-   color:#ffffff;
-box-shadow: 0 1px 2px 0 rgba(0,0,0,0.24), 0 2px 5px 0 rgba(0,0,0,0.19);
+    background-color: #8CD3BA;
+    color:#ffffff;
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.24), 0 2px 5px 0 rgba(0,0,0,0.19);
 }
 button#ESenter{
-   border-radius:4px;
+    border-radius:4px;
 }
 button#ESenter:hover{
     background-color: #A3C1E5;
-    border: 2px solid #A3C1E5;
     color: #ffffff;
-box-shadow: 0 1px 2px 0 rgba(0,0,0,0.24), 0 2px 5px 0 rgba(0,0,0,0.19);
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.24), 0 2px 5px 0 rgba(0,0,0,0.19);
 }
-.table{
-border: 1px solid black;
+.searchSubmit{
+    padding: 6px 15px;
 }
+
+/* spacing */
+
+table {
+  table-layout: fixed;
+  width: 100%;
+  border-collapse: collapse;
+  cursor:pointer;
+}
+
+thead th:nth-child(1), th:nth-child(2), th:nth-child(3) {
+  width: 4%;
+}
+thead th:nth-child(3), th:nth-child(5),th:nth-child(6), th:nth-child(7),th:nth-child(8) {
+ width: 6%
+}
+thead th:nth-child(4){
+width: 8%
+}
+th{
+  padding: 20px;
+}
+td{
+  padding: 5px;
+  font-size: 15px;
+}
+th {
+  letter-spacing: 2px;
+  color: white;
+}
+td:nth-child(10), td:nth-child(12), td:nth-child(14),td:nth-child(16),td:nth-child(18){
+font-size: 10px;
+}
+thead th:nth-child(10), th:nth-child(12), th:nth-child(14),th:nth-child(16),th:nth-child(18){
+   width: 5%;
+}
+thead th:nth-child(9), th:nth-child(11), th:nth-child(13),th:nth-child(15),th:nth-child(17){
+    width: 3%;
+}
+td {
+  letter-spacing: 1px;
+}
+
+tbody td {
+  text-align: center;
+}
+
+tfoot th {
+  text-align: right;
+}
+tbody tr:nth-child(odd) {
+  background-color: #e2e2e2 ;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #efefef;
+}
+thead th {
+background-color: #736481;
+}
+td:hover {font-weight: bold;}
