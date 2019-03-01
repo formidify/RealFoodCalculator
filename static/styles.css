@@ -1,4 +1,5 @@
 @font-face { font-family: Delicious; src: url('Modeka.otf'); }
+@font-face { font-family: Yummy; src: url('Montserrat-Light.ttf'); }
 /*button, input, select {
 	font-family: inherit;
     font-size: 100%;
@@ -68,6 +69,7 @@ fieldset {
 }
 
 #data-entry-form{
+    font-family: Yummy;
     display: flex;
     flex-direction: row;
     justify-content: left;
@@ -132,7 +134,7 @@ h1{
     padding-bottom: 14px;
     padding-left: 2%;
     background-color: #ba7e46;
-    font-family:Delicious,bold;
+    font-family:Yummy,bold;
     display: inline-block;
     margin:0;
     opacity:1;
@@ -142,6 +144,7 @@ body{
     /*background-image: url("back2.jpg");*/
     background-size:100%;
     background-color: #FAFDFD;
+    font-family: Yummy;
 }
 
 img{
@@ -151,7 +154,7 @@ img{
 a{
     text-decoration:none;
     background-color: #ba7e46;
-    font-family:Delicious, sans-serif;
+    font-family:Yummy;
     font-size: large;
     font-weight: bold;
     color: white;
