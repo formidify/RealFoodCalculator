@@ -299,12 +299,13 @@ function exportTableToCSV(filename) {
         var row = [], cols = rows[i].querySelectorAll("td, th");
 
         for (var j = 0; j < cols.length; j++)
-            row.push(cols[j].innerText);
+            row.push('"'+cols[j].innerText+'"');
 
         csv.push(row.join(","));
     }
 
     // Download CSV file
+    /*var csv = new TableExport(document.getElementById("results"));*/
     downloadCSV(csv.join("\n"), filename);
 }
 
