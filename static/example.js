@@ -10,8 +10,8 @@ function initialize() {
   console.log(logged_in);
   // TODO : change logged_in from true back to false if wanting to develop
   //    functionality.
-  if (logged_in == null) {logged_in = true;}
-  if (!window.location.href.includes("/login") && !window.location.href.includes("/home") && !(logged_in)){
+  if (logged_in == null) {logged_in =false;}
+  if (!window.location.href.includes("/login") && !(logged_in)){
     console.log("Getting false in line 15")
     redirect_to_login();
   }
@@ -211,7 +211,8 @@ function append_json(data){
     '<td contenteditable=false>' + object.humaneDescription + '</td>' +
     '<td contenteditable=false>' + object.disqualifier + '</td>' +
     '<td contenteditable=false>' + object.disqualifierDescription + '</td>' +
-    '<td contenteditable=false>' + object.notes + '</td>';
+    '<td contenteditable=false>' + object.notes + '</td>' +
+    '<td contenteditable=false>' + object.cost + '</td>';
     table.appendChild(tr);
     tr.setAttribute("id",'cur_row'+cur_row.toString());
     // TODO : might not need class = can_updt
@@ -299,7 +300,7 @@ function exportTableToCSV(filename) {
         var row = [], cols = rows[i].querySelectorAll("td, th");
 
         for (var j = 0; j < cols.length; j++)
-            row.push(cols[j].innerText);
+            row.push('"'+cols[j].innerText+'"');
 
         csv.push(row.join(","));
     }

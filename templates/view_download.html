@@ -3,23 +3,22 @@
 <head>
     <meta charset="utf-8">
     <title> View/Download Data </title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}" />
     <script type="text/javascript" src="{{ url_for('static', filename='example.js') }}" defer></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
 
 <body>
     <h1>Real Food Calculator</h1>
-    <div class="topnav">
-      <nav>
+    <nav>
+      <div id="navBar">
           <a id="home_btn" href="#">Home</a>
           <!--<a id="data_entry_btn" href="#">Data Entry</a>-->
           <a id="entry_session_btn" href="#">Entry Session</a>
           <a id="view_download_btn" href="#">View/Download Data</a>
           <a id="visualization_btn" href="#">Visualization</a>
-      </nav>
-    </div>
-
+      </div>
+    </nav>
     <!--
         <a href=''>Home</a>
         <a href=''>Data Entry Session</a>
@@ -109,6 +108,7 @@
             <th>Disqualifier</th>
             <th>Disqualifier Description</th>
             <th>Notes</th>
+            <th>Costs</th>
 
             <!-- <th>Vendor</th>
             <th>Desc.</th>

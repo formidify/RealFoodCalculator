@@ -9,21 +9,31 @@
  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
  <script>
 window.onload = function (){
-console.log(localStorage.getItem("savedEntry"));
-if (localStorage.getItem('savedEntry')!==null){
+//console.log(localStorage.getItem("savedEntry"));
+if (localStorage.getItem('savedEntry')!=""){
 var savedEntry = JSON.parse(localStorage.getItem('savedEntry'));
-if (savedEntry!= null){
 console.log("savedEntry:", savedEntry);
 populateSavedItems(savedEntry);
 localStorage["isSavedEntry"] = false;
 localStorage["savedEntry"] = {};
-  }
 }
 }
-    localStorage["foodData"] = [];
+
+
+if ((localStorage.getItem("entrySession") == '[]') || (localStorage.getItem("entrySession") == '')){
+    console.log("Entry Session is empty ");
     var initializeEntrySession = [];
-    localStorage["entrySession"] = initializeEntrySession;
-    //every time this page is reloaded foodData will be cleared
+    //localStorage["entrySession"] = initializeEntrySession;
+ 
+}else{
+    console.log("Entry Session is Not empty"); 
+    var initializeEntrySession = JSON.parse(localStorage.getItem("entrySession"));
+    console.log("Initialized Entry Session", initializeEntrySession);
+}
+
+
+   // var initializeEntrySession = [];
+    //localStorage["entrySession"] = initializeEntrySession;
 
     function toggleCheckbox(item){
          console.log("hi we're here");
@@ -174,7 +184,7 @@ if (invalid == true){
 
        // localStorage["foodData"] += "/" + JSON.stringify(thisEntry);
         initializeEntrySession.push(thisEntry);
-        localStorage.getItem('entrySession');
+        console.log("Entry Session", localStorage.getItem('entrySession'));
         localStorage.setItem('entrySession', JSON.stringify(initializeEntrySession));
         populateSavedItems(itemsToSave);
 } }
@@ -274,7 +284,7 @@ function populateSavedItems(items){
     </div> -->
     <h2>Adding Items to October 2018 with Rating Version 2</h2>
    <button class="button" onclick="go_to_entry_session();">Go To Entry Session</button>
-    <form action = "http://cmc307-06.mathcs.carleton.edu:2019/data_entry" method = "POST" id = "data-entry-form">
+    <form action = "data_entry" method = "POST" id = "data-entry-form">
       <fieldset class = "firstTwoCols">
         <div class="col1">
           <div>

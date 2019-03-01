@@ -7,7 +7,8 @@
    <!-- <script type="text/javascript" src="{{ url_for('static', filename='example.js') }}" defer></script> -->
    <link rel="stylesheet" type="text/css" href="../static/styles.css" />
    <script type="text/javascript" src="../static/example.js" defer></script>
-   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<!--   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+-->
 </head>
 <script>
 var entrySessionString = localStorage.getItem('entrySession');
@@ -28,14 +29,14 @@ window.onload = function (){
               cell.innerHTML = entrySession[item][value];
 	      if (colNum == 6){
 		//cost column, sum for total cost
-		totalCost = totalCost + parseInt(entrySession[item][value]);
+		totalCost = totalCost + parseFloat(entrySession[item][value]);
 	      }
 	      colNum++;
               }
 	 var newCell = row.insertCell(-1);
 	 newCell.innerHTML = '<button class="editbtn" onclick="editButton(' + rowNum + ');">' + 'edit</button>';
          }
-     document.getElementById("costDesc").innerHTML = "Total Cost = $" + totalCost;
+     document.getElementById("costDesc").innerHTML = "Total Cost = $" + totalCost.toFixed(2);
      document.getElementById("entrySessionData").value = entrySessionString;
      rowNum = 0;
      }
@@ -85,17 +86,54 @@ function editButton(cur_row){
   child.firstChild.setAttribute('onclick', 'saveButton('+cur_row.toString()+');');
 }
 
+function checkData(colNum, dataValue){
+	var catTypes = ["dairy", "baked", "beverages", "eggs", "grocery", "meat", "poultry", "produce", "fish", "tea or coffee"]; 
+	if (colNum == 0){
+		//check if category is valid
+		if (!catTypes.includes(dataValue)){
+			window.alert("Invalid category input");
+			return false; 
+		}
+	}
+	if (colNum == 1){
+		//make sure vendor exists- isn't empty string
+		if (dataValue ==''){
+			window.alert("No vendor entered for entry");
+			return false;
+		}
+	}
+	if (colNum == 6){
+		//check if cost is a number 
+		var floatVersion = parseFloat(dataItem);
+		if (isNaN(floatVersion)){
+			window.alert("Invalid cost for entry");
+			return false;
+		}
+	}
+	if ((colNum == 7) || (colNum == 9) || (colNum == 11) || (colNum = 1)){ 
+		//for boolean values (except for humane)
+		dataValue = dataValue.toString();
+		if ((dataValue != 'true') &&  (dataValue != 'false')){
+			window.alert("Invalid true/false value for qualification");
+			return false;
+		}
+	}
+	if (colNum == 13){
+		dataValue = dataValue.toString();
+		if ((dataValue != 'true') && (dataValue != 'false') && (dataValue != 'N/A')){
+			window.alert("Invalid input for humane status, please enter 'true', 'false', or 'N/A'")
+			return false;
+		}
+	}
+	return true;
+}
+
 function saveButton(cur_row){
 	//still needs to update storage
   var edit_cells = document.getElementById('cur_row'+cur_row).getElementsByTagName('td');
   var parent = document.getElementById('cur_row'+cur_row);
   var child = parent.getElementsByTagName('td')[17];
-  for (var i=0; i<edit_cells.length; i++){
-    edit_cells[i].setAttribute('contenteditable', 'false');
-    edit_cells[i].style.backgroundColor = '#ffffff';
-  }
-
-  
+	var totalCost = 0;  
 	//update local storage with new data:
 	var newString = '[';
 	var table = document.getElementById("sessionTable");
@@ -104,6 +142,14 @@ function saveButton(cur_row){
 		for (var j = 0; j < 17; j++){
 			var dataItem = table.rows[i].cells[j].innerHTML;
 			//var dataItem = col.value;
+			if (!checkData(j, dataItem)){
+				//if checkData returns false, there is an invalid input, stop function
+				return;
+			}	
+			//if 6th column(cost), update totalCost
+			if (j == 6){
+				totalCost = totalCost + parseFloat(dataItem);
+			}
 			newString = newString + '"';
 			newString = newString + dataItem;
 			if (j != 16){
@@ -113,18 +159,22 @@ function saveButton(cur_row){
 			    newString = newString + '"';
 			}
 		}
-        if (i != table.rows.length - 1){
-	newString = newString + '],';
-	} else{
-	newString = newString + ']';
-	}
+        	if (i != table.rows.length - 1){
+			newString = newString + '],';
+		} else{
+			newString = newString + ']';
+		}
 	}
         
 	newString = newString + ']';
   localStorage['entrySession'] = newString;
 
+  for (var i=0; i<edit_cells.length; i++){
+  	edit_cells[i].setAttribute('contenteditable', 'false');
+  	edit_cells[i].style.backgroundColor = '#ffffff';
+  }
   //update cost sum
-  document.getElementById("costDesc").innerHTML = "Total Cost = $" + totalCost;
+  document.getElementById("costDesc").innerHTML = "Total Cost = $" + totalCost.toFixed(2);
 
 
   //remove deleteRow button
@@ -145,12 +195,16 @@ function deleteRow(cur_row){
     //update local storage by accessing table without the deleted row:
     //update local storage with new data:
         var newString = '[';
+	var totalCost = 0;
         var table = document.getElementById("sessionTable");
         for (var i = 1; i < table.rows.length; i++){
                 newString = newString + '[';
                 for (var j = 0; j < 17; j++){
                         var dataItem = table.rows[i].cells[j].innerHTML;
                         //var dataItem = col.value;
+			if (j == 6){
+				totalCost = totalCost + parseFloat(dataItem);
+			}
                         newString = newString + '"';
                         newString = newString + dataItem;
                         if (j != 16){
@@ -160,13 +214,13 @@ function deleteRow(cur_row){
                             newString = newString + '"';
                         }
                 }
-	if (i != table.rows.length - 1){
-            newString = newString + '],';
-        } else{
-            newString = newString + ']';
-        }
+		if (i != table.rows.length - 1){
+            		newString = newString + '],';
+        	} else{
+            		newString = newString + ']';
+        	}
         }	
-
+	document.getElementById("costDesc").innerHTML = "Total Cost = $" + totalCost.toFixed(2);
         newString = newString + ']';
         localStorage['entrySession'] = newString;
    }
@@ -260,78 +314,6 @@ function submitEntries(){
 </table>
 
 <p id="costDesc"> </p>
-    <script type="text/javascript">
-        //info from https://stackoverflow.com/questions/28206654/saving-table-data-to-html5-localstorage and
-        //https://stackoverflow.com/questions/47559534/how-to-put-json-data-into-html-table
-
-
-        $('#loadBtn').on('click', function() {
-//all of the following code is no longer needed?
-            console.log('Here');
-//            var jsonData2 = JSON.parse(localStorage.foodData);
-
-
-
-            //reading localStorage string and splitting into array format to populate table
-            var tempData = localStorage.foodData;
-            var ar = tempData.split('/');
-            var foodItem = [];
-
-            for (var i = 1; i < ar.length; i++){
-                foodItem[i - 1] = JSON.parse(ar[i]);
-            }
-
-            for (var i = 0; i < foodItem.length; i++) {
-            //Insert data into HTML table
-
-                //foodItem[i] represents string/array of one individual entry
-                console.log(foodItem);
-
-
-                var $tr = $("<tr>");
-                var $1 = $("<td>");
-                var $2 = $("<td>");
-                var $3 = $("<td>");
-                var $4 = $("<td>");
-                var $5 = $("<td>");
-                var $6 = $("<td>");
-                var $7 = $("<td>");
-                var $8 = $("<td>");
-                var $9 = $("<td>");
-                var $10 = $("<td>");
-
-                $1.append(foodItem[i][0]);
-                $2.append(foodItem[i][1]);
-                $3.append(foodItem[i][2]);
-                $4.append(foodItem[i][3]);
-                $5.append(foodItem[i][4]);
-                $6.append(foodItem[i][5]);
-                $7.append(foodItem[i][6]);
-                $8.append(foodItem[i][7]);
-                $9.append(foodItem[i][8]);
-                $10.append(foodItem[i][9]);
-
-                $tr.append($1);
-                $tr.append($2);
-                $tr.append($3);
-                $tr.append($4);
-                $tr.append($5);
-                $tr.append($6);
-                $tr.append($7);
-                $tr.append($8);
-                $tr.append($9);
-                $tr.append($10);
-
-                $('#dataTable').append($tr);
-            }
-        });
-    </script>
-
-
-   <!-- <button class="button4">Cancel Session</button>-->
-    <!--<button class="button3 btn btn-default" id="loadBtn">Submit All</button>-->
-
-
 
 </body>
 
