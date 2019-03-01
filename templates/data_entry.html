@@ -24,9 +24,9 @@ if ((localStorage.getItem("entrySession") == '[]') || (localStorage.getItem("ent
     console.log("Entry Session is empty ");
     var initializeEntrySession = [];
     //localStorage["entrySession"] = initializeEntrySession;
- 
+
 }else{
-    console.log("Entry Session is Not empty"); 
+    console.log("Entry Session is Not empty");
     var initializeEntrySession = JSON.parse(localStorage.getItem("entrySession"));
     console.log("Initialized Entry Session", initializeEntrySession);
 }
@@ -441,7 +441,7 @@ function populateSavedItems(items){
                 <label class="radio" for="humane">
                 <input id="humane-na" name="humane" type="radio" value="none" checked>Not Applicable</label>
               </div>
-            </div>  
+            </div>
             <select id="humaneDescription" name="humaneDescription">
               <option value="">Not Humane or Not an Animal Product</option>
               <option value="AGA Grasfed by American Grassfed Association (ruminants only)">AGA Grasfed by American Grassfed Association (ruminants only)</option>

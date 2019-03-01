@@ -173,7 +173,7 @@ a:hover{
 
 a:active{
     color:white;
-    background-color: #86898e;
+    background-color: #511e03;
 }
 
 .entry{
@@ -194,9 +194,9 @@ a:active{
   text-decoration: none;
   white-space: nowrap;
   /*color: #555;*/
-  
+
   /*background-color: #ddd;*/
-} 
+}
 
 #rating_version{
 width: 100px;

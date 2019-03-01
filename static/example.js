@@ -306,6 +306,7 @@ function exportTableToCSV(filename) {
     }
 
     // Download CSV file
+    /*var csv = new TableExport(document.getElementById("results"));*/
     downloadCSV(csv.join("\n"), filename);
 }
 
