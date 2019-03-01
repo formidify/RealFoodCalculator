@@ -644,7 +644,7 @@ def get_label(search):
 
 # get data for brand, label, item trio visualization
 @app.route("/visualization/brand_vendor_data", defaults = {'item': '', 'type': ''})
-@app.route("/visualization/brand_vendor_data/<item>+<type>")
+@app.route("/visualization/brand_vendor_data/<path:item>+<path:type>")
 def get_brand_vendor_data(item, type):
     yrs = get_all_years()
 
