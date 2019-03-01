@@ -282,8 +282,8 @@ function populateSavedItems(items){
           <a id="visualization_btn" href="#">Visualization</a>
       </nav>
     </div> -->
-    <h2>Adding Items to October 2018 with Rating Version 2</h2>
-   <button class="button" id = "EScancel" onclick="go_to_entry_session();"><- Go To Entry Session</button>
+    <h2>Adding Items to Current Entry Session</h2>
+   <button class="button" onclick="go_to_entry_session();">Go To Entry Session</button>
     <form action = "data_entry" method = "POST" id = "data-entry-form">
       <fieldset class = "firstTwoCols">
         <div class="col1">
@@ -486,29 +486,36 @@ function populateSavedItems(items){
 
     <h3>Past Entries</h3>
     <table>
+    <thead>
 	<tr>
         <th></th>
+        <th>Year</th>
+        <th>Month</th>
         <th>Description</th>
         <th>Category</th>
         <th>Product Code</th>
-        <th>Label/Brand</th>
+        <th>Label/ Brand</th>
         <th>Vendor</th>
         <th>Local</th>
-        <th>Local Description</th>
+        <th></th>
         <th>Fair</th>
-        <th>Fair Description</th>
+        <th></th>
         <th>Ecological</th>
-        <th>Ecological Description</th>
+        <th></th>
         <th>Humane</th>
-        <th>Humane Description</th>
+        <th></th>
         <th>Disqualifier</th>
-        <th>Disqualifier Description</th>
+        <th></th>
         <th>Notes</th>
         </tr>
+     </thead>
+     <tbody>
 	{% for item in result %}
         <tr>
         <td><button onclick="populateItem('{{item.description}}','{{item.category}}','{{item.productCode}}','{{item.brand}}','{{item.vendor}}','{{item.local}}','{{item.localDescription}}','{{item.fair}}','{{item.fairDescription}}','{{item.ecological}}','{{item.ecologicalDescription}}','{{item.humane}}','{{item.humaneDescription}}','{{item.disqualifier}}','{{item.disqualifierDescription}}','{{item.notes}}')">ADD</button></td>
-	<td onclick="populateForm('description','{{item.description}}')"> {{item.description}} </td>
+    <td> {{item.year}} </td>
+    <td> {{item.month}} </td> 	
+    <td onclick="populateForm('description','{{item.description}}')"> {{item.description}} </td>
     <td onclick="populateForm('category','{{item.category}}')"> {{item.category}} </td>
     <td onclick="populateForm('productCode','{{item.productCode}}')"> {{item.productCode}} </td>
     <td onclick="populateForm('brand','{{item.brand}}')"> {{item.brand}} </td>
@@ -526,6 +533,7 @@ function populateSavedItems(items){
     <td onclick="populateForm('notes','{{item.notes}}')"> {{item.notes}} </td>
         </tr>
 {% endfor %}
+    </tbody>
     </table>
 
 </body>
