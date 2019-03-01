@@ -651,6 +651,8 @@ def get_brand_vendor_data(item, type):
 
     if "'" in item:
         item = item.replace("'", "''")
+        item = item.strip()
+    
     # add individual items
     if type == 'item':
         # query for all labels
