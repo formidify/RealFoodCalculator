@@ -975,18 +975,22 @@ document.getElementById("increaseChart5").onclick = function(evt)
 <div>
     <a>Items to show:</a>
   <div class = "control" style = "display: inline-block">
-<select id = "num_items_percent" name="Show:" style = "width: 100%">
-  <option value="5">5</option>
-  <option value="10">10</option>
-  <option value="15">15</option>
-  <option value="20">20</option>
-</select>
+
+<div class="quantity buttons_added">
+  Showing
+  <input type="button" value="-" class="minus" onclick = "minusTime()">
+  <input type="number" step="1" min="0" max="" name="quantity" value="0" title="Qty" class="input-text qty text" size="4" pattern="" inputmode="" id = "showTime">
+  <input type="button" value="+" class="plus" onclick = "addTime()">
+  out of 
+  <input type="number" step="1" min="0" max="" name="quantity" value="0" title="Qty" class="input-text qty text" size="4" pattern="" inputmode="" id = "totalTime">
+</div>
+
 </div>
     <label for="add">Add by item:</label>
     <input id="add_time" type="text" name="text" list = "items_time" onkeyup = "searchItem()" autocomplete="off">
     <datalist id="items_time"></datalist>
     <input id = "submit_item_time" type="submit" value="submit" onclick = "addItemData()">
-<a> OR </a>
+<a> AND/OR </a>
 <a> Add by category: </a>
 <select id = "categoriesTime">
   <option disabled selected value> select an option </option>

@@ -78,7 +78,8 @@ fieldset {
     font-family: Delicious;
     font-size: 28px;
     text-align: center;
-    width: 400px;
+    width: 390px;
+    margin:10px;
 }
 
 #missionBackground{
@@ -125,6 +126,14 @@ div{
     background-color: #F5F5DC';
 }
 
+#urlLink{
+    text-decoration:none;
+    background-color: #FAFDFD;
+    color: black;
+    text-decoration: underline;
+    padding: 0px 128px 0px 0px;
+}
+
 h1{
     color:white;
     width:98%;
@@ -164,8 +173,9 @@ a{
     text-decoration: none;
     display: inline-block;
     white-space: nowrap;
-    /*border: 1px solid #cbf435;*/
     opacity:1;
+    border-top:1px solid white;
+    border-right:1px solid white;
 }
 
 a:hover{
