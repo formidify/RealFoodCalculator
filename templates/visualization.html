@@ -1367,10 +1367,10 @@ var ctx13 = document.getElementById("livChart4").getContext('2d');
 
 var ctx1x = [ctx10, ctx11, ctx12, ctx13]
 
-var myLivChart1 = new Chart(ctx10, {type: 'bar'});
-var myLivChart2 = new Chart(ctx11, {type: 'bar'});
-var myLivChart3 = new Chart(ctx12, {type: 'bar'});
-var myLivChart4 = new Chart(ctx13, {type: 'bar'});
+var myLivChart1 = new Chart(ctx10, {type: 'bar', options: {scales: {yAxes: [{ticks: {min: 0}}]}}});
+var myLivChart2 = new Chart(ctx11, {type: 'bar', options: {scales: {yAxes: [{ticks: {min: 0}}]}}});
+var myLivChart3 = new Chart(ctx12, {type: 'bar', options: {scales: {yAxes: [{ticks: {min: 0}}]}}});
+var myLivChart4 = new Chart(ctx13, {type: 'bar', options: {scales: {yAxes: [{ticks: {min: 0}}]}}});
 
 var LivCharts = [myLivChart1, myLivChart2, myLivChart3, myLivChart4]
 
