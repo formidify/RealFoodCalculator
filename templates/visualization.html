@@ -1596,7 +1596,7 @@ function addLivItem() {
 
   y = document.getElementById("item_liv").value;
 
-  searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/brand_vendor_data/" + x + "+item");
+  searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/brand_vendor_data/" + y + "+item");
 
   searches.done(function(results) {
     label_brand = results.label_brand
@@ -1663,7 +1663,7 @@ function addLivVendor() {
 
   y = document.getElementById("vendor_liv").value;
 
-  searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/brand_vendor_data/" + x + "+vendor");
+  searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/brand_vendor_data/" + y + "+vendor");
 
   searches.done(function(results) {
     label_brand = results.label_brand
@@ -1714,7 +1714,7 @@ function addLivLabel() {
 
   y = document.getElementById("label_liv").value;
 
-  searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/brand_vendor_data/" + x + "+brand");
+  searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/brand_vendor_data/" + y + "+brand");
 
   searches.done(function(results) {
     description = results.description
