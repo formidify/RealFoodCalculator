@@ -210,6 +210,33 @@ width:100px;
 width:100px;
 }
 
+button#EScancel{
+   border-radius:4px;
+}
+button#EScancel:hover{
+    background-color: #F1A19B;
+  border: 2px solid #F1A19B;
+   color:#ffffff; 
+box-shadow: 0 1px 2px 0 rgba(0,0,0,0.24), 0 2px 5px 0 rgba(0,0,0,0.19);
+}
+input#ESsubmit{
+   border-radius:4px;
+}
+input#ESsubmit:hover {
+   background-color: #8CD3BA;
+     border: 2px solid #8CD3BA; /* Green */
+   color:#ffffff;
+box-shadow: 0 1px 2px 0 rgba(0,0,0,0.24), 0 2px 5px 0 rgba(0,0,0,0.19);
+}
+button#ESenter{
+   border-radius:4px;
+}
+button#ESenter:hover{
+    background-color: #A3C1E5;
+    border: 2px solid #A3C1E5;
+    color: #ffffff;
+box-shadow: 0 1px 2px 0 rgba(0,0,0,0.24), 0 2px 5px 0 rgba(0,0,0,0.19);
+}
 .table{
 border: 1px solid black;
 }

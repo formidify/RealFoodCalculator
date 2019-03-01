@@ -88,6 +88,7 @@ function editButton(cur_row){
 
 function checkData(colNum, dataValue){
 	var catTypes = ["dairy", "baked", "beverages", "eggs", "grocery", "meat", "poultry", "produce", "fish", "tea or coffee"]; 
+	console.log("dataItem = " + dataValue);
 	if (colNum == 0){
 		//check if category is valid
 		if (!catTypes.includes(dataValue)){
@@ -104,23 +105,24 @@ function checkData(colNum, dataValue){
 	}
 	if (colNum == 6){
 		//check if cost is a number 
-		var floatVersion = parseFloat(dataItem);
+		var floatVersion = parseFloat(dataValue);
 		if (isNaN(floatVersion)){
 			window.alert("Invalid cost for entry");
 			return false;
 		}
 	}
-	if ((colNum == 7) || (colNum == 9) || (colNum == 11) || (colNum = 1)){ 
+	if (colNum == 7 || colNum == 9 || colNum == 11 || colNum == 15){ 
 		//for boolean values (except for humane)
 		dataValue = dataValue.toString();
-		if ((dataValue != 'true') &&  (dataValue != 'false')){
+		console.log(dataValue + "hi" + colNum + "=colnum");
+		if ((dataValue !== 'true') &&  (dataValue !== 'false')){
 			window.alert("Invalid true/false value for qualification");
 			return false;
 		}
 	}
 	if (colNum == 13){
 		dataValue = dataValue.toString();
-		if ((dataValue != 'true') && (dataValue != 'false') && (dataValue != 'N/A')){
+		if ((dataValue !== 'true') && (dataValue !== 'false') && (dataValue !== 'N/A')){
 			window.alert("Invalid input for humane status, please enter 'true', 'false', or 'N/A'")
 			return false;
 		}
@@ -283,10 +285,10 @@ function submitEntries(){
 
 <div>
  <input id="rating_version" name="rating_version" type="number" value="2.0" placeholder="2.0">
-<button class="button" onclick="go_to_data_entry();">Add New Item</button>
-<input type="submit" onclick="return submitEntries();" class="button" value="Submit All"/>
+<input type="submit" id = "ESsubmit" onclick="return submitEntries();" class="button" value="Submit All"/>
 </form>
-<button class="button" onclick="clearEntries(true);">Cancel Session</button>
+<button class="button" id = "ESenter" onclick="go_to_data_entry();">Add New Item</button>
+<button class="button" id = "EScancel" onclick="clearEntries(true);">Cancel Session</button>
 </div>
 </div>
 
