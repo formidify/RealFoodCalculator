@@ -9,21 +9,31 @@
  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
  <script>
 window.onload = function (){
-console.log(localStorage.getItem("savedEntry"));
-if (localStorage.getItem('savedEntry')!==null){
+//console.log(localStorage.getItem("savedEntry"));
+if (localStorage.getItem('savedEntry')!=""){
 var savedEntry = JSON.parse(localStorage.getItem('savedEntry'));
-if (savedEntry!= null){
 console.log("savedEntry:", savedEntry);
 populateSavedItems(savedEntry);
 localStorage["isSavedEntry"] = false;
 localStorage["savedEntry"] = {};
-  }
 }
 }
-    localStorage["foodData"] = [];
+
+
+if ((localStorage.getItem("entrySession") == '[]') || (localStorage.getItem("entrySession") == '')){
+    console.log("Entry Session is empty ");
     var initializeEntrySession = [];
-    localStorage["entrySession"] = initializeEntrySession;
-    //every time this page is reloaded foodData will be cleared
+    //localStorage["entrySession"] = initializeEntrySession;
+
+}else{
+    console.log("Entry Session is Not empty");
+    var initializeEntrySession = JSON.parse(localStorage.getItem("entrySession"));
+    console.log("Initialized Entry Session", initializeEntrySession);
+}
+
+
+   // var initializeEntrySession = [];
+    //localStorage["entrySession"] = initializeEntrySession;
 
     function toggleCheckbox(item){
          console.log("hi we're here");
@@ -174,7 +184,7 @@ if (invalid == true){
 
        // localStorage["foodData"] += "/" + JSON.stringify(thisEntry);
         initializeEntrySession.push(thisEntry);
-        localStorage.getItem('entrySession');
+        console.log("Entry Session", localStorage.getItem('entrySession'));
         localStorage.setItem('entrySession', JSON.stringify(initializeEntrySession));
         populateSavedItems(itemsToSave);
 } }
@@ -274,7 +284,7 @@ function populateSavedItems(items){
     </div> -->
     <h2>Adding Items to October 2018 with Rating Version 2</h2>
    <button class="button" onclick="go_to_entry_session();">Go To Entry Session</button>
-    <form action = "http://cmc307-06.mathcs.carleton.edu:2019/data_entry" method = "POST" id = "data-entry-form">
+    <form action = "data_entry" method = "POST" id = "data-entry-form">
       <fieldset class = "firstTwoCols">
         <div class="col1">
           <div>
@@ -296,14 +306,14 @@ function populateSavedItems(items){
               <option value="teacoffee">tea or coffee</option>
             </select>
           </div>
-          <div class="col1">
+          <div class="col2">
             <div class = "row1">
               <label for="vendor">Vendor</label>
               <input id="vendor-check" name="vendor-keep" type="checkbox">
             </div>
             <input id="vendor" name="vendor" type="text">
           </div>
-          <div class="col1">
+          <div class="col2">
             <div class = "row1">
               <label for="brand">Label/Brand</label>
               <input id="brand-check" name="brand-keep" type="checkbox">
@@ -311,10 +321,6 @@ function populateSavedItems(items){
             <input id="brand" name="brand" type="text">
           </div>
         </div>
-        <input type="submit" onclick="return searchMatches();" value="Search for Similar Items"/>
-        <!--<button type="button" id="clear-submit" onclick="submit()">Submit Item to Entry Session</button>
-          <button type="submit">Search</button>
-          <button type="button" id="clear-submit" onclick="submit()">Submit</button>-->
       </fieldset>
       <fieldset >
         <div class="col1">
@@ -343,7 +349,7 @@ function populateSavedItems(items){
             <label class = "row1" for="cost">Cost</label>
             <input id="cost" name="cost" type="number" step="any" placeholder="0.00">
           </div>
-        </div> <!--TODO :div wasn't originally here -->
+        </div>
       </fieldset>
 
       <fieldset id = "real-qualifications">
@@ -435,7 +441,7 @@ function populateSavedItems(items){
                 <label class="radio" for="humane">
                 <input id="humane-na" name="humane" type="radio" value="none" checked>Not Applicable</label>
               </div>
-            </div>  
+            </div>
             <select id="humaneDescription" name="humaneDescription">
               <option value="">Not Humane or Not an Animal Product</option>
               <option value="AGA Grasfed by American Grassfed Association (ruminants only)">AGA Grasfed by American Grassfed Association (ruminants only)</option>
@@ -471,6 +477,7 @@ function populateSavedItems(items){
               <option value="Ultra-Processed Foods">Ultra-Processed Food</option>
             </select>
           </div>
+          <input id = "searchSimItems" type="submit" onclick="return searchMatches();" value="Search for Similar Items"/>
         </div> <!-- TODO : added div here -->
       </fieldset>
       <!-- <input type="submit" onclick="return searchMatches();" value="Search for Similar Items"/> -->
