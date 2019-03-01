@@ -145,7 +145,12 @@ for (i = 0; i < 4; i++) {
             ticks: {
               autoSkip: false
             }
-          }]
+          }],
+          yAxes: [{
+                  ticks: {
+                    min: 0
+                  }
+              }]
       }
   }});
 
@@ -1367,10 +1372,10 @@ var ctx13 = document.getElementById("livChart4").getContext('2d');
 
 var ctx1x = [ctx10, ctx11, ctx12, ctx13]
 
-var myLivChart1 = new Chart(ctx10, {type: 'bar'});
-var myLivChart2 = new Chart(ctx11, {type: 'bar'});
-var myLivChart3 = new Chart(ctx12, {type: 'bar'});
-var myLivChart4 = new Chart(ctx13, {type: 'bar'});
+var myLivChart1 = new Chart(ctx10, {type: 'bar', options: {scales: {yAxes: [{ticks: {min: 0}}]}}});
+var myLivChart2 = new Chart(ctx11, {type: 'bar', options: {scales: {yAxes: [{ticks: {min: 0}}]}}});
+var myLivChart3 = new Chart(ctx12, {type: 'bar', options: {scales: {yAxes: [{ticks: {min: 0}}]}}});
+var myLivChart4 = new Chart(ctx13, {type: 'bar', options: {scales: {yAxes: [{ticks: {min: 0}}]}}});
 
 var LivCharts = [myLivChart1, myLivChart2, myLivChart3, myLivChart4]
 
@@ -1591,7 +1596,7 @@ function addLivItem() {
 
   y = document.getElementById("item_liv").value;
 
-  searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/brand_vendor_data/" + x + "+item");
+  searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/brand_vendor_data/" + y + "+item");
 
   searches.done(function(results) {
     label_brand = results.label_brand
@@ -1658,7 +1663,7 @@ function addLivVendor() {
 
   y = document.getElementById("vendor_liv").value;
 
-  searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/brand_vendor_data/" + x + "+vendor");
+  searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/brand_vendor_data/" + y + "+vendor");
 
   searches.done(function(results) {
     label_brand = results.label_brand
@@ -1709,7 +1714,7 @@ function addLivLabel() {
 
   y = document.getElementById("label_liv").value;
 
-  searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/brand_vendor_data/" + x + "+brand");
+  searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/brand_vendor_data/" + y + "+brand");
 
   searches.done(function(results) {
     description = results.description
