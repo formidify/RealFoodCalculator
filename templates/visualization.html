@@ -1484,7 +1484,7 @@ function addTime() {
 function clearCanvasTime() {
 current = JSON.parse(sessionStorage.timeCurrent)
 for (t = 0; t < current.length; t++) {
-  remove_item_time(current[t])
+  remove_item_time(" " + current[t])
 }
 remove_cat_time()
 
