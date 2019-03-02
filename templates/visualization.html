@@ -1371,15 +1371,13 @@ function remove_cat_time() {
 
   total_configs = removeElements(["real " + item, "total " + item], JSON.parse(sessionStorage.timeConfigs))
 
+  }
   myLineChart.update();
-
-
   sessionStorage.setItem("timeCurrCat", JSON.stringify([]));
   sessionStorage.setItem("timeNotCat", JSON.stringify([]));
   sessionStorage.setItem("timeConfigs", JSON.stringify(total_configs));
   sessionStorage.setItem("timeChartLabels", JSON.stringify(timeChartLabels));
   sessionStorage.setItem("currentTimeCat", "");
-  }
 }
 
 function clearCanvasTime() {
