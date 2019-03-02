@@ -1293,13 +1293,13 @@ function remove_item_time(item) {
   index = sessionStorage.timeChartLabels.indexOf("total " + item)
   myLineChart.data.datasets.splice(index, 1);
 
-  total_configs = removeElements(["real " + item, "total " + item], sessionStorage.timeConfigs)
+  total_configs = removeElements(["real " + item, "total " + item], JSON.parse(sessionStorage.timeConfigs))
 
   myLineChart.update();
 
 
   sessionStorage.setItem("timeCurrent", JSON.stringify(removeElements([item], sessionStorage.timeCurrent)));
-  sessionStorage.setItem("timeConfigs", JSON.stringify(total_configs));
+  sessionStorage.setItem("timeConfigs", JSON.stringify(JSON.parse(total_configs)));
 }
 
 function remove_cat_time() {
