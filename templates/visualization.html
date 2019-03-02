@@ -1472,6 +1472,7 @@ function addTime() {
 
   check.splice(0, 1)
   sessionStorage.setItem("timeCurrCat", JSON.stringify(past.concat([item])));
+  console.log(past.concat([item]))
   sessionStorage.setItem("timeNotCat", JSON.stringify(check));
   }
 }
