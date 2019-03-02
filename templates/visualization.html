@@ -1230,8 +1230,10 @@ $('#buttons_time').append('<button class="btnic" id = "time_' + y + '" onclick =
 
 function addCatData() {
   cat = $("select#categoriesTime").val();
+  if (sessionStorage.currentTimeCat != "") { 
+      remove_cat_time();
+    }
   if (sessionStorage.currentTimeCat != cat) {
-  remove_cat_time();
   curr = []
   not = []
   searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/get_categories_time/" + cat);
