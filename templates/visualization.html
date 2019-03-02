@@ -1306,7 +1306,7 @@ function remove_item_time(item) {
 
   item_id = "time_" + item
   el = document.getElementById(item_id);
-  el.remove()
+  el.parentNode.removeChild(el);
 
 }
 
