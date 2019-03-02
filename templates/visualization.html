@@ -1396,6 +1396,7 @@ function minusTime() {
   check = JSON.parse(sessionStorage.timeCurrCat)
   if (check.length > 0) { 
   $("#showTime").html($("#showTime").html() - 1)
+  timeChartLabels = JSON.parse(sessionStorage.timeChartLabels)
   item = check[check.length - 1]
   index = timeChartLabels.indexOf(item) + 2
   myLineChart.data.datasets.splice(index, 1);
