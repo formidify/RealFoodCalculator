@@ -1188,13 +1188,13 @@ function addItemData() {
 
       if (updatedTimeColumn) {
         updatedTimeColumn = false;
-        var head_item = table.columns(0).header();
+        var head_item = table.columns(2).header();
         $(head_item).html(results.yrs[0]);
 
-        var head_item = table.columns(1).header();
+        var head_item = table.columns(3).header();
         $(head_item).html(results.yrs[1]);
 
-        var head_item = table.columns(2).header();
+        var head_item = table.columns(4).header();
         $(head_item).html(results.yrs[2]);
       }
       //datasets = []
@@ -1219,6 +1219,7 @@ total_configs = JSON.parse(sessionStorage.timeConfigs)
             line.borderDash = [10, 5]
         }
         myLineChart.data.datasets.push(line)
+        table.row.add([y, types[j], cost[j][0], cost[j][1], cost[j][2]]).draw(false)
     }
 // console.log(datasets.toString())
 // add legend for each item
@@ -1279,13 +1280,13 @@ function addCatData() {
     // update column years
           if (updatedTimeColumn) {
         updatedTimeColumn = false;
-        var head_item = table.columns(0).header();
+        var head_item = table.columns(2).header();
         $(head_item).html(results.yrs[0]);
 
-        var head_item = table.columns(1).header();
+        var head_item = table.columns(3).header();
         $(head_item).html(results.yrs[1]);
 
-        var head_item = table.columns(2).header();
+        var head_item = table.columns(4).header();
         $(head_item).html(results.yrs[2]);
       }
 
@@ -1313,6 +1314,7 @@ function addCatData() {
             line.borderDash = [10, 5]
         }
         myLineChart.data.datasets.push(line)
+        table.row.add([items[i], types[j], cost[j][i][0], cost[j][i][1], cost[j][i][2]]).draw(false)
     }
     // legend line
     line = {}
