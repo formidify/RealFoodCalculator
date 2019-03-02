@@ -1398,6 +1398,12 @@ function remove_cat_time() {
 }
 
 function clearCanvasTime() {
+current = JSON.parse(sessionStorage.timeCurrent)
+for (t = 0; t < current.length; t++) {
+  remove_item_time(current[t])
+}
+remove_cat_time()
+
 sessionStorage.setItem("currentTimeCat", "") // current investigated category
 sessionStorage.setItem("timeSearch", JSON.stringify([])); // previous searches
 sessionStorage.setItem("timeCurrent", JSON.stringify([])); // current items added
@@ -1407,8 +1413,6 @@ sessionStorage.setItem("timeChartLabels", JSON.stringify([])); // labels
 sessionStorage.setItem("timeCurrCat", JSON.stringify([]));
 sessionStorage.setItem("timeNotCat", JSON.stringify([])); 
 
-myLineChart.destroy();
-initializeTimeChart();
 }
 </script>
 
