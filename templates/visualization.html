@@ -988,6 +988,7 @@ document.getElementById("increaseChart5").onclick = function(evt)
   
 </div>
 
+<div>
     <label for="add">Add by item:</label>
     <input id="add_time" type="text" name="text" list = "items_time" onkeyup = "searchItem()" autocomplete="off">
     <datalist id="items_time"></datalist>
@@ -1000,7 +1001,14 @@ document.getElementById("increaseChart5").onclick = function(evt)
 <input id = "submit_cat_time" type="submit" value="submit" onclick = "addCatData()">
 </div>
 
+<div>
+  Remove: 
+<button class="btnic" id = "canvas_time"><i class="fa fa-close"></i> Remove all canvas</button>
+<button class="btnic" id = "remove_cat_time"><i class="fa fa-close"></i> Remove selected category</button>
 <button class="btnic"><i class="fa fa-close"></i> chocolate</button>
+
+</div>
+</div>
 
 <div class="row">
   <div class="column" style = "width: 60%; height: 25%;  float: left">
