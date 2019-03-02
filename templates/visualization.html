@@ -17,6 +17,11 @@
         <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
+        <!-- add datatables buttons functionality -->
+        <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.3.1/js/dataTables.buttons.min.js"></script> 
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+        <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.3.1/js/buttons.html5.min.js"></script>
+
     </head>
 <body>
 
@@ -1174,9 +1179,7 @@ myLineChart = new Chart(ctx5, {data: lineChartData,
 var table;
 $(document).ready(function(){table = $('#time_table').DataTable({
         dom: 'Bfrtip',
-        buttons: [
-            'copy', 'csv', 'excel'
-        ]
+        buttons: ['copy', 'csv', 'excel']
     }); });
 
 // add single item to the time series chart
@@ -1554,7 +1557,8 @@ current = JSON.parse(sessionStorage.timeCurrent)
 for (t = 0; t < current.length; t++) {
   remove_item_time(" " + current[t])
 }
-remove_cat_time()
+remove_cat_time();
+table.rows.clear();
 
 sessionStorage.setItem("currentTimeCat", "") // current investigated category
 sessionStorage.setItem("timeSearch", JSON.stringify([])); // previous searches
