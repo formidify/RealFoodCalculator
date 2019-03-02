@@ -18,9 +18,11 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
         <!-- add datatables buttons functionality -->
-        <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.3.1/js/dataTables.buttons.min.js"></script> 
+        <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.3.1/js/dataTables.buttons.min.js"></script>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
         <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.3.1/js/buttons.html5.min.js"></script>
+        <link rel="shortcut icon" href="../static/favicon.ico" type="image/x-icon">
+        <link rel="icon" href="../static/favicon.ico" type="image/x-icon">
 
     </head>
 <body>
@@ -126,7 +128,7 @@ Chart.DatasetController.extend({
     }
 });
 
-divs = ["realCatChart", "nonCatChart", "realItemChart", "nonItemChart", 
+divs = ["realCatChart", "nonCatChart", "realItemChart", "nonItemChart",
         "realVendChart", "nonVendChart", "realBrandChart", "nonBrandChart"]
 
 groups = ['category', 'description', 'vendor', 'label_brand']
@@ -194,7 +196,7 @@ for (i = 0; i < 4; i++) {
 
 
 <h1>Real vs non-real percentage</h1>
-  
+
 <div style = "display: block">
 <a>First, choose a year:</a>
 <select id = "yearPercent" name="Show:" style = "width: 22%">
@@ -208,7 +210,7 @@ for (i = 0; i < 4; i++) {
   <div id = "showPercent" style = "display: inline">0</div>
   <input type="button" value="+" class="plus" onclick = "addPercent()">
   out of <div id = "allPercent" style = "display: inline">0</div> of the selected category
-  
+
 </div>
 
 
@@ -236,7 +238,7 @@ for (i = 0; i < 4; i++) {
 </div>
 
 <div>
-  Remove: 
+  Remove:
 <button class="btnic" id = "canvas_time" onclick = "clearCanvasPercent()"><i class="fa fa-close"></i> Remove all canvas</button>
 <button class="btnic" id = "remove_cat_time" onclick = "remove_cat_percent()"><i class="fa fa-close"></i> Remove selected category</button>
 <div style = "display:inline" id = "buttons_percent"></div>
@@ -894,7 +896,7 @@ document.getElementById("increaseChart5").onclick = function(evt)
   <div id = "showTime" style = "display: inline">0</div>
   <input type="button" value="+" class="plus" onclick = "addTime()">
   out of <div id = "allTime" style = "display: inline">0</div> of the selected category
-  
+
 </div>
 
 <div>
@@ -911,7 +913,7 @@ document.getElementById("increaseChart5").onclick = function(evt)
 </div>
 
 <div>
-  Remove: 
+  Remove:
 <button class="btnic" id = "canvas_time" onclick = "clearCanvasTime()"><i class="fa fa-close"></i> Remove all canvas</button>
 <button class="btnic" id = "remove_cat_time" onclick = "remove_cat_time()"><i class="fa fa-close"></i> Remove selected category</button>
 <div style = "display:inline" id = "buttons_time"></div>
@@ -950,7 +952,7 @@ function removeElements(e, l) {
     l.splice(index, 1)
   }
   return l
-} 
+}
 // Hash any string into an integer value
 // Then we'll use the int and convert to hex.
 function hashCode(str) {
@@ -968,7 +970,7 @@ function intToARGB(i) {
             ((i>>16)&0xFF).toString(16) +
             ((i>>8)&0xFF).toString(16) +
             (i&0xFF).toString(16);
-    // Sometimes the string returned will be too short so we 
+    // Sometimes the string returned will be too short so we
     // add zeros to pad it out, which later get removed if
     // the length is greater than six.
     hex += '000000';
@@ -1008,7 +1010,7 @@ sessionStorage.setItem("timeConfigs", JSON.stringify([])); // different configur
 sessionStorage.setItem("timeChartLabels", JSON.stringify([])); // labels
 
 sessionStorage.setItem("timeCurrCat", JSON.stringify([]));
-sessionStorage.setItem("timeNotCat", JSON.stringify([])); 
+sessionStorage.setItem("timeNotCat", JSON.stringify([]));
 
 function searchItem() {
   x = document.getElementById("add_time").value;
@@ -1169,7 +1171,7 @@ $('#buttons_time').append('<button class="btnic" id = "time_' + y + '" onclick =
 
 function addCatData() {
   cat = $("select#categoriesTime").val();
-  if (sessionStorage.currentTimeCat != "" && sessionStorage.currentTimeCat != cat) { 
+  if (sessionStorage.currentTimeCat != "" && sessionStorage.currentTimeCat != cat) {
       remove_cat_time();
     }
   if (sessionStorage.currentTimeCat != cat) {
@@ -1250,7 +1252,7 @@ function addCatData() {
 
   for (k = num_items; k < items.length; k++) {
     not.push(items[k])
-  } 
+  }
 
 
   myLineChart.update();
@@ -1366,7 +1368,7 @@ function remove_cat_time() {
 function minusTime() {
   if (sessionStorage.currentTimeCat == "") {return;}
   check = JSON.parse(sessionStorage.timeCurrCat)
-  if (check.length > 0) { 
+  if (check.length > 0) {
   $("#showTime").html(parseInt($("#showTime").html()) - 1)
   timeChartLabels = JSON.parse(sessionStorage.timeChartLabels)
   total_configs = JSON.parse(sessionStorage.timeConfigs)
@@ -1471,7 +1473,7 @@ sessionStorage.setItem("timeConfigs", JSON.stringify([])); // different configur
 sessionStorage.setItem("timeChartLabels", JSON.stringify([])); // labels
 
 sessionStorage.setItem("timeCurrCat", JSON.stringify([]));
-sessionStorage.setItem("timeNotCat", JSON.stringify([])); 
+sessionStorage.setItem("timeNotCat", JSON.stringify([]));
 
 }
 </script>
@@ -1675,7 +1677,7 @@ function searchLivLabel() {
     }});
 }
 }
-var real_color = "rgba(99,132,255," 
+var real_color = "rgba(99,132,255,"
 var nonreal_color = "rgba(255,99,132,"
 var year_offset = ["0.2)", "0.6)", "1.0)"]
 
