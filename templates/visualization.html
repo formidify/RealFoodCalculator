@@ -1393,11 +1393,13 @@ function remove_cat_time() {
 }
 
 function minusTime() {
+  if (sessionStorage.currentTimeCat == "") {return;}
   check = JSON.parse(sessionStorage.timeCurrCat)
   if (check.length > 0) { 
   $("#showTime").html(parseInt($("#showTime").html()) - 1)
   timeChartLabels = JSON.parse(sessionStorage.timeChartLabels)
   item = check[check.length - 1]
+
   index = timeChartLabels.indexOf(item) + 2
   myLineChart.data.datasets.splice(index, 1);
   timeChartLabels = removeElements([item], timeChartLabels)
@@ -1415,6 +1417,8 @@ function minusTime() {
   total_configs = removeElements(["real " + item, "total " + item], JSON.parse(sessionStorage.timeConfigs))
   myLineChart.update();
 
+  console.log(timeChartLabels)
+
   sessionStorage.setItem("timeConfigs", JSON.stringify(total_configs));
   sessionStorage.setItem("timeChartLabels", JSON.stringify(timeChartLabels));
 
@@ -1426,6 +1430,7 @@ function minusTime() {
 }
 
 function addTime() {
+  if (sessionStorage.currentTimeCat == "") {return;}
   check = JSON.parse(sessionStorage.timeNotCat)
   $("#showTime").html(parseInt($("#showTime").html()) + 1)
   if (check.length > 0) {
