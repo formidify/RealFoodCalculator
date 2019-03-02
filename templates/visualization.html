@@ -1419,8 +1419,8 @@ function minusTime() {
   sessionStorage.setItem("timeChartLabels", JSON.stringify(timeChartLabels));
 
   check.splice(check.length-1, 1)
-  sessionStorage.setItem("timeCurrCat", check);
-  sessionStorage.setItem("timeNotCat", [item].concat(JSON.parse(sessionStorage.timeNotCat)));
+  sessionStorage.setItem("timeCurrCat", JSON.stringify(check));
+  sessionStorage.setItem("timeNotCat", JSON.stringify([item].concat(JSON.parse(sessionStorage.timeNotCat))));
 
 }
 }
