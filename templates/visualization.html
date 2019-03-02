@@ -1330,7 +1330,7 @@ function addCatData() {
   }
 
   // add data to table
-  for (i = 0; i < num_items; i++) {
+  for (i = 0; i < results.item.length; i++) {
     for (j = 0; j < types.length; j++) {
       table.row.add([items[i], types[j], cost[j][i][0], cost[j][i][1], cost[j][i][2]]).draw(false)
     }
@@ -1389,8 +1389,7 @@ function remove_item_time(item) {
   console.log(item_id)
   $(item_id).remove()
 
-  table
-    .rows( function ( idx, data, node ) {
+  table.rows( function ( idx, data, node ) {
         return data[0] === item;
     } )
     .remove()
@@ -1428,14 +1427,18 @@ function remove_cat_time() {
   total_configs = removeElements(["real " + item, "total " + item], JSON.parse(sessionStorage.timeConfigs))
   sessionStorage.setItem("timeConfigs", JSON.stringify(total_configs));
 
-    table
-    .rows( function ( idx, data, node ) {
-        return data[0] === item;
+  }
+
+
+  total = curr.concat(JSON.parse(sessionStorage.timeNotCat))
+  for (z = 0; z < total.length; z++) {
+    table.rows( function ( idx, data, node ) {
+        return data[0] === total[z];
     } )
     .remove()
     .draw();
-    
   }
+  
   myLineChart.update();
   sessionStorage.setItem("timeCurrCat", JSON.stringify([]));
   sessionStorage.setItem("timeNotCat", JSON.stringify([]));
