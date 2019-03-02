@@ -269,6 +269,25 @@ def get_all_years():
 
     return [2018, 2017, 2016]
 
+# get bar data for vis page
+@app.route("/visualization/recent_years")
+def get_recent_years():
+    yrs = []
+
+    yr_query = """SELECT DISTINCT ON (year) year FROM test_data_large ORDER BY year DESC;"""
+
+    connection = get_connection()
+    if connection is not None:
+        try:
+            # either this or minimum items allowed to show
+            for row in get_select_query_results(connection, yr_query):
+                yrs.append(row[0])
+        except Exception as e:
+            print(e)
+        connection.close()
+
+    return flask.jsonify({"yrs": [2018, 2017, 2016]})
+
 # get data for quick charts
 @app.route("/visualization/quick_data")
 def get_quick_data():
@@ -508,8 +527,8 @@ def get_item_time(yrs, item):
 
 # get time series data for vis page (by category)
 # NOTE: items where all four categories (local, ecological, fair, humane) are null will not be included in the calculation
-@app.route("/visualization/item_data", defaults = {'item': '', 'type': ''})
-@app.route("/visualization/item_data/<path:item>+<path:type>")
+@app.route("/visualization/item_data", defaults = {'item': '', 'type': '', 'year': ''})
+@app.route("/visualization/item_data/<path:item>+<path:type>+<path:year>")
 def get_item_data(item, type):
 
     # add item for percent chart
@@ -519,10 +538,6 @@ def get_item_data(item, type):
 
     # add item for hypothetical increase chart
     if type == 'increase':
-        return
-
-    # add item for item/label/vendor chart
-    if type == 'liv':
         return
 
     # add single item for one year
