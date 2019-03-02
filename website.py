@@ -29,7 +29,6 @@ def entrySession():
     labels = ['category','vendor', 'brand','description','notes','productCode', 'cost','local','localDescription', 'fair', 'fairDescription','ecological','ecologicalDescription','humane','humaneDescription','disqualifier','disqualifierDescription']
     api_url = 'http://cmc307-06.mathcs.carleton.edu:5001/add_entry?'
     if request.method == 'POST':
-        print("in post")
         result = request.form
         for key, value in result.items():
             if (key == 'entrySessionData') and (value != '[]') and (value != ''):
@@ -38,15 +37,11 @@ def entrySession():
                      api_url_item = api_url
                      index = 0
                      for category in item:
-                         #index = item.index(category)
                          print("Index", index)
                          if category == '':
                              category = 'NONE'
-                         print("labels[index]", labels[index], category)
-                         print("type of category: ", type(category))
                          if isinstance(category, str):
                              category=category.replace("#","%23")
-                             print("Replaced pound:", category)
                          api_url_item += (labels[index] + '=' + str(category) + '&')
                          index += 1
                      api_url_item += ('month='+result['month']+'&')
@@ -54,7 +49,6 @@ def entrySession():
                      api_url_item += ('rating_version='+result['rating_version'])
                      r = requests.get(api_url_item)
                      print("API URL IN WEBSITE:", api_url_item)
-                     print(r)
 
     return render_template('entry_session.html')
 

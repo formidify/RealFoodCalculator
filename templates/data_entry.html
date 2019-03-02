@@ -22,7 +22,7 @@ var savedEntry = JSON.parse(localStorage.getItem('savedEntry'));
   }
 }
 
-
+/*
 if ((localStorage.getItem("entrySession") == '[]') || (localStorage.getItem("entrySession") == '')){
     console.log("Entry Session is empty ");
     var initializeEntrySession = [];
@@ -33,7 +33,18 @@ if ((localStorage.getItem("entrySession") == '[]') || (localStorage.getItem("ent
     var initializeEntrySession = JSON.parse(localStorage.getItem("entrySession"));
     console.log("Initialized Entry Session", initializeEntrySession);
 }
+*/
 
+if(localStorage.getItem("entrySession")){
+console.log("Entry Session is Not empty");
+    var initializeEntrySession = JSON.parse(localStorage.getItem("entrySession"));
+    console.log("Initialized Entry Session", initializeEntrySession);
+}else{
+
+    console.log("Entry Session is empty ");
+    var initializeEntrySession = [];
+
+}
 
    // var initializeEntrySession = [];
     //localStorage["entrySession"] = initializeEntrySession;
@@ -185,6 +196,7 @@ if (invalid == true){
         thisEntry.push(document.getElementById('disqualifierDescription').value);
 
 
+        console.log("This Entry", thisEntry);
        // localStorage["foodData"] += "/" + JSON.stringify(thisEntry);
         initializeEntrySession.push(thisEntry);
         console.log("Entry Session", localStorage.getItem('entrySession'));

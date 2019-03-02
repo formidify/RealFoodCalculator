@@ -12,10 +12,15 @@
    <link rel="icon" href="..static/favicon.ico" type="image/x-icon">
 </head>
 <script>
+window.onload = function (){
+    if (localStorage.getItem('entrySession')){
 var entrySessionString = localStorage.getItem('entrySession');
 var entrySession = JSON.parse(localStorage.getItem('entrySession'));
 
-window.onload = function (){
+
+}else{
+ var entrySession = [];
+}
     var results = document.getElementById("sessionTable");
     var rowNum = 0;
     var totalCost = 0;
@@ -58,13 +63,13 @@ function clearEntries(alert){
 	if (!alert){
 		console.log("Clearing Entries");
 		entrySession = [];
-		localStorage.setItem('entrySession', '[]');
+		localStorage.removeItem('entrySession');
 		location.reload();
 	}else{
 		if (window.confirm("Are you sure you want to clear all entries?")){
    			console.log("Clearing Entries");
 			entrySession = [];
-   			localStorage.setItem('entrySession', '[]');
+   			localStorage.removeItem('entrySession');
    			location.reload();
 		}
 	}
