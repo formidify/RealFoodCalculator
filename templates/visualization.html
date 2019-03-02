@@ -1299,11 +1299,9 @@ function remove_item_time(item) {
   myLineChart.data.datasets.splice(index, 1);
   timeChartLabels = removeElements(["total " + item], timeChartLabels)
 
-  console.log(timeChartLabels)
+  console.log(myLineChart.data.datasets)
 
   total_configs = removeElements(["real " + item, "total " + item], JSON.parse(sessionStorage.timeConfigs))
-
-  console.log(total_configs)
 
   myLineChart.update();
 
