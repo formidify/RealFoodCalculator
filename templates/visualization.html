@@ -1116,12 +1116,19 @@ function searchItem() {
     }});
 }
 };
+var total_configs = JSON.parse(sessionStorage.timeConfigs)
 
 Chart.defaults.global.plugins.datalabels.display = false;
 
+
  types = ['total', 'real']
  dashes = [[0, 0], [10, 5]]
+var ctx5 = document.getElementById("timeSeriesChart").getContext('2d');
+var myLineChart;
 
+initializeTimeChart();
+
+function initializeTimeChart() {
  lineChartData = {}
  lineChartData.datasets = []
 // add legend for real vs non real
@@ -1139,9 +1146,7 @@ for (i = 0; i < types.length; i++) {
     lineChartData.datasets.push(line)
 }
 
-var total_configs = JSON.parse(sessionStorage.timeConfigs)
-var ctx5 = document.getElementById("timeSeriesChart").getContext('2d');
-var myLineChart;
+ctx5 = document.getElementById("timeSeriesChart").getContext('2d');
 myLineChart = new Chart(ctx5, {data: lineChartData,
     type: 'line',
     options: {scales: {yAxes:[{scaleLabel: {display: true, labelString: "Dollar purchases ($)"}, ticks: {min: 0}}]},
@@ -1159,6 +1164,7 @@ myLineChart = new Chart(ctx5, {data: lineChartData,
               maintainAspectRatio: false
   }
 });
+}
 
 // add single item to the time series chart
 function addItemData() {
@@ -1358,6 +1364,7 @@ function remove_cat_time() {
   console.log(timeChartLabels)
   for (i = 0; i < curr.length; i++) {
     item = curr[i]
+    console.log(item)
 // remove legend data
   index = timeChartLabels.indexOf(item) + 2
   myLineChart.data.datasets.splice(index, 1);
@@ -1395,7 +1402,8 @@ sessionStorage.setItem("timeChartLabels", JSON.stringify([])); // labels
 sessionStorage.setItem("timeCurrCat", JSON.stringify([]));
 sessionStorage.setItem("timeNotCat", JSON.stringify([])); 
 
-myLineChart.clear();
+myLineChart.destroy();
+initializeTimeChart();
 }
 </script>
 
