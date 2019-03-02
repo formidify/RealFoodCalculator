@@ -1003,8 +1003,8 @@ document.getElementById("increaseChart5").onclick = function(evt)
 
 <div>
   Remove: 
-<button class="btnic" id = "canvas_time"><i class="fa fa-close"></i> Remove all canvas</button>
-<button class="btnic" id = "remove_cat_time"><i class="fa fa-close"></i> Remove selected category</button>
+<button class="btnic" id = "canvas_time" onclick = "clearCanvasTime()"><i class="fa fa-close"></i> Remove all canvas</button>
+<button class="btnic" id = "remove_cat_time" onclick = "remove_cat_time()"><i class="fa fa-close"></i> Remove selected category</button>
 <div style = "display:inline" id = "buttons_time"></div>
 </div>
 </div>
@@ -1382,7 +1382,7 @@ function remove_cat_time() {
   }
 }
 
-function clearCanvas() {
+function clearCanvasTime() {
 sessionStorage.setItem("currentTimeCat", "") // current investigated category
 sessionStorage.setItem("timeSearch", JSON.stringify([])); // previous searches
 sessionStorage.setItem("timeCurrent", JSON.stringify([])); // current items added
