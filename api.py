@@ -308,9 +308,12 @@ def delete_entry():
     else:
        disqualifier = ""
     query = """
-        DELETE TOP 1
+        DELETE
         FROM test_data_large
-        WHERE   {0}
+        WHERE test_data_large.month
+        IN( SELECT test_data_large.month
+            FROM test_data_large
+            WHERE {0}
                 lower(test_data_large.description) LIKE '%{1}%'
                 AND lower(test_data_large.category) LIKE '%{2}%'
                 AND lower(test_data_large.product_code) LIKE '{3}'
@@ -327,7 +330,8 @@ def delete_entry():
                 AND lower(test_data_large.ecological_description) LIKE lower( '%{14}%')
                 AND lower(test_data_large.humane_description) LIKE lower('%{15}%')
                 AND lower(test_data_large.disqualifier_description) LIKE lower('%{16}%')
-        ORDER BY test_data_large.label_brand
+                LIMIT 1
+        )
         """.format(month, description, category, productCode, brand, vendor, notes, local,
         fair, ecological, humane, disqualifier, localDescription, fairDescription,
         ecologicalDescription,humaneDescription, disqualifierDescription)
