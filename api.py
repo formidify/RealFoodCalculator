@@ -332,7 +332,7 @@ def delete_entry():
         fair, ecological, humane, disqualifier, localDescription, fairDescription,
         ecologicalDescription,humaneDescription, disqualifierDescription)
     if connection is not None:
-        get_select_query_results(connection, query, parameters)
+        get_select_query_results(connection, query)
         connection.commit()
         connection.close()
         return "Stub Function: Deleted Entry"
