@@ -1172,7 +1172,12 @@ myLineChart = new Chart(ctx5, {data: lineChartData,
 });
 
 var table;
-$(document).ready(function(){table = $('#time_table').DataTable(); });
+$(document).ready(function(){table = $('#time_table').DataTable({
+        dom: 'Bfrtip',
+        buttons: [
+            'copy', 'csv', 'excel'
+        ]
+    }); });
 
 // add single item to the time series chart
 function addItemData() {
