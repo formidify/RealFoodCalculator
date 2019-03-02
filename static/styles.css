@@ -254,6 +254,7 @@ input#ESsubmit:hover {
 button#ESenter{
     border-radius:4px;
     cursor:pointer;
+    margin-bottom: 10px;
 }
 button#ESenter:hover{
     background-color: #A3C1E5;
@@ -269,6 +270,7 @@ button#ESenter:hover{
 table {
   /*table-layout: fixed*/
   width: 100%;
+  margin-top:15px;
   border-collapse: collapse;
 }
 /* Month, Year, Add Button */
@@ -356,6 +358,7 @@ td:hover {font-weight: bold;}
 
 #sessionTable thead th:nth-child(1), th:nth-child(2), th:nth-child(3),th:nth-child(6), th:nth-child(7){
 width: 8%;
+margin-top: 50px;
 }
 /* Category, Label/Brand, Vendor  */
 #sessionTable thead th:nth-child(1){
