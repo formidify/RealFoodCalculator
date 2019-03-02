@@ -333,12 +333,7 @@ function searchItemPercent() {
 }
 };
 
-   real_color = Array(items.length).fill('rgba(255, 99, 132, 0.2)')
-   nonreal_color = Array(items.length).fill('rgba(255, 159, 64, 0.2)')
-
-   real_border_color = Array(items.length).fill('rgba(255,99,132,1)')
-   nonreal_border_color = Array(items.length).fill('rgba(255, 159, 64, 1)')
-
+// initialize my bar chart
 var myBarChart;
   ctx2 = document.getElementById("percentChart").getContext('2d');
   myBarChart = new Chart(ctx2, {
@@ -346,16 +341,12 @@ var myBarChart;
       datasets: [{
           label: "real",
           data: [],
-          borderWidth: 2,
-          backgroundColor: real_color,
-          borderColor: real_border_color
+          borderWidth: 2
       },
       {
           label: "non-real",
           data: [],
-          borderWidth: 2,
-          backgroundColor: nonreal_color,
-          borderColor: nonreal_border_color
+          borderWidth: 2
         }
       ],
       // These labels appear in the legend and in the tooltips when hovering different arcs
@@ -403,7 +394,13 @@ function addItemDataPercent() {
 
       //datasets = []
       myBarChart.data.datasets[0].data.push(data[1])
+      myBarChart.data.datasets[0].backgroundColor.push('rgba(255, 99, 132, 0.2)')
+      myBarChart.data.datasets[0].borderColor.push('rgba(255, 99, 132, 1)')
+
       myBarChart.data.datasets[1].data.push(data[2])
+      myBarChart.data.datasets[1].backgroundColor.push('rgba(255, 159, 64, 0.2)')
+      myBarChart.data.datasets[1].borderColor.push('rgba(255, 159, 64, 1)')
+
       myBarChart.data.labels.push(data[0])
 
 
