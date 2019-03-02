@@ -1392,6 +1392,41 @@ function remove_cat_time() {
   $("#allTime").html(0)
 }
 
+function minusTime() {
+  check = JSON.parse(sessionStorage.timeCurrCat)
+  if (check.length > 0) { 
+  $("#showTime").html(0) = $("#showTime").html() - 1
+  item = check[check.length - 1]
+  index = timeChartLabels.indexOf(item) + 2
+  myLineChart.data.datasets.splice(index, 1);
+  timeChartLabels = removeElements([item], timeChartLabels)
+
+  // remove real data
+  index = timeChartLabels.indexOf("real " + item) + 2
+  myLineChart.data.datasets.splice(index, 1);
+  timeChartLabels = removeElements(["real " + item], timeChartLabels)
+
+  // remove total data in chart
+  index = timeChartLabels.indexOf("total " + item) + 2
+  myLineChart.data.datasets.splice(index, 1);
+  timeChartLabels = removeElements(["total " + item], timeChartLabels)
+
+  total_configs = removeElements(["real " + item, "total " + item], JSON.parse(sessionStorage.timeConfigs))
+  myLineChart.update();
+
+  sessionStorage.setItem("timeConfigs", JSON.stringify(total_configs));
+  sessionStorage.setItem("timeChartLabels", JSON.stringify(timeChartLabels));
+
+  check.splice(check.length-1, 1)
+  sessionStorage.setItem("timeCurrCat", check);
+  sessionStorage.setItem("timeNotCat", [item].concat(JSON.parse(sessionStorage.timeNotCat)));
+
+}
+}
+
+function addTime() {
+  $("#showTime").html(0) = $("#showTime").html() + 1
+}
 function clearCanvasTime() {
 current = JSON.parse(sessionStorage.timeCurrent)
 for (t = 0; t < current.length; t++) {
