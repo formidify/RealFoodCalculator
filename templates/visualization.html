@@ -1352,6 +1352,7 @@ function remove_item_time(item) {
 function remove_cat_time() {
   timeChartLabels = JSON.parse(sessionStorage.timeChartLabels)
   curr = JSON.parse(sessionStorage.timeCurrCat)
+  console.log(curr)
   for (i = 0; i < curr.length; i++) {
     item = curr[i]
 // remove legend data
