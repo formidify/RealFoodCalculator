@@ -1471,8 +1471,9 @@ function addTime() {
   sessionStorage.setItem("timeChartLabels", JSON.stringify(timeChartLabels));
 
   check.splice(0, 1)
-  sessionStorage.setItem("timeCurrCat", JSON.stringify(past.concat([item])));
-  console.log(past.concat([item]))
+  sessionStorage.setItem("timeCurrCat", JSON.stringify(past.concat([y])));
+  console.log(past.concat([y]))
+  console.log(check)
   sessionStorage.setItem("timeNotCat", JSON.stringify(check));
   }
 }
