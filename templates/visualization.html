@@ -1288,7 +1288,7 @@ function remove_item_time(item) {
   console.log(myLineChart.data.datasets)
 
   // remove legend data
-  index = timeChartLabels.indexOf(item)
+  index = timeChartLabels.indexOf(item) + 2
   myLineChart.data.datasets.splice(index, 1);
   timeChartLabels = removeElements([item], timeChartLabels)
 
@@ -1297,7 +1297,7 @@ function remove_item_time(item) {
   console.log(myLineChart.data.datasets)
 
   // remove real data
-  index = timeChartLabels.indexOf("real " + item)
+  index = timeChartLabels.indexOf("real " + item) + 2
   myLineChart.data.datasets.splice(index, 1);
   timeChartLabels = removeElements(["real " + item], timeChartLabels)
 
@@ -1306,7 +1306,7 @@ function remove_item_time(item) {
   console.log(myLineChart.data.datasets)
 
   // remove total data in chart
-  index = timeChartLabels.indexOf("total " + item)
+  index = timeChartLabels.indexOf("total " + item) + 2
   myLineChart.data.datasets.splice(index, 1);
   timeChartLabels = removeElements(["total " + item], timeChartLabels)
 
