@@ -1280,23 +1280,24 @@ function addCatData() {
 };
 
 function remove_item_time(item) {
-  item = item.substring(0)
-  console.log(item)
+  item = item.substring(1)
 
   timeChartLabels = JSON.parse(sessionStorage.timeChartLabels)
-  console.log(timeChartLabels)
 
   // remove legend data
   index = timeChartLabels.indexOf(item)
   myLineChart.data.datasets.splice(index, 1);
+  timeChartLabels = removeElements([item], timeChartLabels)
 
   // remove real data
   index = timeChartLabels.indexOf("real " + item)
   myLineChart.data.datasets.splice(index, 1);
+  timeChartLabels = removeElements(["real " + item], timeChartLabels)
 
   // remove total data in chart
   index = timeChartLabels.indexOf("total " + item)
   myLineChart.data.datasets.splice(index, 1);
+  timeChartLabels = removeElements(["total " + item], timeChartLabels)
 
   total_configs = removeElements(["real " + item, "total " + item], JSON.parse(sessionStorage.timeConfigs))
 
@@ -1305,7 +1306,7 @@ function remove_item_time(item) {
 
   sessionStorage.setItem("timeCurrent", JSON.stringify(removeElements([item], JSON.parse(sessionStorage.timeCurrent))));
   sessionStorage.setItem("timeConfigs", JSON.stringify(total_configs));
-  sessionStorage.setItem("timeChartLabels", JSON.stringify(removeElements([item, "real " + item, "total " + item], timeChartLabels)));
+  sessionStorage.setItem("timeChartLabels", JSON.stringify(timeChartLabels);
 
   item_id = "button#time_" + item + ".btnic"
   console.log(item_id)
