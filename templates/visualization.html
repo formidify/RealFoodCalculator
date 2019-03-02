@@ -360,12 +360,12 @@ $(document).ready(function(){table = $('#time_percent').DataTable({
 
 
 // add single item to the time series chart
-function addItemData() {
+function addItemDataPercent() {
   current_list = JSON.parse(sessionStorage.percentCurrent);
   y = document.getElementById("add_percent").value;
   // check input is longer than 1 and has not appeared in current list
   if (y.length > 1 && !current_list.includes(y)) {
-    year = document.getElementById("")
+    year = document.getElementById("yearPercent").value()
     searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/item_data/" + y + "+percent+" + year);
 
     searches.done(function(results) {
@@ -557,7 +557,7 @@ function updateBarChart(cat, yr){
 
 </script>
 
-
+<div style = "float:left">
 <h1>Hypothetical Increase</h1>
 
 <div class="row">
@@ -591,13 +591,7 @@ function updateBarChart(cat, yr){
   </div>
 </div>
 
-<div class="onoffswitch">
-    <a>Show mixed bar/line chart data as table:</a>
-    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked>
-    <label class="onoffswitch-label" for="myonoffswitch">
-        <span class="onoffswitch-inner"></span>
-        <span class="onoffswitch-switch"></span>
-    </label>
+
 </div>
 
 <script>
@@ -965,6 +959,7 @@ document.getElementById("increaseChart5").onclick = function(evt)
 
 </script>
 
+<div style = "float: left">
 <h1>Time Series of Real vs non-real food</h1>
 
 <div>
@@ -1173,7 +1168,7 @@ function addItemData() {
   y = document.getElementById("add_time").value;
   // check input is longer than 1 and has not appeared in current list
   if (y.length > 1 && !current_list.includes(y)) {
-    searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/item_data/" + y + "+year");
+    searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/item_data/" + y + "+year+");
 
     searches.done(function(results) {
       types = ['total', 'real']
