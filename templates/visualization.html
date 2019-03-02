@@ -1162,6 +1162,10 @@ myLineChart = new Chart(ctx5, {data: lineChartData,
   }
 });
 
+//test code
+sessionStorage.setItem("putu", JSON.stringify(lineChartData.datasets));
+console.log(lineChartData.datasets)
+
 // add single item to the time series chart
 function addItemData() {
   current_list = JSON.parse(sessionStorage.timeCurrent);
@@ -1243,7 +1247,7 @@ function addCatData() {
     num_items = Math.min(results.items.length, 3)
 
   show = parseInt($("#showTime").html()) + num_items
-  all = parseInt($("#allTime").html()) + num_items
+  all = parseInt($("#allTime").html()) + results.items.length
   $("#showTime").html(show)
   $("#allTime").html(all)
 
@@ -1396,18 +1400,23 @@ function minusTime() {
   timeChartLabels = JSON.parse(sessionStorage.timeChartLabels)
   item = check[check.length - 1]
 
+    putu = JSON.parse(sessionStorage.putu)
+
   index = timeChartLabels.indexOf(item) + 2
   myLineChart.data.datasets.splice(index, 1);
+    putu.splice(index, 1);
   timeChartLabels = removeElements([item], timeChartLabels)
 
   // remove real data
   index = timeChartLabels.indexOf("real " + item) + 2
   myLineChart.data.datasets.splice(index, 1);
+    putu.splice(index, 1);
   timeChartLabels = removeElements(["real " + item], timeChartLabels)
 
   // remove total data in chart
   index = timeChartLabels.indexOf("total " + item) + 2
   myLineChart.data.datasets.splice(index, 1);
+    putu.splice(index, 1);
   timeChartLabels = removeElements(["total " + item], timeChartLabels)
 
   total_configs = removeElements(["real " + item, "total " + item], JSON.parse(sessionStorage.timeConfigs))
@@ -1421,6 +1430,9 @@ function minusTime() {
   check.splice(check.length-1, 1)
   sessionStorage.setItem("timeCurrCat", JSON.stringify(check));
   sessionStorage.setItem("timeNotCat", JSON.stringify([item].concat(JSON.parse(sessionStorage.timeNotCat))));
+
+  sessionStorage.setItem("putu", JSON.stringify(putu));
+  console.log(putu)
 
 }
 }
@@ -1436,7 +1448,7 @@ function addTime() {
     costs = JSON.parse(sessionStorage.timeCatCost)
     past = JSON.parse(sessionStorage.timeCurrCat)
 
-
+putu = JSON.parse(sessionStorage.putu)
     color = "#" + intToARGB(hashCode(y))
     for (j = 0; j < types.length; j++) {
         line = {}
@@ -1452,6 +1464,7 @@ function addTime() {
             line.borderDash = [10, 5]
         }
         myLineChart.data.datasets.push(line)
+        putu.push(line)
     }
 // console.log(datasets.toString())
 // add legend for each item
@@ -1466,6 +1479,7 @@ function addTime() {
     line.fill = true
     line.showLine = false
     myLineChart.data.datasets.push(line)
+    putu.push(line)
 
   myLineChart.update();
   sessionStorage.setItem("timeConfigs", JSON.stringify(total_configs));
@@ -1477,6 +1491,9 @@ function addTime() {
   console.log(check)
   console.log(costs)
   sessionStorage.setItem("timeNotCat", JSON.stringify(check));
+
+  sessionStorage.setItem("putu", JSON.stringify(putu));
+  console.log(putu)
   }
 }
 
