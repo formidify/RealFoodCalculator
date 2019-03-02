@@ -1168,7 +1168,7 @@ function addItemData() {
   y = document.getElementById("add_time").value;
   // check input is longer than 1 and has not appeared in current list
   if (y.length > 1 && !current_list.includes(y)) {
-    searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/item_data/" + y + "+year+");
+    searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/item_data/" + y + "+year+ ");
 
     searches.done(function(results) {
       types = ['total', 'real']
