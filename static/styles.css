@@ -1,6 +1,15 @@
 @font-face { font-family: Delicious; src: url('Modeka.otf'); }
 @font-face { font-family: Yummy; src: url('Montserrat-Light.ttf'); }
-
+/*button, input, select {
+	font-family: inherit;
+    font-size: 100%;
+}
+input, select {
+	-webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+}
+*/
 input[type="text"], input[type="number"]{
     width: 150px;
     padding: 5px;
@@ -10,6 +19,21 @@ input[type="text"], input[type="number"]{
 #real-qualifications{
     width:600px;
 }
+/*
+
+input[type="checkbox"]{
+    width: 30px;
+}
+label {
+	display: inline;
+}
+div{
+    display: inline;
+}
+fieldset {
+    width: 33%;
+}
+*/
 #localDescription, #fairDescription, #ecologicalDescription, #humaneDescription, #disqualifierDescription{
     width: 400px;
 }
@@ -202,6 +226,7 @@ width:100px;
 }
 button#EScancel{
    border-radius:4px;
+   cursor:pointer;
 }
 button#EScancel:hover{
     background-color: #F1A19B;
@@ -209,7 +234,17 @@ button#EScancel:hover{
     box-shadow: 0 1px 2px 0 rgba(0,0,0,0.24), 0 2px 5px 0 rgba(0,0,0,0.19);
 }
 input#ESsubmit{
+  display: inline-block;
+  *display: inline;
+  zoom: 1;
+  padding: 6px 20px;
+  margin: 0;
+  border: 1px solid #bbb;
+  overflow: visible;
+  text-decoration: none;
+  white-space: nowrap;
     border-radius:4px;
+    cursor:pointer;
 }
 input#ESsubmit:hover {
     background-color: #8CD3BA;
@@ -218,6 +253,7 @@ input#ESsubmit:hover {
 }
 button#ESenter{
     border-radius:4px;
+    cursor:pointer;
 }
 button#ESenter:hover{
     background-color: #A3C1E5;
@@ -228,15 +264,14 @@ button#ESenter:hover{
     padding: 6px 15px;
 }
 
-/* spacing */
+/* TABLES */
 
 table {
-  table-layout: fixed;
+  /*table-layout: fixed*/
   width: 100%;
   border-collapse: collapse;
-  cursor:pointer;
 }
-
+/* Month, Year, Add Button */
 thead th:nth-child(1){
   width: 4%;
 }
@@ -246,9 +281,11 @@ thead th:nth-child(2){
 thead th:nth-child(3){
   width: 4%;
 }
+/* Description */
 thead th:nth-child(4){
 width: 12%
 }
+/* Category, Vendor, Label/Brand, Product Code */
 thead th:nth-child(5){
   width: 8%;
 }
@@ -261,6 +298,33 @@ width: 8%
 thead th:nth-child(8){
 width: 8%
 }
+/* Real Qualifications */
+thead th:nth-child(9){
+    width: 3%;
+}
+thead th:nth-child(11){
+    width: 3%;
+}
+thead th:nth-child(13){
+    width: 3%;
+}
+thead th:nth-child(15){
+    width: 3%;
+}
+thead th:nth-child(17){
+    width: 3%;
+}
+/* Notes */ 
+thead th:nth-child(19){
+    width: 12%;
+}
+/*Descriptions*/
+thead th:nth-child(10), th:nth-child(12), th:nth-child(14),th:nth-child(16),th:nth-child(18){
+   width: 5%;
+}
+td:nth-child(10), td:nth-child(12), td:nth-child(14),td:nth-child(16),td:nth-child(18){
+font-size: 10px;
+}
 th{
   padding: 15px;
   text-align: center;
@@ -272,28 +336,17 @@ td{
 th {
   color: white;
 }
-td:nth-child(10), td:nth-child(12), td:nth-child(14),td:nth-child(16),td:nth-child(18){
-font-size: 10px;
-}
-thead th:nth-child(10), th:nth-child(12), th:nth-child(14),th:nth-child(16),th:nth-child(18){
-   width: 5%;
-}
-thead th:nth-child(9), th:nth-child(11), th:nth-child(13),th:nth-child(15),th:nth-child(17){
-    width: 3%;
-}
 
 tbody td {
   text-align: center;
+  cursor:pointer;
 }
 
-tfoot th {
-  text-align: right;
-}
-tbody tr:nth-child(odd) {
+tr:nth-child(odd) {
   background-color: #e2e2e2 ;
 }
 
-tbody tr:nth-child(even) {
+tr:nth-child(even) {
   background-color: #efefef;
 }
 thead th {
@@ -304,7 +357,61 @@ td:hover {font-weight: bold;}
 #sessionTable thead th:nth-child(1), th:nth-child(2), th:nth-child(3),th:nth-child(6), th:nth-child(7){
 width: 8%;
 }
-#sessionTable thead th:nth-child(4),th:nth-child(5){
-   width: 10%;
+/* Category, Label/Brand, Vendor  */
+#sessionTable thead th:nth-child(1){
+  width: 5%;
 }
-
+#sessionTable thead th:nth-child(2){
+  width: 5%;
+}
+#sessionTable thead th:nth-child(3){
+  width: 5%;
+}
+/* Description */
+#sessionTable thead th:nth-child(4){
+width: 12%
+}
+/* Product Code, Cost*/
+#sessionTable thead th:nth-child(6){
+width: 5%
+}
+#sessionTable thead th:nth-child(7){
+width: 5%;
+}
+/* Real Qualifications */
+#sessionTable thead th:nth-child(8){
+    width: 3%;
+}
+#sessionTable thead th:nth-child(10){
+    width: 3%;
+}
+#sessionTable thead th:nth-child(12){
+    width: 3%;
+}
+#sessionTable thead th:nth-child(14){
+    width: 3%;
+}
+#sessionTable thead th:nth-child(16){
+    width: 3%;
+}
+/* Notes */ 
+#sessionTable thead th:nth-child(5){
+    width: 10%;
+}
+/*Descriptions*/
+#sessionTable thead th:nth-child(9), th:nth-child(11), th:nth-child(13),th:nth-child(15),th:nth-child(17){
+   width: 5%;
+}
+#sessionTable td:nth-child(9), td:nth-child(11), td:nth-child(13),td:nth-child(15),td:nth-child(17){
+font-size: 15px;
+}
+/* Real Font*/
+#sessionTable td:nth-child(8), td:nth-child(10), td:nth-child(12),td:nth-child(14),td:nth-child(16){
+font-size: 15px;
+}
+#sessionTable td {
+  text-align: center;
+}
+#results td{
+text-align: center;
+}

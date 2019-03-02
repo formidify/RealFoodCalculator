@@ -10,12 +10,13 @@
  <script>
 window.onload = function (){
 //console.log(localStorage.getItem("savedEntry"));
-  if (localStorage.getItem('savedEntry')!=""){
-  var savedEntry = JSON.parse(localStorage.getItem('savedEntry'));
+//  if ((localStorage.getItem('savedEntry')!= null) || (localStorage.getItem('savedEntry')!="{}") || (localStorage.getItem('savedEntry')!="")){
+if(localStorage.getItem("savedEntry")){  
+var savedEntry = JSON.parse(localStorage.getItem('savedEntry'));
   console.log("savedEntry:", savedEntry);
   populateSavedItems(savedEntry);
-  localStorage["isSavedEntry"] = false;
-  localStorage["savedEntry"] = {};
+  localStorage.setItem("isSavedEntry", false);
+  localStorage.removeItem("savedEntry");
   }
 }
 
