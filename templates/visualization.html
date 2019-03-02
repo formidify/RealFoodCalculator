@@ -290,7 +290,7 @@ c.done(function(results) {
   }
 });
 
-yrs = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/recent_years/");
+yrs = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/recent_years");
 
 yrs.done(function(results) {
   y = results.yrs;
@@ -491,7 +491,7 @@ barData.done(function(results) {
       }
   };
 
-   ctx2 = document.getElementById("percentChart2").getContext('2d');
+   ctx2 = document.getElementById("percentChart").getContext('2d');
   myBarChart = new Chart(ctx2, {
       type: 'bar',
       data: data,
