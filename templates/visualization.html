@@ -979,7 +979,7 @@ document.getElementById("increaseChart5").onclick = function(evt)
 <div>
 
 <div class="quantity buttons_added">
-  Show
+  Showing
   <input type="button" value="-" class="minus" onclick = "minusTime()">
   <div id = "showTime" style = "display: inline">0</div>
   <input type="button" value="+" class="plus" onclick = "addTime()">
@@ -999,6 +999,7 @@ document.getElementById("increaseChart5").onclick = function(evt)
 <input id = "submit_cat_time" type="submit" value="submit" onclick = "addCatData()">
 </div>
 
+<a href="#" data-role="button" data-icon="delete" data-theme="e">Delete</a>
 
 <div class="row">
   <div class="column" style = "width: 60%; height: 25%;  float: left">
@@ -1053,8 +1054,8 @@ function arraysEqual(arr1, arr2) {
     return true;
 }
 
-var searches_time = [];
-//var select = document.getElementById("categoeis");
+var searches_time = []; // current searches at every turn
+
 c = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/get_categories/");
 
 c.done(function(results) {
