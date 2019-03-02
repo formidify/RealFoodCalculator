@@ -1211,7 +1211,7 @@ sessionStorage.setItem("timeConfigs", JSON.stringify(total_configs));
 sessionStorage.setItem("timeChartLabels", chart_labels); // labels
 
 // add option to remove
-$('#buttons_time').append('<button class="btnic" onclick = "remove_item_time(' + y + ')"><i class="fa fa-close"></i> ' + y + '</button>');
+$('#buttons_time').append('<button class="btnic" onclick = "remove_item_time(&quot' + y + '&quot)"><i class="fa fa-close"></i> ' + y + '</button>');
 
     })
 
