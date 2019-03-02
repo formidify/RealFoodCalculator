@@ -1471,14 +1471,12 @@ function addTime() {
 
   myLineChart.update();
   console.log(total_configs)
+  console.log(timeChartLabels)
   sessionStorage.setItem("timeConfigs", JSON.stringify(total_configs));
   sessionStorage.setItem("timeChartLabels", JSON.stringify(timeChartLabels));
 
   check.splice(0, 1)
   sessionStorage.setItem("timeCurrCat", JSON.stringify(past.concat([y])));
-  console.log(past.concat([y]))
-  console.log(check)
-  console.log(costs)
   sessionStorage.setItem("timeNotCat", JSON.stringify(check));
   }
 }
