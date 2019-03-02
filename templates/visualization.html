@@ -1238,6 +1238,11 @@ function addCatData() {
   searches.done(function(results) {
     num_items = Math.min(results.items.length, 3)
 
+  show = parseInt($("#showTime").html()) + num_items
+  all = parseInt($("#allTime").html()) + num_items
+  $("#showTime").html(show)
+  $("#allTime").html(all)
+
     cost = results.cost
     items = results.items
     types = ['total', 'real']
@@ -1249,7 +1254,6 @@ function addCatData() {
     colors = []
 
     for (i = 0; i < num_items; i++) {
-      if (!current_list.includes(items[i])) {
     for (j = 0; j < types.length; j++) {
         line = {}
         line.data = cost[j][i]
@@ -1283,7 +1287,6 @@ function addCatData() {
     myLineChart.data.datasets.push(line)
 
     current_list = current_list.concat([items[i]])
-  }
   }
 
   for (k = num_items; k < items.length; k++) {
