@@ -1024,13 +1024,8 @@ document.getElementById("increaseChart5").onclick = function(evt)
         <th>Year 3</th>
       </tr>
     </thead>
-    <tfoot>
-        <th>Item</th>
-        <th>Type</th>
-        <th>Year 1</th>
-        <th>Year 2</th>
-        <th>Year 3</th>
-    </tfoot>
+    <tbody>
+    </tbody>
 </table>
     </div>
 </div>
@@ -1183,7 +1178,7 @@ var table = $('time_table').DataTable(dom: 'Bfrtip',
                         extend: 'pdf',
                         text: 'PDF',
                         orientation: 'landscape',
-                        title: 'Four Winds Interactive Tracking Information',                    
+                        title: 'Four Winds Interactive Tracking Information'                   
                     }]);
 
 // add single item to the time series chart
