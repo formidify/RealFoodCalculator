@@ -973,19 +973,16 @@ document.getElementById("increaseChart5").onclick = function(evt)
 <h1>Time Series of Real vs non-real food</h1>
 
 <div>
-    <a>Items to show:</a>
-  <div class = "control" style = "display: inline-block">
 
 <div class="quantity buttons_added">
   Show
   <input type="button" value="-" class="minus" onclick = "minusTime()">
-  <div id = "showTime">0</div>
+  <div id = "showTime" display = "inline-block">0</div>
   <input type="button" value="+" class="plus" onclick = "addTime()">
-  out of <div id = "allTime">0</div>
+  out of <div id = "allTime" display = "inline-block">0</div>
   
 </div>
 
-</div>
     <label for="add">Add by item:</label>
     <input id="add_time" type="text" name="text" list = "items_time" onkeyup = "searchItem()" autocomplete="off">
     <datalist id="items_time"></datalist>
