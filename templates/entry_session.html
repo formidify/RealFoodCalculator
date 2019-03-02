@@ -265,6 +265,7 @@ function submitEntries(){
     </div>
     </nav>
 <h2>Current Entries</h2>
+<button class="button" id="ESenter" onclick="go_to_data_entry();">Add New Item</button>
 <form action="entry_session" method="POST" id="entry-session-form">
  <input id="entrySessionData" name="entrySessionData" type="hidden"/>
   <label for="month">Month</label>
@@ -291,9 +292,8 @@ function submitEntries(){
 
  <input id="rating_version" name="rating_version" type="number" value="2.0" placeholder="2.0">
 <input type="submit" class="button" id="ESsubmit" onclick="return submitEntries();"  value="Submit All">
-</form>
-<button class="button" id="ESenter" onclick="go_to_data_entry();">Add New Item</button>
 <button class="button" id="EScancel" onclick="clearEntries(true);">Cancel Session</button>
+</form>
 <table id="sessionTable"  class="sessionTable">
 <thead>
 <tr>
