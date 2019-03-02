@@ -387,7 +387,9 @@ function addItemDataPercent() {
   y = document.getElementById("add_percent").value;
   // check input is longer than 1 and has not appeared in current list
   if (y.length > 1 && !current_list.includes(y)) {
-    year = document.getElementById("yearPercent").value()
+    e = document.getElementById("yearPercent");
+    var year = e.options[e.selectedIndex].value;
+    
     searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/item_data/" + y + "+percent+" + year);
 
     searches.done(function(results) {
