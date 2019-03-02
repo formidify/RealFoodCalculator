@@ -1285,34 +1285,20 @@ function remove_item_time(item) {
 
   timeChartLabels = JSON.parse(sessionStorage.timeChartLabels)
 
-  console.log(myLineChart.data.datasets)
-
   // remove legend data
   index = timeChartLabels.indexOf(item) + 2
   myLineChart.data.datasets.splice(index, 1);
   timeChartLabels = removeElements([item], timeChartLabels)
-
-  console.log(index)
-  console.log(timeChartLabels)
-  console.log(myLineChart.data.datasets)
 
   // remove real data
   index = timeChartLabels.indexOf("real " + item) + 2
   myLineChart.data.datasets.splice(index, 1);
   timeChartLabels = removeElements(["real " + item], timeChartLabels)
 
-  console.log(index)
-  console.log(timeChartLabels)
-  console.log(myLineChart.data.datasets)
-
   // remove total data in chart
   index = timeChartLabels.indexOf("total " + item) + 2
   myLineChart.data.datasets.splice(index, 1);
   timeChartLabels = removeElements(["total " + item], timeChartLabels)
-
-  console.log(index)
-  console.log(timeChartLabels)
-  console.log(myLineChart.data.datasets)
 
   total_configs = removeElements(["real " + item, "total " + item], JSON.parse(sessionStorage.timeConfigs))
 
@@ -1323,7 +1309,7 @@ function remove_item_time(item) {
   sessionStorage.setItem("timeConfigs", JSON.stringify(total_configs));
   sessionStorage.setItem("timeChartLabels", JSON.stringify(timeChartLabels));
 
-  item_id = "button#time_" + item + ".btnic"
+  item_id = "time_" + item
   console.log(item_id)
   $(item_id).remove()
 
