@@ -277,36 +277,36 @@ def delete_entry():
     disqualifier = flask.request.args.get('disqualifier', default='-1')
     disqualifierDescription = flask.request.args.get('disqualifierDescription', default ='%').lower()
 
-        if month == "-1" and year == "-1":
-            month = " "
-        elif month == "-1":
-            month = "test_data_large.year = " + year + " AND "
-        elif year == "-1":
-            month = "test_data_large.month = " + month + " AND "
-        else:
-            month = "test_data_large.month = " + month + " AND test_data_large.year = " + year + " AND "
-        if local == "on":
-            local = "AND test_data_large.local = TRUE"
-        else:
-            local = ""
-        if fair == "on":
-            fair = "AND test_data_large.fair = TRUE"
-        else:
-            fair = ""
-        if ecological == "on":
-            ecological = "AND test_data_large.ecological = TRUE"
-        else:
-            ecological = ""
-        if humane == "on":
-            humane = "AND test_data_large.humane = TRUE"
-        elif humane == "none":
-            humane = "AND test_data_large.humane IS NULL"
-        else:
-            humane = "AND test_data_large.humane = FALSE"
-        if disqualifier == "on":
-            disqualifier = "AND test_data_large.disqualifier = TRUE"
-        else:
-           disqualifier = ""
+    if month == "-1" and year == "-1":
+        month = " "
+    elif month == "-1":
+        month = "test_data_large.year = " + year + " AND "
+    elif year == "-1":
+        month = "test_data_large.month = " + month + " AND "
+    else:
+        month = "test_data_large.month = " + month + " AND test_data_large.year = " + year + " AND "
+    if local == "on":
+        local = "AND test_data_large.local = TRUE"
+    else:
+        local = ""
+    if fair == "on":
+        fair = "AND test_data_large.fair = TRUE"
+    else:
+        fair = ""
+    if ecological == "on":
+        ecological = "AND test_data_large.ecological = TRUE"
+    else:
+        ecological = ""
+    if humane == "on":
+        humane = "AND test_data_large.humane = TRUE"
+    elif humane == "none":
+        humane = "AND test_data_large.humane IS NULL"
+    else:
+        humane = "AND test_data_large.humane = FALSE"
+    if disqualifier == "on":
+        disqualifier = "AND test_data_large.disqualifier = TRUE"
+    else:
+        disqualifier = ""
 
     query = """
             DELETE TOP 1
@@ -624,10 +624,6 @@ def get_item_data(item, type, year):
 
     # add item for percent chart
     if type == 'percent':
-<<<<<<< HEAD
-        query = """SELECT SUM(cost) AS sum FROM test_data_large WHERE description = {d}""".format(d = item)
-        return
-=======
         query = """SELECT COALESCE(Z.description, B.description) 
             AS description, COALESCE(Z.real, 0) 
             AS real, COALESCE(B.nonreal, 0) 
@@ -649,7 +645,6 @@ def get_item_data(item, type, year):
             except Exception as e:
                 print(e)
             connection.close()
->>>>>>> cfd4a14745c075358365608e8ab4e89f28aed472
 
         return flask.jsonify({"data": data})
 
