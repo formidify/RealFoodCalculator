@@ -1305,6 +1305,7 @@ function remove_item_time(item) {
   sessionStorage.setItem("timeChartLabels", JSON.stringify(removeElements([item, "real " + item, "total " + item], timeChartLabels)));
 
   item_id = "button#time_" + item + ".btnic"
+  console.log(item_id)
   $(item_id).remove()
 
 }
