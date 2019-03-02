@@ -114,6 +114,8 @@ def get_products():
 
     if orderBy=="year,month":
         orderBy="year, test_data_large.month DESC"
+    if orderBy=="reverse,year,month":
+        orderBy="month, test_data_large.year ASC"
 
     query = """
             SELECT  test_data_large.month,
@@ -239,12 +241,6 @@ def insert_entry():
     ratingVersion = flask.request.args.get('rating_version', default='2.0')
     facility = ''
      
-    """
-    query = '''
-             INSERT INTO test_data_large VALUES ({0},{1},'{2}','{3}','{4}','{5}','{6}','{7}',{8},'{9}','{10}','{11}','{12}','{13}','{14}','{15}','{16}','{17}','{18}',{19},'{20}','{21}');
-            '''.format(month, year, description, category, productCode, productCodeType, brand, vendor, ratingVersion, local, localDescription, fair, fairDescription, ecological, ecologicalDescription, humane, humaneDescription, disqualifier, disqualifierDescription, cost, notes, facility)
-    print("Entry: ", query)
-    """
     query = """INSERT INTO test_data_large VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);"""
     parameters = (month, year, description, category, productCode, productCodeType, brand, vendor, ratingVersion, local, localDescription, fair, fairDescription, ecological, ecologicalDescription, humane, humaneDescription, disqualifier, disqualifierDescription, cost, notes, facility)
     if connection is not None:

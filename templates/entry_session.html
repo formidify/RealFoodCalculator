@@ -240,9 +240,11 @@ function submitEntries(){
     console.log("in submit");
     if(confirm('Are you sure you want to submit the entries?')){
         console.log("Confirmed Entries");
-        //document.getElementById("entry-session-form").submit();
+        //document.getElementById("entry-session-form").submit.click();
         $("#entry-session-form").submit();
+        console.log("Submitted Entry Session");
         clearEntries(false);
+        
     }
     else{
         return false;
@@ -263,8 +265,7 @@ function submitEntries(){
     </div>
     </nav>
 <h2>Current Entries</h2>
-<div class="entry>
-<form action = "http://cmc307-06.mathcs.carleton.edu:2019/entry_session" method = "POST" id = "entry-session-form">
+<form action="entry_session" method="POST" id="entry-session-form">
  <input id="entrySessionData" name="entrySessionData" type="hidden"/>
   <label for="month">Month</label>
 <select id="month" name="month" required>
@@ -283,19 +284,16 @@ function submitEntries(){
 </select>
 
 <label for="year">Year</label>
-<input id="year" name="year" type="number" default=2019  placeholder="2019" required>
+<input id="year" name="year" type="number" value=2019  placeholder="2019" required>
 
 
          <label for="rating_version">Rating Version</label>
 
-<div>
  <input id="rating_version" name="rating_version" type="number" value="2.0" placeholder="2.0">
-<input type="submit" id = "ESsubmit" onclick="return submitEntries();" class="button" value="Submit All"/>
+<input type="submit" class="button" id="ESsubmit" onclick="return submitEntries();"  value="Submit All">
 </form>
-<button class="button" id = "ESenter" onclick="go_to_data_entry();">Add New Item</button>
-<button class="button" id = "EScancel" onclick="clearEntries(true);">Cancel Session</button>
-</div>
-</div>
+<button class="button" id="ESenter" onclick="go_to_data_entry();">Add New Item</button>
+<button class="button" id="EScancel" onclick="clearEntries(true);">Cancel Session</button>
 <table id="sessionTable"  class="sessionTable">
 <thead>
 <tr>
