@@ -311,6 +311,7 @@ yrs.done(function(results) {
   }});
 
 sessionStorage.setItem("percentSearch", JSON.stringify([])); // previous searches
+sessionStorage.setItem("percentCurrent", JSON.stringify([])); // previous searches
 
 function searchItemPercent() {
   x = document.getElementById("add_percent").value;
@@ -394,7 +395,6 @@ function addItemDataPercent() {
       // elements by index: item, real, nonreal, minus, sum
       data = results.data
 
-      //datasets = []
       myBarChart.data.datasets[0].data.push(data[1])
       myBarChart.data.datasets[0].backgroundColor.push('rgba(255, 99, 132, 0.2)')
       myBarChart.data.datasets[0].borderColor.push('rgba(255, 99, 132, 1)')
@@ -412,17 +412,15 @@ function addItemDataPercent() {
 
 // add option to remove
 $('#buttons_percent').append('<button class="btnic" id = "percent_' + y + '" onclick = "remove_percent_time(&quot ' + y + '&quot)"><i class="fa fa-close"></i> ' + y + '</button>');
-  /*
-  show = parseInt($("#showTime").html()) + 1
-  all = parseInt($("#allTime").html()) + 1
-  $("#showTime").html(show)
-  $("#allTime").html(all) */
 
     })
 
     sessionStorage.setItem("percentCurrent", JSON.stringify(current_list.concat([y])));
   }
 }
+
+
+
 
 
 
