@@ -1434,12 +1434,12 @@ function addTime() {
     total_configs = JSON.parse(sessionStorage.timeConfigs)
     costs = JSON.parse(sessionStorage.timeCatCost)
     past = JSON.parse(sessionStorage.timeCurrCat)
-    cost = costs[past.length] // cost for current item to add
+
 
     color = "#" + intToARGB(hashCode(y))
     for (j = 0; j < types.length; j++) {
         line = {}
-        line.data = cost[j]
+        line.data = costs[j][past.length]
         line.type = 'line'
         line.label = types[j] + " " + y
         total_configs.push(line.label)
