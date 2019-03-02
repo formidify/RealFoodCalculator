@@ -1280,6 +1280,8 @@ function addCatData() {
 };
 
 function remove_item_time(item) {
+  item = item.substring(1)
+  
   timeChartLabels = JSON.parse(sessionStorage.timeChartLabels)
   console.log(timeChartLabels)
 
