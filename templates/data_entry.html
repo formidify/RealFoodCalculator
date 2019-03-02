@@ -260,27 +260,71 @@ function searchMatches(){
     $("#data-entry-form").submit();
     return false;
 }
+
 function getItemsToSave(){
     itemsToSave = {}
     $("input:checkbox:checked").each(function() {
            item = ($(this).attr("name"));
            itemName = item.slice(0, -5);
+           if (itemName == "real"){
+               var realNames = ["local","fair","ecological","humane","disqualifier"];
+               var saveReal = {};
+               for (real in realNames){
+                   console.log(realNames[real]+"-true");
+                   itemValue = document.getElementById(realNames[real]+"-true").checked;
+                   if (realNames[real]=="humane"){
+                       humaneNaValue = document.getElementById(realNames[real]+"-na").checked;
+                       saveReal[realNames[real]+"-na"]=itemValue;
+                   }
+                   itemDescription = document.getElementById(realNames[real]+"Description").value;
+                   saveReal[realNames[real]]=itemValue;
+                   saveReal[realNames[real]+"Description"]=itemDescription;
+               }
+           itemsToSave[itemName] = saveReal;
+           }else{
            itemValue = document.getElementById(itemName).value;
            itemsToSave[itemName] = itemValue;
-           });
-
+          }
+    });    
 console.log("itemsToSave", JSON.stringify(itemsToSave));
     localStorage.setItem('savedEntry', JSON.stringify(itemsToSave));
     return itemsToSave;
 }
 function populateSavedItems(items){
     for (key in items){
+        if (key == "real"){
+            for (realKey in items["real"]){
+               console.log("realKey", realKey, "key", key);
+               console.log("items[key][realKey]", items[key][realKey]);
+               if (!(realKey.includes("Description"))){ 
+                   if (realKey == "humane-na"){
+                      console.log("Inside Humane");
+                      if (items[key][realKey]=true){
+                           document.getElementById(realKey).checked = items[key][realKey];
+                      }
+                      document.getElementById("humane-true").checked = items[key]["humane"];
+                     if (items[key]["humane"]!= true && items[key][realKey]!=true){
+                      document.getElementById("humane-false").checked = true;
+               }
+               }
+               else{
+               if (!(realKey.includes("humane"))){
+               document.getElementById(realKey+"-true").checked = items[key][realKey];
+               document.getElementById(realKey+"-false").checked = !(items[key][realKey]);
+               }
+             } }else{
+               document.getElementById(realKey).value = items[key][realKey];
+            }
+          }
+        }else{
         document.getElementById(key).value = items[key];
         console.log("Updated", key, " to ", items[key]);
+        }
         checkbox = (key+ "-check");
         document.getElementById(checkbox).checked = true;
 }
 }
+
 </script>
 <script type="text/javascript" src="../static/example.js" defer></script>
     </head>
