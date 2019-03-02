@@ -1280,8 +1280,6 @@ function addCatData() {
 };
 
 function remove_item_time(item) {
-  labels = timeSeriesChart.data.labels 
-  index = labels.indexOf(item)
 
   // remove item on the time series chart
   timeSeriesChart.data.labels.splice(index, 1);
@@ -1298,10 +1296,13 @@ function remove_item_time(item) {
   index = sessionStorage.timeChartLabels.indexOf("total " + item)
   timeSeriesChart.data.datasets.splice(index, 1);
 
+  total_configs = removeElements(["real " + item, "total " + item], sessionStorage.timeConfigs)
+
   timeSeriesChart.update();
 
+
   sessionStorage.setItem("timeCurrent", JSON.stringify(removeElements([item], sessionStorage.timeCurrent)));
-  sessionStorage.setItem("timeConfigs", JSON.stringify(removeElements([item, "real " + item, "total " + item], sessionStorage.timeConfigs)));
+  sessionStorage.setItem("timeConfigs", JSON.stringify(total_configs));
 }
 
 function remove_cat_time() {
