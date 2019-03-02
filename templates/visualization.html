@@ -369,66 +369,22 @@ function addItemDataPercent() {
     searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/item_data/" + y + "+percent+" + year);
 
     searches.done(function(results) {
-      types = ['total', 'real']
-      myLineChart.data.labels = results.yrs
 
-      if (updatedTimeColumn) {
-        updatedTimeColumn = false;
-        var head_item = table.columns(2).header();
-        $(head_item).html(results.yrs[0]);
+      // elements by index: item, real, nonreal, minus, sum
+      data = results.data
 
-        var head_item = table.columns(3).header();
-        $(head_item).html(results.yrs[1]);
-
-        var head_item = table.columns(4).header();
-        $(head_item).html(results.yrs[2]);
-      }
       //datasets = []
-      color = "#" + intToARGB(hashCode(y))
+      myBarChart.data.datasets[0].data.push(data[1])
+      myBarChart.data.datasets[1].data.push(data[2])
+      myBarChart.data.labels.push(data[0])
 
-      cost = results.cost
 
-chart_labels = JSON.parse(sessionStorage.timeChartLabels);
-total_configs = JSON.parse(sessionStorage.timeConfigs)
 
-    for (j = 0; j < types.length; j++) {
-        line = {}
-        line.data = cost[j]
-        line.type = 'line'
-        line.label = types[j] + " " + y
-        total_configs.push(line.label)
-        chart_labels.push(line.label)
-        //line.backgroundColor = colors[i]
-        line.borderColor = color
-        line.fill = false
-        if (j > 0) {
-            line.borderDash = [10, 5]
-        }
-        myLineChart.data.datasets.push(line)
-        table.row.add([y, types[j], cost[j][0], cost[j][1], cost[j][2]]).draw(false)
-    }
-// console.log(datasets.toString())
-// add legend for each item
-    line = {}
-    line.data = 0 // arbitrary
-    line.type = 'line'
-    line.label = y
-    chart_labels.push(line.label)
-    line.backgroundColor = color
-    line.borderColor = color
-    //line.fillColor = colors[i]
-    line.fill = true
-    line.showLine = false
-    myLineChart.data.datasets.push(line)
+      myLineChart.update();
 
-  myLineChart.update();
-  console.log(myLineChart.data.datasets)
-
-sessionStorage.setItem("timeConfigs", JSON.stringify(total_configs));
-sessionStorage.setItem("timeChartLabels", JSON.stringify(chart_labels)); // labels
 
 // add option to remove
-$('#buttons_time').append('<button class="btnic" id = "time_' + y + '" onclick = "remove_item_time(&quot ' + y + '&quot)"><i class="fa fa-close"></i> ' + y + '</button>');
+$('#buttons_percent').append('<button class="btnic" id = "percent_' + y + '" onclick = "remove_percent_time(&quot ' + y + '&quot)"><i class="fa fa-close"></i> ' + y + '</button>');
   /*
   show = parseInt($("#showTime").html()) + 1
   all = parseInt($("#allTime").html()) + 1
@@ -437,7 +393,7 @@ $('#buttons_time').append('<button class="btnic" id = "time_' + y + '" onclick =
 
     })
 
-    sessionStorage.setItem("timeCurrent", JSON.stringify(current_list.concat([y])));
+    sessionStorage.setItem("percentCurrent", JSON.stringify(current_list.concat([y])));
   }
 }
 
