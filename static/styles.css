@@ -230,7 +230,7 @@ button#EScancel{
 }
 button#EScancel:hover{
     background-color: #F1A19B;
-    color:#ffffff; 
+    color:#ffffff;
     box-shadow: 0 1px 2px 0 rgba(0,0,0,0.24), 0 2px 5px 0 rgba(0,0,0,0.19);
 }
 input#ESsubmit{
@@ -314,7 +314,7 @@ thead th:nth-child(15){
 thead th:nth-child(17){
     width: 3%;
 }
-/* Notes */ 
+/* Notes */
 thead th:nth-child(19){
     width: 12%;
 }
@@ -394,7 +394,7 @@ width: 5%;
 #sessionTable thead th:nth-child(16){
     width: 3%;
 }
-/* Notes */ 
+/* Notes */
 #sessionTable thead th:nth-child(5){
     width: 10%;
 }

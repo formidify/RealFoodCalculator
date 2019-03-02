@@ -62,16 +62,11 @@
 -->
         Sort By:
             <select id="category">
-                <option value="date">Date</option>
-                <option value="desc">Description</option>
-                <option value="cat">Category</option>
-                <option value="code">Product Code</option>
+                <option value="year,month">Date</option>
+                <option value="description">Description</option>
+                <option value="category">Category</option>
+                <option value="productCode">Product Code</option>
                 <option value="vendor">Vendor</option>
-                <option value="fair">Fair</option>
-                <option value="local">Local</option>
-                <option value="eco">Ecological</option>
-                <option value="humane">Humane</option>
-                <option value="disq">Disqualifier</option>
                 <option value="cost">Cost</option>
             </select>
 
@@ -92,7 +87,7 @@
     <br>
 
     <table id="results">
-      <thead> 
+      <thead>
        <tr>
             <th>Edit</th>
             <th>Month</th>
@@ -100,8 +95,10 @@
             <th>Description</th>
             <th>Category</th>
             <th>Product Code</th>
+            <th>Product Code Type</th>
             <th>Label/Brand</th>
             <th>Vendor</th>
+            <th>Rating Version</>
             <th>Local</th>
             <th></th>
             <th>Fair</th>
@@ -111,9 +108,16 @@
             <th>Humane</th>
             <th></th>
             <th>Disqualifier</th>
-            <th></th>
+            <th>Disqualifier Description</th>
+            <th>Costs</th>
             <th>Notes</th>
-            <th>Cost</th>
+            <th>Facility</th>
+
+            <!-- <th>Vendor</th>
+            <th>Desc.</th>
+            <th>Category</th>
+            <th>Real</th>
+            <th>Entry Date</th> -->
         </tr>
     </thead>
     </table>
