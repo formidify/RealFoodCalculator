@@ -1126,9 +1126,6 @@ Chart.defaults.global.plugins.datalabels.display = false;
 var ctx5 = document.getElementById("timeSeriesChart").getContext('2d');
 var myLineChart;
 
-initializeTimeChart();
-
-function initializeTimeChart() {
  lineChartData = {}
  lineChartData.datasets = []
 // add legend for real vs non real
@@ -1164,7 +1161,6 @@ myLineChart = new Chart(ctx5, {data: lineChartData,
               maintainAspectRatio: false
   }
 });
-}
 
 // add single item to the time series chart
 function addItemData() {
@@ -1393,11 +1389,13 @@ function remove_cat_time() {
 }
 
 function minusTime() {
+  if (sessionStorage.currentTimeCat == "") {return;}
   check = JSON.parse(sessionStorage.timeCurrCat)
   if (check.length > 0) { 
   $("#showTime").html(parseInt($("#showTime").html()) - 1)
   timeChartLabels = JSON.parse(sessionStorage.timeChartLabels)
   item = check[check.length - 1]
+
   index = timeChartLabels.indexOf(item) + 2
   myLineChart.data.datasets.splice(index, 1);
   timeChartLabels = removeElements([item], timeChartLabels)
@@ -1415,6 +1413,8 @@ function minusTime() {
   total_configs = removeElements(["real " + item, "total " + item], JSON.parse(sessionStorage.timeConfigs))
   myLineChart.update();
 
+  console.log(timeChartLabels)
+
   sessionStorage.setItem("timeConfigs", JSON.stringify(total_configs));
   sessionStorage.setItem("timeChartLabels", JSON.stringify(timeChartLabels));
 
@@ -1426,6 +1426,7 @@ function minusTime() {
 }
 
 function addTime() {
+  if (sessionStorage.currentTimeCat == "") {return;}
   check = JSON.parse(sessionStorage.timeNotCat)
   $("#showTime").html(parseInt($("#showTime").html()) + 1)
   if (check.length > 0) {
@@ -1434,12 +1435,12 @@ function addTime() {
     total_configs = JSON.parse(sessionStorage.timeConfigs)
     costs = JSON.parse(sessionStorage.timeCatCost)
     past = JSON.parse(sessionStorage.timeCurrCat)
-    cost = costs[past.length] // cost for current item to add
+
 
     color = "#" + intToARGB(hashCode(y))
     for (j = 0; j < types.length; j++) {
         line = {}
-        line.data = cost[j]
+        line.data = costs[j][past.length]
         line.type = 'line'
         line.label = types[j] + " " + y
         total_configs.push(line.label)
