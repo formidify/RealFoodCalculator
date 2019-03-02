@@ -1171,7 +1171,7 @@ myLineChart = new Chart(ctx5, {data: lineChartData,
   }
 });
 
-var table = $('time_table').DataTable();
+$(document).ready(function(){ var table = $('#time_table').DataTable(); });
 
 // add single item to the time series chart
 function addItemData() {
