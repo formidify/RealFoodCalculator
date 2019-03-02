@@ -1214,6 +1214,11 @@ sessionStorage.setItem("timeChartLabels", JSON.stringify(chart_labels)); // labe
 // add option to remove
 $('#buttons_time').append('<button class="btnic" id = "time_' + y + '" onclick = "remove_item_time(&quot ' + y + '&quot)"><i class="fa fa-close"></i> ' + y + '</button>');
 
+  show = parseInt($("#showTime").html()) + 1
+  all = parseInt($("#allTime").html()) + 1
+  $("#showTime").html(show)
+  $("#allTime").html(all)
+
     })
 
     sessionStorage.setItem("timeCurrent", JSON.stringify(current_list.concat([y])));
@@ -1313,6 +1318,11 @@ function remove_item_time(item) {
   item_id = "[id='time_" + item + "']"
   console.log(item_id)
   $(item_id).remove()
+
+  show = parseInt($("#showTime").html()) - 1
+  all = parseInt($("#allTime").html()) - 1
+  $("#showTime").html(show)
+  $("#allTime").html(all)
 
 }
 
