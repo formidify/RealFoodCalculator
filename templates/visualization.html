@@ -1005,8 +1005,7 @@ document.getElementById("increaseChart5").onclick = function(evt)
   Remove: 
 <button class="btnic" id = "canvas_time"><i class="fa fa-close"></i> Remove all canvas</button>
 <button class="btnic" id = "remove_cat_time"><i class="fa fa-close"></i> Remove selected category</button>
-<button class="btnic"><i class="fa fa-close"></i> chocolate</button>
-
+<div style = "display:inline" id = "buttons_time"></div>
 </div>
 </div>
 
@@ -1197,6 +1196,8 @@ total_configs = JSON.parse(sessionStorage.timeConfigs)
   myLineChart.update();
 
 sessionStorage.setItem("timeConfigs", JSON.stringify(total_configs));
+
+$('#div buttons_time').after('<button class="btnic" id = "remove_item_time(' + y + ')"><i class="fa fa-close"></i> ' + y + '</button>');
 
     })
 
