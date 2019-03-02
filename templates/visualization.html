@@ -1127,6 +1127,8 @@ var total_configs = JSON.parse(sessionStorage.timeConfigs)
 
 Chart.defaults.global.plugins.datalabels.display = false;
 
+updatedTimeColumn = true;
+
 
  types = ['total', 'real']
  dashes = [[0, 0], [10, 5]]
@@ -1182,6 +1184,18 @@ function addItemData() {
     searches.done(function(results) {
       types = ['total', 'real']
       myLineChart.data.labels = results.yrs
+
+      if (updatedTimeColumn) {
+        updatedTimeColumn = false;
+        var head_item = table.columns(0).header();
+        $(head_item).html(results.yrs[0]);
+
+        var head_item = table.columns(1).header();
+        $(head_item).html(results.yrs[1]);
+
+        var head_item = table.columns(2).header();
+        $(head_item).html(results.yrs[2]);
+      }
       //datasets = []
       color = "#" + intToARGB(hashCode(y))
 
@@ -1260,6 +1274,19 @@ function addCatData() {
     items = results.items
     types = ['total', 'real']
     myLineChart.data.labels = results.yrs
+
+    // update column years
+          if (updatedTimeColumn) {
+        updatedTimeColumn = false;
+        var head_item = table.columns(0).header();
+        $(head_item).html(results.yrs[0]);
+
+        var head_item = table.columns(1).header();
+        $(head_item).html(results.yrs[1]);
+
+        var head_item = table.columns(2).header();
+        $(head_item).html(results.yrs[2]);
+      }
 
     chart_labels = JSON.parse(sessionStorage.timeChartLabels);
     total_configs = JSON.parse(sessionStorage.timeConfigs)
