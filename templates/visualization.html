@@ -1383,6 +1383,7 @@ function remove_cat_time() {
 
   total_configs = removeElements(["real " + item, "total " + item], JSON.parse(sessionStorage.timeConfigs))
   sessionStorage.setItem("timeConfigs", JSON.stringify(total_configs));
+  console.log(item)
 
   }
   myLineChart.update();
