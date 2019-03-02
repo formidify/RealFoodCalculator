@@ -1230,7 +1230,7 @@ $('#buttons_time').append('<button class="btnic" id = "time_' + y + '" onclick =
 
 function addCatData() {
   cat = $("select#categoriesTime").val();
-  if (sessionStorage.currentTimeCat != "" && sessionStorage.currentTimeCat != cat) {
+  if (sessionStorage.currentTimeCat != cat) {
   remove_cat_time();
   curr = []
   not = []
