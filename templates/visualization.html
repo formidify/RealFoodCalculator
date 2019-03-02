@@ -1197,7 +1197,7 @@ total_configs = JSON.parse(sessionStorage.timeConfigs)
 
 sessionStorage.setItem("timeConfigs", JSON.stringify(total_configs));
 
-$('#div buttons_time').after('<button class="btnic" id = "remove_item_time(' + y + ')"><i class="fa fa-close"></i> ' + y + '</button>');
+$('buttons_time').after('<button class="btnic" id = "remove_item_time(' + y + ')"><i class="fa fa-close"></i> ' + y + '</button>');
 
     })
 
