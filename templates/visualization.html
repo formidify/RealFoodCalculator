@@ -1362,6 +1362,7 @@ function remove_cat_time() {
   curr = JSON.parse(sessionStorage.timeCurrCat)
   console.log(curr)
   console.log(timeChartLabels)
+  console.log(curr.length)
   for (i = 0; i < curr.length; i++) {
     item = curr[i]
     console.log(item)
@@ -1390,6 +1391,9 @@ function remove_cat_time() {
 
   sessionStorage.setItem("timeChartLabels", JSON.stringify(timeChartLabels));
   sessionStorage.setItem("currentTimeCat", "");
+
+  $("#showTime").html(0)
+  $("#allTime").html(0)
 }
 
 function clearCanvasTime() {
