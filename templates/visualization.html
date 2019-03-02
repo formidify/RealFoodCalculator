@@ -1208,7 +1208,7 @@ total_configs = JSON.parse(sessionStorage.timeConfigs)
   myLineChart.update();
 
 sessionStorage.setItem("timeConfigs", JSON.stringify(total_configs));
-sessionStorage.setItem("timeChartLabels", chart_labels); // labels
+sessionStorage.setItem("timeChartLabels", JSON.stringify(chart_labels)); // labels
 
 // add option to remove
 $('#buttons_time').append('<button class="btnic" id = "time_' + y + '" onclick = "remove_item_time(&quot ' + y + '&quot)"><i class="fa fa-close"></i> ' + y + '</button>');
