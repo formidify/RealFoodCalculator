@@ -1426,8 +1426,54 @@ function minusTime() {
 }
 
 function addTime() {
-  $("#showTime").html(0) = $("#showTime").html() + 1
+  check = JSON.parse(sessionStorage.timeNotCat)
+  $("#showTime").html($("#showTime").html() + 1)
+  if (check.length > 0) {
+    y = check[0]
+    chart_labels = JSON.parse(sessionStorage.timeChartLabels);
+    total_configs = JSON.parse(sessionStorage.timeConfigs)
+    costs = JSON.parse(sessionStorage.timeCatCost)
+    past = JSON.parse(sessionStorage.timeCurrCat)
+    cost = costs[past.length] // cost for current item to add
+    for (j = 0; j < types.length; j++) {
+        line = {}
+        line.data = cost[j]
+        line.type = 'line'
+        line.label = types[j] + " " + y
+        total_configs.push(line.label)
+        chart_labels.push(line.label)
+        //line.backgroundColor = colors[i]
+        line.borderColor = color
+        line.fill = false
+        if (j > 0) {
+            line.borderDash = [10, 5]
+        }
+        myLineChart.data.datasets.push(line)
+    }
+// console.log(datasets.toString())
+// add legend for each item
+    line = {}
+    line.data = 0 // arbitrary
+    line.type = 'line'
+    line.label = y
+    chart_labels.push(line.label)
+    line.backgroundColor = color
+    line.borderColor = color
+    //line.fillColor = colors[i]
+    line.fill = true
+    line.showLine = false
+    myLineChart.data.datasets.push(line)
+
+  myLineChart.update();
+  sessionStorage.setItem("timeConfigs", JSON.stringify(total_configs));
+  sessionStorage.setItem("timeChartLabels", JSON.stringify(timeChartLabels));
+
+  check.splice(0, 1)
+  sessionStorage.setItem("timeCurrCat", JSON.stringify(past.concat([item])));
+  sessionStorage.setItem("timeNotCat", JSON.stringify(check);
+  }
 }
+
 function clearCanvasTime() {
 current = JSON.parse(sessionStorage.timeCurrent)
 for (t = 0; t < current.length; t++) {
