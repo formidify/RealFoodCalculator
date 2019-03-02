@@ -977,12 +977,12 @@ document.getElementById("increaseChart5").onclick = function(evt)
   <div class = "control" style = "display: inline-block">
 
 <div class="quantity buttons_added">
-  Showing
+  Show
   <input type="button" value="-" class="minus" onclick = "minusTime()">
-  <input type="number" step="1" min="0" max="" name="quantity" value="0" title="Qty" class="input-text qty text" size="4" pattern="" inputmode="" id = "showTime">
+  <div id = "showTime">0</div>
   <input type="button" value="+" class="plus" onclick = "addTime()">
-  out of 
-  <input type="number" step="1" min="0" max="" name="quantity" value="0" title="Qty" class="input-text qty text" size="4" pattern="" inputmode="" id = "totalTime">
+  out of <div id = "allTime">0</div>
+  
 </div>
 
 </div>
