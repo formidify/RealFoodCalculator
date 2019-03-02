@@ -144,6 +144,7 @@ function getBaseWebURL() {
 
 function vd_go_btn() {
   console.log("Go button pressed");
+  var orderBy = document.getElementById("category");
   var table = document.getElementById('results');
   var table_len = table.getElementsByTagName('tr').length;
   console.log(table_len);
@@ -162,19 +163,19 @@ function vd_go_btn() {
       queryStrings.push(element.getAttribute("placeholder").toLowerCase()+"="+element.value+"&");
     }
   }
-  // TODO : PUT IN SOMETHING ABOUT SORTING
+  queryStrings.push("orderBy="+orderBy.value);
   console.log("queryString -> " + queryStrings);
   var query = getBaseApiURL()+"/test_data_large?";
   for (var i=0; i<queryStrings.length; i++){
     var str = queryStrings[i];
     query = query+str;
   }
-  var url = query.substring(0,query.length - 1);
-  console.log("url -> " + url);
+  /*var url = query.substring(0,query.length - 1);
+  console.log("url -> " + url);*/
 
   var search_result={};
 
-  fetch(url)
+  fetch(query)
     .then(res => res.json())
     .then((out) => {
       search_result=out;
@@ -194,25 +195,28 @@ function append_json(data){
     tr.innerHTML =
     '<td>'+'<button class="editbtn" onclick="editbtn(' +
     cur_row.toString()+');">' + 'edit</button></td>' +
-    '<td contenteditable=false>' + object.month + '</td>' +
-    '<td contenteditable=false>' + object.year + '</td>' +
-    '<td contenteditable=false>' + object.description + '</td>' +
-    '<td contenteditable=false>' + object.category + '</td>' +
-    '<td contenteditable=false>' + object.productCode + '</td>' +
-    '<td contenteditable=false>' + object.brand + '</td>' +
-    '<td contenteditable=false>' + object.vendor + '</td>' +
-    '<td contenteditable=false>' + object.local + '</td>' +
-    '<td contenteditable=false>' + object.localDescription + '</td>' +
-    '<td contenteditable=false>' + object.fair + '</td>' +
-    '<td contenteditable=false>' + object.fairDescription + '</td>' +
-    '<td contenteditable=false>' + object.ecological + '</td>' +
-    '<td contenteditable=false>' + object.ecologicalDescription + '</td>' +
-    '<td contenteditable=false>' + object.humane + '</td>' +
-    '<td contenteditable=false>' + object.humaneDescription + '</td>' +
-    '<td contenteditable=false>' + object.disqualifier + '</td>' +
-    '<td contenteditable=false>' + object.disqualifierDescription + '</td>' +
-    '<td contenteditable=false>' + object.notes + '</td>' +
-    '<td contenteditable=false>' + object.cost + '</td>';
+    '<td contenteditable=false title="month">' + object.month + '</td>' +
+    '<td contenteditable=false title= "year">' + object.year + '</td>' +
+    '<td contenteditable=false title="description">' + object.description + '</td>' +
+    '<td contenteditable=false title="category">' + object.category + '</td>' +
+    '<td contenteditable=false title="productCode">' + object.productCode + '</td>' +
+    '<td contenteditable=false title="productCodeType">' + object.productCodeType + '</td>' +
+    '<td contenteditable=false title="brand">' + object.brand + '</td>' +
+    '<td contenteditable=false title="vendor">' + object.vendor + '</td>' +
+    '<td contenteditable=false title="rating">' + object.rating + '</td>' +
+    '<td contenteditable=false title="local">' + object.local + '</td>' +
+    '<td contenteditable=false title="localDescription">' + object.localDescription + '</td>' +
+    '<td contenteditable=false title="fair">' + object.fair + '</td>' +
+    '<td contenteditable=false title="fairDescription">' + object.fairDescription + '</td>' +
+    '<td contenteditable=false title="ecological">' + object.ecological + '</td>' +
+    '<td contenteditable=false title="ecologicalDescription">' + object.ecologicalDescription + '</td>' +
+    '<td contenteditable=false title="humane">' + object.humane + '</td>' +
+    '<td contenteditable=false title="humaneDescription">' + object.humaneDescription + '</td>' +
+    '<td contenteditable=false title="disqualifier">' + object.disqualifier + '</td>' +
+    '<td contenteditable=false title="disqualfierDescription">' + object.disqualifierDescription + '</td>' +
+    '<td contenteditable=false title="cost">' + object.cost + '</td>' +
+    '<td contenteditable=false title="notes" >' + object.notes + '</td>' +
+    '<td contenteditable=false title="facility" >' + object.facility + '</td>';
     table.appendChild(tr);
     tr.setAttribute("id",'cur_row'+cur_row.toString());
     // TODO : might not need class = can_updt
@@ -225,12 +229,17 @@ function editbtn(cur_row){
   //console.log('current row = ' + cur_row);
   //console.log('current id = ' + document.getElementById('cur_row'+cur_row).getAttribute("id"));
   // TODO : before letting edit, save the json for this whole row and save it to query later
+  origInfo={}
   var edit_cells = document.getElementById('cur_row'+cur_row).getElementsByTagName('td');
   var parent = document.getElementById('cur_row'+cur_row);
   var child = parent.getElementsByTagName('td')[0];
   for (var i=1; i<edit_cells.length; i++){
-    edit_cells[i].setAttribute('contenteditable', 'true');
+    var cur_cell = edit_cells[i];
+    cur_cell.setAttribute('contenteditable', 'true');
+    origInfo[cur_cell.getAttribute("title")]=cur_cell.innerHTML;
   }
+  /*console.log("original_info ->", origInfo);*/
+  localStorage.setItem("origInfo",JSON.stringify(origInfo));
   child.remove();
 
   var cell = document.createElement('td');
@@ -247,13 +256,68 @@ function editbtn(cur_row){
 
 function savebtn(cur_row){
   // TODO : CHANGE THE ACTUAL DATABASE
+  var newInfo={};
+  var queryStrings=[];
   var edit_cells = document.getElementById('cur_row'+cur_row).getElementsByTagName('td');
   var parent = document.getElementById('cur_row'+cur_row);
   var child = parent.getElementsByTagName('td')[0];
   for (var i=1; i<edit_cells.length; i++){
-    edit_cells[i].setAttribute('contenteditable', 'false');
+    var cur_cell=edit_cells[i];
+    cur_cell.setAttribute('contenteditable', 'false');
+    newInfo[cur_cell.getAttribute("title")]=cur_cell.innerHTML;
   }
   child.remove();
+  var origInfo = JSON.parse(localStorage.getItem("origInfo"));
+  console.log(origInfo);
+
+/*********************************************************************/
+  for (var key in origInfo){
+    if (origInfo[key]!= ""){
+      queryStrings.push(key+"="+origInfo[key]+"&");
+      //console.log(key + "=======" + origInfo[key]);
+    }
+  }
+  console.log("queryString -> " + queryStrings);
+  var base_query = "";
+  //var select_query = getBaseApiURL()+"/test_data_large?";
+  //var del_query = getBaseApiURL()+"/delete_entry?";
+  for (var i=0; i<queryStrings.length; i++){
+    var str = queryStrings[i];
+    base_query = base_query+str;
+  }
+  var url = getBaseApiURL()+"/test_data_large?"+base_query.substring(0,base_query.length - 1);
+  var del_url = getBaseApiURL()+"/delete_entry?"+base_query.substring(0,base_query.length - 1);
+  console.log("url -> " + url);
+  console.log("delete_url ->" + del_url);
+
+  var jsonString = fetch(url)
+    .then(res => res.json())
+    .then((out) => {
+      console.log(out);
+      return JSON.stringify(out); })
+    .catch(err => { throw err });
+
+  console.log(jsonString);
+
+  var jsonString2 = fetch(del_url)
+    .then(res => res.json())
+    .then((out) => {
+      console.log(out);
+      return JSON.stringify(out); })
+    .catch(err => { throw err });
+
+  console.log(jsonString2);
+
+  var jsonString3 = fetch(url)
+    .then(res => res.json())
+    .then((out) => {
+      console.log(out);
+      return JSON.stringify(out); })
+    .catch(err => { throw err });
+
+  console.log(jsonString3);
+/*********************************************************************/
+ // TODO : got json of
 
   var cell = document.createElement('td');
   var para = document.createElement("button");
@@ -299,7 +363,7 @@ function exportTableToCSV(filename) {
     for (var i = 0; i < rows.length; i++) {
         var row = [], cols = rows[i].querySelectorAll("td, th");
 
-        for (var j = 0; j < cols.length; j++)
+        for (var j = 1; j < cols.length; j++)
             row.push('"'+cols[j].innerText+'"');
 
         csv.push(row.join(","));
