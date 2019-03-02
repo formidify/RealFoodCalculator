@@ -984,7 +984,7 @@ document.getElementById("increaseChart5").onclick = function(evt)
   <input type="button" value="-" class="minus" onclick = "minusTime()">
   <div id = "showTime" style = "display: inline">0</div>
   <input type="button" value="+" class="plus" onclick = "addTime()">
-  out of <div id = "allTime" style = "display: inline">0</div>
+  out of <div id = "allTime" style = "display: inline">0</div> of the selected category
   
 </div>
 
@@ -994,7 +994,7 @@ document.getElementById("increaseChart5").onclick = function(evt)
     <datalist id="items_time"></datalist>
     <input id = "submit_item_time" type="submit" value="submit" onclick = "addItemData()">
 <a> AND/OR </a>
-<a> Add by category: </a>
+<a> Select a category: </a>
 <select id = "categoriesTime">
   <option disabled selected value> select an option </option>
 </select>
@@ -1090,6 +1090,9 @@ sessionStorage.setItem("timeSearch", JSON.stringify([])); // previous searches
 sessionStorage.setItem("timeCurrent", JSON.stringify([])); // current items added
 sessionStorage.setItem("timeConfigs", JSON.stringify([])); // different configurations for the chart
 sessionStorage.setItem("timeChartLabels", JSON.stringify([])); // labels
+
+sessionStorage.setItem("timeCurrCat", JSON.stringify([]));
+sessionStorage.setItem("timeNotCat", JSON.stringify([])); 
 
 function searchItem() {
   x = document.getElementById("add_time").value;
@@ -1213,11 +1216,11 @@ sessionStorage.setItem("timeChartLabels", JSON.stringify(chart_labels)); // labe
 
 // add option to remove
 $('#buttons_time').append('<button class="btnic" id = "time_' + y + '" onclick = "remove_item_time(&quot ' + y + '&quot)"><i class="fa fa-close"></i> ' + y + '</button>');
-
+  /*
   show = parseInt($("#showTime").html()) + 1
   all = parseInt($("#allTime").html()) + 1
   $("#showTime").html(show)
-  $("#allTime").html(all)
+  $("#allTime").html(all) */
 
     })
 
@@ -1226,20 +1229,26 @@ $('#buttons_time').append('<button class="btnic" id = "time_' + y + '" onclick =
 }
 
 function addCatData() {
-  current_list = JSON.parse(sessionStorage.timeCurrent);
   cat = $("select#categoriesTime").val();
+  if (sessionStorage.currentTimeCat != "" && sessionStorage.currentTimeCat != cat) {
+  remove_cat_time();
+  curr = []
+  not = []
   searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/get_categories_time/" + cat);
   searches.done(function(results) {
+    num_items = Math.min(results.items.length, 3)
+
     cost = results.cost
     items = results.items
     types = ['total', 'real']
     myLineChart.data.labels = results.yrs
 
+    chart_labels = JSON.parse(sessionStorage.timeChartLabels);
     total_configs = JSON.parse(sessionStorage.timeConfigs)
 
     colors = []
 
-    for (i = 0; i < items.length; i++) {
+    for (i = 0; i < num_items; i++) {
       if (!current_list.includes(items[i])) {
     for (j = 0; j < types.length; j++) {
         line = {}
@@ -1248,7 +1257,8 @@ function addCatData() {
         line.label = types[j] + " " + items[i]
 
         total_configs.push(line.label)
-
+        chart_labels.push(line.label)
+        curr.push(items)
         //line.backgroundColor = colors[i]
         color = "#" + intToARGB(hashCode(items[i]))
         colors.push(color)
@@ -1269,20 +1279,30 @@ function addCatData() {
     //line.fillColor = colors[i]
     line.fill = true
     line.showLine = false
+    chart_labels.push(line.label)
     myLineChart.data.datasets.push(line)
 
     current_list = current_list.concat([items[i]])
   }
   }
 
+  for (k = num_items; k < items.length; k++) {
+    not.push(items[k])
+  } 
+
 
   myLineChart.update();
   sessionStorage.setItem("timeConfigs", JSON.stringify(total_configs));
+   sessionStorage.setItem("timeChartLabels", JSON.stringify(chart_labels));
+
+  sessionStorage.setItem("timeCurrCat", JSON.stringify(curr));
+  sessionStorage.setItem("timeNotCat", JSON.stringify(not));
+  sessionStorage.setItem("timeCatCost", JSON.stringify(cost));
 
 
   })
-  sessionStorage.setItem("timeCurrent", JSON.stringify(current_list));
-
+  sessionStorage.setItem("currentTimeCat", cat);
+}
 };
 
 function remove_item_time(item) {
@@ -1319,19 +1339,59 @@ function remove_item_time(item) {
   console.log(item_id)
   $(item_id).remove()
 
+  /*
   show = parseInt($("#showTime").html()) - 1
   all = parseInt($("#allTime").html()) - 1
   $("#showTime").html(show)
   $("#allTime").html(all)
+  */
 
 }
 
 function remove_cat_time() {
+  timeChartLabels = JSON.parse(sessionStorage.timeChartLabels)
+  curr = JSON.parse(sessionStorage.timeCurrCat)
+  for (i = 0; i < curr.length; i++) {
+    item = curr[i]
+// remove legend data
+  index = timeChartLabels.indexOf(item) + 2
+  myLineChart.data.datasets.splice(index, 1);
+  timeChartLabels = removeElements([item], timeChartLabels)
 
+  // remove real data
+  index = timeChartLabels.indexOf("real " + item) + 2
+  myLineChart.data.datasets.splice(index, 1);
+  timeChartLabels = removeElements(["real " + item], timeChartLabels)
+
+  // remove total data in chart
+  index = timeChartLabels.indexOf("total " + item) + 2
+  myLineChart.data.datasets.splice(index, 1);
+  timeChartLabels = removeElements(["total " + item], timeChartLabels)
+
+  total_configs = removeElements(["real " + item, "total " + item], JSON.parse(sessionStorage.timeConfigs))
+
+  myLineChart.update();
+
+
+  sessionStorage.setItem("timeCurrCat", JSON.stringify([]));
+  sessionStorage.setItem("timeNotCat", JSON.stringify([]));
+  sessionStorage.setItem("timeConfigs", JSON.stringify(total_configs));
+  sessionStorage.setItem("timeChartLabels", JSON.stringify(timeChartLabels));
+  sessionStorage.setItem("currentTimeCat", "");
+  }
 }
 
 function clearCanvas() {
+sessionStorage.setItem("currentTimeCat", "") // current investigated category
+sessionStorage.setItem("timeSearch", JSON.stringify([])); // previous searches
+sessionStorage.setItem("timeCurrent", JSON.stringify([])); // current items added
+sessionStorage.setItem("timeConfigs", JSON.stringify([])); // different configurations for the chart
+sessionStorage.setItem("timeChartLabels", JSON.stringify([])); // labels
 
+sessionStorage.setItem("timeCurrCat", JSON.stringify([]));
+sessionStorage.setItem("timeNotCat", JSON.stringify([])); 
+
+myLineChart.clear();
 }
 </script>
 
