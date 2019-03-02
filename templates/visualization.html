@@ -1236,7 +1236,7 @@ $('#buttons_time').append('<button class="btnic" id = "time_' + y + '" onclick =
 
 function addCatData() {
   cat = $("select#categoriesTime").val();
-  if (sessionStorage.currentTimeCat != "") { 
+  if (sessionStorage.currentTimeCat != "" && sessionStorage.currentTimeCat != cat) { 
       remove_cat_time();
     }
   if (sessionStorage.currentTimeCat != cat) {
@@ -1360,12 +1360,8 @@ function remove_item_time(item) {
 function remove_cat_time() {
   timeChartLabels = JSON.parse(sessionStorage.timeChartLabels)
   curr = JSON.parse(sessionStorage.timeCurrCat)
-  console.log(curr)
-  console.log(timeChartLabels)
-  console.log(curr.length)
   for (p = 0; p < curr.length; p++) {
     item = curr[p]
-    console.log(item)
 // remove legend data
   index = timeChartLabels.indexOf(item) + 2
   myLineChart.data.datasets.splice(index, 1);
@@ -1383,7 +1379,6 @@ function remove_cat_time() {
 
   total_configs = removeElements(["real " + item, "total " + item], JSON.parse(sessionStorage.timeConfigs))
   sessionStorage.setItem("timeConfigs", JSON.stringify(total_configs));
-  console.log(item)
 
   }
   myLineChart.update();
