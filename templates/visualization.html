@@ -335,9 +335,28 @@ function searchItemPercent() {
 }
 };
 
+// initialize my bar chart
 var myBarChart;
   ctx2 = document.getElementById("percentChart").getContext('2d');
   myBarChart = new Chart(ctx2, {
+    data:{
+      datasets: [{
+          label: "real",
+          data: [],
+          borderWidth: 2
+      },
+      {
+          label: "non-real",
+          data: [],
+          borderWidth: 2
+        }
+      ],
+      // These labels appear in the legend and in the tooltips when hovering different arcs
+      labels: [],
+      options: {
+          responsive: true
+      }
+  },
       type: 'bar',
       options: {
           scales: {
@@ -371,66 +390,28 @@ function addItemDataPercent() {
     searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/item_data/" + y + "+percent+" + year);
 
     searches.done(function(results) {
-      types = ['total', 'real']
-      myLineChart.data.labels = results.yrs
 
-      if (updatedTimeColumn) {
-        updatedTimeColumn = false;
-        var head_item = table.columns(2).header();
-        $(head_item).html(results.yrs[0]);
+      // elements by index: item, real, nonreal, minus, sum
+      data = results.data
 
-        var head_item = table.columns(3).header();
-        $(head_item).html(results.yrs[1]);
-
-        var head_item = table.columns(4).header();
-        $(head_item).html(results.yrs[2]);
-      }
       //datasets = []
-      color = "#" + intToARGB(hashCode(y))
+      myBarChart.data.datasets[0].data.push(data[1])
+      myBarChart.data.datasets[0].backgroundColor.push('rgba(255, 99, 132, 0.2)')
+      myBarChart.data.datasets[0].borderColor.push('rgba(255, 99, 132, 1)')
 
-      cost = results.cost
+      myBarChart.data.datasets[1].data.push(data[2])
+      myBarChart.data.datasets[1].backgroundColor.push('rgba(255, 159, 64, 0.2)')
+      myBarChart.data.datasets[1].borderColor.push('rgba(255, 159, 64, 1)')
 
-chart_labels = JSON.parse(sessionStorage.timeChartLabels);
-total_configs = JSON.parse(sessionStorage.timeConfigs)
+      myBarChart.data.labels.push(data[0])
 
-    for (j = 0; j < types.length; j++) {
-        line = {}
-        line.data = cost[j]
-        line.type = 'line'
-        line.label = types[j] + " " + y
-        total_configs.push(line.label)
-        chart_labels.push(line.label)
-        //line.backgroundColor = colors[i]
-        line.borderColor = color
-        line.fill = false
-        if (j > 0) {
-            line.borderDash = [10, 5]
-        }
-        myLineChart.data.datasets.push(line)
-        table.row.add([y, types[j], cost[j][0], cost[j][1], cost[j][2]]).draw(false)
-    }
-// console.log(datasets.toString())
-// add legend for each item
-    line = {}
-    line.data = 0 // arbitrary
-    line.type = 'line'
-    line.label = y
-    chart_labels.push(line.label)
-    line.backgroundColor = color
-    line.borderColor = color
-    //line.fillColor = colors[i]
-    line.fill = true
-    line.showLine = false
-    myLineChart.data.datasets.push(line)
 
-  myLineChart.update();
-  console.log(myLineChart.data.datasets)
 
-sessionStorage.setItem("timeConfigs", JSON.stringify(total_configs));
-sessionStorage.setItem("timeChartLabels", JSON.stringify(chart_labels)); // labels
+      myLineChart.update();
+
 
 // add option to remove
-$('#buttons_time').append('<button class="btnic" id = "time_' + y + '" onclick = "remove_item_time(&quot ' + y + '&quot)"><i class="fa fa-close"></i> ' + y + '</button>');
+$('#buttons_percent').append('<button class="btnic" id = "percent_' + y + '" onclick = "remove_percent_time(&quot ' + y + '&quot)"><i class="fa fa-close"></i> ' + y + '</button>');
   /*
   show = parseInt($("#showTime").html()) + 1
   all = parseInt($("#allTime").html()) + 1
@@ -439,7 +420,7 @@ $('#buttons_time').append('<button class="btnic" id = "time_' + y + '" onclick =
 
     })
 
-    sessionStorage.setItem("timeCurrent", JSON.stringify(current_list.concat([y])));
+    sessionStorage.setItem("percentCurrent", JSON.stringify(current_list.concat([y])));
   }
 }
 
@@ -458,61 +439,6 @@ var new_real = [];
 var new_nonreal = [];
 var new_label = [];
 
- barData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/bar_data/produce+total')
- var myBarChart;
-
-barData.done(function(results) {
-  // bar plot
-   items = results.items // food items
-   real_color = Array(items.length).fill('rgba(255, 99, 132, 0.2)')
-   nonreal_color = Array(items.length).fill('rgba(255, 159, 64, 0.2)')
-
-   real_border_color = Array(items.length).fill('rgba(255,99,132,1)')
-   nonreal_border_color = Array(items.length).fill('rgba(255, 159, 64, 1)')
-
-  data = {
-      datasets: [{
-          label: "real",
-          data: results.real,
-          borderWidth: 2,
-          backgroundColor: real_color,
-          borderColor: real_border_color
-      },
-      {
-          label: "non-real",
-          data: results.nonreal,
-          borderWidth: 2,
-          backgroundColor: nonreal_color,
-          borderColor: nonreal_border_color
-        }
-      ],
-      // These labels appear in the legend and in the tooltips when hovering different arcs
-      labels: items,
-      options: {
-          responsive: true
-      }
-  };
-
-   ctx2 = document.getElementById("percentChart").getContext('2d');
-  myBarChart = new Chart(ctx2, {
-      type: 'bar',
-      data: data,
-      options: {
-          scales: {
-              xAxes: [{
-                  stacked: true
-              }],
-              yAxes: [{
-                  stacked: true
-              }]},
-              title: {
-              display: true,
-              text: "Purchase for total produce"
-          }
-
-      }
-  });
-})
 
 // update bar chart
 function updateBarChart(cat, yr){

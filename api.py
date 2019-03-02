@@ -625,7 +625,8 @@ def get_item_data(item, type, year):
         query = """SELECT COALESCE(Z.description, B.description)
             AS description, COALESCE(Z.real, 0)
             AS real, COALESCE(B.nonreal, 0)
-            AS nonreal FROM (SELECT description, SUM(cost)
+            AS nonreal, (COALESCE(nonreal,0) - COALESCE(real,0)) AS minus, (COALESCE(nonreal,0) + COALESCE(real,0)) AS sum
+            FROM (SELECT description, SUM(cost)
             AS real FROM test_data_large WHERE year = {y} AND description = '{d}' AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't')
             GROUP BY description) Z FULL OUTER JOIN (SELECT description, SUM(cost) AS nonreal FROM
             (SELECT COALESCE(local, 'f') AS local, COALESCE(fair, 'f') AS fair, COALESCE(ecological, 'f') AS ecological, COALESCE(humane, 'f') AS humane,
@@ -642,6 +643,8 @@ def get_item_data(item, type, year):
             except Exception as e:
                 print(e)
             connection.close()
+
+        return flask.jsonify({"data": data})
 
     # add item for hypothetical increase chart
     if type == 'increase':
