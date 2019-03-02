@@ -1314,7 +1314,6 @@ function addCatData() {
             line.borderDash = [10, 5]
         }
         myLineChart.data.datasets.push(line)
-        table.row.add([items[i], types[j], cost[j][i][0], cost[j][i][1], cost[j][i][2]]).draw(false)
     }
     // legend line
     line = {}
@@ -1328,6 +1327,13 @@ function addCatData() {
     line.showLine = false
     chart_labels.push(line.label)
     myLineChart.data.datasets.push(line)
+  }
+
+  // add data to table
+  for (i = 0; i < num_items; i++) {
+    for (j = 0; j < types.length; j++) {
+      table.row.add([items[i], types[j], cost[j][i][0], cost[j][i][1], cost[j][i][2]]).draw(false)
+    }
   }
 
   for (k = num_items; k < items.length; k++) {
@@ -1383,6 +1389,13 @@ function remove_item_time(item) {
   console.log(item_id)
   $(item_id).remove()
 
+  table
+    .rows( function ( idx, data, node ) {
+        return data[0] === item;
+    } )
+    .remove()
+    .draw();
+
   /*
   show = parseInt($("#showTime").html()) - 1
   all = parseInt($("#allTime").html()) - 1
@@ -1415,6 +1428,13 @@ function remove_cat_time() {
   total_configs = removeElements(["real " + item, "total " + item], JSON.parse(sessionStorage.timeConfigs))
   sessionStorage.setItem("timeConfigs", JSON.stringify(total_configs));
 
+    table
+    .rows( function ( idx, data, node ) {
+        return data[0] === item;
+    } )
+    .remove()
+    .draw();
+    
   }
   myLineChart.update();
   sessionStorage.setItem("timeCurrCat", JSON.stringify([]));
@@ -1425,6 +1445,7 @@ function remove_cat_time() {
 
   $("#showTime").html(0)
   $("#allTime").html(0)
+
 }
 
 function minusTime() {
