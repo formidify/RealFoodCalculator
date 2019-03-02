@@ -1254,6 +1254,7 @@ function addCatData() {
     colors = []
 
     for (i = 0; i < num_items; i++) {
+      curr.push(items[i])
     for (j = 0; j < types.length; j++) {
         line = {}
         line.data = cost[j][i]
@@ -1262,7 +1263,6 @@ function addCatData() {
 
         total_configs.push(line.label)
         chart_labels.push(line.label)
-        curr.push(items)
         //line.backgroundColor = colors[i]
         color = "#" + intToARGB(hashCode(items[i]))
         colors.push(color)
