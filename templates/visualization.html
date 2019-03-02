@@ -1280,17 +1280,19 @@ function addCatData() {
 };
 
 function remove_item_time(item) {
+  timeChartLabels = JSON.parse(sessionStorage.timeChartLabels)
+  console.log(timeChartLabels)
 
   // remove legend data
-  index = sessionStorage.timeChartLabels.indexOf(item)
+  index = timeChartLabels.indexOf(item)
   myLineChart.data.datasets.splice(index, 1);
 
   // remove real data
-  index = sessionStorage.timeChartLabels.indexOf("real " + item)
+  index = timeChartLabels.indexOf("real " + item)
   myLineChart.data.datasets.splice(index, 1);
 
   // remove total data in chart
-  index = sessionStorage.timeChartLabels.indexOf("total " + item)
+  index = timeChartLabels.indexOf("total " + item)
   myLineChart.data.datasets.splice(index, 1);
 
   total_configs = removeElements(["real " + item, "total " + item], JSON.parse(sessionStorage.timeConfigs))
@@ -1300,7 +1302,7 @@ function remove_item_time(item) {
 
   sessionStorage.setItem("timeCurrent", JSON.stringify(removeElements([item], JSON.parse(sessionStorage.timeCurrent))));
   sessionStorage.setItem("timeConfigs", JSON.stringify(total_configs));
-  sessionStorage.setItem("timeChartLabels", JSON.stringify(removeElements([item, "real " + item, "total " + item], JSON.parse(sessionStorage.timeChartLabels))));
+  sessionStorage.setItem("timeChartLabels", JSON.stringify(removeElements([item, "real " + item, "total " + item], timeChartLabels)));
 
   item_id = "time_" + item
   el = document.getElementById(item_id);
