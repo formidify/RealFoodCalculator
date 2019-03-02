@@ -1126,9 +1126,6 @@ Chart.defaults.global.plugins.datalabels.display = false;
 var ctx5 = document.getElementById("timeSeriesChart").getContext('2d');
 var myLineChart;
 
-initializeTimeChart();
-
-function initializeTimeChart() {
  lineChartData = {}
  lineChartData.datasets = []
 // add legend for real vs non real
@@ -1164,7 +1161,6 @@ myLineChart = new Chart(ctx5, {data: lineChartData,
               maintainAspectRatio: false
   }
 });
-}
 
 // add single item to the time series chart
 function addItemData() {
