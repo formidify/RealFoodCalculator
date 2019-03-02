@@ -1310,7 +1310,7 @@ function remove_item_time(item) {
   sessionStorage.setItem("timeChartLabels", JSON.stringify(timeChartLabels));
 
   //item_id = "#time_" + item
-  item_id = "[id=time_" + item + "]"
+  item_id = "[id='time_" + item + "']"
   console.log(item_id)
   $(item_id).remove()
 
