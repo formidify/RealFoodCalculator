@@ -333,9 +333,37 @@ function searchItemPercent() {
 }
 };
 
+   real_color = Array(items.length).fill('rgba(255, 99, 132, 0.2)')
+   nonreal_color = Array(items.length).fill('rgba(255, 159, 64, 0.2)')
+
+   real_border_color = Array(items.length).fill('rgba(255,99,132,1)')
+   nonreal_border_color = Array(items.length).fill('rgba(255, 159, 64, 1)')
+
 var myBarChart;
   ctx2 = document.getElementById("percentChart").getContext('2d');
   myBarChart = new Chart(ctx2, {
+    data:{
+      datasets: [{
+          label: "real",
+          data: [],
+          borderWidth: 2,
+          backgroundColor: real_color,
+          borderColor: real_border_color
+      },
+      {
+          label: "non-real",
+          data: [],
+          borderWidth: 2,
+          backgroundColor: nonreal_color,
+          borderColor: nonreal_border_color
+        }
+      ],
+      // These labels appear in the legend and in the tooltips when hovering different arcs
+      labels: [],
+      options: {
+          responsive: true
+      }
+  },
       type: 'bar',
       options: {
           scales: {
@@ -412,61 +440,6 @@ var new_real = [];
 var new_nonreal = [];
 var new_label = [];
 
- barData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/bar_data/produce+total')
- var myBarChart;
-
-barData.done(function(results) {
-  // bar plot
-   items = results.items // food items
-   real_color = Array(items.length).fill('rgba(255, 99, 132, 0.2)')
-   nonreal_color = Array(items.length).fill('rgba(255, 159, 64, 0.2)')
-
-   real_border_color = Array(items.length).fill('rgba(255,99,132,1)')
-   nonreal_border_color = Array(items.length).fill('rgba(255, 159, 64, 1)')
-
-  data = {
-      datasets: [{
-          label: "real",
-          data: results.real,
-          borderWidth: 2,
-          backgroundColor: real_color,
-          borderColor: real_border_color
-      },
-      {
-          label: "non-real",
-          data: results.nonreal,
-          borderWidth: 2,
-          backgroundColor: nonreal_color,
-          borderColor: nonreal_border_color
-        }
-      ],
-      // These labels appear in the legend and in the tooltips when hovering different arcs
-      labels: items,
-      options: {
-          responsive: true
-      }
-  };
-
-   ctx2 = document.getElementById("percentChart").getContext('2d');
-  myBarChart = new Chart(ctx2, {
-      type: 'bar',
-      data: data,
-      options: {
-          scales: {
-              xAxes: [{
-                  stacked: true
-              }],
-              yAxes: [{
-                  stacked: true
-              }]},
-              title: {
-              display: true,
-              text: "Purchase for total produce"
-          }
-
-      }
-  });
-})
 
 // update bar chart
 function updateBarChart(cat, yr){
