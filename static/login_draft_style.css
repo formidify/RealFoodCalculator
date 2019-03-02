@@ -1,28 +1,27 @@
+@font-face { font-family: Yummy; src: url('Montserrat-Light.ttf'); }
 body{
     margin: 0;
     padding: 0;
-    background: url(pic1.jpg);
+    background: url(apricot.jpeg);
     background-size: cover;
     background-position: center;
-    font-family: sans-serif
+    font-family: Yummy;
 }
 
 .loginbox{
     width: 320px;
     height: 420px;
-    background: #000;
-    color: #fff;
+    background: #c6b8a7;
+    color: #511e03;
     top: 50%;
     left: 50%;
-    margin-top: -160px;
-    margin-left: -210px;
+    margin-top: -200px;
+    margin-left: -170px;
     position: relative;
     transform: translate(-50%,-50%)
     box-sizing: border-box;
-}
-
-.exampleText{
-  color:#fff;
+    box-shadow: 5px 5px 6px 0px #666462;
+    border-radius: 15px;
 }
 
 .avatar{
@@ -55,7 +54,7 @@ h1{
 
 .loginbox input[type="text"], input[type="password"]{
   border: none;
-  border-bottom: 1px solid #fff;
+  border-bottom: 1px solid #511e03;
   background: transparent;
   outline: none;
   height: 40px;
@@ -66,23 +65,26 @@ h1{
 .loginbox input[type="button"]{
   border: none;
   outline:none;
-  background: #fb2525;
-  color: #fff;
+  background: #ba7e46;
+  color: #511e03;
   font-size: 18px;
   border-radius: 20px;
+  width:95%;
+  margin-left: 2.5%;
 }
 
 .loginbox input[type="button"]:hover{
   cursor: pointer;
-  background: #ffc107;
-  color: #000;
+  background: #511e03;
+  color: #ffc107;
 }
 
 .loginbox a{
   text-decoration: none;
   font-size: 12px;
   line-height:20px;
-  color: darkgrey;
+  color: #511e03;
+  margin-left: 10px;
 }
 
 .loginbox a:hover{
