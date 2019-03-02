@@ -1171,7 +1171,7 @@ myLineChart = new Chart(ctx5, {data: lineChartData,
   }
 });
 
-var table = $('time_table').DataTable(dom: 'Bfrtip', buttons: ['excel', 'csv', {extend: 'pdf',text: 'PDF',orientation: 'landscape',title: 'Four Winds Interactive Tracking Information'}]);
+var table = $('time_table').DataTable();
 
 // add single item to the time series chart
 function addItemData() {
