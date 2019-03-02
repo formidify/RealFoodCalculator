@@ -1281,24 +1281,21 @@ function addCatData() {
 
 function remove_item_time(item) {
 
-  // remove item on the time series chart
-  timeSeriesChart.data.labels.splice(index, 1);
-
   // remove legend data
   index = sessionStorage.timeChartLabels.indexOf(item)
-  timeSeriesChart.data.datasets.splice(index, 1);
+  myLineChart.data.datasets.splice(index, 1);
 
   // remove real data
   index = sessionStorage.timeChartLabels.indexOf("real " + item)
-  timeSeriesChart.data.datasets.splice(index, 1);
+  myLineChart.data.datasets.splice(index, 1);
 
   // remove total data in chart
   index = sessionStorage.timeChartLabels.indexOf("total " + item)
-  timeSeriesChart.data.datasets.splice(index, 1);
+  myLineChart.data.datasets.splice(index, 1);
 
   total_configs = removeElements(["real " + item, "total " + item], sessionStorage.timeConfigs)
 
-  timeSeriesChart.update();
+  myLineChart.update();
 
 
   sessionStorage.setItem("timeCurrent", JSON.stringify(removeElements([item], sessionStorage.timeCurrent)));
