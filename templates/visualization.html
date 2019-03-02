@@ -1473,7 +1473,7 @@ function addTime() {
   console.log(total_configs)
   console.log(timeChartLabels)
   sessionStorage.setItem("timeConfigs", JSON.stringify(total_configs));
-  sessionStorage.setItem("timeChartLabels", JSON.stringify(timeChartLabels));
+  sessionStorage.setItem("timeChartLabels", JSON.stringify(chart_labels));
 
   check.splice(0, 1)
   sessionStorage.setItem("timeCurrCat", JSON.stringify(past.concat([y])));
