@@ -276,7 +276,7 @@ function getItemsToSave(){
                    itemValue = document.getElementById(realNames[real]+"-true").checked;
                    if (realNames[real]=="humane"){
                        humaneNaValue = document.getElementById(realNames[real]+"-na").checked;
-                       saveReal[realNames[real]+"-na"]=itemValue;
+                       saveReal[realNames[real]+"-na"]=humaneNaValue;
                    }
                    itemDescription = document.getElementById(realNames[real]+"Description").value;
                    saveReal[realNames[real]]=itemValue;
@@ -299,21 +299,22 @@ function populateSavedItems(items){
                console.log("realKey", realKey, "key", key);
                console.log("items[key][realKey]", items[key][realKey]);
                if (!(realKey.includes("Description"))){ 
-                   if (realKey == "humane-na"){
+                   if (realKey.includes("humane") || (realKey == "humane")){
                       console.log("Inside Humane");
-                      if (items[key][realKey]=true){
-                           document.getElementById(realKey).checked = items[key][realKey];
-                      }
+                           document.getElementById("humane-na").checked = items[key]["humane-na"];
+            
                       document.getElementById("humane-true").checked = items[key]["humane"];
-                     if (items[key]["humane"]!= true && items[key][realKey]!=true){
+                     if (items[key]["humane"]==false && items[key]["humane-na"]==false){
                       document.getElementById("humane-false").checked = true;
-               }
+               }else{
+                      document.getElementById("humane-false").checked = false;
+                      }
                }
                else{
-               if (!(realKey.includes("humane"))){
+               
                document.getElementById(realKey+"-true").checked = items[key][realKey];
                document.getElementById(realKey+"-false").checked = !(items[key][realKey]);
-               }
+               
              } }else{
                document.getElementById(realKey).value = items[key][realKey];
             }
