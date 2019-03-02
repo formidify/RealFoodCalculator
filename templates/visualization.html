@@ -1027,6 +1027,14 @@ document.getElementById("increaseChart5").onclick = function(evt)
 
 
 <script>
+// takes into two lists, and removes all elements in first list from the second list
+function removeElements(e, l) {
+  for (i = 0; i < e.length; i++) {
+    index = l.indexOf(e[i])
+    l.splice(index, 1)
+  }
+  return l
+} 
 // Hash any string into an integer value
 // Then we'll use the int and convert to hex.
 function hashCode(str) {
@@ -1077,9 +1085,11 @@ c.done(function(results) {
   }
 });
 
-sessionStorage.setItem("timeSearch", JSON.stringify([]));
-sessionStorage.setItem("timeCurrent", JSON.stringify([]));
-sessionStorage.setItem("timeConfigs", JSON.stringify([]));
+sessionStorage.setItem("currentTimeCat", "") // current investigated category
+sessionStorage.setItem("timeSearch", JSON.stringify([])); // previous searches
+sessionStorage.setItem("timeCurrent", JSON.stringify([])); // current items added
+sessionStorage.setItem("timeConfigs", JSON.stringify([])); // different configurations for the chart
+sessionStorage.setItem("timeChartLabels", JSON.stringify([])); // labels
 
 function searchItem() {
   x = document.getElementById("add_time").value;
@@ -1163,7 +1173,7 @@ function addItemData() {
 
       cost = results.cost
 
-
+chart_labels = JSON.parse(sessionStorage.timeChartLabels);
 total_configs = JSON.parse(sessionStorage.timeConfigs)
 
     for (j = 0; j < types.length; j++) {
@@ -1172,6 +1182,7 @@ total_configs = JSON.parse(sessionStorage.timeConfigs)
         line.type = 'line'
         line.label = types[j] + " " + y
         total_configs.push(line.label)
+        chart_labels.push(line.label)
         //line.backgroundColor = colors[i]
         line.borderColor = color
         line.fill = false
@@ -1186,6 +1197,7 @@ total_configs = JSON.parse(sessionStorage.timeConfigs)
     line.data = 0 // arbitrary
     line.type = 'line'
     line.label = y
+    chart_labels.push(line.label)
     line.backgroundColor = color
     line.borderColor = color
     //line.fillColor = colors[i]
@@ -1196,8 +1208,10 @@ total_configs = JSON.parse(sessionStorage.timeConfigs)
   myLineChart.update();
 
 sessionStorage.setItem("timeConfigs", JSON.stringify(total_configs));
+sessionStorage.setItem("timeChartLabels", chart_labels); // labels
 
-$('#buttons_time').append('<button class="btnic" id = "remove_item_time(' + y + ')"><i class="fa fa-close"></i> ' + y + '</button>');
+// add option to remove
+$('#buttons_time').append('<button class="btnic" onclick = "remove_item_time(' + y + ')"><i class="fa fa-close"></i> ' + y + '</button>');
 
     })
 
@@ -1265,6 +1279,38 @@ function addCatData() {
 
 };
 
+function remove_item_time(item) {
+  labels = timeSeriesChart.data.labels 
+  index = labels.indexOf(item)
+
+  // remove item on the time series chart
+  timeSeriesChart.data.labels.splice(index, 1);
+
+  // remove legend data
+  index = sessionStorage.timeChartLabels.indexOf(item)
+  timeSeriesChart.data.datasets.splice(index, 1);
+
+  // remove real data
+  index = sessionStorage.timeChartLabels.indexOf("real " + item)
+  timeSeriesChart.data.datasets.splice(index, 1);
+
+  // remove total data in chart
+  index = sessionStorage.timeChartLabels.indexOf("total " + item)
+  timeSeriesChart.data.datasets.splice(index, 1);
+
+  timeSeriesChart.update();
+
+  sessionStorage.setItem("timeCurrent", JSON.stringify(removeElements([item], sessionStorage.timeCurrent)));
+  sessionStorage.setItem("timeConfigs", JSON.stringify(removeElements([item, "real " + item, "total " + item], sessionStorage.timeConfigs)));
+}
+
+function remove_cat_time() {
+
+}
+
+function clearCanvas() {
+
+}
 </script>
 
 
@@ -1294,11 +1340,11 @@ function addCatData() {
 </div>
 
 <div class="row">
-  <div class="column" style = "width: 50%; height: 80%;  float: left">
+  <div class="column" style = "width: 50%; height: 50%;  float: left">
     <canvas id="livChart1" style="display: block; height: 75px; width: 75px;"></canvas>
     <canvas id="livChart2" style="display: block; height: 75px; width: 75px;"></canvas>
   </div>
-  <div class="column" style = "width: 50%; height: 80%;  float: left">
+  <div class="column" style = "width: 50%; height: 50%;  float: left">
     <canvas id="livChart3" style="display: block; height: 75px; width: 75px;"></canvas>
     <canvas id="livChart4" style="display: block; height: 75px; width: 75px;"></canvas>
   </div>
