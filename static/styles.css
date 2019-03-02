@@ -312,3 +312,16 @@ thead th {
 background-color: #736481;
 }
 td:hover {font-weight: bold;}
+
+#sessionTable:td:nth-child(8), td:nth-child(10), td:nth-child(12),td:nth-child(14),td:nth-child(16){
+font-size: 10px;
+}
+#sessionTable:td:nth-child(9), th:nth-child(11), th:nth-child(13),th:nth-child(15),th:nth-child(17){
+   font-size=12px;
+}
+#sessionTable:thead th:nth-child(9), th:nth-child(11), th:nth-child(13),th:nth-child(15),th:nth-child(17){
+   width: 5%;
+}
+#sessionTable:thead th:nth-child(8), th:nth-child(10), th:nth-child(12),th:nth-child(14),th:nth-child(16){
+    width: 3%;
+}
