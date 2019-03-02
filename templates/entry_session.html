@@ -8,6 +8,8 @@
    <link rel="stylesheet" type="text/css" href="../static/styles.css" />
    <script type="text/javascript" src="../static/example.js" defer></script>
    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+   <link rel="shortcut icon" href="../static/favicon.ico" type="image/x-icon">
+   <link rel="icon" href="../static/favicon.ico" type="image/x-icon">
 </head>
 <script>
 window.onload = function (){
@@ -49,7 +51,7 @@ var entrySession = JSON.parse(localStorage.getItem('entrySession'));
 	 document.getElementById("EScostBox").style.paddingLeft='4px';
 	 document.getElementById("EScostBox").style.paddingRight='4px';
 	 document.getElementById("EScostBox").style.margin='18px';
-     
+
 	 document.getElementById("EScostBox").style.borderRadius='4px';
 	 document.getElementById("EScostBox").style.color='black';
 
@@ -65,7 +67,7 @@ function clearEntries(alert){
 		location.reload();
 	}else{
 		if (window.confirm("Are you sure you want to clear all entries?")){
-   			console.log("Clearing Entries");   
+   			console.log("Clearing Entries");
 			entrySession = [];
    			localStorage.removeItem('entrySession');
    			location.reload();
@@ -100,13 +102,13 @@ function editButton(cur_row){
 }
 
 function checkData(colNum, dataValue){
-	var catTypes = ["dairy", "baked", "beverages", "eggs", "grocery", "meat", "poultry", "produce", "fish", "tea or coffee"]; 
+	var catTypes = ["dairy", "baked", "beverages", "eggs", "grocery", "meat", "poultry", "produce", "fish", "tea or coffee"];
 	console.log("dataItem = " + dataValue);
 	if (colNum == 0){
 		//check if category is valid
 		if (!catTypes.includes(dataValue)){
 			window.alert("Invalid category input");
-			return false; 
+			return false;
 		}
 	}
 	if (colNum == 1){
@@ -117,14 +119,14 @@ function checkData(colNum, dataValue){
 		}
 	}
 	if (colNum == 6){
-		//check if cost is a number 
+		//check if cost is a number
 		var floatVersion = parseFloat(dataValue);
 		if (isNaN(floatVersion)){
 			window.alert("Invalid cost for entry");
 			return false;
 		}
 	}
-	if (colNum == 7 || colNum == 9 || colNum == 11 || colNum == 15){ 
+	if (colNum == 7 || colNum == 9 || colNum == 11 || colNum == 15){
 		//for boolean values (except for humane)
 		dataValue = dataValue.toString();
 		console.log(dataValue + "hi" + colNum + "=colnum");
@@ -148,18 +150,18 @@ function saveButton(cur_row){
   	var parent = document.getElementById('cur_row'+cur_row);
 	var child = parent.getElementsByTagName('td')[17];
 	var totalCost = 0;
-  
+
 	//update local storage with new data:
 	var newString = '[';
 	var table = document.getElementById("sessionTable");
 	for (var i = 1; i < table.rows.length; i++){
-		newString = newString + '['; 
+		newString = newString + '[';
 		for (var j = 0; j < 17; j++){
 			var dataItem = table.rows[i].cells[j].innerHTML;
 			if (!checkData(j, dataItem)){
 				//if checkData returns false, there is an invalid input, stop function
 				return;
-			}	
+			}
 			//if 6th column(cost), update totalCost
 			if (j == 6){
 				totalCost = totalCost + parseFloat(dataItem);
@@ -179,7 +181,7 @@ function saveButton(cur_row){
 			newString = newString + ']';
 		}
 	}
-        
+
 	newString = newString + ']';
   	localStorage['entrySession'] = newString;
 	for (var i=0; i<edit_cells.length; i++){
@@ -231,7 +233,7 @@ function deleteRow(cur_row){
         	} else{
             newString = newString + ']';
         	}
-        }	
+        }
 		document.getElementById("costDesc").innerHTML = "Total Cost = $" + totalCost.toFixed(2);
     	newString = newString + ']';
         localStorage['entrySession'] = newString;
@@ -249,7 +251,7 @@ function submitEntries(){
         $("#entry-session-form").submit();
         console.log("Submitted Entry Session");
         clearEntries(false);
-        
+
     }
     else{
         return false;

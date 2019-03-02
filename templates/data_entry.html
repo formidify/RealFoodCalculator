@@ -6,12 +6,14 @@
         <title>data-entry</title>
         <meta charset="utf-8">
         <meta content="width=device-width, initial-scale=1" name="viewport">
- <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+        <link rel="shortcut icon" href="../static/favicon.ico" type="image/x-icon">
+        <link rel="icon" href="../static/favicon.ico" type="image/x-icon">
  <script>
 window.onload = function (){
 //console.log(localStorage.getItem("savedEntry"));
 //  if ((localStorage.getItem('savedEntry')!= null) || (localStorage.getItem('savedEntry')!="{}") || (localStorage.getItem('savedEntry')!="")){
-if(localStorage.getItem("savedEntry")){  
+if(localStorage.getItem("savedEntry")){
 var savedEntry = JSON.parse(localStorage.getItem('savedEntry'));
   console.log("savedEntry:", savedEntry);
   populateSavedItems(savedEntry);
@@ -571,7 +573,7 @@ function populateSavedItems(items){
         <tr>
         <td><button onclick="populateItem('{{item.description}}','{{item.category}}','{{item.productCode}}','{{item.brand}}','{{item.vendor}}','{{item.local}}','{{item.localDescription}}','{{item.fair}}','{{item.fairDescription}}','{{item.ecological}}','{{item.ecologicalDescription}}','{{item.humane}}','{{item.humaneDescription}}','{{item.disqualifier}}','{{item.disqualifierDescription}}','{{item.notes}}')">ADD</button></td>
     <td> {{item.year}} </td>
-    <td> {{item.month}} </td> 	
+    <td> {{item.month}} </td>
     <td onclick="populateForm('description','{{item.description}}')"> {{item.description}} </td>
     <td onclick="populateForm('category','{{item.category}}')"> {{item.category}} </td>
     <td onclick="populateForm('productCode','{{item.productCode}}')"> {{item.productCode}} </td>
