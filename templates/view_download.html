@@ -10,7 +10,7 @@
     <script type="text/javascript" src="../static/library/node_modules/tableexport/src/stable/js/tableexport.js"></script>-->
 </head>
 <body>
-    <h1>Real Food Calculator</h1>
+    <h1>Carleton RFC</h1>
     <nav>
       <div id="navBar">
           <a id="home_btn" href="#">Home</a>
@@ -27,6 +27,7 @@
     -->
 
     <h2>View/Download Data</h2>
+<!--
     <style>
         /*table */
         table {
@@ -58,7 +59,7 @@
         }
 
     </style>
-
+-->
         Sort By:
             <select id="category">
                 <option value="year,month">Date</option>
@@ -80,11 +81,14 @@
         <button class="Button" onclick="vd_go_btn();">Go</button>
 
     </div>
-
+    <div class="dropdown">
+      <button class="dropbtn" onclick="exportTableToCSV('RFC.csv')">Download CSV</button>
+    </div>
     <br>
 
     <table id="results">
-        <tr>
+      <thead>
+       <tr>
             <th>Edit</th>
             <th>Month</th>
             <th>Year</th>
@@ -96,13 +100,13 @@
             <th>Vendor</th>
             <th>Rating Version</>
             <th>Local</th>
-            <th>Local Description</th>
+            <th></th>
             <th>Fair</th>
-            <th>Fair Description</th>
+            <th></th>
             <th>Ecological</th>
-            <th>Ecological Description</th>
+            <th></th>
             <th>Humane</th>
-            <th>Humane Description</th>
+            <th></th>
             <th>Disqualifier</th>
             <th>Disqualifier Description</th>
             <th>Costs</th>
@@ -115,26 +119,9 @@
             <th>Real</th>
             <th>Entry Date</th> -->
         </tr>
-        <!--<tbody>
-            <td>Sysco</td>
-            <td>Apple</td>
-            <td>Produce</td>
-            <td>Organic</td>
-            <td>10/1/18</td>
-        </tbody> -->
+    </thead>
     </table>
     <br>
-
-    <div class="dropdown">
-      <button class="dropbtn" onclick="exportTableToCSV('RFC.csv')">Download CSV</button>
-      <!--<div class="dropdown-content">
-        <a href="#">.csv</a>
-        <a href="#">.xlsx</a>
-      </div>-->
-    </div>
-
-
-
 </body>
 
 </html>

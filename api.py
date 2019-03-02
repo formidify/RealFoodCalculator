@@ -79,6 +79,7 @@ def get_products():
     humaneDescription = flask.request.args.get('humaneDescription', default='%').lower()
     disqualifier = flask.request.args.get('disqualifier', default='-1')
     disqualifierDescription = flask.request.args.get('disqualifierDescription', default ='%').lower()
+    orderBy = flask.request.args.get('orderBy', default='label_brand').lower()
 
     if month == "-1" and year == "-1":
         month = " "
@@ -111,6 +112,10 @@ def get_products():
     else:
        disqualifier = ""
 
+    if orderBy=="year,month":
+        orderBy="year, test_data_large.month DESC"
+    if orderBy=="reverse,year,month":
+        orderBy="month, test_data_large.year ASC"
 
     query = """
             SELECT  test_data_large.month,
@@ -153,8 +158,8 @@ def get_products():
                     AND lower(test_data_large.ecological_description) LIKE lower( '%{14}%')
                     AND lower(test_data_large.humane_description) LIKE lower('%{15}%')
                     AND lower(test_data_large.disqualifier_description) LIKE lower('%{16}%')
-            ORDER BY test_data_large.label_brand
-            """.format(month, description, category, productCode, brand, vendor, notes, local, fair, ecological, humane, disqualifier, localDescription, fairDescription, ecologicalDescription,humaneDescription, disqualifierDescription)
+            ORDER BY test_data_large.{17}
+            """.format(month, description, category, productCode, brand, vendor, notes,local, fair, ecological, humane, disqualifier, localDescription, fairDescription, ecologicalDescription,humaneDescription, disqualifierDescription,orderBy)
 
     products_list = []
     connection = get_connection()
@@ -235,11 +240,6 @@ def insert_entry():
     productCodeType = ''
     ratingVersion = flask.request.args.get('rating_version', default='2.0')
     facility = ''
-
-    query = '''
-             INSERT INTO test_data_large VALUES ({0},{1},'{2}','{3}','{4}','{5}','{6}','{7}',{8},'{9}','{10}','{11}','{12}','{13}','{14}','{15}','{16}','{17}','{18}',{19},'{20}','{21}');
-            '''.format(month, year, description, category, productCode, productCodeType, brand, vendor, ratingVersion, local, localDescription, fair, fairDescription, ecological, ecologicalDescription, humane, humaneDescription, disqualifier, disqualifierDescription, cost, notes, facility)
-    print("Entry: ", query)
 
     query = """INSERT INTO test_data_large VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);"""
     parameters = (month, year, description, category, productCode, productCodeType, brand, vendor, ratingVersion, local, localDescription, fair, fairDescription, ecological, ecologicalDescription, humane, humaneDescription, disqualifier, disqualifierDescription, cost, notes, facility)
@@ -359,6 +359,25 @@ def get_all_years():
         connection.close()
 
     return [2018, 2017, 2016]
+
+# get bar data for vis page
+@app.route("/visualization/recent_years")
+def get_recent_years():
+    yrs = []
+
+    yr_query = """SELECT DISTINCT ON (year) year FROM test_data_large ORDER BY year DESC;"""
+
+    connection = get_connection()
+    if connection is not None:
+        try:
+            # either this or minimum items allowed to show
+            for row in get_select_query_results(connection, yr_query):
+                yrs.append(row[0])
+        except Exception as e:
+            print(e)
+        connection.close()
+
+    return flask.jsonify({"yrs": [2018, 2017, 2016]})
 
 # get data for quick charts
 @app.route("/visualization/quick_data")
@@ -599,8 +618,8 @@ def get_item_time(yrs, item):
 
 # get time series data for vis page (by category)
 # NOTE: items where all four categories (local, ecological, fair, humane) are null will not be included in the calculation
-@app.route("/visualization/item_data", defaults = {'item': '', 'type': ''})
-@app.route("/visualization/item_data/<path:item>+<path:type>")
+@app.route("/visualization/item_data", defaults = {'item': '', 'type': '', 'year': ''})
+@app.route("/visualization/item_data/<path:item>+<path:type>+<path:year>")
 def get_item_data(item, type):
 
     # add item for percent chart
@@ -610,10 +629,6 @@ def get_item_data(item, type):
 
     # add item for hypothetical increase chart
     if type == 'increase':
-        return
-
-    # add item for item/label/vendor chart
-    if type == 'liv':
         return
 
     # add single item for one year

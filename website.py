@@ -25,9 +25,11 @@ def example():
 
 @app.route('/entry_session', methods=['POST','GET'])
 def entrySession():
+    print("Rendering Entry Session")
     labels = ['category','vendor', 'brand','description','notes','productCode', 'cost','local','localDescription', 'fair', 'fairDescription','ecological','ecologicalDescription','humane','humaneDescription','disqualifier','disqualifierDescription']
     api_url = 'http://cmc307-06.mathcs.carleton.edu:5001/add_entry?'
     if request.method == 'POST':
+        print("in post")
         result = request.form
         for key, value in result.items():
             if (key == 'entrySessionData') and (value != '[]') and (value != ''):
@@ -85,7 +87,7 @@ def result():
             #print('Value:', value)
             if (value):
                 api_url += (key + '=' + value + '&')
-        api_url += 'year=year'
+        api_url += 'year=year&orderBy=reverse,year,month'
         #print(api_url)
         r = requests.get(api_url).json()
         #print(r)

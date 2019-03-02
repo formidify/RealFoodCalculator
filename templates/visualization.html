@@ -12,10 +12,20 @@
         <!--<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}" />-->
        <!-- <link rel="stylesheet" type="text/css" href="../static/styles.css" /> -->
         <script type="text/javascript" src="../static/example.js" defer></script>
+
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+        <!-- add datatables buttons functionality -->
+        <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.3.1/js/dataTables.buttons.min.js"></script> 
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+        <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.3.1/js/buttons.html5.min.js"></script>
+
     </head>
 <body>
 
-    <h1>Real Food Calculator</h1>
+    <h1>Carleton RFC</h1>
     <div class="topnav">
       <nav>
           <a id="home_btn" href="#">Home</a>
@@ -65,6 +75,21 @@
 <a>Not quite the year you are looking for? Go more recent or historical.</a>
 
 <div class="row">
+  <div class="column" style = "width: 33%; height: 15%;  float: left">
+    <canvas id="allTimeChart" style="display: block; height: 75px; width: 75px;"></canvas>
+  </div>
+  <div class="column" style = "width: 33%; height: 15%;  float: left">
+    <canvas id="percentChart1" style="display: block; height: 75px; width: 75px;"></canvas>
+    <canvas id="percentChart4" style="display: block; height: 75px; width: 75px;"></canvas>
+  </div>
+  <div class="column" style = "width: 33%; height: 15%;  float: left">
+    <canvas id="percentChart3" style="display: block; height: 75px; width: 75px;"></canvas>
+    <canvas id="percentChart5" style="display: block; height: 75px; width: 75px;"></canvas>
+  </div>
+</div>
+
+
+<div class="row">
   <div class="column" style = "width: 25%; height: 25%;  float: left">
     <canvas id="realCatChart" style="display: block; height: 75px; width: 75px;"></canvas>
     <canvas id="realVendChart" style="display: block; height: 75px; width: 75px;"></canvas>
@@ -82,6 +107,13 @@
     <canvas id="nonBrandChart" style="display: block; height: 75px; width: 75px;"></canvas>
   </div>
 </div>
+
+<script>
+Chart.defaults.global.plugins.datalabels.display = false
+// display time series bar chart for all food items
+ctx0 = document.getElementById("allTimeChart").getContext('2d');
+</script>
+
 
 <script>
 Chart.defaults.global.plugins.datalabels.display = false
@@ -162,35 +194,21 @@ for (i = 0; i < 4; i++) {
 
 
 <h1>Real vs non-real percentage</h1>
-
-
-<div class="row">
-  <div class="column" style = "width: 25%; height: 25%;  float: left">
-    <canvas id="percentChart1" style="display: block; height: 75px; width: 75px;"></canvas>
-    <canvas id="percentChart4" style="display: block; height: 75px; width: 75px;"></canvas>
-  </div>
-  <div class="column" style = "width: 25%; height: 25%;  float: left">
-    <canvas id="percentChart3" style="display: block; height: 75px; width: 75px;"></canvas>
-    <canvas id="percentChart5" style="display: block; height: 75px; width: 75px;"></canvas>
-  </div>
-  <div class="column" style = "width: 50%; height: 20%; float: left">
   
-<a>Items to show:</a>
-  <div class = "control" style = "display: inline-block">
-<select id = "num_items_percent" name="Show:" style = "width: 100%">
-  <option value="5">5</option>
-  <option value="10">10</option>
-  <option value="15">15</option>
-  <option value="20">20</option>
+<div style = "display: block">
+<a>First, choose a year:</a>
+<select id = "yearPercent" name="Show:" style = "width: 22%">
+  <option disabled selected value> select an option </option>
 </select>
 </div>
 
-<div style = "display: inline-block; width: 50%">
-<form>
-    <label for="add">Add item:</label>
-    <input id="add" type="text" name="text">
-    <input type="submit" value="Search">
-</form>
+<div class="quantity buttons_added">
+  Showing
+  <input type="button" value="-" class="minus" onclick = "minusPercent()">
+  <div id = "showPercent" style = "display: inline">0</div>
+  <input type="button" value="+" class="plus" onclick = "addPercent()">
+  out of <div id = "allPercent" style = "display: inline">0</div> of the selected category
+  
 </div>
 
 
@@ -204,19 +222,43 @@ for (i = 0; i < 4; i++) {
 </select>
 </div>
 
-
-    <canvas id="percentChart2" style="display: block; height: 100px; width: 100px;"></canvas>
-  </div>
+<div>
+    <label for="add">Add by item:</label>
+    <input id="add_percent" type="text" name="text" list = "items_percent" onkeyup = "searchItemPercent()" autocomplete="off">
+    <datalist id="items_percent"></datalist>
+    <input id = "submit_percent_time" type="submit" value="submit" onclick = "addItemDataPercent()">
+<a> AND/OR </a>
+<a> Select a category: </a>
+<select id = "categoriesPercent">
+  <option disabled selected value> select an option </option>
+</select>
+<input id = "submit_cat_percent" type="submit" value="submit" onclick = "addCatDataPercent()">
 </div>
 
+<div>
+  Remove: 
+<button class="btnic" id = "canvas_time" onclick = "clearCanvasPercent()"><i class="fa fa-close"></i> Remove all canvas</button>
+<button class="btnic" id = "remove_cat_time" onclick = "remove_cat_percent()"><i class="fa fa-close"></i> Remove selected category</button>
+<div style = "display:inline" id = "buttons_percent"></div>
+</div>
 
-<div class="onoffswitch">
-    <a>Show barchart data as table:</a>
-    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked>
-    <label class="onoffswitch-label" for="myonoffswitch">
-        <span class="onoffswitch-inner"></span>
-        <span class="onoffswitch-switch"></span>
-    </label>
+<div class="row">
+  <div class="column" style = "width: 50%; height: 20%;  float: left">
+    <canvas id="percentChart" style="display: block; width: 60%; height: 800px"></canvas>
+  </div>
+  <div class="column" style = "width: 40%; height: 25%; display: inline-block;">
+    <table id="percent_table" class="display" style = "display: inline-block;">
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Real</th>
+        <th>Nonreal</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+    </div>
 </div>
 
 
@@ -235,6 +277,177 @@ for (i = 0; i < 4; i++) {
 <script>
 Chart.defaults.global.plugins.datalabels.display = false
 
+c = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/get_categories/");
+
+c.done(function(results) {
+  cats = results.cats;
+  for (i = 0; i < cats.length; i++) {
+    cat = cats[i]
+    $("select#categoriesPercent").append( $("<option>")
+    .val(cat)
+    .html(cat)
+);
+  }
+});
+
+yrs = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/recent_years");
+
+yrs.done(function(results) {
+  y = results.yrs;
+  for (i = 0; i < y.length; i++) {
+    Y = y[i]
+    if (i == 0) {
+          $("select#yearPercent").append( $("<option selected>")
+    .val(Y)
+    .html(Y)
+    )}
+    else {
+    $("select#yearPercent").append( $("<option>")
+    .val(Y)
+    .html(Y)
+);}
+  }});
+
+sessionStorage.setItem("percentSearch", JSON.stringify([])); // previous searches
+
+function searchItemPercent() {
+  x = document.getElementById("add_percent").value;
+  if (x.length > 1) {
+  searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/get_item/" + x);
+
+  old_searches = JSON.parse(sessionStorage.percentSearch);
+
+    searches.done(function(results) {
+    if (!arraysEqual(old_searches, results.search)) {
+    sessionStorage.setItem("percentSearch", JSON.stringify(results.search));
+      var dataList = $("#items_percent");
+        dataList.empty();
+        if(results.search.length) {
+          for(i=0; i<results.search.length; i++) {
+            item = results.search[i];
+            var opt = $("<option></option>").attr("value", item).attr("text", item);
+            dataList.append(opt);
+          }
+        }
+    }});
+}
+};
+
+var myBarChart;
+  ctx2 = document.getElementById("percentChart").getContext('2d');
+  myBarChart = new Chart(ctx2, {
+      type: 'bar',
+      options: {
+          scales: {
+              xAxes: [{
+                  stacked: true
+              }],
+              yAxes: [{
+                  stacked: true
+              }]},
+              title: {
+              display: true
+          }
+
+      }
+  });
+
+var table;
+$(document).ready(function(){table = $('#time_percent').DataTable({
+        dom: 'lBfrtip',
+        buttons: ['copyHtml5', 'csvHtml5', 'excelHtml5']
+    }); });
+
+
+// add single item to the time series chart
+function addItemData() {
+  current_list = JSON.parse(sessionStorage.percentCurrent);
+  y = document.getElementById("add_percent").value;
+  // check input is longer than 1 and has not appeared in current list
+  if (y.length > 1 && !current_list.includes(y)) {
+    year = document.getElementById("")
+    searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/item_data/" + y + "+percent+" + year);
+
+    searches.done(function(results) {
+      types = ['total', 'real']
+      myLineChart.data.labels = results.yrs
+
+      if (updatedTimeColumn) {
+        updatedTimeColumn = false;
+        var head_item = table.columns(2).header();
+        $(head_item).html(results.yrs[0]);
+
+        var head_item = table.columns(3).header();
+        $(head_item).html(results.yrs[1]);
+
+        var head_item = table.columns(4).header();
+        $(head_item).html(results.yrs[2]);
+      }
+      //datasets = []
+      color = "#" + intToARGB(hashCode(y))
+
+      cost = results.cost
+
+chart_labels = JSON.parse(sessionStorage.timeChartLabels);
+total_configs = JSON.parse(sessionStorage.timeConfigs)
+
+    for (j = 0; j < types.length; j++) {
+        line = {}
+        line.data = cost[j]
+        line.type = 'line'
+        line.label = types[j] + " " + y
+        total_configs.push(line.label)
+        chart_labels.push(line.label)
+        //line.backgroundColor = colors[i]
+        line.borderColor = color
+        line.fill = false
+        if (j > 0) {
+            line.borderDash = [10, 5]
+        }
+        myLineChart.data.datasets.push(line)
+        table.row.add([y, types[j], cost[j][0], cost[j][1], cost[j][2]]).draw(false)
+    }
+// console.log(datasets.toString())
+// add legend for each item
+    line = {}
+    line.data = 0 // arbitrary
+    line.type = 'line'
+    line.label = y
+    chart_labels.push(line.label)
+    line.backgroundColor = color
+    line.borderColor = color
+    //line.fillColor = colors[i]
+    line.fill = true
+    line.showLine = false
+    myLineChart.data.datasets.push(line)
+
+  myLineChart.update();
+  console.log(myLineChart.data.datasets)
+
+sessionStorage.setItem("timeConfigs", JSON.stringify(total_configs));
+sessionStorage.setItem("timeChartLabels", JSON.stringify(chart_labels)); // labels
+
+// add option to remove
+$('#buttons_time').append('<button class="btnic" id = "time_' + y + '" onclick = "remove_item_time(&quot ' + y + '&quot)"><i class="fa fa-close"></i> ' + y + '</button>');
+  /*
+  show = parseInt($("#showTime").html()) + 1
+  all = parseInt($("#allTime").html()) + 1
+  $("#showTime").html(show)
+  $("#allTime").html(all) */
+
+    })
+
+    sessionStorage.setItem("timeCurrent", JSON.stringify(current_list.concat([y])));
+  }
+}
+
+
+
+
+
+
+
+
 let num_items = document.querySelector('#num_items_percent');
 let rank = document.querySelector('#rank_percent');
 
@@ -242,142 +455,6 @@ let rank = document.querySelector('#rank_percent');
 var new_real = [];
 var new_nonreal = [];
 var new_label = [];
-
-
-
-// pie chart
-// load data from Flask; shows all categories
-getData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/pie_data')
-
-getData.done(function(results) {
-    years = results.labels
-    // year 1
-    yr = years[0]
-    result = results[yr]
-    data = {
-        datasets: [{
-            data: result.data,
-            backgroundColor: palette('tol', result.data.length).map(function(hex) {
-            return '#' + hex;
-          })
-        }],
-
-        // These labels appear in the legend and in the tooltips when hovering different arcs
-        labels: result.labels,
-        options: {
-            responsive: true
-        }
-    };
-
-     ctx1 = document.getElementById("percentChart1").getContext('2d');
-    myPieChart1 = new Chart(ctx1, {
-        type: 'pie',
-        data: data ,
-        options: {
-          title: {
-              display: true,
-              position: 'bottom',
-              text: yr
-          }
-      }
-    });
-
-
-    // year 2
-    yr = years[1]
-    result = results[yr]
-    data = {
-        datasets: [{
-            data: result.data,
-            backgroundColor: palette('tol', result.data.length).map(function(hex) {
-            return '#' + hex;
-          })
-        }],
-
-        // These labels appear in the legend and in the tooltips when hovering different arcs
-        labels: result.labels,
-        options: {
-            responsive: true
-        }
-    };
-
-     ctx6 = document.getElementById("percentChart3").getContext('2d');
-    myPieChart2 = new Chart(ctx6, {
-        type: 'pie',
-        data: data ,
-        options: {
-          title: {
-              display: true,
-              position: 'bottom',
-              text: yr
-          }
-      }
-    });
-
-
-    // year 3
-    yr = years[2]
-    result = results[yr]
-    data = {
-        datasets: [{
-            data: result.data,
-            backgroundColor: palette('tol', result.data.length).map(function(hex) {
-            return '#' + hex;
-          })
-        }],
-
-        // These labels appear in the legend and in the tooltips when hovering different arcs
-        labels: result.labels,
-        options: {
-            responsive: true
-        }
-    };
-
-     ctx7 = document.getElementById("percentChart4").getContext('2d');
-    myPieChart3 = new Chart(ctx7, {
-        type: 'pie',
-        data: data ,
-        options: {
-          title: {
-              display: true,
-              position: 'bottom',
-              text: yr
-          }
-      }
-    });
-
-
-    // total
-    yr = years[3]
-    result = results.total
-    data = {
-        datasets: [{
-            data: result.data,
-            backgroundColor: palette('tol', result.data.length).map(function(hex) {
-            return '#' + hex;
-          })
-        }],
-
-        // These labels appear in the legend and in the tooltips when hovering different arcs
-        labels: result.labels,
-        options: {
-            responsive: true
-        }
-    };
-
-     ctx8 = document.getElementById("percentChart5").getContext('2d');
-    myPieChart4 = new Chart(ctx8, {
-        type: 'pie',
-        data: data ,
-        options: {
-          title: {
-              display: true,
-              position: 'bottom',
-              text: yr
-          }
-      }
-    });
-})
 
  barData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/bar_data/produce+total')
  var myBarChart;
@@ -414,7 +491,7 @@ barData.done(function(results) {
       }
   };
 
-   ctx2 = document.getElementById("percentChart2").getContext('2d');
+   ctx2 = document.getElementById("percentChart").getContext('2d');
   myBarChart = new Chart(ctx2, {
       type: 'bar',
       data: data,
@@ -475,89 +552,7 @@ function updateBarChart(cat, yr){
     })
 }
 
-document.getElementById("percentChart1").onclick = function(evt)
-{
-     activePoints = myPieChart1.getElementsAtEvent(evt);
 
-    if(activePoints.length > 0)
-    {
-      //get the internal index of slice in pie chart
-       clickedElementindex = activePoints[0]["_index"];
-
-      //get specific label by index
-       label = myPieChart1.data.labels[clickedElementindex];
-
-      //get value by index
-       value = myPieChart1.data.datasets[0].data[clickedElementindex];
-
-       year = years[0];
-
-      updateBarChart(label, year);
-   }
-}
-
-document.getElementById("percentChart3").onclick = function(evt)
-{
-     activePoints = myPieChart2.getElementsAtEvent(evt);
-
-    if(activePoints.length > 0)
-    {
-      //get the internal index of slice in pie chart
-       clickedElementindex = activePoints[0]["_index"];
-
-      //get specific label by index
-       label = myPieChart2.data.labels[clickedElementindex];
-
-      //get value by index
-       value = myPieChart2.data.datasets[0].data[clickedElementindex];
-
-       year = years[1];
-
-      updateBarChart(label, year);
-   }
-}
-
-document.getElementById("percentChart4").onclick = function(evt)
-{
-     activePoints = myPieChart3.getElementsAtEvent(evt);
-
-    if(activePoints.length > 0)
-    {
-      //get the internal index of slice in pie chart
-       clickedElementindex = activePoints[0]["_index"];
-
-      //get specific label by index
-       label = myPieChart3.data.labels[clickedElementindex];
-
-      //get value by index
-       value = myPieChart3.data.datasets[0].data[clickedElementindex];
-
-       year = years[2];
-
-      updateBarChart(label, year);
-   }
-}
-
-document.getElementById("percentChart5").onclick = function(evt)
-{
-     activePoints = myPieChart4.getElementsAtEvent(evt);
-
-    if(activePoints.length > 0)
-    {
-      //get the internal index of slice in pie chart
-       clickedElementindex = activePoints[0]["_index"];
-
-      //get specific label by index
-       label = myPieChart4.data.labels[clickedElementindex];
-
-      //get value by index
-       value = myPieChart4.data.datasets[0].data[clickedElementindex];
-
-       year = years[3];
-
-      updateBarChart(label, year);
-   }
-}
 
 
 </script>
@@ -973,44 +968,70 @@ document.getElementById("increaseChart5").onclick = function(evt)
 <h1>Time Series of Real vs non-real food</h1>
 
 <div>
-    <a>Items to show:</a>
-  <div class = "control" style = "display: inline-block">
-<select id = "num_items_percent" name="Show:" style = "width: 100%">
-  <option value="5">5</option>
-  <option value="10">10</option>
-  <option value="15">15</option>
-  <option value="20">20</option>
-</select>
+
+<div class="quantity buttons_added">
+  Showing
+  <input type="button" value="-" class="minus" onclick = "minusTime()">
+  <div id = "showTime" style = "display: inline">0</div>
+  <input type="button" value="+" class="plus" onclick = "addTime()">
+  out of <div id = "allTime" style = "display: inline">0</div> of the selected category
+  
 </div>
+
+<div>
     <label for="add">Add by item:</label>
     <input id="add_time" type="text" name="text" list = "items_time" onkeyup = "searchItem()" autocomplete="off">
     <datalist id="items_time"></datalist>
     <input id = "submit_item_time" type="submit" value="submit" onclick = "addItemData()">
-<a> OR </a>
-<a> Add by category: </a>
+<a> AND/OR </a>
+<a> Select a category: </a>
 <select id = "categoriesTime">
   <option disabled selected value> select an option </option>
 </select>
 <input id = "submit_cat_time" type="submit" value="submit" onclick = "addCatData()">
 </div>
 
-
-
-<div class="chartjs-wrapper">
-    <canvas id="timeSeriesChart" style="display: block; width: 60%; height: 800px"></canvas>
+<div>
+  Remove: 
+<button class="btnic" id = "canvas_time" onclick = "clearCanvasTime()"><i class="fa fa-close"></i> Remove all canvas</button>
+<button class="btnic" id = "remove_cat_time" onclick = "remove_cat_time()"><i class="fa fa-close"></i> Remove selected category</button>
+<div style = "display:inline" id = "buttons_time"></div>
+</div>
 </div>
 
-    <div class="onoffswitch">
-    <a>Show time series chart data as table:</a>
-    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked>
-    <label class="onoffswitch-label" for="myonoffswitch">
-        <span class="onoffswitch-inner"></span>
-        <span class="onoffswitch-switch"></span>
-    </label>
+<div class="row">
+  <div class="column" style = "width: 60%; height: 25%;  float: left">
+    <canvas id="timeSeriesChart" style="display: block; width: 60%; height: 800px"></canvas>
+  </div>
+  <div class="column" style = "width: 40%; height: 25%; display: inline-block;">
+    <table id="time_table" class="display" style = "display: inline-block;">
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Type</th>
+        <th>Year 1</th>
+        <th>Year 2</th>
+        <th>Year 3</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+    </div>
+</div>
+
 </div>
 
 
 <script>
+// takes into two lists, and removes all elements in first list from the second list
+function removeElements(e, l) {
+  for (i = 0; i < e.length; i++) {
+    index = l.indexOf(e[i])
+    l.splice(index, 1)
+  }
+  return l
+} 
 // Hash any string into an integer value
 // Then we'll use the int and convert to hex.
 function hashCode(str) {
@@ -1046,8 +1067,8 @@ function arraysEqual(arr1, arr2) {
     return true;
 }
 
-var searches_time = [];
-//var select = document.getElementById("categoeis");
+var searches_time = []; // current searches at every turn
+
 c = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/get_categories/");
 
 c.done(function(results) {
@@ -1061,9 +1082,14 @@ c.done(function(results) {
   }
 });
 
-sessionStorage.setItem("timeSearch", JSON.stringify([]));
-sessionStorage.setItem("timeCurrent", JSON.stringify([]));
-sessionStorage.setItem("timeConfigs", JSON.stringify([]));
+sessionStorage.setItem("currentTimeCat", "") // current investigated category
+sessionStorage.setItem("timeSearch", JSON.stringify([])); // previous searches
+sessionStorage.setItem("timeCurrent", JSON.stringify([])); // current items added
+sessionStorage.setItem("timeConfigs", JSON.stringify([])); // different configurations for the chart
+sessionStorage.setItem("timeChartLabels", JSON.stringify([])); // labels
+
+sessionStorage.setItem("timeCurrCat", JSON.stringify([]));
+sessionStorage.setItem("timeNotCat", JSON.stringify([])); 
 
 function searchItem() {
   x = document.getElementById("add_time").value;
@@ -1087,11 +1113,17 @@ function searchItem() {
     }});
 }
 };
+var total_configs = JSON.parse(sessionStorage.timeConfigs)
 
 Chart.defaults.global.plugins.datalabels.display = false;
 
+updatedTimeColumn = true;
+
+
  types = ['total', 'real']
  dashes = [[0, 0], [10, 5]]
+var ctx5 = document.getElementById("timeSeriesChart").getContext('2d');
+var myLineChart;
 
  lineChartData = {}
  lineChartData.datasets = []
@@ -1110,9 +1142,7 @@ for (i = 0; i < types.length; i++) {
     lineChartData.datasets.push(line)
 }
 
-var total_configs = JSON.parse(sessionStorage.timeConfigs)
-var ctx5 = document.getElementById("timeSeriesChart").getContext('2d');
-var myLineChart;
+ctx5 = document.getElementById("timeSeriesChart").getContext('2d');
 myLineChart = new Chart(ctx5, {data: lineChartData,
     type: 'line',
     options: {scales: {yAxes:[{scaleLabel: {display: true, labelString: "Dollar purchases ($)"}, ticks: {min: 0}}]},
@@ -1131,6 +1161,12 @@ myLineChart = new Chart(ctx5, {data: lineChartData,
   }
 });
 
+var table;
+$(document).ready(function(){table = $('#time_table').DataTable({
+        dom: 'lBfrtip',
+        buttons: ['copyHtml5', 'csvHtml5', 'excelHtml5']
+    }); });
+
 // add single item to the time series chart
 function addItemData() {
   current_list = JSON.parse(sessionStorage.timeCurrent);
@@ -1142,12 +1178,24 @@ function addItemData() {
     searches.done(function(results) {
       types = ['total', 'real']
       myLineChart.data.labels = results.yrs
+
+      if (updatedTimeColumn) {
+        updatedTimeColumn = false;
+        var head_item = table.columns(2).header();
+        $(head_item).html(results.yrs[0]);
+
+        var head_item = table.columns(3).header();
+        $(head_item).html(results.yrs[1]);
+
+        var head_item = table.columns(4).header();
+        $(head_item).html(results.yrs[2]);
+      }
       //datasets = []
       color = "#" + intToARGB(hashCode(y))
 
       cost = results.cost
 
-
+chart_labels = JSON.parse(sessionStorage.timeChartLabels);
 total_configs = JSON.parse(sessionStorage.timeConfigs)
 
     for (j = 0; j < types.length; j++) {
@@ -1156,6 +1204,7 @@ total_configs = JSON.parse(sessionStorage.timeConfigs)
         line.type = 'line'
         line.label = types[j] + " " + y
         total_configs.push(line.label)
+        chart_labels.push(line.label)
         //line.backgroundColor = colors[i]
         line.borderColor = color
         line.fill = false
@@ -1163,6 +1212,7 @@ total_configs = JSON.parse(sessionStorage.timeConfigs)
             line.borderDash = [10, 5]
         }
         myLineChart.data.datasets.push(line)
+        table.row.add([y, types[j], cost[j][0], cost[j][1], cost[j][2]]).draw(false)
     }
 // console.log(datasets.toString())
 // add legend for each item
@@ -1170,6 +1220,7 @@ total_configs = JSON.parse(sessionStorage.timeConfigs)
     line.data = 0 // arbitrary
     line.type = 'line'
     line.label = y
+    chart_labels.push(line.label)
     line.backgroundColor = color
     line.borderColor = color
     //line.fillColor = colors[i]
@@ -1178,8 +1229,18 @@ total_configs = JSON.parse(sessionStorage.timeConfigs)
     myLineChart.data.datasets.push(line)
 
   myLineChart.update();
+  console.log(myLineChart.data.datasets)
 
 sessionStorage.setItem("timeConfigs", JSON.stringify(total_configs));
+sessionStorage.setItem("timeChartLabels", JSON.stringify(chart_labels)); // labels
+
+// add option to remove
+$('#buttons_time').append('<button class="btnic" id = "time_' + y + '" onclick = "remove_item_time(&quot ' + y + '&quot)"><i class="fa fa-close"></i> ' + y + '</button>');
+  /*
+  show = parseInt($("#showTime").html()) + 1
+  all = parseInt($("#allTime").html()) + 1
+  $("#showTime").html(show)
+  $("#allTime").html(all) */
 
     })
 
@@ -1188,21 +1249,47 @@ sessionStorage.setItem("timeConfigs", JSON.stringify(total_configs));
 }
 
 function addCatData() {
-  current_list = JSON.parse(sessionStorage.timeCurrent);
   cat = $("select#categoriesTime").val();
+  if (sessionStorage.currentTimeCat != "" && sessionStorage.currentTimeCat != cat) { 
+      remove_cat_time();
+    }
+  if (sessionStorage.currentTimeCat != cat) {
+  curr = []
+  not = []
   searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/get_categories_time/" + cat);
   searches.done(function(results) {
+    num_items = Math.min(results.items.length, 3)
+
+  show = parseInt($("#showTime").html()) + num_items
+  all = parseInt($("#allTime").html()) + results.items.length
+  $("#showTime").html(show)
+  $("#allTime").html(all)
+
     cost = results.cost
     items = results.items
     types = ['total', 'real']
     myLineChart.data.labels = results.yrs
 
+    // update column years
+          if (updatedTimeColumn) {
+        updatedTimeColumn = false;
+        var head_item = table.columns(2).header();
+        $(head_item).html(results.yrs[0]);
+
+        var head_item = table.columns(3).header();
+        $(head_item).html(results.yrs[1]);
+
+        var head_item = table.columns(4).header();
+        $(head_item).html(results.yrs[2]);
+      }
+
+    chart_labels = JSON.parse(sessionStorage.timeChartLabels);
     total_configs = JSON.parse(sessionStorage.timeConfigs)
 
     colors = []
 
-    for (i = 0; i < items.length; i++) {
-      if (!current_list.includes(items[i])) {
+    for (i = 0; i < num_items; i++) {
+      curr.push(items[i])
     for (j = 0; j < types.length; j++) {
         line = {}
         line.data = cost[j][i]
@@ -1210,7 +1297,7 @@ function addCatData() {
         line.label = types[j] + " " + items[i]
 
         total_configs.push(line.label)
-
+        chart_labels.push(line.label)
         //line.backgroundColor = colors[i]
         color = "#" + intToARGB(hashCode(items[i]))
         colors.push(color)
@@ -1231,28 +1318,248 @@ function addCatData() {
     //line.fillColor = colors[i]
     line.fill = true
     line.showLine = false
+    chart_labels.push(line.label)
     myLineChart.data.datasets.push(line)
+  }
 
-    current_list = current_list.concat([items[i]])
+  // add data to table
+  for (i = 0; i < items.length; i++) {
+    for (j = 0; j < types.length; j++) {
+      table.row.add([items[i], types[j], cost[j][i][0], cost[j][i][1], cost[j][i][2]]).draw(false)
+    }
   }
-  }
+
+  for (k = num_items; k < items.length; k++) {
+    not.push(items[k])
+  } 
 
 
   myLineChart.update();
   sessionStorage.setItem("timeConfigs", JSON.stringify(total_configs));
+   sessionStorage.setItem("timeChartLabels", JSON.stringify(chart_labels));
+
+  sessionStorage.setItem("timeCurrCat", JSON.stringify(curr));
+  sessionStorage.setItem("timeNotCat", JSON.stringify(not));
+  sessionStorage.setItem("timeCatCost", JSON.stringify(cost));
 
 
   })
-  sessionStorage.setItem("timeCurrent", JSON.stringify(current_list));
-
+  sessionStorage.setItem("currentTimeCat", cat);
+}
 };
 
+function remove_item_time(item) {
+  item = item.substring(1)
+
+  timeChartLabels = JSON.parse(sessionStorage.timeChartLabels)
+
+  // remove legend data
+  index = timeChartLabels.indexOf(item) + 2
+  myLineChart.data.datasets.splice(index, 1);
+  timeChartLabels = removeElements([item], timeChartLabels)
+
+  // remove real data
+  index = timeChartLabels.indexOf("real " + item) + 2
+  myLineChart.data.datasets.splice(index, 1);
+  timeChartLabels = removeElements(["real " + item], timeChartLabels)
+
+  // remove total data in chart
+  index = timeChartLabels.indexOf("total " + item) + 2
+  myLineChart.data.datasets.splice(index, 1);
+  timeChartLabels = removeElements(["total " + item], timeChartLabels)
+
+  total_configs = removeElements(["real " + item, "total " + item], JSON.parse(sessionStorage.timeConfigs))
+
+  myLineChart.update();
+
+
+  sessionStorage.setItem("timeCurrent", JSON.stringify(removeElements([item], JSON.parse(sessionStorage.timeCurrent))));
+  sessionStorage.setItem("timeConfigs", JSON.stringify(total_configs));
+  sessionStorage.setItem("timeChartLabels", JSON.stringify(timeChartLabels));
+
+  //item_id = "#time_" + item
+  item_id = "[id='time_" + item + "']"
+  console.log(item_id)
+  $(item_id).remove()
+
+  table.rows( function ( idx, data, node ) {
+        return data[0] === item;
+    } )
+    .remove()
+    .draw();
+
+  /*
+  show = parseInt($("#showTime").html()) - 1
+  all = parseInt($("#allTime").html()) - 1
+  $("#showTime").html(show)
+  $("#allTime").html(all)
+  */
+
+}
+
+function remove_cat_time() {
+  timeChartLabels = JSON.parse(sessionStorage.timeChartLabels)
+  curr = JSON.parse(sessionStorage.timeCurrCat)
+  for (p = 0; p < curr.length; p++) {
+    item = curr[p]
+// remove legend data
+  index = timeChartLabels.indexOf(item) + 2
+  myLineChart.data.datasets.splice(index, 1);
+  timeChartLabels = removeElements([item], timeChartLabels)
+
+  // remove real data
+  index = timeChartLabels.indexOf("real " + item) + 2
+  myLineChart.data.datasets.splice(index, 1);
+  timeChartLabels = removeElements(["real " + item], timeChartLabels)
+
+  // remove total data in chart
+  index = timeChartLabels.indexOf("total " + item) + 2
+  myLineChart.data.datasets.splice(index, 1);
+  timeChartLabels = removeElements(["total " + item], timeChartLabels)
+
+  total_configs = removeElements(["real " + item, "total " + item], JSON.parse(sessionStorage.timeConfigs))
+  sessionStorage.setItem("timeConfigs", JSON.stringify(total_configs));
+
+  }
+
+
+  total = curr.concat(JSON.parse(sessionStorage.timeNotCat))
+  for (z = 0; z < total.length; z++) {
+    table.rows( function ( idx, data, node ) {
+        return data[0] === total[z];
+    } )
+    .remove()
+    .draw();
+  }
+
+  myLineChart.update();
+  sessionStorage.setItem("timeCurrCat", JSON.stringify([]));
+  sessionStorage.setItem("timeNotCat", JSON.stringify([]));
+
+  sessionStorage.setItem("timeChartLabels", JSON.stringify(timeChartLabels));
+  sessionStorage.setItem("currentTimeCat", "");
+
+  $("#showTime").html(0)
+  $("#allTime").html(0)
+
+}
+
+function minusTime() {
+  if (sessionStorage.currentTimeCat == "") {return;}
+  check = JSON.parse(sessionStorage.timeCurrCat)
+  if (check.length > 0) { 
+  $("#showTime").html(parseInt($("#showTime").html()) - 1)
+  timeChartLabels = JSON.parse(sessionStorage.timeChartLabels)
+  total_configs = JSON.parse(sessionStorage.timeConfigs)
+  item = check[check.length - 1]
+
+  index = timeChartLabels.indexOf(item) + 2
+  myLineChart.data.datasets.splice(index, 1);
+  timeChartLabels = removeElements([item], timeChartLabels)
+
+  // remove real data
+  index = timeChartLabels.indexOf("real " + item) + 2
+  myLineChart.data.datasets.splice(index, 1);
+  timeChartLabels = removeElements(["real " + item], timeChartLabels)
+
+  // remove total data in chart
+  index = timeChartLabels.indexOf("total " + item) + 2
+  myLineChart.data.datasets.splice(index, 1);
+  timeChartLabels = removeElements(["total " + item], timeChartLabels)
+
+  total_configs = removeElements(["real " + item, "total " + item], total_configs)
+  myLineChart.update();
+
+  console.log(total_configs)
+  console.log(timeChartLabels)
+
+  sessionStorage.setItem("timeConfigs", JSON.stringify(total_configs));
+  sessionStorage.setItem("timeChartLabels", JSON.stringify(timeChartLabels));
+
+  check.splice(check.length-1, 1)
+  sessionStorage.setItem("timeCurrCat", JSON.stringify(check));
+  sessionStorage.setItem("timeNotCat", JSON.stringify([item].concat(JSON.parse(sessionStorage.timeNotCat))));
+
+}
+}
+
+function addTime() {
+  if (sessionStorage.currentTimeCat == "") {return;}
+  check = JSON.parse(sessionStorage.timeNotCat)
+  if (check.length > 0) {
+    $("#showTime").html(parseInt($("#showTime").html()) + 1)
+    y = check[0]
+    chart_labels = JSON.parse(sessionStorage.timeChartLabels);
+    total_configs = JSON.parse(sessionStorage.timeConfigs)
+    costs = JSON.parse(sessionStorage.timeCatCost)
+    past = JSON.parse(sessionStorage.timeCurrCat)
+
+
+    color = "#" + intToARGB(hashCode(y))
+    for (j = 0; j < types.length; j++) {
+        line = {}
+        line.data = costs[j][past.length]
+        line.type = 'line'
+        line.label = types[j] + " " + y
+        total_configs.push(line.label)
+        chart_labels.push(line.label)
+        //line.backgroundColor = colors[i]
+        line.borderColor = color
+        line.fill = false
+        if (j > 0) {
+            line.borderDash = [10, 5]
+        }
+        myLineChart.data.datasets.push(line)
+    }
+// console.log(datasets.toString())
+// add legend for each item
+    line = {}
+    line.data = 0 // arbitrary
+    line.type = 'line'
+    line.label = y
+    chart_labels.push(line.label)
+    line.backgroundColor = color
+    line.borderColor = color
+    //line.fillColor = colors[i]
+    line.fill = true
+    line.showLine = false
+    myLineChart.data.datasets.push(line)
+
+  myLineChart.update();
+  console.log(total_configs)
+  console.log(chart_labels)
+  sessionStorage.setItem("timeConfigs", JSON.stringify(total_configs));
+  sessionStorage.setItem("timeChartLabels", JSON.stringify(chart_labels));
+
+  check.splice(0, 1)
+  sessionStorage.setItem("timeCurrCat", JSON.stringify(past.concat([y])));
+  sessionStorage.setItem("timeNotCat", JSON.stringify(check));
+  }
+}
+
+function clearCanvasTime() {
+current = JSON.parse(sessionStorage.timeCurrent)
+for (t = 0; t < current.length; t++) {
+  remove_item_time(" " + current[t])
+}
+remove_cat_time();
+table.rows.clear();
+
+sessionStorage.setItem("currentTimeCat", "") // current investigated category
+sessionStorage.setItem("timeSearch", JSON.stringify([])); // previous searches
+sessionStorage.setItem("timeCurrent", JSON.stringify([])); // current items added
+sessionStorage.setItem("timeConfigs", JSON.stringify([])); // different configurations for the chart
+sessionStorage.setItem("timeChartLabels", JSON.stringify([])); // labels
+
+sessionStorage.setItem("timeCurrCat", JSON.stringify([]));
+sessionStorage.setItem("timeNotCat", JSON.stringify([])); 
+
+}
 </script>
 
 
-<h1>Item, Vendor and Label - The Exciting Love Trio</h1>
-
-<div>
+<div style = "float:left">
+  <h1>Item, Vendor and Label - The Exciting Love Trio</h1>
 
     <label for="add">Search By item:</label>
     <input id="item_liv" type="text" name="text" list = "items_list" onkeyup = "searchLivItem()" autocomplete="off">
@@ -1276,11 +1583,11 @@ function addCatData() {
 </div>
 
 <div class="row">
-  <div class="column" style = "width: 50%; height: 80%;  float: left">
+  <div class="column" style = "width: 50%; height: 50%;  float: left">
     <canvas id="livChart1" style="display: block; height: 75px; width: 75px;"></canvas>
     <canvas id="livChart2" style="display: block; height: 75px; width: 75px;"></canvas>
   </div>
-  <div class="column" style = "width: 50%; height: 80%;  float: left">
+  <div class="column" style = "width: 50%; height: 50%;  float: left">
     <canvas id="livChart3" style="display: block; height: 75px; width: 75px;"></canvas>
     <canvas id="livChart4" style="display: block; height: 75px; width: 75px;"></canvas>
   </div>
