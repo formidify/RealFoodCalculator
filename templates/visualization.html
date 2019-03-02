@@ -1162,6 +1162,8 @@ myLineChart = new Chart(ctx5, {data: lineChartData,
   }
 });
 
+var table = $('time_table').DataTable();
+
 // add single item to the time series chart
 function addItemData() {
   current_list = JSON.parse(sessionStorage.timeCurrent);
@@ -1430,8 +1432,8 @@ function minusTime() {
 function addTime() {
   if (sessionStorage.currentTimeCat == "") {return;}
   check = JSON.parse(sessionStorage.timeNotCat)
-  $("#showTime").html(parseInt($("#showTime").html()) + 1)
   if (check.length > 0) {
+    $("#showTime").html(parseInt($("#showTime").html()) + 1)
     y = check[0]
     chart_labels = JSON.parse(sessionStorage.timeChartLabels);
     total_configs = JSON.parse(sessionStorage.timeConfigs)
