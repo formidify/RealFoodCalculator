@@ -306,33 +306,31 @@ def delete_entry():
     if disqualifier == "on":
         disqualifier = "AND test_data_large.disqualifier = TRUE"
     else:
-        disqualifier = ""
-
+       disqualifier = ""
     query = """
-            DELETE TOP 1
-            FROM test_data_large
-            WHERE   {0}
-                    lower(test_data_large.description) LIKE '%{1}%'
-                    AND lower(test_data_large.category) LIKE '%{2}%'
-                    AND lower(test_data_large.product_code) LIKE '{3}'
-                    AND lower(test_data_large.label_brand) LIKE '%{4}%'
-                    AND lower(test_data_large.vendor) LIKE '%{5}%'
-                    AND lower(test_data_large.notes) LIKE '%{6}%'
-                    {7}
-                    {8}
-                    {9}
-                    {10}
-                    {11}
-                    AND lower(test_data_large.local_description) LIKE lower('%{12}%')
-                    AND lower(test_data_large.fair_description) LIKE lower('%{13}%')
-                    AND lower(test_data_large.ecological_description) LIKE lower( '%{14}%')
-                    AND lower(test_data_large.humane_description) LIKE lower('%{15}%')
-                    AND lower(test_data_large.disqualifier_description) LIKE lower('%{16}%')
-            ORDER BY test_data_large.label_brand
-            """.format(month, description, category, productCode, brand, vendor, notes, local,
-            fair, ecological, humane, disqualifier, localDescription, fairDescription,
-            ecologicalDescription,humaneDescription, disqualifierDescription)
-
+        DELETE TOP 1
+        FROM test_data_large
+        WHERE   {0}
+                lower(test_data_large.description) LIKE '%{1}%'
+                AND lower(test_data_large.category) LIKE '%{2}%'
+                AND lower(test_data_large.product_code) LIKE '{3}'
+                AND lower(test_data_large.label_brand) LIKE '%{4}%'
+                AND lower(test_data_large.vendor) LIKE '%{5}%'
+                AND lower(test_data_large.notes) LIKE '%{6}%'
+                {7}
+                {8}
+                {9}
+                {10}
+                {11}
+                AND lower(test_data_large.local_description) LIKE lower('%{12}%')
+                AND lower(test_data_large.fair_description) LIKE lower('%{13}%')
+                AND lower(test_data_large.ecological_description) LIKE lower( '%{14}%')
+                AND lower(test_data_large.humane_description) LIKE lower('%{15}%')
+                AND lower(test_data_large.disqualifier_description) LIKE lower('%{16}%')
+        ORDER BY test_data_large.label_brand
+        """.format(month, description, category, productCode, brand, vendor, notes, local,
+        fair, ecological, humane, disqualifier, localDescription, fairDescription,
+        ecologicalDescription,humaneDescription, disqualifierDescription)
     if connection is not None:
         get_select_query_results(connection, query, parameters)
         connection.commit()
@@ -624,17 +622,17 @@ def get_item_data(item, type, year):
 
     # add item for percent chart
     if type == 'percent':
-        query = """SELECT COALESCE(Z.description, B.description) 
-            AS description, COALESCE(Z.real, 0) 
-            AS real, COALESCE(B.nonreal, 0) 
-            AS nonreal FROM (SELECT description, SUM(cost) 
-            AS real FROM test_data_large WHERE year = {y} AND description = '{d}' AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't') 
-            GROUP BY description) Z FULL OUTER JOIN (SELECT description, SUM(cost) AS nonreal FROM 
-            (SELECT COALESCE(local, 'f') AS local, COALESCE(fair, 'f') AS fair, COALESCE(ecological, 'f') AS ecological, COALESCE(humane, 'f') AS humane, 
+        query = """SELECT COALESCE(Z.description, B.description)
+            AS description, COALESCE(Z.real, 0)
+            AS real, COALESCE(B.nonreal, 0)
+            AS nonreal FROM (SELECT description, SUM(cost)
+            AS real FROM test_data_large WHERE year = {y} AND description = '{d}' AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't')
+            GROUP BY description) Z FULL OUTER JOIN (SELECT description, SUM(cost) AS nonreal FROM
+            (SELECT COALESCE(local, 'f') AS local, COALESCE(fair, 'f') AS fair, COALESCE(ecological, 'f') AS ecological, COALESCE(humane, 'f') AS humane,
             description, cost, year, category FROM test_data_large) X
-                WHERE year = {y} AND description = '{d}' AND local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't' GROUP BY description) B 
+                WHERE year = {y} AND description = '{d}' AND local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't' GROUP BY description) B
                 ON Z.description = B.description ORDER BY (COALESCE(nonreal,0) - COALESCE(real,0)) desc;""".format(y = year, d = item)
-        
+
         connection = get_connection()
         if connection is not None:
             try:
