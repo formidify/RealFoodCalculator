@@ -310,8 +310,8 @@ def delete_entry():
     query = """
         DELETE
         FROM test_data_large
-        WHERE test_data_large.month
-        IN( SELECT test_data_large.month
+        WHERE ctid
+        IN( SELECT ctid
             FROM test_data_large
             WHERE {0}
                 lower(test_data_large.description) LIKE '%{1}%'
