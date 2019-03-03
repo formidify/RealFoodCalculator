@@ -560,11 +560,11 @@ def get_bar_item(item, yr):
         AS nonreal, (COALESCE(nonreal,0) - COALESCE(real,0)) AS minus, (COALESCE(nonreal,0) + COALESCE(real,0)) AS sum
         FROM (SELECT description, SUM(cost)
         AS real FROM test_data_large WHERE year = {y} AND description = '{d}' AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't')
-        GROUP BY description) Z FULL OUTER JOIN (SELECT description, SUM(cost) AS nonreal FROM
+        ) Z FULL OUTER JOIN (SELECT description, SUM(cost) AS nonreal FROM
         (SELECT COALESCE(local, 'f') AS local, COALESCE(fair, 'f') AS fair, COALESCE(ecological, 'f') AS ecological, COALESCE(humane, 'f') AS humane,
         description, cost, year, category FROM test_data_large) X
-            WHERE year = {y} AND description = '{d}' AND local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't' GROUP BY description) B
-            ON Z.description = B.description ORDER BY (COALESCE(nonreal,0) - COALESCE(real,0)) desc;""".format(y = year, d = item)
+            WHERE year = {y} AND description = '{d}' AND local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't') B
+            ON Z.description = B.description ORDER BY (COALESCE(nonreal,0) - COALESCE(real,0)) desc;""".format(y = yr, d = item)
 
     connection = get_connection()
     if connection is not None:
