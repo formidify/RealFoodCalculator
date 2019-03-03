@@ -427,6 +427,7 @@ function findInsertIndex(d) {
 
     curr = JSON.parse(sessionStorage.currPercent)
     curr.splice(index, 0, d[0])
+    console.log(curr)
     sessionStorage.setItem("currPercent", JSON.stringify(curr));
 
 
@@ -586,7 +587,7 @@ function remove_cat_percent() {
   console.log(curr)
   console.log(curr_cat)
   for (q = 0; q < curr_cat.length; q++) {
-    item = curr_cat[q]
+    item = curr_cat[q][0]
     index = curr.indexOf(item)
     myBarChart.data.datasets[0].data.splice(index, 1)
 
