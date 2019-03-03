@@ -255,6 +255,8 @@ for (i = 0; i < 4; i++) {
         <th>Item</th>
         <th>Real</th>
         <th>Nonreal</th>
+        <th>Gap (nonreal - real)</th>
+        <th>Total</th>
       </tr>
     </thead>
     <tbody>
@@ -310,6 +312,7 @@ yrs.done(function(results) {
 );}
   }});
 
+sessionStorage.setItem("currentPercentCat", "") // current investigated category
 sessionStorage.setItem("percentSearch", JSON.stringify([])); // previous searches
 sessionStorage.setItem("percentCurrent", JSON.stringify([])); // previous searches
 
@@ -374,8 +377,8 @@ var myBarChart;
       }
   });
 
-var table;
-$(document).ready(function(){table = $('#time_percent').DataTable({
+var table_percent;
+$(document).ready(function(){table_percent = $('#percent_table').DataTable({
         dom: 'lBfrtip',
         buttons: ['copyHtml5', 'csvHtml5', 'excelHtml5']
     }); });
@@ -389,8 +392,8 @@ function addItemDataPercent() {
   if (y.length > 1 && !current_list.includes(y)) {
     e = document.getElementById("yearPercent");
     var year = e.options[e.selectedIndex].value;
-    
-    searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/item_data/" + y + "+percent+" + year);
+
+    searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/bar_item/" + y + "+" + year);
 
     searches.done(function(results) {
 
@@ -410,6 +413,7 @@ function addItemDataPercent() {
 
 
       myLineChart.update();
+      table_percent.row.add(data).draw(false)
 
 
 // add option to remove
@@ -420,6 +424,106 @@ $('#buttons_percent').append('<button class="btnic" id = "percent_' + y + '" onc
     sessionStorage.setItem("percentCurrent", JSON.stringify(current_list.concat([y])));
   }
 }
+
+function addCatData() {
+  cat = $("select#categoriesPercent").val();
+  if (sessionStorage.currentTimeCat != "" && sessionStorage.currentPercentCat != cat) { 
+      remove_cat_time();
+    }
+  if (sessionStorage.currentTimeCat != cat) {
+  curr = []
+  not = []
+  searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/get_categories_time/" + cat);
+  searches.done(function(results) {
+    num_items = Math.min(results.items.length, 3)
+
+  show = parseInt($("#showTime").html()) + num_items
+  all = parseInt($("#allTime").html()) + results.items.length
+  $("#showTime").html(show)
+  $("#allTime").html(all)
+
+    cost = results.cost
+    items = results.items
+    types = ['total', 'real']
+    myLineChart.data.labels = results.yrs
+
+    // update column years
+          if (updatedTimeColumn) {
+        updatedTimeColumn = false;
+        var head_item = table.columns(2).header();
+        $(head_item).html(results.yrs[0]);
+
+        var head_item = table.columns(3).header();
+        $(head_item).html(results.yrs[1]);
+
+        var head_item = table.columns(4).header();
+        $(head_item).html(results.yrs[2]);
+      }
+
+    chart_labels = JSON.parse(sessionStorage.timeChartLabels);
+    total_configs = JSON.parse(sessionStorage.timeConfigs)
+
+    colors = []
+
+    for (i = 0; i < num_items; i++) {
+      curr.push(items[i])
+    for (j = 0; j < types.length; j++) {
+        line = {}
+        line.data = cost[j][i]
+        line.type = 'line'
+        line.label = types[j] + " " + items[i]
+
+        total_configs.push(line.label)
+        chart_labels.push(line.label)
+        //line.backgroundColor = colors[i]
+        color = "#" + intToARGB(hashCode(items[i]))
+        colors.push(color)
+        line.borderColor = color
+        line.fill = false
+        if (j > 0) {
+            line.borderDash = [10, 5]
+        }
+        myLineChart.data.datasets.push(line)
+    }
+    // legend line
+    line = {}
+    line.data = 0 // arbitrary
+    line.type = 'line'
+    line.label = items[i]
+    line.backgroundColor = color
+    line.borderColor = color
+    //line.fillColor = colors[i]
+    line.fill = true
+    line.showLine = false
+    chart_labels.push(line.label)
+    myLineChart.data.datasets.push(line)
+  }
+
+  // add data to table
+  for (i = 0; i < items.length; i++) {
+    for (j = 0; j < types.length; j++) {
+      table.row.add([items[i], types[j], cost[j][i][0], cost[j][i][1], cost[j][i][2]]).draw(false)
+    }
+  }
+
+  for (k = num_items; k < items.length; k++) {
+    not.push(items[k])
+  } 
+
+
+  myLineChart.update();
+  sessionStorage.setItem("timeConfigs", JSON.stringify(total_configs));
+   sessionStorage.setItem("timeChartLabels", JSON.stringify(chart_labels));
+
+  sessionStorage.setItem("timeCurrCat", JSON.stringify(curr));
+  sessionStorage.setItem("timeNotCat", JSON.stringify(not));
+  sessionStorage.setItem("timeCatCost", JSON.stringify(cost));
+
+
+  })
+  sessionStorage.setItem("currentTimeCat", cat);
+}
+};
 
 
 
@@ -1096,7 +1200,7 @@ function addItemData() {
   y = document.getElementById("add_time").value;
   // check input is longer than 1 and has not appeared in current list
   if (y.length > 1 && !current_list.includes(y)) {
-    searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/item_data/" + y + "+year+ ");
+    searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/item_data/" + y);
 
     searches.done(function(results) {
       types = ['total', 'real']

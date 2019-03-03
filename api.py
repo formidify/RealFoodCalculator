@@ -339,6 +339,8 @@ def delete_entry():
     else:
         return "Stub Function: Could not get connection"
 
+# ----------------------------------------------------
+### UNIVERSAL CHART METHODS (used for more than 1 chart)
 
 # get all years in reverse order
 def get_all_years():
@@ -358,7 +360,26 @@ def get_all_years():
 
     return [2018, 2017, 2016]
 
-# get bar data for vis page
+# universal method for multiple charts to get all the distinct categories in the dataset
+@app.route("/visualization/get_categories/")
+def get_categories():
+    cats = []
+    query = """SELECT DISTINCT ON (trim(category)) category FROM test_data_large;"""
+
+    connection = get_connection()
+    if connection is not None:
+        try:
+            # either this or minimum items allowed to show
+            for row in get_select_query_results(connection, query):
+                cats.append(row[0])
+        except Exception as e:
+            print(e)
+        connection.close()
+
+    print(cats)
+    return flask.jsonify({"cats": cats})
+
+# get recent years data straight from visualization
 @app.route("/visualization/recent_years")
 def get_recent_years():
     yrs = []
@@ -377,7 +398,8 @@ def get_recent_years():
 
     return flask.jsonify({"yrs": [2018, 2017, 2016]})
 
-# get data for quick charts
+#---------------------------------
+######## get data for quick charts
 @app.route("/visualization/quick_data")
 def get_quick_data():
     dic = {}
@@ -477,13 +499,17 @@ def get_pie_data():
     return flask.jsonify(dic)
 
 
-# get bar data for vis page
-@app.route("/visualization/bar_data", defaults = {'cat': 'produce', 'yr': 'total'})
+# ----------------------------------------
+
+# get percent data per category
+@app.route("/visualization/bar_data", defaults = {'cat': '', 'yr': ''})
 @app.route("/visualization/bar_data/<cat>+<yr>")
 def get_bar_data(cat, yr):
     items = []
     real = []
     nonreal = []
+    minus = []
+    s = []
 
     if yr == 'total':
         y = ''
@@ -494,7 +520,8 @@ def get_bar_data(cat, yr):
     query = """SELECT COALESCE(Z.description, B.description)
             AS description, COALESCE(Z.real, 0)
             AS real, COALESCE(B.nonreal, 0)
-            AS nonreal FROM (SELECT description, SUM(cost)
+            AS nonreal, (COALESCE(nonreal,0) - COALESCE(real,0)) AS minus, (COALESCE(nonreal,0) + COALESCE(real,0)) AS sum
+            FROM (SELECT description, SUM(cost)
             AS real FROM test_data_large WHERE {y} category = '{c}' AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't')
             GROUP BY description) Z FULL OUTER JOIN (SELECT description, SUM(cost) AS nonreal FROM
             (SELECT COALESCE(local, 'f') AS local, COALESCE(fair, 'f') AS fair, COALESCE(ecological, 'f') AS ecological, COALESCE(humane, 'f') AS humane,
@@ -511,14 +538,45 @@ def get_bar_data(cat, yr):
                 items.append(row[0])
                 real.append(row[1])
                 nonreal.append(row[2])
+                minus.append(row[3])
+                s.append(row[4])
         except Exception as e:
             print(e)
         connection.close()
 
-    return flask.jsonify({"items": items[:8], "real": real[:8], "nonreal": nonreal[:8]})
+    return flask.jsonify({"items": items, "real": real, "nonreal": nonreal, "minus": minus, "sum": s})
+
+# get percent data per item
+@app.route("/visualization/bar_item", defaults = {'item': '', 'yr': ''})
+@app.route("/visualization/bar_item/<item>+<yr>")
+def get_bar_item(item, yr):
+    query = """SELECT COALESCE(Z.description, B.description)
+        AS description, COALESCE(Z.real, 0)
+        AS real, COALESCE(B.nonreal, 0)
+        AS nonreal, (COALESCE(nonreal,0) - COALESCE(real,0)) AS minus, (COALESCE(nonreal,0) + COALESCE(real,0)) AS sum
+        FROM (SELECT description, SUM(cost)
+        AS real FROM test_data_large WHERE year = {y} AND description = '{d}' AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't')
+        GROUP BY description) Z FULL OUTER JOIN (SELECT description, SUM(cost) AS nonreal FROM
+        (SELECT COALESCE(local, 'f') AS local, COALESCE(fair, 'f') AS fair, COALESCE(ecological, 'f') AS ecological, COALESCE(humane, 'f') AS humane,
+        description, cost, year, category FROM test_data_large) X
+            WHERE year = {y} AND description = '{d}' AND local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't' GROUP BY description) B
+            ON Z.description = B.description ORDER BY (COALESCE(nonreal,0) - COALESCE(real,0)) desc;""".format(y = year, d = item)
+
+    connection = get_connection()
+    if connection is not None:
+        try:
+            # either this or minimum items allowed to show
+            for row in get_select_query_results(connection, query):
+                data = row
+        except Exception as e:
+            print(e)
+        connection.close()
+
+    return flask.jsonify({"data": data})
 
 
-# get percent data for vis page
+# -------------------------------------------------------------------------------------
+# get increase data for vis page
 # NOTE: items where all four categories (local, ecological, fair, humane) are null will not be included in the calculation
 @app.route("/visualization/percent_data", defaults = {'cat': 'produce', 'yr': 'total'})
 @app.route("/visualization/percent_data/<cat>+<yr>")
@@ -553,7 +611,6 @@ def get_percent_data(cat, yr):
                 DESC;""".format(y = y, c = cat)
 
 
-    # todo: query should also take account of the years
     connection = get_connection()
     if connection is not None:
         try:
@@ -572,15 +629,10 @@ def get_percent_data(cat, yr):
 
 
 
-# get time series data for vis page (by category)
-# NOTE: items where all four categories (local, ecological, fair, humane) are null will not be included in the calculation
-@app.route("/visualization/time_data", defaults = {'cat': 'produce'})
-@app.route("/visualization/time_data/<cat>")
-def get_time_data(cat):
+# -------------------------------------------------------
+### all below methods are for the time series chart
 
-    # default ranking order is by a * norm(% in all) + b * norm(% in one) - c * norm($ spent) for a = b = c = 1, but the coefficients can be up to change
-    return flask.jsonify({"items": items[:8], "total_percent": total_percent[:8], "ind_percent": ind_percent[:8], "dollars": dollars[:8]})
-
+# for time series chart - get the real vs total data for each item in the year range
 def get_item_time(yrs, item):
     query_real = """SELECT s, year FROM (SELECT {y0} AS year, COALESCE(SUM(cost),0) AS s FROM test_data_large WHERE year = {y0} AND trim(description) = '{i}'
         AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't') UNION
@@ -614,72 +666,22 @@ def get_item_time(yrs, item):
 
     return total, real
 
-# get time series data for vis page (by category)
+# get time series data for vis page (by item)
 # NOTE: items where all four categories (local, ecological, fair, humane) are null will not be included in the calculation
-@app.route("/visualization/item_data", defaults = {'item': '', 'type': '', 'year': ''})
-@app.route("/visualization/item_data/<path:item>+<path:type>+<path:year>")
-def get_item_data(item, type, year):
+@app.route("/visualization/item_data", defaults = {'item': ''})
+@app.route("/visualization/item_data/<path:item>")
+def get_item_data(item):
 
-    # add item for percent chart
-    if type == 'percent':
-        query = """SELECT COALESCE(Z.description, B.description)
-            AS description, COALESCE(Z.real, 0)
-            AS real, COALESCE(B.nonreal, 0)
-            AS nonreal, (COALESCE(nonreal,0) - COALESCE(real,0)) AS minus, (COALESCE(nonreal,0) + COALESCE(real,0)) AS sum
-            FROM (SELECT description, SUM(cost)
-            AS real FROM test_data_large WHERE year = {y} AND description = '{d}' AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't')
-            GROUP BY description) Z FULL OUTER JOIN (SELECT description, SUM(cost) AS nonreal FROM
-            (SELECT COALESCE(local, 'f') AS local, COALESCE(fair, 'f') AS fair, COALESCE(ecological, 'f') AS ecological, COALESCE(humane, 'f') AS humane,
-            description, cost, year, category FROM test_data_large) X
-                WHERE year = {y} AND description = '{d}' AND local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't' GROUP BY description) B
-                ON Z.description = B.description ORDER BY (COALESCE(nonreal,0) - COALESCE(real,0)) desc;""".format(y = year, d = item)
+    yrs = get_all_years()
+    print(item)
 
-        connection = get_connection()
-        if connection is not None:
-            try:
-                # either this or minimum items allowed to show
-                for row in get_select_query_results(connection, query):
-                    data = row
-            except Exception as e:
-                print(e)
-            connection.close()
+    total, real = get_item_time(yrs, item)
 
-        return flask.jsonify({"data": data})
+    yrs = yrs[:3]
+    yrs.reverse()
+    return flask.jsonify({"cost": [total, real], "yrs": yrs})
 
-    # add item for hypothetical increase chart
-    if type == 'increase':
-        return
-
-    # add single item for one year
-    if type == 'year':
-        yrs = get_all_years()
-        print(item)
-
-        total, real = get_item_time(yrs, item)
-
-        yrs = yrs[:3]
-        yrs.reverse()
-        return flask.jsonify({"cost": [total, real], "yrs": yrs})
-
-
-@app.route("/visualization/get_categories/")
-def get_categories():
-    cats = []
-    query = """SELECT DISTINCT ON (trim(category)) category FROM test_data_large;"""
-
-    connection = get_connection()
-    if connection is not None:
-        try:
-            # either this or minimum items allowed to show
-            for row in get_select_query_results(connection, query):
-                cats.append(row[0])
-        except Exception as e:
-            print(e)
-        connection.close()
-
-    print(cats)
-    return flask.jsonify({"cats": cats})
-
+# get time series data per category
 @app.route("/visualization/get_categories_time/", defaults = {'cat': ''})
 @app.route("/visualization/get_categories_time/<cat>")
 def get_categories_time(cat):
@@ -709,7 +711,9 @@ def get_categories_time(cat):
     yrs.reverse()
     return flask.jsonify({"cost": [total, real], "yrs": yrs, "items": items})
 
-## combine the below 3 methods into one
+
+# -----------------------------------------------------------
+###### All the methods below are for item, label, brand chart
 
 # return results that match the input item
 @app.route("/visualization/get_item", defaults = {'search': ''})
