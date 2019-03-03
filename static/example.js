@@ -271,8 +271,9 @@ function savebtn(cur_row){
 
 /*********************************************************************/
   for (var key in origInfo){
-    if (origInfo[key]!= ""){
-      queryStrings.push(key+"="+origInfo[key]+"&");
+    queryStrings.push(key+"="+origInfo[key]+"&");
+    //if (origInfo[key]!= ""){
+    //  queryStrings.push(key+"="+origInfo[key]+"&");
       //console.log(key + "=======" + origInfo[key]);
     }
   }
@@ -315,7 +316,7 @@ function savebtn(cur_row){
   var add_query = "";
   for (var i=0; i<addQueryStrings.length; i++){
     var str = addQueryStrings[i];
-    add_query = base_query+str;
+    add_query = add_query+str;
   }
   var add_url = getBaseApiURL()+"/add_entry?"+add_query.substring(0,add_query.length - 1);
   console.log("add_url -> " + add_url);
