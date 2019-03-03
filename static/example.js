@@ -308,20 +308,15 @@ function savebtn(cur_row){
   }
 
   if (success){
-  fetch(del_url)
-    //.then(res => res.json())
-    .then(res => res.text())
-    .then((out) => {
-      console.log(out);
-    })
-    .catch(err => { throw err });
-
-  for (var key in newInfo){
-    //if (newInfo[key]!= ""){
-    addQueryStrings.push(key+"="+newInfo[key]+"&");
-      //console.log(key + "=======" + origInfo[key]);
-    //}
-  }
+    console.log("GETTING INTO SUCCES??");
+    fetch(del_url)
+      //.then(res => res.json())
+      .then(res => res.text())
+      .then((out) => {
+        console.log(out);
+      })
+      .catch(err => { throw err });
+    }
   }
 
 /*********************************************************************
