@@ -604,13 +604,14 @@ function remove_cat_percent() {
   sessionStorage.setItem("currentPercentCat", "")
 
   total = curr_cat.concat(JSON.parse(sessionStorage.percentCatNot))
+  console.log(total)
   for (z = 0; z < total.length; z++) {
+    item = total[z]
     table_percent.rows( function ( idx, data, node ) {
-        return data[0] === total[z];
+        return data[0] === item;
     } )
     .remove()
     .draw();
-    item = total[z]
 
   }
 
