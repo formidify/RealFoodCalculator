@@ -682,6 +682,9 @@ function addPercent() {
   curr_cat = curr_cat.push(curr_not[0])
   curr_not.splice(0, 1)
 
+  console.log(curr_cat)
+  console.log(curr_not)
+
   sessionStorage.setItem("percentCatCurr", JSON.stringify(curr_cat));
   sessionStorage.setItem("percentCatNot", JSON.stringify(curr_not));
 
