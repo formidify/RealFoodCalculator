@@ -362,13 +362,13 @@ def vd_insert_entry():
         print ("ERR: ENTRY NOT IN CORRECT FORM")
 
     passThis = True
-    if not (local == "true" or local == "false" or local=''):
+    if not (local == "true" or local == "false" or local==''):
         passThis = False
-    if not (fair == "true" or fair == "false" or fair=''):
+    if not (fair == "true" or fair == "false" or fair==''):
         passThis = False
-    if not (ecological == "true" or ecological == "false" or ecological=''):
+    if not (ecological == "true" or ecological == "false" or ecological==''):
         passThis = False
-    if not (disqualifier == "true" or disqualifier == "false" or disqualifier=''):
+    if not (disqualifier == "true" or disqualifier == "false" or disqualifier==''):
         passThis = False
     if not (humane == "true" or humane == "false" or humane is None):
         passThis = False
