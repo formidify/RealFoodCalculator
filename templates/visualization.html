@@ -317,7 +317,7 @@ yrs.done(function(results) {
 
 sessionStorage.setItem("currentPercentCat", "") // current investigated category
 sessionStorage.setItem("percentSearch", JSON.stringify([])); // previous searches
-sessionStorage.setItem("percentCurrent", JSON.stringify([])); // previous searches
+sessionStorage.setItem("percentCurrent", JSON.stringify([])); // CHECK IF CAN BE DELETED
 
 sessionStorage.setItem("percentCatCurr", JSON.stringify([]));
 sessionStorage.setItem("percentCatNot", JSON.stringify([]));
@@ -640,9 +640,9 @@ function minusPercent() {
   myBarChart.data.datasets[1].borderColor.splice(0, 1)
   myBarChart.update()
 
-  curr_not.splice(0, 0, curr_cat[curr_cat.length-1][0])
-  curr.splice(index, 1)
-  curr_cat.splice(curr_cat.length-1, 1)
+  curr_not.splice(0, 0, curr_cat[curr_cat.length-1][0]) // add to non-displaying category data
+  curr.splice(index, 1) // remove from current labels
+  curr_cat.splice(curr_cat.length-1, 1) // remove from current category data
 
   for (j = 0; j < 4; j++) {
     arr = JSON.parse(sessionStorage[curr_data_percent[j]])
@@ -690,71 +690,20 @@ function addPercent() {
 }
 }
 
+// clear the whole canvas
 function clearCanvasPercent() {
   
 }
 
-
+// change the year of all shown items to the given year; and change the associate order
 function changeYearPercent() {
 
 }
 
+// change the ranking method and the associate data
 function changeRankPercent() {
 
 }
-
-
-let num_items = document.querySelector('#num_items_percent');
-let rank = document.querySelector('#rank_percent');
-
-// manually added items
-var new_real = [];
-var new_nonreal = [];
-var new_label = [];
-
-
-// update bar chart
-function updateBarChart(cat, yr){
-   updatedData = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/bar_data/" + cat + "+" + yr);
-  updatedData.done(function(results) {
-   real_color = Array(results.items.length).fill('rgba(255, 99, 132, 0.2)')
-   nonreal_color = Array(results.items.length).fill('rgba(255, 159, 64, 0.2)')
-
-   real_border_color = Array(results.items.length).fill('rgba(255,99,132,1)')
-   nonreal_border_color = Array(results.items.length).fill('rgba(255, 159, 64, 1)')
-
-  data = {
-      datasets: [{
-          label: "real",
-          data: results.real,
-          borderWidth: 2,
-          backgroundColor: real_color,
-          borderColor: real_border_color
-      },
-      {
-          label: "non-real",
-          data: results.nonreal,
-          borderWidth: 2,
-          backgroundColor: nonreal_color,
-          borderColor: nonreal_border_color
-        }
-      ],
-      // These labels appear in the legend and in the tooltips when hovering different arcs
-      labels: results.items,
-      options: {
-          responsive: true
-      }
-  };
-
-  myBarChart.data = data;
-  myBarChart.options.title.text = yr + " purchase of " + cat;
-
-  myBarChart.update();
-    })
-}
-
-
-
 
 </script>
 
