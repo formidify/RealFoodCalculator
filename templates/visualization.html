@@ -1024,7 +1024,7 @@ $(document).ready(function(){table = $('#time_table').DataTable({
 // add single item to the time series chart
 function addItemData() {
   current_list = JSON.parse(sessionStorage.timeCurrent);
-  y = document.getElementById("add_time").value;
+  y = document.getElementById("add_time").value.trim();
   // check input is longer than 1 and has not appeared in current list
   if (y.length > 1 && !current_list.includes(y)) {
     searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/item_data/" + y);
@@ -1056,13 +1056,16 @@ function addItemData() {
   var dup = JSON.parse(sessionStorage.timeDuplicate)
   curr = JSON.parse(sessionStorage.timeCurrCat)
   n = JSON.parse(sessionStorage.timeNotCat)
+
   console.log(curr)
   console.log(n)
+
   if (curr.includes(y) || n.includes(y)) {
-    dup = dup.concat([y])
+    dup.push(y)
   }
-  sessionStorage.setItem("timeDuplicate", JSON.stringify(dup));
   console.log(dup)
+  sessionStorage.setItem("timeDuplicate", JSON.stringify(dup));
+  
 
 
     for (j = 0; j < types.length; j++) {
@@ -1096,7 +1099,6 @@ function addItemData() {
     myLineChart.data.datasets.push(line)
 
   myLineChart.update();
-  console.log(myLineChart.data.datasets)
 
 sessionStorage.setItem("timeConfigs", JSON.stringify(total_configs));
 sessionStorage.setItem("timeChartLabels", JSON.stringify(chart_labels)); // labels
@@ -1196,7 +1198,7 @@ curr_ind = JSON.parse(sessionStorage.timeCurrent)
   // add data to table
   for (i = 0; i < items.length; i++) {
     if (curr_ind.includes(items[i])) {
-      dup = dup.concat([items[i]])
+      dup.push(items[i])
     }
     for (j = 0; j < types.length; j++) {
       table.row.add([items[i], types[j], cost[j][i][0], cost[j][i][1], cost[j][i][2]]).draw(false)
@@ -1204,7 +1206,6 @@ curr_ind = JSON.parse(sessionStorage.timeCurrent)
   }
 
   sessionStorage.setItem("timeDuplicate", JSON.stringify(dup))
-  console.log(dup)
 
   sessionStorage.setItem("timeConfigs", JSON.stringify(dup));
 
@@ -1290,7 +1291,6 @@ function remove_item_time(item) {
     dup.splice(del, 1);
   }
   sessionStorage.setItem("timeDuplicate", JSON.stringify(dup))
-  console.log(dup)
 
 
   /*
@@ -1343,6 +1343,9 @@ function remove_cat_time() {
     item = total[z]
 
   if (dup.includes(item)) {
+    console.log(dup)
+    console.log(item)
+    console.log(total)
     index = total.indexOf(item)
     for (j = 0; j < types.length; j++) {
       table.row.add([item, types[j], cost[j][index][0], cost[j][index][1], cost[j][index][2]]).draw(false)
@@ -1353,7 +1356,6 @@ function remove_cat_time() {
 
   }
     sessionStorage.setItem("timeDuplicate", JSON.stringify(dup))
-    console.log(dup)
 
   // add duplicated entries between category and item entry back into the table
 
@@ -1824,7 +1826,7 @@ function addLivItem() {
   LivCharts[2].destroy();
   LivCharts[3].destroy();
 
-  y = document.getElementById("item_liv").value;
+  y = document.getElementById("item_liv").value.trim();
 
   searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/brand_vendor_data/" + y + "+item");
 
@@ -1891,7 +1893,7 @@ function addLivVendor() {
   LivCharts[2].destroy();
   LivCharts[3].destroy();
 
-  y = document.getElementById("vendor_liv").value;
+  y = document.getElementById("vendor_liv").value.trim();
 
   searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/brand_vendor_data/" + y + "+vendor");
 
@@ -1942,7 +1944,7 @@ function addLivLabel() {
   LivCharts[2].destroy();
   LivCharts[3].destroy();
 
-  y = document.getElementById("label_liv").value;
+  y = document.getElementById("label_liv").value.trim();
 
   searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/brand_vendor_data/" + y + "+brand");
 
