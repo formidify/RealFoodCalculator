@@ -672,11 +672,12 @@ function addPercent() {
   curr_cat.splice(curr_cat.length-1, 0, curr_not[0])
 
   sessionStorage.setItem("percentCatCurr", JSON.stringify(curr_cat));
-  sessionStorage.setItem("percentCatNot", JSON.stringify(curr_not);
+  sessionStorage.setItem("percentCatNot", JSON.stringify(curr_not));
 
 
   show = parseInt($("#showPercent").html()) + 1
   $("#showPercent").html(show)
+}
 }
 
 function clearCanvasPercent() {
