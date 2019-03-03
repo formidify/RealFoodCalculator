@@ -316,6 +316,20 @@ sessionStorage.setItem("currentPercentCat", "") // current investigated category
 sessionStorage.setItem("percentSearch", JSON.stringify([])); // previous searches
 sessionStorage.setItem("percentCurrent", JSON.stringify([])); // previous searches
 
+sessionStorage.setItem("percentCatCurr", JSON.stringify([]));
+sessionStorage.setItem("percentCatNot", JSON.stringify([]));
+
+sessionStorage.setItem("currPercent", JSON.stringify([])); // current labels stored in chart
+sessionStorage.setItem("currReal", JSON.stringify([])); 
+sessionStorage.setItem("currNonreal", JSON.stringify([])); 
+sessionStorage.setItem("currSum", JSON.stringify([])); 
+sessionStorage.setItem("currMinus", JSON.stringify([])); 
+
+curr_data_percent = ["currMinus", "currSum", "currReal", "currNonreal"]
+
+
+sessionStorage.setItem("percentSort", ""); // store the current ranking method
+
 function searchItemPercent() {
   x = document.getElementById("add_percent").value;
   if (x.length > 1) {
@@ -339,6 +353,7 @@ function searchItemPercent() {
 }
 };
 
+var rank_methods = ["minus", "add", "real", "nonreal"]
 // initialize my bar chart
 var myBarChart;
   ctx2 = document.getElementById("percentChart").getContext('2d');
@@ -387,6 +402,56 @@ $(document).ready(function(){table_percent = $('#percent_table').DataTable({
         buttons: ['copyHtml5', 'csvHtml5', 'excelHtml5']
     }); });
 
+// given the attributes of an item and the current sorting, find which index to splice it into the chart
+function findInsertIndex(d) {
+    e = document.getElementById("rankPercent");
+    var rank = e.options[e.selectedIndex].value;
+
+    val = d[rank_methods.indexOf(rank) + 1]
+
+    chart_data = JSON.parse(sessionStorage[curr_data_percent[indexOf(rank)]])
+
+    index = 0
+
+    if (rank == 'minus') {
+      for (i = chart_data.length - 1; i >= 0; i--) {
+        if (val > chart_data[i]) {
+          index = i + 1;
+          break;
+        }
+      }
+      index = 0;
+    }
+
+    else {
+      for (i = 0; i < chart_data.length; i++) {
+        if (val > chart_data[i]) {
+          index = i;
+          break;
+        }
+      }
+      index = chart_data.length;
+    }
+    curr = JSON.parse(sessionStorage.currPercent)
+    curr.splice(index, 0, d[0])
+
+    sessionStorage.setItem("currPercent", JSON.stringify(curr));
+
+    chart_data.splice(index, 0, d[rank_methods.indexOf(rank) + 1])
+    sessionStorage.setItem("currPercent", JSON.stringify(chart_data));
+
+    // insert the newly added item to the same spot across all 4 data arrays
+    for (j = 0; j < 4; j++) {
+      arr = JSON.parse(sessionStorage[curr_data_percent[j]])
+      arr.splice(index, 0, d[i+1])
+      sessionStorage.setItem(curr_data_percent[j], JSON.stringify(arr));
+    }
+} 
+
+// do not necessarily need right now
+function sortCatData(arr, num) {
+  return
+}
 
 // add single item to the time series chart
 function addItemDataPercent() {
@@ -403,17 +468,17 @@ function addItemDataPercent() {
 
       // elements by index: item, real, nonreal, minus, sum
       data = results.data
+      index = findInsertIndex(data)
 
-      myBarChart.data.datasets[0].data.push(data[1])
+      myBarChart.data.datasets[0].data.splice(index, 0, data[1])
       myBarChart.data.datasets[0].backgroundColor.push('rgba(255, 99, 132, 0.2)')
       myBarChart.data.datasets[0].borderColor.push('rgba(255, 99, 132, 1)')
 
-      myBarChart.data.datasets[1].data.push(data[2])
+      myBarChart.data.datasets[1].data.splice(index, 0, data[2])
       myBarChart.data.datasets[1].backgroundColor.push('rgba(255, 159, 64, 0.2)')
       myBarChart.data.datasets[1].borderColor.push('rgba(255, 159, 64, 1)')
 
-      myBarChart.data.labels.push(data[0])
-
+      myBarChart.data.labels.splice(index, 0, data[0])
 
 
       myBarChart.update();
@@ -429,105 +494,67 @@ $('#buttons_percent').append('<button class="btnic" id = "percent_' + y + '" onc
   }
 }
 
+
 function addCatData() {
   cat = $("select#categoriesPercent").val();
-  if (sessionStorage.currentTimeCat != "" && sessionStorage.currentPercentCat != cat) { 
+  if (sessionStorage.currentPercentCat != "" && sessionStorage.currentPercentCat != cat) { 
       remove_cat_time();
     }
   if (sessionStorage.currentTimeCat != cat) {
-  curr = []
-  not = []
-  searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/get_categories_time/" + cat);
+  e = document.getElementById("rankPercent");
+  var rank = e.options[e.selectedIndex].value;
+
+  e = document.getElementById("yearPercent");
+  var year = e.options[e.selectedIndex].value;
+  searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/bar_data/" + cat + "+" + year + "+" + rank);
   searches.done(function(results) {
-    num_items = Math.min(results.items.length, 3)
 
-  show = parseInt($("#showTime").html()) + num_items
-  all = parseInt($("#allTime").html()) + results.items.length
-  $("#showTime").html(show)
-  $("#allTime").html(all)
+  // results already sorted given the rank inputted to api.py
+  num_items = Math.min(results.items.length, 3)
+  // new_results = sortCatData(results, num_items)
 
-    cost = results.cost
-    items = results.items
-    types = ['total', 'real']
-    myLineChart.data.labels = results.yrs
+  // transpose results for easier data wrangling
+  result_list = [results.items, results.minus, results.sum, results.real, results.nonreal]
+  results = result_list.map((col, i) => vr.map(row => row[i]));
 
-    // update column years
-          if (updatedTimeColumn) {
-        updatedTimeColumn = false;
-        var head_item = table.columns(2).header();
-        $(head_item).html(results.yrs[0]);
-
-        var head_item = table.columns(3).header();
-        $(head_item).html(results.yrs[1]);
-
-        var head_item = table.columns(4).header();
-        $(head_item).html(results.yrs[2]);
-      }
-
-    chart_labels = JSON.parse(sessionStorage.timeChartLabels);
-    total_configs = JSON.parse(sessionStorage.timeConfigs)
-
-    colors = []
-
-    for (i = 0; i < num_items; i++) {
-      curr.push(items[i])
-    for (j = 0; j < types.length; j++) {
-        line = {}
-        line.data = cost[j][i]
-        line.type = 'line'
-        line.label = types[j] + " " + items[i]
-
-        total_configs.push(line.label)
-        chart_labels.push(line.label)
-        //line.backgroundColor = colors[i]
-        color = "#" + intToARGB(hashCode(items[i]))
-        colors.push(color)
-        line.borderColor = color
-        line.fill = false
-        if (j > 0) {
-            line.borderDash = [10, 5]
-        }
-        myLineChart.data.datasets.push(line)
-    }
-    // legend line
-    line = {}
-    line.data = 0 // arbitrary
-    line.type = 'line'
-    line.label = items[i]
-    line.backgroundColor = color
-    line.borderColor = color
-    //line.fillColor = colors[i]
-    line.fill = true
-    line.showLine = false
-    chart_labels.push(line.label)
-    myLineChart.data.datasets.push(line)
-  }
+  results_curr = results.slice(0, num_items)
+  results_no = results.slice(num_items, results.length)
 
   // add data to table
-  for (i = 0; i < items.length; i++) {
-    for (j = 0; j < types.length; j++) {
-      table.row.add([items[i], types[j], cost[j][i][0], cost[j][i][1], cost[j][i][2]]).draw(false)
-    }
+  for (i = 0; i < num_items; i++) {
+      data = results_curr[i]
+      index = findInsertIndex(data)
+
+      myBarChart.data.datasets[0].data.splice(index, 0, data[1])
+      myBarChart.data.datasets[0].backgroundColor.push('rgba(255, 99, 132, 0.2)')
+      myBarChart.data.datasets[0].borderColor.push('rgba(255, 99, 132, 1)')
+
+      myBarChart.data.datasets[1].data.splice(index, 0, data[2])
+      myBarChart.data.datasets[1].backgroundColor.push('rgba(255, 159, 64, 0.2)')
+      myBarChart.data.datasets[1].borderColor.push('rgba(255, 159, 64, 1)')
+
+      myBarChart.data.labels.splice(index, 0, data[0])
   }
 
-  for (k = num_items; k < items.length; k++) {
-    not.push(items[k])
-  } 
+  for (i = 0; i < results.length; i++) {
+      table.row.add(results[i]).draw(false)
+    }
 
 
-  myLineChart.update();
-  sessionStorage.setItem("timeConfigs", JSON.stringify(total_configs));
-   sessionStorage.setItem("timeChartLabels", JSON.stringify(chart_labels));
 
-  sessionStorage.setItem("timeCurrCat", JSON.stringify(curr));
-  sessionStorage.setItem("timeNotCat", JSON.stringify(not));
-  sessionStorage.setItem("timeCatCost", JSON.stringify(cost));
-
+  myBarChart.update();
+  sessionStorage.setItem("percentCatCurr", JSON.stringify(results_curr));
+  sessionStorage.setItem("percentCatNot", JSON.stringify(results_no));
+  sessionStorage.setItem("currentPercentCat", cat);
 
   })
-  sessionStorage.setItem("currentTimeCat", cat);
 }
 };
+
+
+function remove_cat_percent() {
+
+}
 
 
 
@@ -1614,13 +1641,13 @@ sessionStorage.setItem("timeNotCat", JSON.stringify([]));
 </div>
 
 <div class="row">
-  <div class="column" style = "width: 50%; height: 800px;  float: left">
-    <canvas id="livChart1" style="display: block; height: 400px; width: 75px;"></canvas>
-    <canvas id="livChart2" style="display: block; height: 400px; width: 75px;"></canvas>
+  <div class="column" style = "width: 50%; height: 25%;  float: left">
+    <canvas id="livChart1" style="display: block; height: 40px; width: 50%;"></canvas>
+    <canvas id="livChart2" style="display: block; height: 40px; width: 50%;"></canvas>
   </div>
-  <div class="column" style = "width: 50%; height: 800px;  float: left">
-    <canvas id="livChart3" style="display: block; height: 400px; width: 75px;"></canvas>
-    <canvas id="livChart4" style="display: block; height: 400px; width: 75px;"></canvas>
+  <div class="column" style = "width: 50%; height: 25%;  float: left">
+    <canvas id="livChart3" style="display: block; height: 40px; width: 50%;"></canvas>
+    <canvas id="livChart4" style="display: block; height: 40px; width: 50%;"></canvas>
   </div>
 </div>
 

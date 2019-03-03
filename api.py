@@ -506,14 +506,17 @@ def get_pie_data():
 # ----------------------------------------
 
 # get percent data per category
-@app.route("/visualization/bar_data", defaults = {'cat': '', 'yr': ''})
-@app.route("/visualization/bar_data/<cat>+<yr>")
-def get_bar_data(cat, yr):
+@app.route("/visualization/bar_data", defaults = {'cat': '', 'yr': '', 'rank': ''})
+@app.route("/visualization/bar_data/<cat>+<yr>+<rk>")
+def get_bar_data(cat, yr, rk):
     items = []
     real = []
     nonreal = []
     minus = []
     s = []
+
+    rks = ['minus', 'add', 'real', 'nonreal']
+    q_rk = ['(COALESCE(nonreal,0) - COALESCE(real,0))', '(COALESCE(nonreal,0) + COALESCE(real,0)) desc', 'COALESCE(real,0) desc', 'COALESCE(nonreal,0) desc']
 
     if yr == 'total':
         y = ''
@@ -531,7 +534,7 @@ def get_bar_data(cat, yr):
             (SELECT COALESCE(local, 'f') AS local, COALESCE(fair, 'f') AS fair, COALESCE(ecological, 'f') AS ecological, COALESCE(humane, 'f') AS humane,
             description, cost, year, category FROM test_data_large) X
                 WHERE {y} category = '{c}' AND local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't' GROUP BY trim(description)) B
-                ON Z.description = B.description ORDER BY (COALESCE(real,0) + COALESCE(nonreal,0)) desc;""".format(y = y, c = cat)
+                ON Z.description = B.description ORDER BY {r};""".format(y = y, c = cat, r = q_rk[rks.index(rk)])
 
     # todo: query should also take account of the years
     connection = get_connection()
@@ -548,16 +551,15 @@ def get_bar_data(cat, yr):
             print(e)
         connection.close()
 
-    return flask.jsonify({"items": items, "real": real, "nonreal": nonreal, "minus": minus, "sum": s})
+    return flask.jsonify({"items": items, "minus": minus, "sum": s, "real": real, "nonreal": nonreal})
 
 # get percent data per item
 @app.route("/visualization/bar_item", defaults = {'item': '', 'yr': ''})
 @app.route("/visualization/bar_item/<item>+<yr>")
 def get_bar_item(item, yr):
     query = """SELECT COALESCE(Z.description, B.description)
-        AS description, COALESCE(Z.real, 0)
-        AS real, COALESCE(B.nonreal, 0)
-        AS nonreal, (COALESCE(nonreal,0) - COALESCE(real,0)) AS minus, (COALESCE(nonreal,0) + COALESCE(real,0)) AS sum
+        AS description, (COALESCE(B.nonreal,0) - COALESCE(Z.real,0)) AS minus, (COALESCE(B.nonreal,0) + COALESCE(Z.real,0)) AS sum,
+        COALESCE(Z.real, 0) AS real, COALESCE(B.nonreal, 0) AS nonreal
         FROM (SELECT '{d}' AS description, COALESCE(SUM(cost), 0)
         AS real FROM test_data_large WHERE year = {y} AND trim(description) ='{d}' AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't')) 
         Z FULL OUTER JOIN (SELECT '{d}' AS description, COALESCE(SUM(cost), 0) AS nonreal FROM
