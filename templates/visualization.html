@@ -440,11 +440,6 @@ function findInsertIndex(d) {
     return index;
 } 
 
-// do not necessarily need right now
-function sortCatData(arr, num) {
-  return
-}
-
 // add single item to the time series chart
 function addItemDataPercent() {
   current_list = JSON.parse(sessionStorage.percentCurrent);
@@ -616,18 +611,72 @@ function remove_cat_percent() {
     .remove()
     .draw();
 
+  $("#showPercent").html(0)
+  $("#allPercent").html(0)
+
   }
   sessionStorage.setItem("percentCatCurr", JSON.stringify([]));
   sessionStorage.setItem("percentCatNot", JSON.stringify([]));
 
 }
 
+// remove one entry for category data
 function minusPercent() {
-  item_remove = JSON.parse(sessionStorage.percentCatCurr)
+  curr_cat = JSON.parse(sessionStorage.percentCatCurr)
+  if (curr_cat.length > 1) { 
+  curr_not = JSON.parse(sessionStorage.percentCatNot)
+
+  item = curr_cat[curr_cat.length-1][0]
+  curr = JSON.parse(sessionStorage.currPercent)
+  index = curr.indexOf(item)
+
+  myBarChart.data.datasets[0].data.splice(index, 1)
+  myBarChart.data.datasets[1].data.splice(index, 1)
+  myBarChart.data.labels.splice(index, 1)
+  myBarChart.update()
+
+  curr_not.splice(0, 0, curr_cat[curr_cat.length-1])
+  curr.splice(index, 1)
+  curr_cat.splice(curr_cat.length-1, 1)
+
+    for (j = 0; j < 4; j++) {
+      arr = JSON.parse(sessionStorage[curr_data_percent[j]])
+      arr.splice(index, 1)
+      sessionStorage.setItem(curr_data_percent[j], JSON.stringify(arr));
+    }
+
+  sessionStorage.setItem("percentCatCurr", JSON.stringify(curr_cat));
+  sessionStorage.setItem("percentCatNot", JSON.stringify(curr_not);
+  sessionStorage.setItem("currPercent", JSON.stringify(curr);
+
+  show = parseInt($("#showPercent").html()) - 1
+  $("#showPercent").html(show)
+}
 }
 
-function minusPercent() {
-  
+// add an entry from category data
+function addPercent() {
+  curr_not = JSON.parse(sessionStorage.percentCatNot)
+  if (curr_not.length > 1) { 
+  curr_cat = JSON.parse(sessionStorage.percentCatCurr)
+  item = curr_not[0][0]
+
+  index = findInsertIndex(curr_not[0])
+
+  myBarChart.data.datasets[0].data.splice(index, 0, curr_not[0][3])
+  myBarChart.data.datasets[1].data.splice(index, 0, curr_not[0][4])
+  myBarChart.data.labels.splice(index, 0, curr_not[0][0])
+  myBarChart.update()
+
+  curr_not.splice(0, 1)
+  curr_cat.splice(curr_cat.length-1, 0, curr_not[0])
+
+  sessionStorage.setItem("percentCatCurr", JSON.stringify(curr_cat));
+  sessionStorage.setItem("percentCatNot", JSON.stringify(curr_not);
+
+
+  show = parseInt($("#showPercent").html()) + 1
+  $("#showPercent").html(show)
 }
 
 function clearCanvasPercent() {
