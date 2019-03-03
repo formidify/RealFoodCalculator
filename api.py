@@ -359,28 +359,35 @@ def vd_insert_entry():
     ratingVersion = flask.request.args.get('ratingVersion')
     productCodeType = flask.request.args.get('productCodeType')
 
-    if humane == "null":
+    if humane == "'null'" or humane == 'null':
         humane = None
     try:
         month = int(month)
         year = int(year)
         ratingVersion = float(ratingVersion)
     except:
-        print ("ERR: ENTRY NOT IN CORRECT FORM")
+        print ("ERR: ENTRY NOT IN CORRECT FORM - check numbers")
 
     passThis = True
+    failType = ""
     if not (local == "true" or local == "false" or local==''):
         passThis = False
+        failType="local"
     if not (fair == "true" or fair == "false" or fair==''):
         passThis = False
+        failType="fair"
     if not (ecological == "true" or ecological == "false" or ecological==''):
         passThis = False
+        failType="ecological"
     if not (disqualifier == "true" or disqualifier == "false" or disqualifier==''):
         passThis = False
+        failType="disqualifier"
     if not (humane == "true" or humane == "false" or humane is None):
         passThis = False
+        failType="humane"
+
     if passThis == False:
-        print("ERR : ENTRY NOT IN CORRECT FORM")
+        print("ERR : ENTRY NOT IN CORRECT FORM - check boolean: " + failType)
         return False
 
     query = """INSERT INTO test_data_large VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);"""
