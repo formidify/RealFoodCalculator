@@ -416,6 +416,7 @@ function findInsertIndex(d) {
     chart_data = JSON.parse(sessionStorage[curr_data_percent[rank_methods.indexOf(rank)]])
 
     index = chart_data.length;
+    console.log(chart_data)
     for (k = 0; k < chart_data.length; k++) {
       if (val > chart_data[k]) {
         index = k;
