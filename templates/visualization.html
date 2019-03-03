@@ -1055,12 +1055,8 @@ function addItemData() {
   // add duplicate entries into the list
   var dup = JSON.parse(sessionStorage.timeDuplicate)
   curr = JSON.parse(sessionStorage.timeCurrCat)
-  not = JSON.parse(sessionStorage.timeNotCat)
-  console.log(curr)
-  console.log(not)
-  console.log(y)
-  if (curr.indexOf(y) != -1 || not.indexOf(y) != -1) {
-    console.log(dup)
+  n = JSON.parse(sessionStorage.timeNotCat)
+  if (curr.includes(y) || n.includes(y)) {
     dup = dup.concat([y])
   }
   sessionStorage.setItem("timeDuplicate", JSON.stringify(dup));
@@ -1274,12 +1270,12 @@ function remove_item_time(item) {
 
   if (dup.includes(item)) {
     curr = JSON.parse(sessionStorage.timeCurrCat)
-    not = JSON.parse(sessionStorage.timeNotCat)
+    n = JSON.parse(sessionStorage.timeNotCat)
 
     if (curr.includes(item)) {
       index = curr.indexOf(item)
     }
-    if (not.includes(item)) {
+    if (n.includes(item)) {
       index = curr.length + not.indexOf(item)
     }
 
