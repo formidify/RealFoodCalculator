@@ -283,7 +283,7 @@ def delete_entry():
     ratingVersion = flask.request.args.get('ratingVersion')
     productCodeType = flask.request.args.get('productCodeType')
 
-    if humane == "null":
+    if humane == "'null'":
         humane = 'is null'
     else:
         humane = '='+ humane
