@@ -441,24 +441,24 @@ function findInsertIndex(d) {
 function addItemDataPercent(override) {
   current_list = JSON.parse(sessionStorage.percentCurrent)
   console.log(current_list)
-  y = document.getElementById("add_percent").value; // set as default
   if (override != '') {y = override;}
+  else {y = document.getElementById("add_percent").value;}
   console.log(y)
-  console.log(override)
+  console.log(y.length > 1 && !current_list.includes(y))
   // check input is longer than 1 and has not appeared in current list
   if (y.length > 1 && !current_list.includes(y)) {
     e = document.getElementById("yearPercent");
     var year = e.options[e.selectedIndex].value;
-
+    console.log(y)
     searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/bar_item/" + y + "+" + year);
-
+    console.log(y)
     searches.done(function(results) {
 
       // elements by index: item, real, nonreal, minus, sum
       data = results.data
-      console.log(data)
+      console.log(y)
       index = findInsertIndex(data)
-
+      console.log(y)
       myBarChart.data.datasets[0].data.splice(index, 0, data[3])
       myBarChart.data.datasets[0].backgroundColor.push('rgba(255, 99, 132, 0.2)')
       myBarChart.data.datasets[0].borderColor.push('rgba(255, 99, 132, 1)')
@@ -502,7 +502,6 @@ function addCatDataPercent(override) {
 
   // results already sorted given the rank inputted to api.py
   num_items = Math.min(results.items.length, 3)
-  console.log(num_items)
   // new_results = sortCatData(results, num_items)
 
   // transpose results for easier data wrangling
@@ -511,9 +510,7 @@ function addCatDataPercent(override) {
 
   results_curr = results.slice(0, num_items)
   results_no = results.slice(num_items, results.length)
-  console.log(results)
   // add data to table
-  console.log(myBarChart.data.labels)
   for (i = 0; i < num_items; i++) {
       data = results_curr[i]
       index = findInsertIndex(data)
@@ -528,7 +525,6 @@ function addCatDataPercent(override) {
       console.log(myBarChart.data.labels)
       myBarChart.data.labels.splice(index, 0, data[0])
   }
-  console.log(myBarChart.data.labels)
 
   myBarChart.update();
 
@@ -562,7 +558,6 @@ function remove_item_percent(item) {
   myBarChart.update();
 
   item_id = "[id='percent_" + item + "']"
-  console.log(item_id)
   $(item_id).remove()
 
   table_percent.rows( function ( idx, data, node ) {
@@ -589,8 +584,6 @@ function remove_item_percent(item) {
 function remove_cat_percent() {
   curr = JSON.parse(sessionStorage.currPercent)
   curr_cat = JSON.parse(sessionStorage.percentCatCurr)
-  console.log(curr)
-  console.log(curr_cat)
   for (q = 0; q < curr_cat.length; q++) {
     item = curr_cat[q][0]
     index = curr.indexOf(item)
@@ -672,13 +665,10 @@ function minusPercent() {
 // add an entry from category data
 function addPercent() {
   curr_not = JSON.parse(sessionStorage.percentCatNot)
-  console.log(curr_not)
   if (curr_not.length > 0) { 
 
   curr_cat = JSON.parse(sessionStorage.percentCatCurr)
-  console.log(curr_cat)
   item = curr_not[0][0]
-  console.log(curr_not)
   index = findInsertIndex(curr_not[0])
 
   myBarChart.data.datasets[0].data.splice(index, 0, curr_not[0][3])
@@ -690,12 +680,9 @@ function addPercent() {
   myBarChart.data.datasets[1].borderColor.push('rgba(255, 159, 64, 1)')
 
   myBarChart.update()
-  console.log(curr_cat)
+
   curr_cat = curr_cat.concat([curr_not[0]])
   curr_not.splice(0, 1)
-
-  console.log(curr_cat)
-  console.log(curr_not)
 
   sessionStorage.setItem("percentCatCurr", JSON.stringify(curr_cat));
   sessionStorage.setItem("percentCatNot", JSON.stringify(curr_not));
@@ -732,10 +719,8 @@ function changeYearPercent() {
   // store the important data
   updateYearCat = sessionStorage.currentPercentCat
   updateYearItems = JSON.parse(sessionStorage.percentCurrent)
-  console.log(updateYearItems)
   // clear the canvas
   clearCanvasPercent();
-  console.log(updateYearItems)
   for (u = 0; u < updateYearItems.length; u++) {
     addItemDataPercent(updateYearItems[u])
   }
