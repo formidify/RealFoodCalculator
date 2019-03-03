@@ -1191,9 +1191,10 @@ function addCatData() {
   // add duplicate entries into the list
   var dup = JSON.parse(sessionStorage.timeDuplicate)
 
+curr_ind = JSON.parse(sessionStorage.timeCurrent)
   // add data to table
   for (i = 0; i < items.length; i++) {
-    if (dup.includes(items[i])) {
+    if (curr_ind.includes(items[i])) {
       dup = dup.concat([items[i]])
     }
     for (j = 0; j < types.length; j++) {
