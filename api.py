@@ -531,9 +531,9 @@ def get_bar_data(cat, yr, rk):
             AS description, COALESCE(Z.real, 0)
             AS real, COALESCE(B.nonreal, 0)
             AS nonreal, (COALESCE(nonreal,0) - COALESCE(real,0)) AS minus, (COALESCE(nonreal,0) + COALESCE(real,0)) AS sum
-            FROM (SELECT trim(description), SUM(cost)
+            FROM (SELECT trim(description) AS description, SUM(cost)
             AS real FROM test_data_large WHERE {y} category = '{c}' AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't')
-            GROUP BY trim(description)) Z FULL OUTER JOIN (SELECT trim(description), SUM(cost) AS nonreal FROM
+            GROUP BY trim(description)) Z FULL OUTER JOIN (SELECT trim(description) AS description, SUM(cost) AS nonreal FROM
             (SELECT COALESCE(local, 'f') AS local, COALESCE(fair, 'f') AS fair, COALESCE(ecological, 'f') AS ecological, COALESCE(humane, 'f') AS humane,
             description, cost, year, category FROM test_data_large) X
                 WHERE {y} category = '{c}' AND local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't' GROUP BY trim(description)) B
