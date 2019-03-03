@@ -427,11 +427,8 @@ function findInsertIndex(d) {
 
     curr = JSON.parse(sessionStorage.currPercent)
     curr.splice(index, 0, d[0])
-
     sessionStorage.setItem("currPercent", JSON.stringify(curr));
 
-    chart_data.splice(index, 0, d[rank_methods.indexOf(rank) + 1])
-    sessionStorage.setItem(curr_data_percent[rank_methods.indexOf(rank)], JSON.stringify(chart_data));
 
     // insert the newly added item to the same spot across all 4 data arrays
     for (j = 0; j < 4; j++) {
