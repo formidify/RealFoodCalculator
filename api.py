@@ -553,6 +553,7 @@ def get_bar_data(cat, yr, rk):
         except Exception as e:
             print(e)
         connection.close()
+        
 
     return flask.jsonify({"items": items, "minus": minus, "sum": s, "real": real, "nonreal": nonreal})
 
