@@ -435,7 +435,7 @@ function findInsertIndex(d) {
     // insert the newly added item to the same spot across all 4 data arrays
     for (j = 0; j < 4; j++) {
       arr = JSON.parse(sessionStorage[curr_data_percent[j]])
-      arr.splice(index, 0, d[i+1])
+      arr.splice(index, 0, d[rank_methods.indexOf(rank)+1])
       sessionStorage.setItem(curr_data_percent[j], JSON.stringify(arr));
     }
     return index;
@@ -479,7 +479,7 @@ function addItemDataPercent() {
 
 
 // add option to remove
-$('#buttons_percent').append('<button class="btnic" id = "percent_' + y + '" onclick = "remove_percent_time(&quot ' + y + '&quot)"><i class="fa fa-close"></i> ' + y + '</button>');
+$('#buttons_percent').append('<button class="btnic" id = "percent_' + y + '" onclick = "remove_item_percent(&quot ' + y + '&quot)"><i class="fa fa-close"></i> ' + y + '</button>');
 
     })
 
@@ -562,7 +562,7 @@ function remove_item_percent(item) {
   curr.splice(index, 1)
   myBarChart.data.labels.splice(index, 1)
   myBarChart.update();
-  
+
   item_id = "[id='percent_" + item + "']"
   console.log(item_id)
   $(item_id).remove()
