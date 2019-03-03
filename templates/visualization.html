@@ -1056,6 +1056,8 @@ function addItemData() {
   var dup = JSON.parse(sessionStorage.timeDuplicate)
   curr = JSON.parse(sessionStorage.timeCurrCat)
   n = JSON.parse(sessionStorage.timeNotCat)
+  console.log(curr)
+  console.log(n)
   if (curr.includes(y) || n.includes(y)) {
     dup = dup.concat([y])
   }
