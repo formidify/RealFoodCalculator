@@ -424,13 +424,14 @@ function findInsertIndex(d) {
       index = 0;
     }
     */
-      for (i = 0; i < chart_data.length; i++) {
-        if (val > chart_data[i]) {
-          index = i;
-          break;
-        }
+    index = chart_data.length;
+    for (i = 0; i < chart_data.length; i++) {
+      if (val > chart_data[i]) {
+        index = i;
+        break;
       }
-      index = chart_data.length;
+    }
+
 
     curr = JSON.parse(sessionStorage.currPercent)
     curr.splice(index, 0, d[0])
