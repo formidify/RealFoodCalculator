@@ -679,8 +679,8 @@ function addPercent() {
 
   myBarChart.update()
 
-  curr_not.splice(0, 1)
   curr_cat = curr_cat.concat(curr_not[0])
+  curr_not.splice(0, 1)
 
   sessionStorage.setItem("percentCatCurr", JSON.stringify(curr_cat));
   sessionStorage.setItem("percentCatNot", JSON.stringify(curr_not));
