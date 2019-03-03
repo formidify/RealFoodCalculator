@@ -269,34 +269,42 @@ function savebtn(cur_row){
   var origInfo = JSON.parse(localStorage.getItem("origInfo"));
   console.log(origInfo);
 
-/*********************************************************************/
+  for (var key in newInfo){
+    addQueryStrings.push(key+"="+newInfo[key]+"&");
+  }
+  console.log("addQueryString -> " + addQueryStrings);
   for (var key in origInfo){
     queryStrings.push(key+"="+origInfo[key]+"&");
-    //if (origInfo[key]!= ""){
-    //  queryStrings.push(key+"="+origInfo[key]+"&");
-      //console.log(key + "=======" + origInfo[key]);
-    //}
   }
   console.log("queryString -> " + queryStrings);
+
+  var add_query = "";
+  for (var i=0; i<addQueryStrings.length; i++){
+    var str = addQueryStrings[i];
+    add_query = add_query+str;
+  }
   var base_query = "";
   for (var i=0; i<queryStrings.length; i++){
     var str = queryStrings[i];
     base_query = base_query+str;
   }
-  var url = getBaseApiURL()+"/test_data_large?"+base_query.substring(0,base_query.length - 1);
+
+  var add_url = getBaseApiURL()+"/vd_add_entry?"+add_query.substring(0,add_query.length - 1);
   var del_url = getBaseApiURL()+"/delete_entry?"+base_query.substring(0,base_query.length - 1);
-  console.log("url -> " + url);
+  console.log("add_url -> " + add_url);
   console.log("delete_url ->" + del_url);
 
-  //
-  var jsonString = fetch(url)
-    .then(res => res.json())
+  fetch(add_url)
+    .then(res => res.text())
+    //.then(res => res.json())
     .then((out) => {
       console.log(out);
-      return JSON.stringify(out); })
+      return out;})
     .catch(err => { throw err });
+    
+  var success=false;
 
-  console.log(jsonString);
+  // TODO : try to make it so can catch errors here?
 
   fetch(del_url)
     //.then(res => res.json())
@@ -305,34 +313,6 @@ function savebtn(cur_row){
       console.log(out);
     })
     .catch(err => { throw err });
-
-  for (var key in newInfo){
-    //if (newInfo[key]!= ""){
-    addQueryStrings.push(key+"="+newInfo[key]+"&");
-      //console.log(key + "=======" + origInfo[key]);
-    //}
-  }
-  console.log("addQueryString -> " + addQueryStrings);
-
-  var add_query = "";
-  for (var i=0; i<addQueryStrings.length; i++){
-    var str = addQueryStrings[i];
-    add_query = add_query+str;
-  }
-  var add_url = getBaseApiURL()+"/vd_add_entry?"+add_query.substring(0,add_query.length - 1);
-  console.log("add_url -> " + add_url);
-
-  var jsonString3 = fetch(add_url)
-    .then(res => res.text())
-    //.then(res => res.json())
-    .then((out) => {
-      console.log(out);
-      return out;})
-    .catch(err => { throw err });
-
-  console.log(jsonString3);
-/*********************************************************************/
- // TODO : got json of
 
   var cell = document.createElement('td');
   var para = document.createElement("button");
