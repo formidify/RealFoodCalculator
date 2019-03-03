@@ -573,7 +573,7 @@ def get_bar_data(cat, yr, rk):
     s = []
 
     rks = ['minus', 'add', 'real', 'nonreal']
-    q_rk = ['(COALESCE(nonreal,0) - COALESCE(real,0))', '(COALESCE(nonreal,0) + COALESCE(real,0)) desc', 'COALESCE(real,0) desc', 'COALESCE(nonreal,0) desc']
+    q_rk = ['(COALESCE(nonreal,0) - COALESCE(real,0)) desc', '(COALESCE(nonreal,0) + COALESCE(real,0)) desc', 'COALESCE(real,0) desc', 'COALESCE(nonreal,0) desc']
 
     if yr == 'total':
         y = ''
