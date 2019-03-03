@@ -202,7 +202,7 @@ for (i = 0; i < 4; i++) {
 
 <div style = "display: block; width: 100%">
 <a>First, choose a year:</a>
-<select id = "yearPercent" name="Show:" style = "width: 22%">
+<select id = "yearPercent" name="Show:" style = "width: 22%" onchange="changeYearPercent()">
   <option disabled selected value> select an option </option>
 </select>
 </div>
@@ -317,7 +317,7 @@ yrs.done(function(results) {
 
 sessionStorage.setItem("currentPercentCat", "") // current investigated category
 sessionStorage.setItem("percentSearch", JSON.stringify([])); // previous searches
-
+sessionStorage.setItem("percentCurrent", JSON.stringify([])); // all the individual items added
 sessionStorage.setItem("percentCatCurr", JSON.stringify([]));
 sessionStorage.setItem("percentCatNot", JSON.stringify([]));
 
@@ -329,8 +329,6 @@ sessionStorage.setItem("currMinus", JSON.stringify([]));
 
 curr_data_percent = ["currMinus", "currSum", "currReal", "currNonreal"]
 
-
-sessionStorage.setItem("percentSort", ""); // store the current ranking method
 
 function searchItemPercent() {
   x = document.getElementById("add_percent").value;
@@ -441,7 +439,7 @@ function findInsertIndex(d) {
 
 // add single item to the time series chart
 function addItemDataPercent() {
-  current_list = JSON.parse(sessionStorage.currPercent);
+  current_list = JSON.parse(sessionStorage.percentCurrent)
   y = document.getElementById("add_percent").value;
   // check input is longer than 1 and has not appeared in current list
   if (y.length > 1 && !current_list.includes(y)) {
@@ -475,6 +473,7 @@ function addItemDataPercent() {
 $('#buttons_percent').append('<button class="btnic" id = "percent_' + y + '" onclick = "remove_item_percent(&quot ' + y + '&quot)"><i class="fa fa-close"></i> ' + y + '</button>');
 
     })
+    sessionStorage.setItem("percentCurrent", JSON.stringify(current_list.concat([y])));
 
   }
 }
@@ -571,6 +570,12 @@ function remove_item_percent(item) {
       arr.splice(index, 1)
       sessionStorage.setItem(curr_data_percent[j], JSON.stringify(arr));
     }
+
+    // update the list that contains all user-entered individual entries
+    current_list = JSON.parse(sessionStorage.percentCurrent)
+    index = current_list.indexOf(item)
+    current_list.splice(index, 1)
+    sessionStorage.setItem("percentCurrent", JSON.stringify(current_list));
 }
 
 // remove the category for the percent chart
@@ -695,7 +700,24 @@ function addPercent() {
 
 // clear the whole canvas
 function clearCanvasPercent() {
-  
+  current = JSON.parse(sessionStorage.percentCurrent)
+  for (t = 0; t < current.length; t++) {
+    remove_item_percent(" " + current[t])
+  }
+  remove_cat_percent();
+  table_percent.rows.clear();
+
+  sessionStorage.setItem("currentPercentCat", "") // current investigated category
+  sessionStorage.setItem("percentSearch", JSON.stringify([])); // previous searches
+  sessionStorage.setItem("percentCurrent", JSON.stringify([])); // all the individual items added
+  sessionStorage.setItem("percentCatCurr", JSON.stringify([]));
+  sessionStorage.setItem("percentCatNot", JSON.stringify([]));
+
+  sessionStorage.setItem("currPercent", JSON.stringify([])); // current labels stored in chart
+  sessionStorage.setItem("currReal", JSON.stringify([])); 
+  sessionStorage.setItem("currNonreal", JSON.stringify([])); 
+  sessionStorage.setItem("currSum", JSON.stringify([])); 
+  sessionStorage.setItem("currMinus", JSON.stringify([])); 
 }
 
 // change the year of all shown items to the given year; and change the associate order
