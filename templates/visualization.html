@@ -1058,7 +1058,7 @@ function addItemData() {
   n = JSON.parse(sessionStorage.timeNotCat)
 
   if (curr.includes(y) || n.includes(y)) {
-    dup = dup.concat([y])
+    dup.push(y)
   }
   sessionStorage.setItem("timeDuplicate", JSON.stringify(dup));
   console.log(dup)
@@ -1194,7 +1194,7 @@ curr_ind = JSON.parse(sessionStorage.timeCurrent)
   // add data to table
   for (i = 0; i < items.length; i++) {
     if (curr_ind.includes(items[i])) {
-      dup = dup.concat([items[i]])
+      dup.push(items[i])
     }
     for (j = 0; j < types.length; j++) {
       table.row.add([items[i], types[j], cost[j][i][0], cost[j][i][1], cost[j][i][2]]).draw(false)
