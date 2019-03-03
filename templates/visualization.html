@@ -583,6 +583,8 @@ function remove_item_percent(item) {
 function remove_cat_percent() {
   curr = JSON.parse(sessionStorage.currPercent)
   curr_cat = JSON.parse(sessionStorage.percentCatCurr)
+  console.log(curr)
+  console.log(curr_cat)
   for (q = 0; q < curr_cat.length; q++) {
     item = curr_cat[q]
     index = curr.indexOf(item)
@@ -614,13 +616,13 @@ function remove_cat_percent() {
     .draw();
 
   }
-  sessionStorage.setItem(percentCatCurr, JSON.stringify([]));
-  sessionStorage.setItem(percentCatNot, JSON.stringify([]));
+  sessionStorage.setItem("percentCatCurr", JSON.stringify([]));
+  sessionStorage.setItem("percentCatNot", JSON.stringify([]));
 
 }
 
 function minusPercent() {
-
+  item_remove = JSON.parse(sessionStorage.percentCatCurr)
 }
 
 function minusPercent() {
