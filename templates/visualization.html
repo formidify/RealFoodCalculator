@@ -1059,7 +1059,7 @@ function addItemData() {
   console.log(curr)
   console.log(not)
   console.log(y)
-  if (curr.includes(y) || not.includes(y)) {
+  if (curr.indexOf(y) != -1 || not.indexOf(y) != -1) {
     console.log(dup)
     dup = dup.concat([y])
   }
