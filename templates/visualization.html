@@ -515,6 +515,7 @@ function addCatDataPercent() {
   results_no = results.slice(num_items, results.length)
   console.log(results)
   // add data to table
+  console.log(myBarChart.data.labels)
   for (i = 0; i < num_items; i++) {
       data = results_curr[i]
       index = findInsertIndex(data)
@@ -526,7 +527,7 @@ function addCatDataPercent() {
       myBarChart.data.datasets[1].data.splice(index, 0, data[4])
       myBarChart.data.datasets[1].backgroundColor.push('rgba(255, 159, 64, 0.2)')
       myBarChart.data.datasets[1].borderColor.push('rgba(255, 159, 64, 1)')
-
+      console.log(myBarChart.data.labels)
       myBarChart.data.labels.splice(index, 0, data[0])
   }
   console.log(myBarChart.data.labels)
