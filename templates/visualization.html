@@ -1056,7 +1056,8 @@ function addItemData() {
   var dup = JSON.parse(sessionStorage.timeDuplicate)
   curr = JSON.parse(sessionStorage.timeCurrCat)
   not = JSON.parse(sessionStorage.timeNotCat)
-
+  console.log(curr)
+  console.log(not)
   if (curr.includes(y) || not.includes(y)) {
     dup = dup.concat([y])
   }
@@ -1204,8 +1205,6 @@ curr_ind = JSON.parse(sessionStorage.timeCurrent)
 
   sessionStorage.setItem("timeDuplicate", JSON.stringify(dup))
   console.log(dup)
-  console.log(curr)
-  console.log(not)
 
   sessionStorage.setItem("timeConfigs", JSON.stringify(dup));
 
