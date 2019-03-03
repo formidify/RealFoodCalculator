@@ -1061,6 +1061,7 @@ function addItemData() {
     dup = dup.concat([y])
   }
   sessionStorage.setItem("timeDuplicate", JSON.stringify(dup));
+  console.log(dup)
 
 
     for (j = 0; j < types.length; j++) {
@@ -1201,6 +1202,7 @@ function addCatData() {
   }
 
   sessionStorage.setItem("timeDuplicate", JSON.stringify(dup))
+  console.log(dup)
 
   sessionStorage.setItem("timeConfigs", JSON.stringify(dup));
 
@@ -1286,6 +1288,7 @@ function remove_item_time(item) {
     dup.splice(index, 1);
   }
   sessionStorage.setItem("timeDuplicate", JSON.stringify(dup))
+  console.log(dup)
 
 
   /*
@@ -1348,6 +1351,7 @@ function remove_cat_time() {
 
   }
     sessionStorage.setItem("timeDuplicate", JSON.stringify(dup))
+    console.log(dup)
 
   // add duplicated entries between category and item entry back into the table
 
