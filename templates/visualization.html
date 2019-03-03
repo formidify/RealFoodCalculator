@@ -411,7 +411,7 @@ function findInsertIndex(d) {
     val = d[rank_methods.indexOf(rank) + 1]
 
     chart_data = JSON.parse(sessionStorage[curr_data_percent[rank_methods.indexOf(rank)]])
-
+    /*
     index = 0
 
     if (rank == 'minus') {
@@ -423,8 +423,7 @@ function findInsertIndex(d) {
       }
       index = 0;
     }
-
-    else {
+    */
       for (i = 0; i < chart_data.length; i++) {
         if (val > chart_data[i]) {
           index = i;
@@ -432,7 +431,7 @@ function findInsertIndex(d) {
         }
       }
       index = chart_data.length;
-    }
+
     curr = JSON.parse(sessionStorage.currPercent)
     curr.splice(index, 0, d[0])
 
@@ -447,6 +446,7 @@ function findInsertIndex(d) {
       arr.splice(index, 0, d[i+1])
       sessionStorage.setItem(curr_data_percent[j], JSON.stringify(arr));
     }
+    return index;
 } 
 
 // do not necessarily need right now
