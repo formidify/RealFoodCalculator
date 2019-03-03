@@ -82,7 +82,7 @@ def result():
             if (value):
                 api_url += (key + '=' + value + '&')
         api_url += 'year=year&orderBy=reverse,year,month'
-        #print(api_url)
+        print(api_url)
         r = requests.get(api_url).json()
         #print(r)
         # print(json.loads(r.text))
@@ -104,4 +104,4 @@ if __name__ == '__main__':
 #    host = 'cmc307-06.mathcs.carleton.edu'
 #    port = int(sys.argv[2])
     host='realfoodnetwork.carleton.edu'
-    app.run(host="localhost", port=2019, debug=True)
+    app.run(host=host, port=2019, debug=True)
