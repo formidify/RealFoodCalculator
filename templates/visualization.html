@@ -1057,11 +1057,15 @@ function addItemData() {
   curr = JSON.parse(sessionStorage.timeCurrCat)
   n = JSON.parse(sessionStorage.timeNotCat)
 
+  console.log(curr)
+  console.log(n)
+
   if (curr.includes(y) || n.includes(y)) {
     dup.push(y)
   }
-  sessionStorage.setItem("timeDuplicate", JSON.stringify(dup));
   console.log(dup)
+  sessionStorage.setItem("timeDuplicate", JSON.stringify(dup));
+  
 
 
     for (j = 0; j < types.length; j++) {
