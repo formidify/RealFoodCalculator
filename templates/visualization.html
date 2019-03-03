@@ -441,7 +441,7 @@ function findInsertIndex(d) {
 
 // add single item to the time series chart
 function addItemDataPercent() {
-  current_list = JSON.parse(sessionStorage.currPercent;
+  current_list = JSON.parse(sessionStorage.currPercent);
   y = document.getElementById("add_percent").value;
   // check input is longer than 1 and has not appeared in current list
   if (y.length > 1 && !current_list.includes(y)) {
