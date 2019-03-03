@@ -943,6 +943,8 @@ sessionStorage.setItem("timeChartLabels", JSON.stringify([])); // labels
 sessionStorage.setItem("timeCurrCat", JSON.stringify([]));
 sessionStorage.setItem("timeNotCat", JSON.stringify([]));
 
+sessionStorage.setItem("timeDuplicate", JSON.stringify([]));
+
 function searchItem() {
   x = document.getElementById("add_time").value;
   if (x.length > 1) {
@@ -1047,8 +1049,19 @@ function addItemData() {
 
       cost = results.cost
 
-chart_labels = JSON.parse(sessionStorage.timeChartLabels);
-total_configs = JSON.parse(sessionStorage.timeConfigs)
+  chart_labels = JSON.parse(sessionStorage.timeChartLabels);
+  total_configs = JSON.parse(sessionStorage.timeConfigs)
+
+  // add duplicate entries into the list
+  var dup = JSON.parse(sessionStorage.timeDuplicate)
+  curr = JSON.parse(sessionStorage.timeCurrCat)
+  not = JSON.parse(sessionStorage.timeNotCat)
+
+  if (curr.includes(y) || not.includes(y)) {
+    dup = dup.concat([y])
+  }
+  sessionStorage.setItem("timeDuplicate", JSON.stringify(dup));
+
 
     for (j = 0; j < types.length; j++) {
         line = {}
@@ -1174,12 +1187,22 @@ function addCatData() {
     myLineChart.data.datasets.push(line)
   }
 
+  // add duplicate entries into the list
+  var dup = JSON.parse(sessionStorage.timeDuplicate)
+
   // add data to table
   for (i = 0; i < items.length; i++) {
+    if (curr.includes(items[i])) {
+      dup = dup.concat([items[i]])
+    }
     for (j = 0; j < types.length; j++) {
       table.row.add([items[i], types[j], cost[j][i][0], cost[j][i][1], cost[j][i][2]]).draw(false)
     }
   }
+
+  sessionStorage.setItem("timeDuplicate", JSON.stringify(dup))
+
+  sessionStorage.setItem("timeConfigs", JSON.stringify(dup));
 
   for (k = num_items; k < items.length; k++) {
     not.push(items[k])
@@ -1201,6 +1224,7 @@ function addCatData() {
 };
 
 function remove_item_time(item) {
+  types = ['total', 'real']
   item = item.substring(1)
 
   timeChartLabels = JSON.parse(sessionStorage.timeChartLabels)
@@ -1224,6 +1248,8 @@ function remove_item_time(item) {
 
   myLineChart.update();
 
+  // load duplicate list
+  var dup = JSON.parse(sessionStorage.timeDuplicate)
 
   sessionStorage.setItem("timeCurrent", JSON.stringify(removeElements([item], JSON.parse(sessionStorage.timeCurrent))));
   sessionStorage.setItem("timeConfigs", JSON.stringify(total_configs));
@@ -1240,6 +1266,28 @@ function remove_item_time(item) {
     .remove()
     .draw();
 
+  if (dup.includes(item)) {
+    curr = JSON.parse(sessionStorage.timeCurrCat)
+    not = JSON.parse(sessionStorage.timeNotCat)
+
+    if (curr.includes(item)) {
+      index = curr.indexOf(item)
+    }
+    if (not.includes(item)) {
+      index = curr.length + not.indexOf(item)
+    }
+
+    cost = JSON.parse(sessionStorage.timeCatCost)
+    for (j = 0; j < types.length; j++) {
+      table.row.add([item, types[j], cost[j][index][0], cost[j][index][1], cost[j][index][2]]).draw(false)
+    }
+
+    var del = dup.indexOf(item);
+    dup.splice(index, 1);
+  }
+  sessionStorage.setItem("timeDuplicate", JSON.stringify(dup))
+
+
   /*
   show = parseInt($("#showTime").html()) - 1
   all = parseInt($("#allTime").html()) - 1
@@ -1250,6 +1298,11 @@ function remove_item_time(item) {
 }
 
 function remove_cat_time() {
+  types = ['total', 'real']
+  // load duplicate list
+  dup = JSON.parse(sessionStorage.timeDuplicate)
+  cost = JSON.parse(sessionStorage.timeCatCost)
+
   timeChartLabels = JSON.parse(sessionStorage.timeChartLabels)
   curr = JSON.parse(sessionStorage.timeCurrCat)
   for (p = 0; p < curr.length; p++) {
@@ -1274,7 +1327,7 @@ function remove_cat_time() {
 
   }
 
-
+  myLineChart.update();
   total = curr.concat(JSON.parse(sessionStorage.timeNotCat))
   for (z = 0; z < total.length; z++) {
     table.rows( function ( idx, data, node ) {
@@ -1282,9 +1335,22 @@ function remove_cat_time() {
     } )
     .remove()
     .draw();
+    item = total[z]
+
+  if (dup.includes(item)) {
+    index = total.indexOf(item)
+    for (j = 0; j < types.length; j++) {
+      table.row.add([item, types[j], cost[j][index][0], cost[j][index][1], cost[j][index][2]]).draw(false)
+    }
+    var del = dup.indexOf(item);
+    dup.splice(index, 1);
   }
 
-  myLineChart.update();
+  }
+    sessionStorage.setItem("timeDuplicate", JSON.stringify(dup))
+
+  // add duplicated entries between category and item entry back into the table
+
   sessionStorage.setItem("timeCurrCat", JSON.stringify([]));
   sessionStorage.setItem("timeNotCat", JSON.stringify([]));
 
