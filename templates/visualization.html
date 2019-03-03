@@ -453,6 +453,7 @@ function addItemDataPercent(override) {
 
       // elements by index: item, real, nonreal, minus, sum
       data = results.data
+      console.log(data)
       index = findInsertIndex(data)
 
       myBarChart.data.datasets[0].data.splice(index, 0, data[3])
