@@ -75,7 +75,7 @@ def get_products():
     fairDescription = flask.request.args.get('fairDescription', default='%').lower()
     ecological = flask.request.args.get('ecological', default='-1')
     ecologicalDescription = flask.request.args.get('ecologicalDescription', default='%').lower()
-    humane = flask.request.args.get('humane', default='-1')
+    humane = flask.request.args.get('humane', default='-1').lower()
     humaneDescription = flask.request.args.get('humaneDescription', default='%').lower()
     disqualifier = flask.request.args.get('disqualifier', default='-1')
     disqualifierDescription = flask.request.args.get('disqualifierDescription', default ='%').lower()
@@ -103,10 +103,13 @@ def get_products():
         ecological = ""
     if humane == "on":
         humane = "AND test_data_large.humane = TRUE"
+    #CHANGED NONE TO N/A
     elif humane == "none":
         humane = "AND test_data_large.humane IS NULL"
-    else:
+    elif humane == "false":
         humane = "AND test_data_large.humane = FALSE"
+    else:
+        humane = " "
     if disqualifier == "on":
         disqualifier = "AND test_data_large.disqualifier = TRUE"
     else:
@@ -160,7 +163,7 @@ def get_products():
                     AND lower(test_data_large.disqualifier_description) LIKE lower('%{16}%')
             ORDER BY test_data_large.{17}
             """.format(month, description, category, productCode, brand, vendor, notes,local, fair, ecological, humane, disqualifier, localDescription, fairDescription, ecologicalDescription,humaneDescription, disqualifierDescription,orderBy)
-
+    print(query)
     products_list = []
     connection = get_connection()
     if connection is not None:

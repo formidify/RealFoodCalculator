@@ -80,10 +80,6 @@ def result():
             #print('Key:', key)
             #print('Value:', value)
             if (value):
-                if value == "off":
-                    value = "false"
-                elif value == "on":
-                    value = "true"
                 api_url += (key + '=' + value + '&')
         api_url += 'year=year&orderBy=reverse,year,month'
         print(api_url)
