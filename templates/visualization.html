@@ -1060,6 +1060,7 @@ function addItemData() {
   console.log(not)
   console.log(y)
   if (curr.includes(y) || not.includes(y)) {
+    console.log(dup)
     dup = dup.concat([y])
   }
   sessionStorage.setItem("timeDuplicate", JSON.stringify(dup));
