@@ -536,13 +536,16 @@ function addCatDataPercent() {
       myBarChart.data.labels.splice(index, 0, data[0])
   }
 
+  myBarChart.update();
+  
+  show = parseInt($("#showPercent").html()) + results_curr.length
+  all = parseInt($("#allPercent").html()) + results.length
+  $("#showPercent").html(show)
+  $("#allPercent").html(all)
   for (i = 0; i < results.length; i++) {
       table.row.add(results[i]).draw(false)
     }
 
-
-
-  myBarChart.update();
   sessionStorage.setItem("percentCatCurr", JSON.stringify(results_curr));
   sessionStorage.setItem("percentCatNot", JSON.stringify(results_no));
   sessionStorage.setItem("currentPercentCat", cat);
