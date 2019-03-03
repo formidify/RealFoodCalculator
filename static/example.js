@@ -316,7 +316,6 @@ function savebtn(cur_row){
         console.log(out);
       })
       .catch(err => { throw err });
-    }
   }
 
 /*********************************************************************
