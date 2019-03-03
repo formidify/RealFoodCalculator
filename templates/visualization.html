@@ -725,7 +725,7 @@ function clearCanvasPercent() {
 // change the year of all shown items to the given year; and change the associate order
 function changeYearPercent() {
   // store the important data
-  updateYearCat = JSON.parse(sessionStorage.currentPercentCat)
+  updateYearCat = sessionStorage.currentPercentCat
   updateYearItems = JSON.parse(sessionStorage.percentCurrent)
   console.log(updateYearItems)
   // clear the canvas
