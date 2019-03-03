@@ -630,20 +630,25 @@ function minusPercent() {
   curr = JSON.parse(sessionStorage.currPercent)
   index = curr.indexOf(item)
 
+  // update bar chart by removing the lowest ranked 
   myBarChart.data.datasets[0].data.splice(index, 1)
   myBarChart.data.datasets[1].data.splice(index, 1)
   myBarChart.data.labels.splice(index, 1)
+  myBarChart.data.datasets[0].backgroundColor.splice(0, 1)
+  myBarChart.data.datasets[0].borderColor.splice(0, 1)
+  myBarChart.data.datasets[1].backgroundColor.splice(0, 1)
+  myBarChart.data.datasets[1].borderColor.splice(0, 1)
   myBarChart.update()
 
-  curr_not.splice(0, 0, curr_cat[curr_cat.length-1])
+  curr_not.splice(0, 0, curr_cat[curr_cat.length-1][0])
   curr.splice(index, 1)
   curr_cat.splice(curr_cat.length-1, 1)
 
-    for (j = 0; j < 4; j++) {
-      arr = JSON.parse(sessionStorage[curr_data_percent[j]])
-      arr.splice(index, 1)
-      sessionStorage.setItem(curr_data_percent[j], JSON.stringify(arr));
-    }
+  for (j = 0; j < 4; j++) {
+    arr = JSON.parse(sessionStorage[curr_data_percent[j]])
+    arr.splice(index, 1)
+    sessionStorage.setItem(curr_data_percent[j], JSON.stringify(arr));
+  }
 
   sessionStorage.setItem("percentCatCurr", JSON.stringify(curr_cat));
   sessionStorage.setItem("percentCatNot", JSON.stringify(curr_not));
@@ -667,14 +672,18 @@ function addPercent() {
   myBarChart.data.datasets[0].data.splice(index, 0, curr_not[0][3])
   myBarChart.data.datasets[1].data.splice(index, 0, curr_not[0][4])
   myBarChart.data.labels.splice(index, 0, curr_not[0][0])
+  myBarChart.data.datasets[0].backgroundColor.push('rgba(255, 99, 132, 0.2)')
+  myBarChart.data.datasets[0].borderColor.push('rgba(255, 99, 132, 1)')
+  myBarChart.data.datasets[1].backgroundColor.push('rgba(255, 159, 64, 0.2)')
+  myBarChart.data.datasets[1].borderColor.push('rgba(255, 159, 64, 1)')
+
   myBarChart.update()
 
   curr_not.splice(0, 1)
-  curr_cat.splice(curr_cat.length-1, 0, curr_not[0])
+  curr_cat = curr_cat.concat([item])
 
   sessionStorage.setItem("percentCatCurr", JSON.stringify(curr_cat));
   sessionStorage.setItem("percentCatNot", JSON.stringify(curr_not));
-
 
   show = parseInt($("#showPercent").html()) + 1
   $("#showPercent").html(show)
