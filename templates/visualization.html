@@ -640,7 +640,7 @@ function minusPercent() {
   myBarChart.data.datasets[1].borderColor.splice(0, 1)
   myBarChart.update()
 
-  curr_not.splice(0, 0, curr_cat[curr_cat.length-1][0]) // add to non-displaying category data
+  curr_not.splice(0, 0, curr_cat[curr_cat.length-1]) // add to non-displaying category data
   curr.splice(index, 1) // remove from current labels
   curr_cat.splice(curr_cat.length-1, 1) // remove from current category data
 
@@ -680,7 +680,7 @@ function addPercent() {
   myBarChart.update()
 
   curr_not.splice(0, 1)
-  curr_cat = curr_cat.concat([item])
+  curr_cat = curr_cat.concat(curr_not[0])
 
   sessionStorage.setItem("percentCatCurr", JSON.stringify(curr_cat));
   sessionStorage.setItem("percentCatNot", JSON.stringify(curr_not));
