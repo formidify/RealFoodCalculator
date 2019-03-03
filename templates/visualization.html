@@ -571,20 +571,71 @@ function remove_item_percent(item) {
     .remove()
     .draw();
 
+    sessionStorage.setItem("currPercent", JSON.stringify(curr));
+    for (j = 0; j < 4; j++) {
+      arr = JSON.parse(sessionStorage[curr_data_percent[j]])
+      arr.splice(index, 1)
+      sessionStorage.setItem(curr_data_percent[j], JSON.stringify(arr));
+    }
 }
 
+// remove the category for the percent chart
 function remove_cat_percent() {
+  curr = JSON.parse(sessionStorage.currPercent)
+  curr_cat = JSON.parse(sessionStorage.percentCatCurr)
+  for (q = 0; q < curr.length; q++) {
+    item = curr_cat[a]
+    index = curr.indexOf(item)
+    myBarChart.data.datasets[0].data.splice(index, 1)
+
+    myBarChart.data.datasets[1].data.splice(index, 1)
+    myBarChart.data.labels.splice(index, 1)
+    curr.splice(index, 1)
+
+    for (j = 0; j < 4; j++) {
+      arr = JSON.parse(sessionStorage[curr_data_percent[j]])
+      arr.splice(index, 1)
+      sessionStorage.setItem(curr_data_percent[j], JSON.stringify(arr));
+    }
+  }
+  myBarChart.update()
+
+  sessionStorage.setItem("currPercent", JSON.stringify(curr));
+  sessionStorage.setItem("currentPercentCat", "")
+
+  total = curr_cat.concat(JSON.parse(sessionStorage.percentCatNot))
+  for (z = 0; z < total.length; z++) {
+    table_percent.rows( function ( idx, data, node ) {
+        return data[0] === total[z];
+    } )
+    .remove()
+    .draw();
+    item = total[z]
+
+  }
 
 }
 
+function minusPercent() {
+
+}
+
+function minusPercent() {
+  
+}
+
+function clearCanvasPercent() {
+  
+}
 
 
+function changeYearPercent() {
 
+}
 
+function changeRankPercent() {
 
-
-
-
+}
 
 
 let num_items = document.querySelector('#num_items_percent');
