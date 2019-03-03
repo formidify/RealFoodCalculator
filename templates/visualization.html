@@ -583,7 +583,7 @@ function remove_item_percent(item) {
 function remove_cat_percent() {
   curr = JSON.parse(sessionStorage.currPercent)
   curr_cat = JSON.parse(sessionStorage.percentCatCurr)
-  for (q = 0; q < curr.length; q++) {
+  for (q = 0; q < curr_cat.length; q++) {
     item = curr_cat[q]
     index = curr.indexOf(item)
     myBarChart.data.datasets[0].data.splice(index, 1)
