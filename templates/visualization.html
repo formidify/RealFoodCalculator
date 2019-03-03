@@ -197,7 +197,7 @@ for (i = 0; i < 4; i++) {
 
 <h1>Real vs non-real percentage</h1>
 
-<div style = "display: block">
+<div style = "display: block; width: 100%">
 <a>First, choose a year:</a>
 <select id = "yearPercent" name="Show:" style = "width: 22%">
   <option disabled selected value> select an option </option>
@@ -245,7 +245,7 @@ for (i = 0; i < 4; i++) {
 </div>
 
 <div class="row">
-  <div class="column" style = "width: 50%; height: 20%;  float: left">
+  <div class="column" style = "width: 60%; height: 25%;  float: left">
     <canvas id="percentChart" style="display: block; width: 60%; height: 800px"></canvas>
   </div>
   <div class="column" style = "width: 40%; height: 25%; display: inline-block;">
@@ -377,7 +377,8 @@ var myBarChart;
       // These labels appear in the legend and in the tooltips when hovering different arcs
       labels: [],
       options: {
-          responsive: true
+          responsive: true,
+          maintainAspectRatio: false
       }
   },
       type: 'bar',
@@ -470,11 +471,11 @@ function addItemDataPercent() {
       data = results.data
       index = findInsertIndex(data)
 
-      myBarChart.data.datasets[0].data.splice(index, 0, data[1])
+      myBarChart.data.datasets[0].data.splice(index, 0, data[3])
       myBarChart.data.datasets[0].backgroundColor.push('rgba(255, 99, 132, 0.2)')
       myBarChart.data.datasets[0].borderColor.push('rgba(255, 99, 132, 1)')
 
-      myBarChart.data.datasets[1].data.splice(index, 0, data[2])
+      myBarChart.data.datasets[1].data.splice(index, 0, data[4])
       myBarChart.data.datasets[1].backgroundColor.push('rgba(255, 159, 64, 0.2)')
       myBarChart.data.datasets[1].borderColor.push('rgba(255, 159, 64, 1)')
 
@@ -665,139 +666,7 @@ Chart.defaults.global.plugins.datalabels.display = false
 Chart.Legend.prototype.afterFit = function() {
     this.height = this.height + 20;
 };
-// pie chart
-// load data from Flask; shows all categories
- getData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/pie_data')
 
-getData.done(function(results) {
-    years = results.labels
-    // year 1
-    yr = years[0]
-    result = results[yr]
-    data = {
-        datasets: [{
-            data: result.data,
-            backgroundColor: palette('tol', result.data.length).map(function(hex) {
-            return '#' + hex;
-          })
-        }],
-
-        // These labels appear in the legend and in the tooltips when hovering different arcs
-        labels: result.labels,
-        options: {
-            responsive: true
-        }
-    };
-
-     ctx1 = document.getElementById("increaseChart1").getContext('2d');
-    myPieChart1 = new Chart(ctx1, {
-        type: 'pie',
-        data: data ,
-        options: {
-          title: {
-              display: true,
-              position: 'bottom',
-              text: yr
-          }
-      }
-    });
-
-
-    // year 2
-    yr = years[1]
-    result = results[yr]
-    data = {
-        datasets: [{
-            data: result.data,
-            backgroundColor: palette('tol', result.data.length).map(function(hex) {
-            return '#' + hex;
-          })
-        }],
-
-        // These labels appear in the legend and in the tooltips when hovering different arcs
-        labels: result.labels,
-        options: {
-            responsive: true
-        }
-    };
-
-     ctx6 = document.getElementById("increaseChart3").getContext('2d');
-    myPieChart2 = new Chart(ctx6, {
-        type: 'pie',
-        data: data ,
-        options: {
-          title: {
-              display: true,
-              position: 'bottom',
-              text: yr
-          }
-      }
-    });
-
-
-    // year 3
-    yr = years[2]
-    result = results[yr]
-    data = {
-        datasets: [{
-            data: result.data,
-            backgroundColor: palette('tol', result.data.length).map(function(hex) {
-            return '#' + hex;
-          })
-        }],
-
-        // These labels appear in the legend and in the tooltips when hovering different arcs
-        labels: result.labels,
-        options: {
-            responsive: true
-        }
-    };
-
-     ctx7 = document.getElementById("increaseChart4").getContext('2d');
-    myPieChart3 = new Chart(ctx7, {
-        type: 'pie',
-        data: data ,
-        options: {
-          title: {
-              display: true,
-              position: 'bottom',
-              text: yr
-          }
-      }
-    });
-
-
-    // total
-    yr = years[3]
-    result = results.total
-    data = {
-        datasets: [{
-            data: result.data,
-            backgroundColor: palette('tol', result.data.length).map(function(hex) {
-            return '#' + hex;
-          })
-        }],
-
-        // These labels appear in the legend and in the tooltips when hovering different arcs
-        labels: result.labels,
-        options: {
-            responsive: true
-        }
-    };
-
-     ctx8 = document.getElementById("increaseChart5").getContext('2d');
-    myPieChart4 = new Chart(ctx8, {
-        type: 'pie',
-        data: data ,
-        options: {
-          title: {
-              display: true,
-              position: 'bottom',
-              text: yr
-          }
-      }
-    });
-})
 
  lineData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/percent_data/produce+total')
  var mixedChart;
@@ -939,89 +808,6 @@ function updateMixedChart(cat, yr){
     });
 };
 
-document.getElementById("increaseChart1").onclick = function(evt)
-{
-     activePoints = myPieChart1.getElementsAtEvent(evt);
-
-    if(activePoints.length > 0)
-    {
-      //get the internal index of slice in pie chart
-       clickedElementindex = activePoints[0]["_index"];
-
-      //get specific label by index
-       label = myPieChart1.data.labels[clickedElementindex];
-
-      //get value by index
-       value = myPieChart1.data.datasets[0].data[clickedElementindex];
-
-       year = years[0];
-
-      updateMixedChart(label, year);
-   }
-}
-
-document.getElementById("increaseChart3").onclick = function(evt)
-{
-     activePoints = myPieChart2.getElementsAtEvent(evt);
-
-    if(activePoints.length > 0)
-    {
-      //get the internal index of slice in pie chart
-       clickedElementindex = activePoints[0]["_index"];
-
-      //get specific label by index
-       label = myPieChart2.data.labels[clickedElementindex];
-
-      //get value by index
-       value = myPieChart2.data.datasets[0].data[clickedElementindex];
-
-       year = years[1];
-
-      updateMixedChart(label, year);
-   }
-}
-
-document.getElementById("increaseChart4").onclick = function(evt)
-{
-     activePoints = myPieChart3.getElementsAtEvent(evt);
-
-    if(activePoints.length > 0)
-    {
-      //get the internal index of slice in pie chart
-       clickedElementindex = activePoints[0]["_index"];
-
-      //get specific label by index
-       label = myPieChart3.data.labels[clickedElementindex];
-
-      //get value by index
-       value = myPieChart3.data.datasets[0].data[clickedElementindex];
-
-       year = years[2];
-
-      updateMixedChart(label, year);
-   }
-}
-
-document.getElementById("increaseChart5").onclick = function(evt)
-{
-     activePoints = myPieChart4.getElementsAtEvent(evt);
-
-    if(activePoints.length > 0)
-    {
-      //get the internal index of slice in pie chart
-       clickedElementindex = activePoints[0]["_index"];
-
-      //get specific label by index
-       label = myPieChart4.data.labels[clickedElementindex];
-
-      //get value by index
-       value = myPieChart4.data.datasets[0].data[clickedElementindex];
-
-       year = years[3];
-
-      updateMixedChart(label, year);
-   }
-}
 
 </script>
 
