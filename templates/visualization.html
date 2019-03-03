@@ -317,7 +317,6 @@ yrs.done(function(results) {
 
 sessionStorage.setItem("currentPercentCat", "") // current investigated category
 sessionStorage.setItem("percentSearch", JSON.stringify([])); // previous searches
-sessionStorage.setItem("percentCurrent", JSON.stringify([])); // CHECK IF CAN BE DELETED
 
 sessionStorage.setItem("percentCatCurr", JSON.stringify([]));
 sessionStorage.setItem("percentCatNot", JSON.stringify([]));
@@ -442,7 +441,7 @@ function findInsertIndex(d) {
 
 // add single item to the time series chart
 function addItemDataPercent() {
-  current_list = JSON.parse(sessionStorage.percentCurrent);
+  current_list = JSON.parse(sessionStorage.currPercent;
   y = document.getElementById("add_percent").value;
   // check input is longer than 1 and has not appeared in current list
   if (y.length > 1 && !current_list.includes(y)) {
@@ -477,7 +476,6 @@ $('#buttons_percent').append('<button class="btnic" id = "percent_' + y + '" onc
 
     })
 
-    sessionStorage.setItem("percentCurrent", JSON.stringify(current_list.concat([y])));
   }
 }
 
