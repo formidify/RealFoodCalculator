@@ -1345,6 +1345,7 @@ function remove_cat_time() {
   if (dup.includes(item)) {
     console.log(dup)
     console.log(item)
+    console.log(total)
     index = total.indexOf(item)
     for (j = 0; j < types.length; j++) {
       table.row.add([item, types[j], cost[j][index][0], cost[j][index][1], cost[j][index][2]]).draw(false)
