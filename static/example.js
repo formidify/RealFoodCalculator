@@ -318,7 +318,7 @@ function savebtn(cur_row){
     var str = addQueryStrings[i];
     add_query = add_query+str;
   }
-  var add_url = getBaseApiURL()+"/add_entry?"+add_query.substring(0,add_query.length - 1);
+  var add_url = getBaseApiURL()+"/vd_add_entry?"+add_query.substring(0,add_query.length - 1);
   console.log("add_url -> " + add_url);
 
   var jsonString3 = fetch(add_url)

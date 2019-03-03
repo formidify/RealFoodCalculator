@@ -260,84 +260,64 @@ def delete_entry():
 
     connection = get_connection()
 
-    month = flask.request.args.get('month', default='-1').lower()
-    year = flask.request.args.get('year', default='-1').lower()
-    description = flask.request.args.get('description', default='%').lower()
-    category = flask.request.args.get('category', default='%').lower()
-    productCode = flask.request.args.get('productCode', default='%').lower()
-    brand = flask.request.args.get('brand', default='%').lower()
-    vendor = flask.request.args.get('vendor', default='%').lower()
-    notes = flask.request.args.get('notes', default='%').lower()
-    cost  = flask.request.args.get('cost', default='0')
-    local = flask.request.args.get('local', default='-1')
-    localDescription = flask.request.args.get('localDescription', default='%').lower()
-    fair = flask.request.args.get('fair', default='-1')
-    fairDescription = flask.request.args.get('fairDescription', default='%').lower()
-    ecological = flask.request.args.get('ecological', default='-1')
-    ecologicalDescription = flask.request.args.get('ecologicalDescription', default='%').lower()
-    humane = flask.request.args.get('humane', default='-1')
-    humaneDescription = flask.request.args.get('humaneDescription', default='%').lower()
-    disqualifier = flask.request.args.get('disqualifier', default='-1')
-    disqualifierDescription = flask.request.args.get('disqualifierDescription', default ='%').lower()
+    month = flask.request.args.get('month')
+    year = flask.request.args.get('year')
+    description = flask.request.args.get('description')
+    category = flask.request.args.get('category')
+    productCode = flask.request.args.get('productCode')
+    brand = flask.request.args.get('brand')
+    vendor = flask.request.args.get('vendor')
+    notes = flask.request.args.get('notes')
+    cost  = flask.request.args.get('cost')
+    local = flask.request.args.get('local')
+    localDescription = flask.request.args.get('localDescription')
+    fair = flask.request.args.get('fair')
+    fairDescription = flask.request.args.get('fairDescription')
+    ecological = flask.request.args.get('ecological')
+    ecologicalDescription = flask.request.args.get('ecologicalDescription')
+    humane = flask.request.args.get('humane', default=None)
+    humaneDescription = flask.request.args.get('humaneDescription')
+    disqualifier = flask.request.args.get('disqualifier')
+    disqualifierDescription = flask.request.args.get('disqualifierDescription')
+    disqualifierDescription = flask.request.args.get('facility')
+    ratingVersion = flask.request.args.get('ratingVersion')
+    productCodeType = flask.request.args.get('productCodeType')
 
-    if month == "-1" and year == "-1":
-        month = " "
-    elif month == "-1":
-        month = "test_data_large.year = " + year + " AND "
-    elif year == "-1":
-        month = "test_data_large.month = " + month + " AND "
-    else:
-        month = "test_data_large.month = " + month + " AND test_data_large.year = " + year + " AND "
-    if local == "on":
-        local = "AND test_data_large.local = TRUE"
-    else:
-        local = ""
-    if fair == "on":
-        fair = "AND test_data_large.fair = TRUE"
-    else:
-        fair = ""
-    if ecological == "on":
-        ecological = "AND test_data_large.ecological = TRUE"
-    else:
-        ecological = ""
-    if humane == "on":
-        humane = "AND test_data_large.humane = TRUE"
-    elif humane == "none":
-        humane = "AND test_data_large.humane IS NULL"
-    else:
-        humane = "AND test_data_large.humane = FALSE"
-    if disqualifier == "on":
-        disqualifier = "AND test_data_large.disqualifier = TRUE"
-    else:
-       disqualifier = ""
     query = """
         DELETE
         FROM test_data_large
         WHERE ctid
         IN( SELECT ctid
             FROM test_data_large
-            WHERE {0}
-                lower(test_data_large.description) LIKE '%{1}%'
-                AND lower(test_data_large.category) LIKE '%{2}%'
-                AND lower(test_data_large.product_code) LIKE '{3}'
-                AND lower(test_data_large.label_brand) LIKE '%{4}%'
-                AND lower(test_data_large.vendor) LIKE '%{5}%'
-                AND lower(test_data_large.notes) LIKE '%{6}%'
-                {7}
-                {8}
-                {9}
-                {10}
-                {11}
-                AND lower(test_data_large.local_description) LIKE lower('%{12}%')
-                AND lower(test_data_large.fair_description) LIKE lower('%{13}%')
-                AND lower(test_data_large.ecological_description) LIKE lower( '%{14}%')
-                AND lower(test_data_large.humane_description) LIKE lower('%{15}%')
-                AND lower(test_data_large.disqualifier_description) LIKE lower('%{16}%')
+            WHERE
+                test_data_large.month = '{0}'
+                AND test_data_large.year = '{18}'
+                AND test_data_large.description = '{1}'
+                AND test_data_large.category = '{2}'
+                AND test_data_large.product_code = '{3}'
+                AND test_data_large.label_brand = '{4}'
+                AND test_data_large.vendor = '{5}'
+                AND test_data_large.notes = '{6}'
+                AND test_data_large.local = '{7}'
+                AND test_data_large.fair = '{8}'
+                AND test_data_large.ecological = '{9}'
+                AND test_data_large.humane = '{10}'
+                AND test_data_large.disqualifier = '{11}'
+                AND test_data_large.local_description = '{12}'
+                AND test_data_large.fair_description = '{13}'
+                AND test_data_large.ecological_description = '{14}'
+                AND test_data_large.humane_description = '{15}'
+                AND test_data_large.disqualifier_description = '{16}'
+                AND test_data_large.cost = '{17}'
+                AND test_data_large.facility='{19}'
+                AND test_data_large.rating_version='{20}'
+                AND test_data_large.product_code_type='{21}'
                 LIMIT 1
         )
         """.format(month, description, category, productCode, brand, vendor, notes, local,
         fair, ecological, humane, disqualifier, localDescription, fairDescription,
-        ecologicalDescription,humaneDescription, disqualifierDescription)
+        ecologicalDescription,humaneDescription, disqualifierDescription, cost, year, facility,
+        ratingVersion, productCodeType)
     if connection is not None:
         get_select_query_results(connection, query)
         connection.commit()
@@ -346,6 +326,65 @@ def delete_entry():
     else:
         return "Stub Function: Could not get connection"
 
+@app.route("/vd_add_entry")
+def vd_insert_entry():
+
+    connection = get_connection()
+
+    month = flask.request.args.get('month')
+    year = flask.request.args.get('year')
+    description = flask.request.args.get('description')
+    category = flask.request.args.get('category')
+    productCode = flask.request.args.get('productCode')
+    brand = flask.request.args.get('brand')
+    vendor = flask.request.args.get('vendor')
+    notes = flask.request.args.get('notes')
+    cost  = flask.request.args.get('cost')
+    local = flask.request.args.get('local').lower()
+    localDescription = flask.request.args.get('localDescription')
+    fair = flask.request.args.get('fair').lower()
+    fairDescription = flask.request.args.get('fairDescription')
+    ecological = flask.request.args.get('ecological').lower()
+    ecologicalDescription = flask.request.args.get('ecologicalDescription')
+    humane = flask.request.args.get('humane', default=None).lower()
+    humaneDescription = flask.request.args.get('humaneDescription')
+    disqualifier = flask.request.args.get('disqualifier').lower()
+    disqualifierDescription = flask.request.args.get('disqualifierDescription')
+    disqualifierDescription = flask.request.args.get('facility')
+    ratingVersion = flask.request.args.get('ratingVersion')
+    productCodeType = flask.request.args.get('productCodeType')
+
+    try:
+        month = int(month)
+        year = int(year)
+        ratingVersion = float(ratingVersion)
+    except:
+        print ("ERR: ENTRY NOT IN CORRECT FORM")
+
+    passThis = True
+    if not (local == "true" or local == "false" or local=''):
+        passThis = False
+    if not (fair == "true" or fair == "false" or fair=''):
+        passThis = False
+    if not (ecological == "true" or ecological == "false" or ecological=''):
+        passThis = False
+    if not (disqualifier == "true" or disqualifier == "false" or disqualifier=''):
+        passThis = False
+    if not (humane == "true" or humane == "false" or humane is None):
+        passThis = False
+    if passThis == False:
+        print("ERR : ENTRY NOT IN CORRECT FORM")
+        return False
+
+    query = """INSERT INTO test_data_large VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);"""
+    parameters = (month, year, description, category, productCode, productCodeType, brand, vendor, ratingVersion, local, localDescription, fair, fairDescription, ecological, ecologicalDescription, humane, humaneDescription, disqualifier, disqualifierDescription, cost, notes, facility)
+    if connection is not None:
+        get_select_query_results(connection, query, parameters)
+        connection.commit()
+        connection.close()
+        return "Stub Function: Inserted Entry"
+    else:
+        return "Stub Function: Could not get connection"
 # ----------------------------------------------------
 ### UNIVERSAL CHART METHODS (used for more than 1 chart)
 
@@ -553,7 +592,7 @@ def get_bar_data(cat, yr, rk):
         except Exception as e:
             print(e)
         connection.close()
-        
+
 
     return flask.jsonify({"items": items, "minus": minus, "sum": s, "real": real, "nonreal": nonreal})
 
@@ -565,7 +604,7 @@ def get_bar_item(item, yr):
         AS description, (COALESCE(B.nonreal,0) - COALESCE(Z.real,0)) AS minus, (COALESCE(B.nonreal,0) + COALESCE(Z.real,0)) AS sum,
         COALESCE(Z.real, 0) AS real, COALESCE(B.nonreal, 0) AS nonreal
         FROM (SELECT '{d}' AS description, COALESCE(SUM(cost), 0)
-        AS real FROM test_data_large WHERE year = {y} AND trim(description) ='{d}' AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't')) 
+        AS real FROM test_data_large WHERE year = {y} AND trim(description) ='{d}' AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't'))
         Z FULL OUTER JOIN (SELECT '{d}' AS description, COALESCE(SUM(cost), 0) AS nonreal FROM
         (SELECT COALESCE(local, 'f') AS local, COALESCE(fair, 'f') AS fair, COALESCE(ecological, 'f') AS ecological, COALESCE(humane, 'f') AS humane,
         description, cost, year, category FROM test_data_large) X
