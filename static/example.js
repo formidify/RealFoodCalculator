@@ -301,8 +301,7 @@ function savebtn(cur_row){
       console.log(out);
       return out;})
     .catch(err => { throw err });
-
-  console.log(add_success);
+    
   var success=false;
   //if (add_success != 'Stub Function: Inserted Entry'){
   //  success=false;
