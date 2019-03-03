@@ -623,7 +623,7 @@ function remove_cat_percent() {
 // remove one entry for category data
 function minusPercent() {
   curr_cat = JSON.parse(sessionStorage.percentCatCurr)
-  if (curr_cat.length > 1) { 
+  if (curr_cat.length > 0) { 
   curr_not = JSON.parse(sessionStorage.percentCatNot)
 
   item = curr_cat[curr_cat.length-1][0]
@@ -657,7 +657,8 @@ function minusPercent() {
 // add an entry from category data
 function addPercent() {
   curr_not = JSON.parse(sessionStorage.percentCatNot)
-  if (curr_not.length > 1) { 
+  console.log(curr_not)
+  if (curr_not.length > 0) { 
   curr_cat = JSON.parse(sessionStorage.percentCatCurr)
   item = curr_not[0][0]
 
