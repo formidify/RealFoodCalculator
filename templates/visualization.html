@@ -666,7 +666,7 @@ function addPercent() {
   if (curr_not.length > 0) { 
   curr_cat = JSON.parse(sessionStorage.percentCatCurr)
   item = curr_not[0][0]
-
+  console.log(curr_not)
   index = findInsertIndex(curr_not[0])
 
   myBarChart.data.datasets[0].data.splice(index, 0, curr_not[0][3])
