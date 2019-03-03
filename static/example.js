@@ -300,11 +300,10 @@ function savebtn(cur_row){
     .then((out) => {
       console.log(out);
       return out;})
-    .then(function(out) {var add_success = out;})
     .catch(err => { throw err });
 
   console.log(add_success);
-  var success=true;
+  var success=false;
   //if (add_success != 'Stub Function: Inserted Entry'){
   //  success=false;
   //}
