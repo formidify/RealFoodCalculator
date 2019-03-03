@@ -530,11 +530,11 @@ function addCatDataPercent() {
       data = results_curr[i]
       index = findInsertIndex(data)
 
-      myBarChart.data.datasets[0].data.splice(index, 0, data[1])
+      myBarChart.data.datasets[0].data.splice(index, 0, data[3])
       myBarChart.data.datasets[0].backgroundColor.push('rgba(255, 99, 132, 0.2)')
       myBarChart.data.datasets[0].borderColor.push('rgba(255, 99, 132, 1)')
 
-      myBarChart.data.datasets[1].data.splice(index, 0, data[2])
+      myBarChart.data.datasets[1].data.splice(index, 0, data[4])
       myBarChart.data.datasets[1].backgroundColor.push('rgba(255, 159, 64, 0.2)')
       myBarChart.data.datasets[1].borderColor.push('rgba(255, 159, 64, 1)')
 
@@ -1469,7 +1469,7 @@ for (t = 0; t < current.length; t++) {
   remove_item_time(" " + current[t])
 }
 remove_cat_time();
-table.rows.clear();
+table.clear();
 
 sessionStorage.setItem("currentTimeCat", "") // current investigated category
 sessionStorage.setItem("timeSearch", JSON.stringify([])); // previous searches
