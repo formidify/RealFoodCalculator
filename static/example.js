@@ -306,10 +306,10 @@ function savebtn(cur_row){
     .catch(err => { throw err });
 
   for (var key in newInfo){
-    if (newInfo[key]!= ""){
-      addQueryStrings.push(key+"="+newInfo[key]+"&");
+    //if (newInfo[key]!= ""){
+    addQueryStrings.push(key+"="+newInfo[key]+"&");
       //console.log(key + "=======" + origInfo[key]);
-    }
+    //}
   }
   console.log("addQueryString -> " + addQueryStrings);
 
