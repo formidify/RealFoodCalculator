@@ -302,10 +302,11 @@ function savebtn(cur_row){
       return out;})
     .catch(err => { throw err });
 
+  console.log(add_success);
   var success=true;
-  if (add_success != 'Stub Function: Inserted Entry'){
-    success=false;
-  }
+  //if (add_success != 'Stub Function: Inserted Entry'){
+  //  success=false;
+  //}
 
   if (success){
     console.log("GETTING INTO SUCCES??");
