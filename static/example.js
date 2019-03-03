@@ -275,7 +275,7 @@ function savebtn(cur_row){
     //if (origInfo[key]!= ""){
     //  queryStrings.push(key+"="+origInfo[key]+"&");
       //console.log(key + "=======" + origInfo[key]);
-    }
+    //}
   }
   console.log("queryString -> " + queryStrings);
   var base_query = "";
