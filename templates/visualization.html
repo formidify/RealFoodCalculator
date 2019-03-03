@@ -664,6 +664,7 @@ function addPercent() {
   curr_not = JSON.parse(sessionStorage.percentCatNot)
   console.log(curr_not)
   if (curr_not.length > 0) { 
+
   curr_cat = JSON.parse(sessionStorage.percentCatCurr)
   console.log(curr_cat)
   item = curr_not[0][0]
@@ -679,7 +680,7 @@ function addPercent() {
   myBarChart.data.datasets[1].borderColor.push('rgba(255, 159, 64, 1)')
 
   myBarChart.update()
-
+  console.log(curr_cat)
   curr_cat = curr_cat.push(curr_not[0])
   curr_not.splice(0, 1)
 
