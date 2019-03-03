@@ -269,7 +269,65 @@ function savebtn(cur_row){
   var origInfo = JSON.parse(localStorage.getItem("origInfo"));
   console.log(origInfo);
 
-/*********************************************************************/
+  for (var key in origInfo){
+    queryStrings.push(key+"="+origInfo[key]+"&");
+    //if (origInfo[key]!= ""){
+    //  queryStrings.push(key+"="+origInfo[key]+"&");
+      //console.log(key + "=======" + origInfo[key]);
+    //}
+  }
+  console.log("queryString -> " + queryStrings);
+  var base_query = "";
+  for (var i=0; i<queryStrings.length; i++){
+    var str = queryStrings[i];
+    base_query = base_query+str;
+  }
+  var url = getBaseApiURL()+"/test_data_large?"+base_query.substring(0,base_query.length - 1);
+  var del_url = getBaseApiURL()+"/delete_entry?"+base_query.substring(0,base_query.length - 1);
+  console.log("url -> " + url);
+  console.log("delete_url ->" + del_url);
+
+  var check = "";
+  var jsonString3 = fetch(add_url)
+    .then(res => res.text())
+    //.then(res => res.json())
+    .then((out) => {
+      console.log(out);
+      check = out;
+      return out;})
+    .catch(err => { throw err });
+
+  console.log("CHECKING IF ADDED -->" + check);
+
+  fetch(del_url)
+    //.then(res => res.json())
+    .then(res => res.text())
+    .then((out) => {
+      console.log(out);
+    })
+    .catch(err => { throw err });
+
+  for (var key in newInfo){
+    //if (newInfo[key]!= ""){
+    addQueryStrings.push(key+"="+newInfo[key]+"&");
+      //console.log(key + "=======" + origInfo[key]);
+    //}
+  }
+  console.log("addQueryString -> " + addQueryStrings);
+
+  var add_query = "";
+  for (var i=0; i<addQueryStrings.length; i++){
+    var str = addQueryStrings[i];
+    add_query = add_query+str;
+  }
+  var add_url = getBaseApiURL()+"/vd_add_entry?"+add_query.substring(0,add_query.length - 1);
+  console.log("add_url -> " + add_url);
+
+
+
+
+
+/*********************************************************************
   for (var key in origInfo){
     queryStrings.push(key+"="+origInfo[key]+"&");
     //if (origInfo[key]!= ""){
@@ -331,7 +389,7 @@ function savebtn(cur_row){
     .catch(err => { throw err });
 
   console.log(jsonString3);
-/*********************************************************************/
+*********************************************************************/
  // TODO : got json of
 
   var cell = document.createElement('td');
