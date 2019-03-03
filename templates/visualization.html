@@ -1285,7 +1285,7 @@ function remove_item_time(item) {
     }
 
     var del = dup.indexOf(item);
-    dup.splice(index, 1);
+    dup.splice(del, 1);
   }
   sessionStorage.setItem("timeDuplicate", JSON.stringify(dup))
   console.log(dup)
@@ -1346,7 +1346,7 @@ function remove_cat_time() {
       table.row.add([item, types[j], cost[j][index][0], cost[j][index][1], cost[j][index][2]]).draw(false)
     }
     var del = dup.indexOf(item);
-    dup.splice(index, 1);
+    dup.splice(del, 1);
   }
 
   }
@@ -1475,6 +1475,7 @@ sessionStorage.setItem("timeChartLabels", JSON.stringify([])); // labels
 
 sessionStorage.setItem("timeCurrCat", JSON.stringify([]));
 sessionStorage.setItem("timeNotCat", JSON.stringify([]));
+sessionStorage.setItem("timeDuplicate", JSON.stringify([]));
 
 }
 </script>
