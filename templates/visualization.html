@@ -237,7 +237,7 @@ for (i = 0; i < 4; i++) {
 <select id = "categoriesPercent">
   <option disabled selected value> select an option </option>
 </select>
-<input id = "submit_cat_percent" type="submit" value="submit" onclick = "addCatDataPercent()">
+<input id = "submit_cat_percent" type="submit" value="submit" onclick = "addCatDataPercent('')">
 </div>
 
 <div>
@@ -480,8 +480,9 @@ $('#buttons_percent').append('<button class="btnic" id = "percent_' + y + '" onc
 }
 
 
-function addCatDataPercent() {
-  cat = $("select#categoriesPercent").val();
+function addCatDataPercent(override) {
+  if (override != '') {cat = override;}
+  else {cat = $("select#categoriesPercent").val();}
   if (sessionStorage.currentPercentCat != "" && sessionStorage.currentPercentCat != cat) { 
       remove_cat_time();
     }
@@ -724,7 +725,7 @@ function clearCanvasPercent() {
 // change the year of all shown items to the given year; and change the associate order
 function changeYearPercent() {
   // store the important data
-  // updateYearCat = JSON.parse(sessionStorage.currentPercentCat)
+  updateYearCat = JSON.parse(sessionStorage.currentPercentCat)
   updateYearItems = JSON.parse(sessionStorage.percentCurrent)
   console.log(updateYearItems)
   // clear the canvas
@@ -733,7 +734,9 @@ function changeYearPercent() {
   for (u = 0; u < updateYearItems; u++) {
     addItemDataPercent(updateYearItems[i])
   }
-  addCatDataPercent();
+
+  sessionStorage.setItem("currentPercentCat", updateYearCat)
+  addCatDataPercent(updateYearCat);
 }
 
 // change the ranking method and the associate data
