@@ -440,6 +440,7 @@ function findInsertIndex(d) {
 // add single item to the time series chart
 function addItemDataPercent(override) {
   current_list = JSON.parse(sessionStorage.percentCurrent)
+  console.log(current_list)
   y = document.getElementById("add_percent").value; // set as default
   if (override != '') {y = override;}
   console.log(y)
