@@ -299,7 +299,8 @@ function savebtn(cur_row){
   console.log(jsonString);
 
   fetch(del_url)
-    .then(res => res.json())
+    //.then(res => res.json())
+    .then(res => res.text())
     .then((out) => {
       console.log(out);
     })
@@ -322,7 +323,8 @@ function savebtn(cur_row){
   console.log("add_url -> " + add_url);
 
   var jsonString3 = fetch(add_url)
-    .then(res => res.json())
+    .then(res => res.text())
+    //.then(res => res.json())
     .then((out) => {
       console.log(out);
       return out;})
