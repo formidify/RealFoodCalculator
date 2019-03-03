@@ -399,6 +399,7 @@ def vd_insert_entry():
         return "Stub Function: Inserted Entry"
     else:
         return "Stub Function: Could not get connection"
+
 # ----------------------------------------------------
 ### UNIVERSAL CHART METHODS (used for more than 1 chart)
 
@@ -559,7 +560,7 @@ def get_pie_data():
     return flask.jsonify(dic)
 
 
-# ----------------------------------------
+# Percent Chart methods ----------------------------------------
 
 # get percent data per category
 @app.route("/visualization/bar_data", defaults = {'cat': '', 'yr': '', 'rank': ''})
@@ -639,7 +640,7 @@ def get_bar_item(item, yr):
     return flask.jsonify({"data": data})
 
 
-# -------------------------------------------------------------------------------------
+# Hypothetical increase chart methods -------------------------------------------------------------------------------------
 # get increase data for vis page
 # NOTE: items where all four categories (local, ecological, fair, humane) are null will not be included in the calculation
 @app.route("/visualization/percent_data", defaults = {'cat': 'produce', 'yr': 'total'})
@@ -656,19 +657,19 @@ def get_percent_data(cat, yr):
         y = 'year = ' + str(yr) + ' AND'
 
     # if we convert all of the current non-real food purchases to real
-    query = """SELECT description, 100 * totalp AS totalp, 100 * indp AS indp, dollars FROM
-                (SELECT COALESCE(D.description, A.description) AS description, (dollars / sum) AS totalp, (dollars / total_dollars) AS indp, dollars,
+    query = """SELECT trim(description) AS description, 100 * totalp AS totalp, 100 * indp AS indp, dollars FROM
+                (SELECT trim(COALESCE(D.description, A.description)) AS description, (dollars / sum) AS totalp, (dollars / total_dollars) AS indp, dollars,
                 MIN(dollars / sum) OVER () AS mintotalp, MAX(dollars / sum) OVER () - MIN(dollars / sum) OVER() AS rangetotalp,
                 MIN(dollars / total_dollars) OVER () AS minindp, MAX(dollars / total_dollars) OVER () - MIN(dollars / total_dollars) OVER() AS rangeindp,
                 MIN(dollars) OVER () AS mindp, MAX(dollars) OVER () - MIN(dollars) OVER() AS rangedp
-                FROM (SELECT description, (SELECT SUM(cost) AS sum FROM test_data_large WHERE {y}
+                FROM (SELECT trim(description) AS description, (SELECT SUM(cost) AS sum FROM test_data_large WHERE {y}
                 (local IS NOT NULL OR fair IS NOT NULL OR ecological IS NOT NULL OR humane IS NOT NULL))
-                AS sum FROM test_data_large WHERE {y} category = '{c}' GROUP BY description) A
-                RIGHT JOIN (SELECT COALESCE(B.description, C.description) AS description, COALESCE(B.dollars, 0) AS dollars, C.total_dollars as total_dollars FROM
-                (SELECT description, sum(cost) AS dollars FROM (SELECT COALESCE(local, 'f') AS local, COALESCE(fair, 'f') AS fair, COALESCE(ecological, 'f')
+                AS sum FROM test_data_large WHERE {y} category = '{c}' GROUP BY trim(description)) A
+                RIGHT JOIN (SELECT trim(COALESCE(B.description, C.description)) AS description, COALESCE(B.dollars, 0) AS dollars, C.total_dollars as total_dollars FROM
+                (SELECT trim(description) AS description, sum(cost) AS dollars FROM (SELECT COALESCE(local, 'f') AS local, COALESCE(fair, 'f') AS fair, COALESCE(ecological, 'f')
                 AS ecological, COALESCE(humane, 'f') AS humane, description, cost, year, category FROM test_data_large) X
                 WHERE {y} category = '{c}' AND local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't'
-                GROUP BY description) B FULL OUTER JOIN (SELECT description, sum(cost) AS total_dollars FROM test_data_large
+                GROUP BY trim(description)) B FULL OUTER JOIN (SELECT trim(description) AS description, sum(cost) AS total_dollars FROM test_data_large
                 WHERE {y} category = '{c}' GROUP BY description) C ON B.description = C.description) D ON A.description = D.description) Y
                 ORDER BY (1.00 * (totalp - mintotalp) * CASE WHEN rangetotalp = 0 THEN 0 ELSE (1 / rangetotalp) END
                 -  CASE WHEN rangeindp = 0 OR indp = minindp THEN 1.00 * (minindp + rangeindp) ELSE (1.00 * (indp - minindp) / rangeindp) END)
@@ -693,7 +694,7 @@ def get_percent_data(cat, yr):
 
 
 
-# -------------------------------------------------------
+# Time Series chart methods -------------------------------------------------------
 ### all below methods are for the time series chart
 
 # for time series chart - get the real vs total data for each item in the year range
@@ -776,7 +777,7 @@ def get_categories_time(cat):
     return flask.jsonify({"cost": [total, real], "yrs": yrs, "items": items})
 
 
-# -----------------------------------------------------------
+# LIV chart methods -----------------------------------------------------------
 ###### All the methods below are for item, label, brand chart
 
 # return results that match the input item
