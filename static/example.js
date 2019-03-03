@@ -303,20 +303,16 @@ function savebtn(cur_row){
     .catch(err => { throw err });
     
   var success=false;
-  //if (add_success != 'Stub Function: Inserted Entry'){
-  //  success=false;
-  //}
 
-  if (success){
-    console.log("GETTING INTO SUCCES??");
-    fetch(del_url)
-      //.then(res => res.json())
-      .then(res => res.text())
-      .then((out) => {
-        console.log(out);
-      })
-      .catch(err => { throw err });
-  }
+  // TODO : try to make it so can catch errors here?
+
+  fetch(del_url)
+    //.then(res => res.json())
+    .then(res => res.text())
+    .then((out) => {
+      console.log(out);
+    })
+    .catch(err => { throw err });
 
   var cell = document.createElement('td');
   var para = document.createElement("button");
