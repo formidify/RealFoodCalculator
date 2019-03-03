@@ -226,9 +226,7 @@ function append_json(data){
 }
 
 function editbtn(cur_row){
-  //console.log('current row = ' + cur_row);
-  //console.log('current id = ' + document.getElementById('cur_row'+cur_row).getAttribute("id"));
-  // TODO : before letting edit, save the json for this whole row and save it to query later
+
   origInfo={}
   var edit_cells = document.getElementById('cur_row'+cur_row).getElementsByTagName('td');
   var parent = document.getElementById('cur_row'+cur_row);
@@ -238,7 +236,7 @@ function editbtn(cur_row){
     cur_cell.setAttribute('contenteditable', 'true');
     origInfo[cur_cell.getAttribute("title")]=cur_cell.innerHTML;
   }
-  /*console.log("original_info ->", origInfo);*/
+
   localStorage.setItem("origInfo",JSON.stringify(origInfo));
   child.remove();
 
@@ -258,6 +256,7 @@ function savebtn(cur_row){
   // TODO : CHANGE THE ACTUAL DATABASE
   var newInfo={};
   var queryStrings=[];
+  var addQueryStrings=[];
   var edit_cells = document.getElementById('cur_row'+cur_row).getElementsByTagName('td');
   var parent = document.getElementById('cur_row'+cur_row);
   var child = parent.getElementsByTagName('td')[0];
@@ -279,8 +278,6 @@ function savebtn(cur_row){
   }
   console.log("queryString -> " + queryStrings);
   var base_query = "";
-  //var select_query = getBaseApiURL()+"/test_data_large?";
-  //var del_query = getBaseApiURL()+"/delete_entry?";
   for (var i=0; i<queryStrings.length; i++){
     var str = queryStrings[i];
     base_query = base_query+str;
@@ -290,6 +287,7 @@ function savebtn(cur_row){
   console.log("url -> " + url);
   console.log("delete_url ->" + del_url);
 
+  //
   var jsonString = fetch(url)
     .then(res => res.json())
     .then((out) => {
@@ -299,20 +297,34 @@ function savebtn(cur_row){
 
   console.log(jsonString);
 
-  var jsonString2 = fetch(del_url)
+  fetch(del_url)
     .then(res => res.json())
     .then((out) => {
       console.log(out);
-      return JSON.stringify(out); })
+    })
     .catch(err => { throw err });
 
-  console.log(jsonString2);
+  for (var key in newInfo){
+    if (newInfo[key]!= ""){
+      addQueryStrings.push(key+"="+newInfo[key]+"&");
+      //console.log(key + "=======" + origInfo[key]);
+    }
+  }
+  console.log("addQueryString -> " + addQueryStrings);
 
-  var jsonString3 = fetch(url)
+  var add_query = "";
+  for (var i=0; i<addQueryStrings.length; i++){
+    var str = addQueryStrings[i];
+    add_query = base_query+str;
+  }
+  var add_url = getBaseApiURL()+"/add_entry?"+add_query.substring(0,add_query.length - 1);
+  console.log("add_url -> " + add_url);
+
+  var jsonString3 = fetch(add_url)
     .then(res => res.json())
     .then((out) => {
       console.log(out);
-      return JSON.stringify(out); })
+      return out;})
     .catch(err => { throw err });
 
   console.log(jsonString3);
