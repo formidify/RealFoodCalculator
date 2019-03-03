@@ -706,7 +706,7 @@ function clearCanvasPercent() {
     remove_item_percent(" " + current[t])
   }
   remove_cat_percent();
-  table_percent.rows.clear();
+  table_percent.clear();
 
   sessionStorage.setItem("currentPercentCat", "") // current investigated category
   sessionStorage.setItem("percentSearch", JSON.stringify([])); // previous searches
