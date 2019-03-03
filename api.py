@@ -279,7 +279,7 @@ def delete_entry():
     humaneDescription = flask.request.args.get('humaneDescription')
     disqualifier = flask.request.args.get('disqualifier')
     disqualifierDescription = flask.request.args.get('disqualifierDescription')
-    disqualifierDescription = flask.request.args.get('facility')
+    facility = flask.request.args.get('facility')
     ratingVersion = flask.request.args.get('ratingVersion')
     productCodeType = flask.request.args.get('productCodeType')
 
@@ -350,10 +350,12 @@ def vd_insert_entry():
     humaneDescription = flask.request.args.get('humaneDescription')
     disqualifier = flask.request.args.get('disqualifier').lower()
     disqualifierDescription = flask.request.args.get('disqualifierDescription')
-    disqualifierDescription = flask.request.args.get('facility')
+    facility = flask.request.args.get('facility')
     ratingVersion = flask.request.args.get('ratingVersion')
     productCodeType = flask.request.args.get('productCodeType')
 
+    if humane == "null":
+        humane = None
     try:
         month = int(month)
         year = int(year)
