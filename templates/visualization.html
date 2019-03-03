@@ -414,19 +414,7 @@ function findInsertIndex(d) {
     val = d[rank_methods.indexOf(rank) + 1]
 
     chart_data = JSON.parse(sessionStorage[curr_data_percent[rank_methods.indexOf(rank)]])
-    /*
-    index = 0
 
-    if (rank == 'minus') {
-      for (i = chart_data.length - 1; i >= 0; i--) {
-        if (val > chart_data[i]) {
-          index = i + 1;
-          break;
-        }
-      }
-      index = 0;
-    }
-    */
     index = chart_data.length;
     for (i = 0; i < chart_data.length; i++) {
       if (val > chart_data[i]) {
@@ -549,7 +537,7 @@ function addCatDataPercent() {
   $("#showPercent").html(show)
   $("#allPercent").html(all)
   for (i = 0; i < results.length; i++) {
-      table_percent.row.add(results[i]).draw(false)
+      table_percent.row.add([results[i][0], results[i][3], results[i][4], results[i][1],results[i][2]]).draw(false)
     }
 
   sessionStorage.setItem("percentCatCurr", JSON.stringify(results_curr));
