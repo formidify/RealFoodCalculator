@@ -294,13 +294,15 @@ function savebtn(cur_row){
   console.log("add_url -> " + add_url);
   console.log("delete_url ->" + del_url);
 
-  fetch(add_url)
+  var add_success = fetch(add_url)
     .then(res => res.text())
     //.then(res => res.json())
     .then((out) => {
       console.log(out);
       return out;})
     .catch(err => { throw err });
+
+  if (add_success == 'Stub Function: Inserted Entry'){
 
   fetch(del_url)
     //.then(res => res.json())
@@ -315,6 +317,7 @@ function savebtn(cur_row){
     addQueryStrings.push(key+"="+newInfo[key]+"&");
       //console.log(key + "=======" + origInfo[key]);
     //}
+  }
   }
 
 /*********************************************************************
