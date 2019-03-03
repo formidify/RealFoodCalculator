@@ -302,8 +302,12 @@ function savebtn(cur_row){
       return out;})
     .catch(err => { throw err });
 
-  if (add_success == 'Stub Function: Inserted Entry'){
+  var success=true;
+  if (add_success != 'Stub Function: Inserted Entry'){
+    success=false;
+  }
 
+  if (success){
   fetch(del_url)
     //.then(res => res.json())
     .then(res => res.text())
