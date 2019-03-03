@@ -442,6 +442,8 @@ function addItemDataPercent(override) {
   current_list = JSON.parse(sessionStorage.percentCurrent)
   y = document.getElementById("add_percent").value; // set as default
   if (override != '') {y = override;}
+  console.log(y)
+  console.log(override)
   // check input is longer than 1 and has not appeared in current list
   if (y.length > 1 && !current_list.includes(y)) {
     e = document.getElementById("yearPercent");
@@ -737,8 +739,10 @@ function changeYearPercent() {
     addItemDataPercent(updateYearItems[u])
   }
 
-  sessionStorage.setItem("currentPercentCat", updateYearCat)
-  addCatDataPercent(updateYearCat);
+  if (updateYearCat != '') {
+    sessionStorage.setItem("currentPercentCat", updateYearCat)
+    addCatDataPercent(updateYearCat);
+  }
 }
 
 // change the ranking method and the associate data
