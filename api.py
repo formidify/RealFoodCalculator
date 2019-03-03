@@ -283,10 +283,10 @@ def delete_entry():
     ratingVersion = flask.request.args.get('ratingVersion')
     productCodeType = flask.request.args.get('productCodeType')
 
-    if humane == "null":
+    if humane == "'null'" or humane == 'null':
         humane = 'is null'
     else:
-        humane = '='+ humane
+        humane = "='"+ humane+"'"
 
     query = """
         DELETE
@@ -306,7 +306,7 @@ def delete_entry():
                 AND test_data_large.local = '{7}'
                 AND test_data_large.fair = '{8}'
                 AND test_data_large.ecological = '{9}'
-                AND test_data_large.humane '{10}'
+                AND test_data_large.humane {10}
                 AND test_data_large.disqualifier = '{11}'
                 AND test_data_large.local_description = '{12}'
                 AND test_data_large.fair_description = '{13}'
