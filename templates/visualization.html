@@ -452,8 +452,8 @@ function addItemDataPercent(override) {
     console.log(y)
     searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/bar_item/" + y + "+" + year);
     console.log(y)
+    console.log(searches.data)
     searches.done(function(results) {
-
       // elements by index: item, real, nonreal, minus, sum
       data = results.data
       console.log(y)
