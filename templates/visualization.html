@@ -484,6 +484,9 @@ function addItemDataPercent(override) {
       if (curr.includes(y) || n.includes(y)) {
         dup.push(y)
       }
+      console.log(curr)
+      console.log(n)
+      console.log(dup)
       sessionStorage.setItem("percentDuplicate", JSON.stringify(dup));
 
     })
