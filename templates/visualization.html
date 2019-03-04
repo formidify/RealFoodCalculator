@@ -476,6 +476,7 @@ function addItemDataPercent(override) {
       // add option to remove
       console.log(y)
       $('#buttons_percent').append('<button class="btnic" id = "percent_' + y + '" onclick = "remove_item_percent(&quot ' + y + '&quot)"><i class="fa fa-close"></i> ' + y + '</button>');
+      alert("stop now")
 
     })
     sessionStorage.setItem("percentCurrent", JSON.stringify(current_list.concat([y])));
