@@ -431,7 +431,7 @@ function findInsertIndex(d) {
     // insert the newly added item to the same spot across all 4 data arrays
     for (j = 0; j < 4; j++) {
       arr = JSON.parse(sessionStorage[curr_data_percent[j]])
-      arr.splice(index, 0, d[rank_methods.indexOf(rank)+1])
+      arr.splice(index, 0, d[j+1]) // rank_methods.indexOf(rank)
       sessionStorage.setItem(curr_data_percent[j], JSON.stringify(arr));
     }
     return index;
