@@ -639,7 +639,7 @@ def get_bar_item(item, yr):
 
     print(data)
 
-    return flask.jsonify({"data": data})
+    return flask.jsonify({"data": list(data)})
 
 
 # Hypothetical increase chart methods -------------------------------------------------------------------------------------
