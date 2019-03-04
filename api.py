@@ -459,6 +459,48 @@ def get_recent_years():
 
     return flask.jsonify({"yrs": [2018, 2017, 2016]})
 
+# get recent years data straight for visualization (note: different from get_all_years)
+@app.route("/visualization/total_data")
+def get_total_data():
+    yrs = get_all_years()
+    real = []
+    nonreal = []
+
+    # build queries for the total chart
+    query_real = """SELECT year, s FROM (SELECT {y0} AS year, COALESCE(SUM(cost),0) AS s FROM test_data_large WHERE year = {y0}
+        AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't') UNION
+        SELECT {y1} AS year, COALESCE(SUM(cost),0) AS s FROM test_data_large WHERE year = {y1}
+        AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't') UNION
+        SELECT {y2} AS year, COALESCE(SUM(cost),0) AS s FROM test_data_large WHERE year = {y2}
+        AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't')) AS X ORDER BY year;
+        """.format(y0 = yrs[0], y1 = yrs[1], y2 = yrs[2])
+
+    query_nonreal = """SELECT year, s FROM (SELECT {y0} AS year, COALESCE(SUM(cost),0) AS s
+            FROM (SELECT COALESCE(local, 'f') AS local, COALESCE(fair, 'f') AS fair, COALESCE(ecological, 'f')
+            AS ecological, COALESCE(humane, 'f') AS humane, cost, year FROM test_data_large) A WHERE year = {y0}
+        AND local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't' UNION
+        SELECT {y1} AS year, COALESCE(SUM(cost),0) AS s FROM (SELECT COALESCE(local, 'f') AS local, COALESCE(fair, 'f') AS fair, COALESCE(ecological, 'f')
+            AS ecological, COALESCE(humane, 'f') AS humane, cost, year FROM test_data_large) B WHERE year = {y1}
+        AND local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't' UNION
+        SELECT {y2} AS year, COALESCE(SUM(cost),0) AS s FROM (SELECT COALESCE(local, 'f') AS local, COALESCE(fair, 'f') AS fair, COALESCE(ecological, 'f')
+            AS ecological, COALESCE(humane, 'f') AS humane, cost, year FROM test_data_large) C WHERE year = {y2}
+        AND local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't') AS X ORDER BY year;
+        """.format(y0 = yrs[0], y1 = yrs[1], y2 = yrs[2])
+
+    connection = get_connection()
+    if connection is not None:
+        try:
+            for row in get_select_query_results(connection, query_real):
+                real.append(row[1])
+            for row in get_select_query_results(connection, query_nonreal):
+                nonreal.append(row[1])
+        except Exception as e:
+            print(e)
+        connection.close()
+
+    yrs.reverse()
+    return flask.jsonify({"labels": yrs, "real": real, "nonreal": nonreal})
+
 #---------------------------------
 ######## get data for quick charts
 @app.route("/visualization/quick_data")
