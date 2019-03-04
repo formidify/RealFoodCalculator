@@ -637,6 +637,8 @@ def get_bar_item(item, yr):
             print(e)
         connection.close()
 
+    print(data)
+
     return flask.jsonify({"data": data})
 
 
