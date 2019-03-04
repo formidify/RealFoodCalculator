@@ -75,8 +75,6 @@
  <div style = "display: block, width: 100%">
 <h1>Quick Look @ This Year's Data</h1>
 
-<a>Not quite the year you are looking for? Go more recent or historical.</a>
-
 <div class="row">
   <div class="column" style = "width: 33%; height: 15%;  float: left">
     <canvas id="allTimeChart" style="display: block; height: 75px; width: 75px;"></canvas>
@@ -91,7 +89,149 @@
   </div>
 </div>
 
+</div>
 
+<script>
+// all time real vs nonreal chart
+getData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/pie_data')
+
+
+// pie chart
+// load data from Flask; shows all categories
+getData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/pie_data')
+
+getData.done(function(results) {
+    years = results.labels
+    // year 1
+    yr = years[0]
+    result = results[yr]
+    data = {
+        datasets: [{
+            data: result.data,
+            backgroundColor: palette('tol', result.data.length).map(function(hex) {
+            return '#' + hex;
+          })
+        }],
+
+        // These labels appear in the legend and in the tooltips when hovering different arcs
+        labels: result.labels,
+        options: {
+            responsive: true
+        }
+    };
+
+     ctx1 = document.getElementById("percentChart1").getContext('2d');
+    myPieChart1 = new Chart(ctx1, {
+        type: 'pie',
+        data: data ,
+        options: {
+          title: {
+              display: true,
+              position: 'bottom',
+              text: yr
+          }
+      }
+    });
+
+
+    // year 2
+    yr = years[1]
+    result = results[yr]
+    data = {
+        datasets: [{
+            data: result.data,
+            backgroundColor: palette('tol', result.data.length).map(function(hex) {
+            return '#' + hex;
+          })
+        }],
+
+        // These labels appear in the legend and in the tooltips when hovering different arcs
+        labels: result.labels,
+        options: {
+            responsive: true
+        }
+    };
+
+     ctx6 = document.getElementById("percentChart3").getContext('2d');
+    myPieChart2 = new Chart(ctx6, {
+        type: 'pie',
+        data: data ,
+        options: {
+          title: {
+              display: true,
+              position: 'bottom',
+              text: yr
+          }
+      }
+    });
+
+
+    // year 3
+    yr = years[2]
+    result = results[yr]
+    data = {
+        datasets: [{
+            data: result.data,
+            backgroundColor: palette('tol', result.data.length).map(function(hex) {
+            return '#' + hex;
+          })
+        }],
+
+        // These labels appear in the legend and in the tooltips when hovering different arcs
+        labels: result.labels,
+        options: {
+            responsive: true
+        }
+    };
+
+     ctx7 = document.getElementById("percentChart4").getContext('2d');
+    myPieChart3 = new Chart(ctx7, {
+        type: 'pie',
+        data: data ,
+        options: {
+          title: {
+              display: true,
+              position: 'bottom',
+              text: yr
+          }
+      }
+    });
+
+
+    // total
+    yr = years[3]
+    result = results.total
+    data = {
+        datasets: [{
+            data: result.data,
+            backgroundColor: palette('tol', result.data.length).map(function(hex) {
+            return '#' + hex;
+          })
+        }],
+
+        // These labels appear in the legend and in the tooltips when hovering different arcs
+        labels: result.labels,
+        options: {
+            responsive: true
+        }
+    };
+
+     ctx8 = document.getElementById("percentChart5").getContext('2d');
+    myPieChart4 = new Chart(ctx8, {
+        type: 'pie',
+        data: data ,
+        options: {
+          title: {
+              display: true,
+              position: 'bottom',
+              text: yr
+          }
+      }
+    });
+})
+</script>
+
+ <div style = "display: block, width: 100%">
 <div class="row">
   <div class="column" style = "width: 25%; height: 25%;  float: left">
     <canvas id="realCatChart" style="display: block; height: 75px; width: 75px;"></canvas>
@@ -1560,7 +1700,8 @@ function remove_item_time(item) {
     if (n.includes(item)) {
       index = curr.length + n.indexOf(item)
     }
-
+    console.log(dup)
+    console.log(item)
     cost = JSON.parse(sessionStorage.timeCatCost)
     for (j = 0; j < types.length; j++) {
       table.row.add([item, types[j], cost[j][index][0], cost[j][index][1], cost[j][index][2]]).draw(false)
@@ -1765,7 +1906,7 @@ sessionStorage.setItem("timeDuplicate", JSON.stringify([]));
 
 
 <div style = "float:left; width: 100%">
-  <h1>Item, Vendor and Label - The Exciting Love Trio</h1>
+  <h1>Item, Vendor and Label</h1>
 
     <label for="add">Search By item:</label>
     <input id="item_liv" type="text" name="text" list = "items_list" onkeyup = "searchLivItem()" autocomplete="off">
