@@ -92,81 +92,53 @@
 
 </div>
 
-<script>// create new chart type for stacked grouped bar chart
-Chart.defaults.groupableBar = Chart.helpers.clone(Chart.defaults.bar);
+<script>
+// all time total real vs nonreal charts by years
+getData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/total_data')
 
-var helpers = Chart.helpers;
-Chart.controllers.groupableBar = Chart.controllers.bar.extend({
-  calculateBarX: function (index, datasetIndex) {
-    // position the bars based on the stack index
-    var stackIndex = this.getMeta().stackIndex;
-    return Chart.controllers.bar.prototype.calculateBarX.apply(this, [index, stackIndex]);
-  },
-
-  hideOtherStacks: function (datasetIndex) {
-    var meta = this.getMeta();
-    var stackIndex = meta.stackIndex;
-
-    this.hiddens = [];
-    for (var i = 0; i < datasetIndex; i++) {
-      var dsMeta = this.chart.getDatasetMeta(i);
-      if (dsMeta.stackIndex !== stackIndex) {
-        this.hiddens.push(dsMeta.hidden);
-        dsMeta.hidden = true;
-      }
+getData.done(function(results) {
+  data = {
+    labels: results.labels,
+    datasets: [
+    {
+      data: results.real,
+      label: "real",
+      borderWidth: 2,
+      backgroundColor: Array(results.real.length).fill('rgba(255, 99, 132, 0.2)'),
+      borderColor: Array(results.real.length).fill('rgba(255,99,132,1)')
+    },
+    {
+      data: results.nonreal,
+      label: "nonreal",
+      borderWidth: 2,
+      backgroundColor: Array(results.nonreal.length).fill('rgba(255, 159, 64, 0.2)'),
+      borderColor: Array(results.nonreal.length).fill('rgba(255, 159, 64, 1)')
     }
-  },
+    ]
+  }
 
-  unhideOtherStacks: function (datasetIndex) {
-    var meta = this.getMeta();
-    var stackIndex = meta.stackIndex;
-
-    for (var i = 0; i < datasetIndex; i++) {
-      var dsMeta = this.chart.getDatasetMeta(i);
-      if (dsMeta.stackIndex !== stackIndex) {
-        dsMeta.hidden = this.hiddens.unshift();
-      }
-    }
-  },
-
-  calculateBarY: function (index, datasetIndex) {
-    this.hideOtherStacks(datasetIndex);
-    var barY = Chart.controllers.bar.prototype.calculateBarY.apply(this, [index, datasetIndex]);
-    this.unhideOtherStacks(datasetIndex);
-    return barY;
-  },
-
-  calculateBarBase: function (datasetIndex, index) {
-    this.hideOtherStacks(datasetIndex);
-    var barBase = Chart.controllers.bar.prototype.calculateBarBase.apply(this, [datasetIndex, index]);
-    this.unhideOtherStacks(datasetIndex);
-    return barBase;
-  },
-
-  getBarCount: function () {
-    var stacks = [];
-
-    // put the stack index in the dataset meta
-    Chart.helpers.each(this.chart.data.datasets, function (dataset, datasetIndex) {
-      var meta = this.chart.getDatasetMeta(datasetIndex);
-      if (meta.bar && this.chart.isDatasetVisible(datasetIndex)) {
-        var stackIndex = stacks.indexOf(dataset.stack);
-        if (stackIndex === -1) {
-          stackIndex = stacks.length;
-          stacks.push(dataset.stack);
+  ctx = document.getElementById("allTimeChart").getContext('2d');
+  totalChart = new Chart(ctx, type: 'bar', data:data,
+    options: {
+    scales: {
+      yAxes: [{
+        ticks: {
+          min: 0
+        },
+      }],
+      xAxes: [{
+        ticks: {
+          autoSkip: false
         }
-        meta.stackIndex = stackIndex;
-      }
-    }, this);
-
-    this.getMeta().stacks = stacks;
-    return stacks.length;
-  },
-});
-
-// all time real vs nonreal chart
-getData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/pie_data')
-
+      }]
+    },
+      title: {
+        display: true,
+        text: "Total Real vs. Nonreal Food Purchase by 3 most recent years"
+          }
+  }
+    )
+})
 
 // pie chart
 // load data from Flask; shows all categories
@@ -2013,6 +1985,78 @@ sessionStorage.setItem("timeDuplicate", JSON.stringify([]));
 
 
 <script>
+  // create new chart type for stacked grouped bar chart
+Chart.defaults.groupableBar = Chart.helpers.clone(Chart.defaults.bar);
+
+var helpers = Chart.helpers;
+Chart.controllers.groupableBar = Chart.controllers.bar.extend({
+  calculateBarX: function (index, datasetIndex) {
+    // position the bars based on the stack index
+    var stackIndex = this.getMeta().stackIndex;
+    return Chart.controllers.bar.prototype.calculateBarX.apply(this, [index, stackIndex]);
+  },
+
+  hideOtherStacks: function (datasetIndex) {
+    var meta = this.getMeta();
+    var stackIndex = meta.stackIndex;
+
+    this.hiddens = [];
+    for (var i = 0; i < datasetIndex; i++) {
+      var dsMeta = this.chart.getDatasetMeta(i);
+      if (dsMeta.stackIndex !== stackIndex) {
+        this.hiddens.push(dsMeta.hidden);
+        dsMeta.hidden = true;
+      }
+    }
+  },
+
+  unhideOtherStacks: function (datasetIndex) {
+    var meta = this.getMeta();
+    var stackIndex = meta.stackIndex;
+
+    for (var i = 0; i < datasetIndex; i++) {
+      var dsMeta = this.chart.getDatasetMeta(i);
+      if (dsMeta.stackIndex !== stackIndex) {
+        dsMeta.hidden = this.hiddens.unshift();
+      }
+    }
+  },
+
+  calculateBarY: function (index, datasetIndex) {
+    this.hideOtherStacks(datasetIndex);
+    var barY = Chart.controllers.bar.prototype.calculateBarY.apply(this, [index, datasetIndex]);
+    this.unhideOtherStacks(datasetIndex);
+    return barY;
+  },
+
+  calculateBarBase: function (datasetIndex, index) {
+    this.hideOtherStacks(datasetIndex);
+    var barBase = Chart.controllers.bar.prototype.calculateBarBase.apply(this, [datasetIndex, index]);
+    this.unhideOtherStacks(datasetIndex);
+    return barBase;
+  },
+
+  getBarCount: function () {
+    var stacks = [];
+
+    // put the stack index in the dataset meta
+    Chart.helpers.each(this.chart.data.datasets, function (dataset, datasetIndex) {
+      var meta = this.chart.getDatasetMeta(datasetIndex);
+      if (meta.bar && this.chart.isDatasetVisible(datasetIndex)) {
+        var stackIndex = stacks.indexOf(dataset.stack);
+        if (stackIndex === -1) {
+          stackIndex = stacks.length;
+          stacks.push(dataset.stack);
+        }
+        meta.stackIndex = stackIndex;
+      }
+    }, this);
+
+    this.getMeta().stacks = stacks;
+    return stacks.length;
+  },
+});
+
 sessionStorage.setItem("itemsLivSearch", JSON.stringify([]));
 sessionStorage.setItem("vendorSearch", JSON.stringify([]));
 sessionStorage.setItem("labelSearch", JSON.stringify([]));
