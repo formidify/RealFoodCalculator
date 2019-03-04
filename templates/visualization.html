@@ -805,7 +805,7 @@ function changeRankPercent() {
 
   // do not do anything if no category data is used
   console.log(total)
-  if (total.length == 0) {
+  if (total.length > 0) {
   total_t = total[0].map((col, i) => total.map(row => row[i]));
   sorting = total_t[1 + rank_index]
   console.log(sorting)
