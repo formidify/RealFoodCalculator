@@ -762,7 +762,7 @@ def get_item_data(item):
 @app.route("/visualization/get_categories_time/<cat>")
 def get_categories_time(cat):
     items = [] # all of the distinct item in the category
-    query = """SELECT trim(description), SUM(cost) AS s FROM test_data_large WHERE trim(category) = '{p}' GROUP BY description ORDER BY s DESC;""".format(p = cat)
+    query = """SELECT trim(description), SUM(cost) AS s FROM test_data_large WHERE trim(category) = '{p}' GROUP BY trim(description) ORDER BY s DESC;""".format(p = cat)
     yrs = get_all_years()
 
     connection = get_connection()
