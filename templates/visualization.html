@@ -473,10 +473,9 @@ function addItemDataPercent(override) {
       myBarChart.update();
       table_percent.row.add([data[0], data[3], data[4], data[1], data[2]]).draw(false)
 
-
-// add option to remove
-console.log(y)
-$('#buttons_percent').append('<button class="btnic" id = "percent_' + y + '" onclick = "remove_item_percent(&quot ' + y + '&quot)"><i class="fa fa-close"></i> ' + y + '</button>');
+      // add option to remove
+      console.log(y)
+      $('#buttons_percent').append('<button class="btnic" id = "percent_' + y + '" onclick = "remove_item_percent(&quot ' + y + '&quot)"><i class="fa fa-close"></i> ' + y + '</button>');
 
     })
     sessionStorage.setItem("percentCurrent", JSON.stringify(current_list.concat([y])));
@@ -721,6 +720,7 @@ function changeYearPercent() {
   updateYearItems = JSON.parse(sessionStorage.percentCurrent)
   // clear the canvas
   clearCanvasPercent();
+  console.log(updateYearItems)
   for (u = 0; u < updateYearItems.length; u++) {
     addItemDataPercent(updateYearItems[u])
   }
