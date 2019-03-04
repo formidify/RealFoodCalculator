@@ -481,15 +481,15 @@ function addItemDataPercent(override) {
       curr = JSON.parse(sessionStorage.percentCatCurr)
       n = JSON.parse(sessionStorage.percentCatNot)
       total = curr.concat(n)
+      if (total.length > 0) {
       total_t = total[0].map((col, i) => total.map(row => row[i]));
 
       if (total_t[0].includes(y)) {
         dup.push(y)
       }
-      console.log(curr)
-      console.log(n)
-      console.log(dup)
+
       sessionStorage.setItem("percentDuplicate", JSON.stringify(dup));
+    }
 
     })
     $('#buttons_percent').append('<button class="btnic" id = "percent_' + y + '" onclick = "remove_item_percent(&quot ' + y + '&quot)"><i class="fa fa-close"></i> ' + y + '</button>');
