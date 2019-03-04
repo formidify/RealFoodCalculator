@@ -601,6 +601,8 @@ function remove_item_percent(item) {
   curr_cat = JSON.parse(sessionStorage.percentCatCurr)
   n = JSON.parse(sessionStorage.percentCatNot)
   total = curr_cat.concat(n)
+  // only check duplicates in category if there are items in there
+  if (total.length > 0) {
   total_t = total[0].map((col, i) => total.map(row => row[i]));
 
   var dup = JSON.parse(sessionStorage.percentDuplicate)
@@ -615,13 +617,17 @@ function remove_item_percent(item) {
     var del = dup.indexOf(item);
     dup.splice(del, 1);
   }
+}
+
   sessionStorage.setItem("percentDuplicate", JSON.stringify(dup))
 }
 
 // remove the category for the percent chart
 function remove_cat_percent() {
-  curr = JSON.parse(sessionStorage.currPercent)
   curr_cat = JSON.parse(sessionStorage.percentCatCurr)
+  total = curr_cat.concat(JSON.parse(sessionStorage.percentCatNot))
+  if (total.length == 0) {return;}
+  curr = JSON.parse(sessionStorage.currPercent)
   for (q = 0; q < curr_cat.length; q++) {
     item = curr_cat[q][0]
     index = curr.indexOf(item)
@@ -642,7 +648,7 @@ function remove_cat_percent() {
   sessionStorage.setItem("currPercent", JSON.stringify(curr));
   sessionStorage.setItem("currentPercentCat", "")
 
-  total = curr_cat.concat(JSON.parse(sessionStorage.percentCatNot))
+
   total_t = total[0].map((col, i) => total.map(row => row[i]));
 
   var dup = JSON.parse(sessionStorage.percentDuplicate)
