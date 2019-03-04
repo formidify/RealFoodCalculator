@@ -767,22 +767,6 @@ function changeRankPercent() {
   sessionStorage.setItem("currSum", JSON.stringify([])); 
   sessionStorage.setItem("currMinus", JSON.stringify([])); 
 
-  // re-sort category data
-  curr_not = JSON.parse(sessionStorage.percentCatNot)
-  curr_cat = JSON.parse(sessionStorage.percentCatCurr)
-
-  console.log(curr_cat)
-  console.log(curr_not)
-
-  total = curr_cat.concat(curr_not)
-  total_t = total[0].map((col, i) => total.map(row => row[i]));
-  sorting = total_t[1 + rank_index]
-  console.log(sorting)
-
-  total = sortListbyList(total, sorting)
-
-  curr_cat = total.slice(0, show)
-  curr_not = total.slice(show, total.length)
 
   // clear and redraw everything
   l = chart_labels.length
@@ -812,8 +796,23 @@ function changeRankPercent() {
     myBarChart.data.labels.splice(index_c, 0, item)
   }
 
-  console.log(curr_cat)
-  console.log(curr_not)
+
+  // re-sort category data
+  curr_not = JSON.parse(sessionStorage.percentCatNot)
+  curr_cat = JSON.parse(sessionStorage.percentCatCurr)
+
+  total = curr_cat.concat(curr_not)
+
+  // do not do anything if no category data is used
+  if (total != []) {
+  total_t = total[0].map((col, i) => total.map(row => row[i]));
+  sorting = total_t[1 + rank_index]
+  console.log(sorting)
+
+  total = sortListbyList(total, sorting)
+
+  curr_cat = total.slice(0, show)
+  curr_not = total.slice(show, total.length)
   // put category data onto the chart inorder
   for (a = 0; a < curr_cat.length; a++) {
     data = curr_cat[a]
@@ -830,6 +829,8 @@ function changeRankPercent() {
     myBarChart.data.labels.splice(index_a, 0, data[0])
 
   }
+
+}
 
   myBarChart.update()
 
