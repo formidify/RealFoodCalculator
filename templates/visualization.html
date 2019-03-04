@@ -118,7 +118,7 @@ getData.done(function(results) {
   }
 
   ctx = document.getElementById("allTimeChart").getContext('2d');
-  totalChart = new Chart(ctx, type: 'bar', data:data,
+  totalChart = new Chart(ctx, {type: 'bar', data:data,
     options: {
     scales: {
       yAxes: [{
@@ -137,7 +137,7 @@ getData.done(function(results) {
         text: "Total Real vs. Nonreal Food Purchase by 3 most recent years"
           }
   }
-    )
+    })
 }
 
 // pie chart
