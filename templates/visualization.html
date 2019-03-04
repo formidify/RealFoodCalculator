@@ -800,6 +800,9 @@ function changeRankPercent() {
     myBarChart.data.labels.splice(index_c, 0, item)
   }
 
+  console.log(curr_cat)
+  console.log(curr_not)
+  // put category data onto the chart inorder
   for (a = 0; a < curr_cat.length; a++) {
     data = curr_cat[a]
     index_a = findInsertIndex(data)
