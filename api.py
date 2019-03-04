@@ -681,7 +681,7 @@ def get_percent_data(cat, yr):
                 AS ecological, COALESCE(humane, 'f') AS humane, description, cost, year, category FROM test_data_large) X
                 WHERE {y} category = '{c}' AND local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't'
                 GROUP BY trim(description)) B FULL OUTER JOIN (SELECT trim(description) AS description, sum(cost) AS total_dollars FROM test_data_large
-                WHERE {y} category = '{c}' GROUP BY description) C ON B.description = C.description) D ON A.description = D.description) Y
+                WHERE {y} category = '{c}' GROUP BY trim(description)) C ON B.description = C.description) D ON A.description = D.description) Y
                 ORDER BY (1.00 * (totalp - mintotalp) * CASE WHEN rangetotalp = 0 THEN 0 ELSE (1 / rangetotalp) END
                 -  CASE WHEN rangeindp = 0 OR indp = minindp THEN 1.00 * (minindp + rangeindp) ELSE (1.00 * (indp - minindp) / rangeindp) END)
                 DESC;""".format(y = y, c = cat)
@@ -953,9 +953,9 @@ def get_brand_vendor_data(item, type):
                     l = l.replace("'", "''")
                 n1 = []
                 n2 = []
-                query_b = query_real.format(y0 = yrs[0], y1 = yrs[1], y2 = yrs[2], i = item, k = key, a = key_b, l = l)
+                query_b = query_real.format(y = y, y0 = yrs[0], y1 = yrs[1], y2 = yrs[2], i = item, k = key, a = key_b, l = l)
 
-                query_b_nonreal = query_nonreal.format(y0 = yrs[0], y1 = yrs[1], y2 = yrs[2], i = item, k = key, a = key_b, l = l)
+                query_b_nonreal = query_nonreal.format(y = y, y0 = yrs[0], y1 = yrs[1], y2 = yrs[2], i = item, k = key, a = key_b, l = l)
 
                 for row in get_select_query_results(connection, query_b):
                     n1.append(row[0])
