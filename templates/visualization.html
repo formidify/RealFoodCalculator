@@ -440,25 +440,23 @@ function findInsertIndex(d) {
 // add single item to the time series chart
 function addItemDataPercent(override) {
   current_list = JSON.parse(sessionStorage.percentCurrent)
-  console.log(current_list)
+
   if (override != '') {y = override;}
   else {y = document.getElementById("add_percent").value;}
-  console.log(y)
-  console.log(y.length > 1 && !current_list.includes(y))
+
   // check input is longer than 1 and has not appeared in current list
   if (y.length > 1 && !current_list.includes(y)) {
     e = document.getElementById("yearPercent");
     var year = e.options[e.selectedIndex].value;
-    console.log(y)
+
     searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/bar_item/" + y + "+" + year);
-    console.log(y)
-    console.log(searches.data)
+
     searches.done(function(results) {
       // elements by index: item, real, nonreal, minus, sum
       data = results.data
-      console.log(y)
+
       index = findInsertIndex(data)
-      console.log(y)
+
       myBarChart.data.datasets[0].data.splice(index, 0, data[3])
       myBarChart.data.datasets[0].backgroundColor.push('rgba(255, 99, 132, 0.2)')
       myBarChart.data.datasets[0].borderColor.push('rgba(255, 99, 132, 1)')
@@ -716,7 +714,7 @@ function changeYearPercent() {
   updateYearItems = JSON.parse(sessionStorage.percentCurrent)
   // clear the canvas
   clearCanvasPercent();
-  console.log(updateYearItems)
+
   for (u = 0; u < updateYearItems.length; u++) {
     addItemDataPercent(updateYearItems[u])
   }
@@ -727,9 +725,92 @@ function changeYearPercent() {
   }
 }
 
+function sortListbyList(arr1, arr2) {
+  arr3 = arr2.slice(0).sort()
+  sortedArray = [];
+  for (i=0; i<arr3.length; i++) {
+    sortedArray.push(arr1[arr2.indexOf(arr3[i])]);
+  }
+  return sortedArray;
+
 // change the ranking method and the associate data
 function changeRankPercent() {
+  show = parseInt($("#showPercent").html())
 
+  e = document.getElementById("rank_percent");
+  var rank = e.options[e.selectedIndex].value;
+  rank_index = rank_methods.indexOf(rank)
+
+  // load individual data
+  current = JSON.parse(sessionStorage.percentCurrent)
+  chart_labels = JSON.parse(sessionStorage.currPercent)
+  minus = JSON.parse(sessionStorage["currMinus"])
+  sum = JSON.parse(sessionStorage["currSum"])
+  real = JSON.parse(sessionStorage["currReal"])
+  nonreal = JSON.parse(sessionStorage["currNonreal"])
+
+  current_data = [minus, sum, real, nonreal]
+  current_data = current_data[0].map((col, i) => current_data.map(row => row[i]));
+
+  sessionStorage.setItem("currPercent", JSON.stringify([])); // current labels stored in chart
+  sessionStorage.setItem("currReal", JSON.stringify([])); 
+  sessionStorage.setItem("currNonreal", JSON.stringify([])); 
+  sessionStorage.setItem("currSum", JSON.stringify([])); 
+  sessionStorage.setItem("currMinus", JSON.stringify([])); 
+
+  // re-sort category data
+  curr_not = JSON.parse(sessionStorage.percentCatNot)
+  curr_cat = JSON.parse(sessionStorage.percentCatCurr)
+
+  total = curr_cat.concat(curr_not)
+  total_t = total[0].map((col, i) => total.map(row => row[i]));
+  sorting = total_t[1 + rank_index]
+
+  total = sortListbyList(total, sorting)
+
+  curr_cat = total.slice(0, show)
+  curr_not = total.slice(show, total.length - 1)
+
+  // clear and redraw everything
+  myBarChart.clear(); // clear everything drawn
+
+  for (b = 0; b < current.length; b++) {
+    item = current[b]
+    index_b = chart_labels.indexOf(item)
+    index_c = findInsertIndex([item, minus[index_b],sum[index_b], real[index_b], nonreal[index_b]])
+
+    myBarChart.data.datasets[0].data.splice(index_c, 0, real[index_b])
+    myBarChart.data.datasets[0].backgroundColor.push('rgba(255, 99, 132, 0.2)')
+    myBarChart.data.datasets[0].borderColor.push('rgba(255, 99, 132, 1)')
+
+    myBarChart.data.datasets[1].data.splice(index_c, 0, nonreal[index_b])
+    myBarChart.data.datasets[1].backgroundColor.push('rgba(255, 159, 64, 0.2)')
+    myBarChart.data.datasets[1].borderColor.push('rgba(255, 159, 64, 1)')
+
+    myBarChart.data.labels.splice(index_c, 0, item)
+  }
+
+  for (a = 0; a < curr_cat.length; a++) {
+    data = curr_cat[a]
+    index_a = findInsertIndex(dat)
+
+    myBarChart.data.datasets[0].data.splice(index_a, 0, data[3])
+    myBarChart.data.datasets[0].backgroundColor.push('rgba(255, 99, 132, 0.2)')
+    myBarChart.data.datasets[0].borderColor.push('rgba(255, 99, 132, 1)')
+
+    myBarChart.data.datasets[1].data.splice(index_a, 0, data[4])
+    myBarChart.data.datasets[1].backgroundColor.push('rgba(255, 159, 64, 0.2)')
+    myBarChart.data.datasets[1].borderColor.push('rgba(255, 159, 64, 1)')
+
+    myBarChart.data.labels.splice(index_a, 0, data[0])
+
+  }
+
+  myBarChart.update()
+
+
+  sessionStorage.setItem("percentCatCurr", JSON.stringify([]));
+  sessionStorage.setItem("percentCatNot", JSON.stringify([]));
 }
 
 </script>
