@@ -605,8 +605,10 @@ function remove_item_percent(item) {
   // only check duplicates in category if there are items in there
   if (total.length > 0) {
   total_t = total[0].map((col, i) => total.map(row => row[i]));
+  console.log(total_t)
 
   var dup = JSON.parse(sessionStorage.percentDuplicate)
+  console.log(dup)
   // add back the duplicate entry if it exists in category data
   if (dup.includes(item)) {
     index = total_t[0].indexOf(item)
