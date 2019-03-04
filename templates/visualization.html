@@ -480,8 +480,10 @@ function addItemDataPercent(override) {
       var dup = JSON.parse(sessionStorage.percentDuplicate)
       curr = JSON.parse(sessionStorage.percentCatCurr)
       n = JSON.parse(sessionStorage.percentCatNot)
+      total = curr.concat(n)
+      total_t = total[0].map((col, i) => total.map(row => row[i]));
 
-      if (curr.includes(y) || n.includes(y)) {
+      if (total_t[0].includes(y)) {
         dup.push(y)
       }
       console.log(curr)
