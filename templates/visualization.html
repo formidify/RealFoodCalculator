@@ -763,14 +763,18 @@ function changeRankPercent() {
   curr_not = JSON.parse(sessionStorage.percentCatNot)
   curr_cat = JSON.parse(sessionStorage.percentCatCurr)
 
+  console.log(curr_cat)
+  console.log(curr_not)
+
   total = curr_cat.concat(curr_not)
   total_t = total[0].map((col, i) => total.map(row => row[i]));
   sorting = total_t[1 + rank_index]
+  console.log(sorting)
 
   total = sortListbyList(total, sorting)
 
   curr_cat = total.slice(0, show)
-  curr_not = total.slice(show, total.length - 1)
+  curr_not = total.slice(show, total.length)
 
   // clear and redraw everything
   l = chart_labels.length
