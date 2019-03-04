@@ -725,16 +725,21 @@ function changeYearPercent() {
   }
 }
 
-function sortListbyList(arr1, arr2) {
-  console.log(arr2)
-  arr3 = arr2.slice(0).sort()
-  console.log(arr3)
-  sortedArray = [];
-  for (i=0; i<arr3.length; i++) {
-    sortedArray.push(arr1[arr2.indexOf(arr3[i])]);
+function sortListbyList(A, B) {
+  var all = [];
+  for (var i = 0; i < B.length; i++) {
+      all.push({ 'A': A[i], 'B': B[i] });
   }
-  console.log(arr1)
-  return sortedArray;
+  all.sort(function(a, b) {
+    return a.A - b.A;
+  });
+  A = [];
+  B = [];
+  for (var i = 0; i < all.length; i++) {
+     A.push(all[i].A);
+     B.push(all[i].B);
+  }    
+  return A.reverse();
 }
 
 // change the ranking method and the associate data
