@@ -671,6 +671,7 @@ function remove_cat_percent() {
     dup.splice(del, 1);
   }
   }
+  sessionStorage.setItem("percentDuplicate", JSON.stringify(dup))
   // update html
   $("#showPercent").html(0)
   $("#allPercent").html(0)
