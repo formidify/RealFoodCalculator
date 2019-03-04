@@ -617,9 +617,7 @@ function remove_item_percent(item) {
   // add back the duplicate entry if it exists in category data
   if (dup.includes(item)) {
     index = total_t[0].indexOf(item)
-
-    table.row.add([total[index][0], total[index][3], total[index][4], total[index][1],total[index][2]]).draw(false)
-
+    table_percent.row.add([total[index][0], total[index][3], total[index][4], total[index][1],total[index][2]]).draw(false)
     var del = dup.indexOf(item);
     dup.splice(del, 1);
   }
@@ -668,7 +666,7 @@ function remove_cat_percent() {
 
   if (dup.includes(item)) {
     index = total_t[0].indexOf(item)
-    table.row.add([total[index][0], total[index][3], total[index][4], total[index][1],total[index][2]]).draw(false)
+    table_percent.row.add([total[index][0], total[index][3], total[index][4], total[index][1],total[index][2]]).draw(false)
     var del = dup.indexOf(item);
     dup.splice(del, 1);
   }
