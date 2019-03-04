@@ -685,7 +685,7 @@ function addCatDataPercent(override) {
   if (override != '') {cat = override;}
   else {cat = $("select#categoriesPercent").val();}
   if (sessionStorage.currentPercentCat != "" && sessionStorage.currentPercentCat != cat) { 
-      remove_cat_time();
+      remove_cat_percent();
     }
   if (sessionStorage.currentTimeCat != cat) {
   e = document.getElementById("rank_percent");
