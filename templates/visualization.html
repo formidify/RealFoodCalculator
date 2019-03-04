@@ -659,7 +659,7 @@ function addItemDataPercent(override) {
       table_percent.row.add([data[0], data[3], data[4], data[1], data[2]]).draw(false)
 
       // add duplicates to entry
-      var dup = JSON.parse(sessionStorage.percentDuplicate)
+      dup = JSON.parse(sessionStorage.percentDuplicate)
       curr = JSON.parse(sessionStorage.percentCatCurr)
       n = JSON.parse(sessionStorage.percentCatNot)
       total = curr.concat(n)
@@ -730,7 +730,8 @@ function addCatDataPercent(override) {
   $("#allPercent").html(all)
 
   // add duplicate items
-  var dup = JSON.parse(sessionStorage.percentDuplicate)
+  dup = JSON.parse(sessionStorage.percentDuplicate)
+  console.log(dup)
   curr_ind = JSON.parse(sessionStorage.percentCurrent)
 
   for (i = 0; i < results.length; i++) {
