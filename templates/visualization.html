@@ -593,6 +593,7 @@ $(document).ready(function(){table_percent = $('#percent_table').DataTable({
 
 // given the attributes of an item and the current sorting, find which index to splice it into the chart
 function findInsertIndex(d) {
+  curr_data_percent = ["currMinus", "currSum", "currReal", "currNonreal"]
     e = document.getElementById("rank_percent");
     var rank = e.options[e.selectedIndex].value;
 
@@ -751,6 +752,7 @@ function addCatDataPercent(override) {
 };
 
 function remove_item_percent(item) {
+  curr_data_percent = ["currMinus", "currSum", "currReal", "currNonreal"]
   item = item.substring(1)
 
   curr = JSON.parse(sessionStorage.currPercent) // all the labels currently shown on the plot
@@ -811,6 +813,7 @@ function remove_item_percent(item) {
 
 // remove the category for the percent chart
 function remove_cat_percent() {
+  curr_data_percent = ["currMinus", "currSum", "currReal", "currNonreal"]
   curr_cat = JSON.parse(sessionStorage.percentCatCurr)
   total = curr_cat.concat(JSON.parse(sessionStorage.percentCatNot))
   if (total.length == 0) {return;}
@@ -865,6 +868,7 @@ function remove_cat_percent() {
 
 // remove one entry for category data
 function minusPercent() {
+  curr_data_percent = ["currMinus", "currSum", "currReal", "currNonreal"]
   curr_cat = JSON.parse(sessionStorage.percentCatCurr)
   if (curr_cat.length > 0) { 
   curr_not = JSON.parse(sessionStorage.percentCatNot)
