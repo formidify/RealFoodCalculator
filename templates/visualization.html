@@ -726,11 +726,14 @@ function changeYearPercent() {
 }
 
 function sortListbyList(arr1, arr2) {
+  console.log(arr2)
   arr3 = arr2.slice(0).sort()
+  console.log(arr3)
   sortedArray = [];
   for (i=0; i<arr3.length; i++) {
     sortedArray.push(arr1[arr2.indexOf(arr3[i])]);
   }
+  console.log(arr1)
   return sortedArray;
 }
 
