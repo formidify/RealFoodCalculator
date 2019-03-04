@@ -75,15 +75,16 @@
  <div style = "display: block, width: 100%">
 <h1>Quick Look @ This Year's Data</h1>
 
+<h1>In terms of the bigger picture ...</h1>
 <div class="row">
-  <div class="column" style = "width: 33%; height: 15%;  float: left">
+  <div class="column" style = "width: 50%; height: 25%;  float: left">
     <canvas id="allTimeChart" style="display: block; height: 75px; width: 75px;"></canvas>
   </div>
-  <div class="column" style = "width: 33%; height: 15%;  float: left">
+  <div class="column" style = "width: 25%; height: 25%;  float: left">
     <canvas id="percentChart1" style="display: block; height: 75px; width: 75px;"></canvas>
     <canvas id="percentChart4" style="display: block; height: 75px; width: 75px;"></canvas>
   </div>
-  <div class="column" style = "width: 33%; height: 15%;  float: left">
+  <div class="column" style = "width: 25%; height: 25%;  float: left">
     <canvas id="percentChart3" style="display: block; height: 75px; width: 75px;"></canvas>
     <canvas id="percentChart5" style="display: block; height: 75px; width: 75px;"></canvas>
   </div>
@@ -91,7 +92,78 @@
 
 </div>
 
-<script>
+<script>// create new chart type for stacked grouped bar chart
+Chart.defaults.groupableBar = Chart.helpers.clone(Chart.defaults.bar);
+
+var helpers = Chart.helpers;
+Chart.controllers.groupableBar = Chart.controllers.bar.extend({
+  calculateBarX: function (index, datasetIndex) {
+    // position the bars based on the stack index
+    var stackIndex = this.getMeta().stackIndex;
+    return Chart.controllers.bar.prototype.calculateBarX.apply(this, [index, stackIndex]);
+  },
+
+  hideOtherStacks: function (datasetIndex) {
+    var meta = this.getMeta();
+    var stackIndex = meta.stackIndex;
+
+    this.hiddens = [];
+    for (var i = 0; i < datasetIndex; i++) {
+      var dsMeta = this.chart.getDatasetMeta(i);
+      if (dsMeta.stackIndex !== stackIndex) {
+        this.hiddens.push(dsMeta.hidden);
+        dsMeta.hidden = true;
+      }
+    }
+  },
+
+  unhideOtherStacks: function (datasetIndex) {
+    var meta = this.getMeta();
+    var stackIndex = meta.stackIndex;
+
+    for (var i = 0; i < datasetIndex; i++) {
+      var dsMeta = this.chart.getDatasetMeta(i);
+      if (dsMeta.stackIndex !== stackIndex) {
+        dsMeta.hidden = this.hiddens.unshift();
+      }
+    }
+  },
+
+  calculateBarY: function (index, datasetIndex) {
+    this.hideOtherStacks(datasetIndex);
+    var barY = Chart.controllers.bar.prototype.calculateBarY.apply(this, [index, datasetIndex]);
+    this.unhideOtherStacks(datasetIndex);
+    return barY;
+  },
+
+  calculateBarBase: function (datasetIndex, index) {
+    this.hideOtherStacks(datasetIndex);
+    var barBase = Chart.controllers.bar.prototype.calculateBarBase.apply(this, [datasetIndex, index]);
+    this.unhideOtherStacks(datasetIndex);
+    return barBase;
+  },
+
+  getBarCount: function () {
+    var stacks = [];
+
+    // put the stack index in the dataset meta
+    Chart.helpers.each(this.chart.data.datasets, function (dataset, datasetIndex) {
+      var meta = this.chart.getDatasetMeta(datasetIndex);
+      if (meta.bar && this.chart.isDatasetVisible(datasetIndex)) {
+        var stackIndex = stacks.indexOf(dataset.stack);
+        if (stackIndex === -1) {
+          stackIndex = stacks.length;
+          stacks.push(dataset.stack);
+        }
+        meta.stackIndex = stackIndex;
+      }
+    }, this);
+
+    this.getMeta().stacks = stacks;
+    return stacks.length;
+  },
+});
+
 // all time real vs nonreal chart
 getData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/pie_data')
 
@@ -133,7 +205,6 @@ getData.done(function(results) {
       }
     });
 
-
     // year 2
     yr = years[1]
     result = results[yr]
@@ -165,7 +236,6 @@ getData.done(function(results) {
       }
     });
 
-
     // year 3
     yr = years[2]
     result = results[yr]
@@ -196,7 +266,6 @@ getData.done(function(results) {
           }
       }
     });
-
 
     // total
     yr = years[3]
@@ -232,6 +301,7 @@ getData.done(function(results) {
 </script>
 
  <div style = "display: block, width: 100%">
+  <h1>In terms of a smaller picture ...</h1>
 <div class="row">
   <div class="column" style = "width: 25%; height: 25%;  float: left">
     <canvas id="realCatChart" style="display: block; height: 75px; width: 75px;"></canvas>
@@ -389,7 +459,7 @@ for (i = 0; i < 4; i++) {
 
 <div class="row">
   <div class="column" style = "width: 60%; height: 30%;  float: left">
-    <canvas id="percentChart" style="display: block; width: 60%; height: 400px"></canvas>
+    <canvas id="percentChart" style="display: block; width: 60%; height: 600px"></canvas>
   </div>
   <div class="column" style = "width: 40%; height: 30%; display: inline-block;">
     <table id="percent_table" class="display" style = "display: inline-block;">
@@ -1943,78 +2013,6 @@ sessionStorage.setItem("timeDuplicate", JSON.stringify([]));
 
 
 <script>
-// create new chart type for stacked grouped bar chart
-Chart.defaults.groupableBar = Chart.helpers.clone(Chart.defaults.bar);
-
-var helpers = Chart.helpers;
-Chart.controllers.groupableBar = Chart.controllers.bar.extend({
-  calculateBarX: function (index, datasetIndex) {
-    // position the bars based on the stack index
-    var stackIndex = this.getMeta().stackIndex;
-    return Chart.controllers.bar.prototype.calculateBarX.apply(this, [index, stackIndex]);
-  },
-
-  hideOtherStacks: function (datasetIndex) {
-    var meta = this.getMeta();
-    var stackIndex = meta.stackIndex;
-
-    this.hiddens = [];
-    for (var i = 0; i < datasetIndex; i++) {
-      var dsMeta = this.chart.getDatasetMeta(i);
-      if (dsMeta.stackIndex !== stackIndex) {
-        this.hiddens.push(dsMeta.hidden);
-        dsMeta.hidden = true;
-      }
-    }
-  },
-
-  unhideOtherStacks: function (datasetIndex) {
-    var meta = this.getMeta();
-    var stackIndex = meta.stackIndex;
-
-    for (var i = 0; i < datasetIndex; i++) {
-      var dsMeta = this.chart.getDatasetMeta(i);
-      if (dsMeta.stackIndex !== stackIndex) {
-        dsMeta.hidden = this.hiddens.unshift();
-      }
-    }
-  },
-
-  calculateBarY: function (index, datasetIndex) {
-    this.hideOtherStacks(datasetIndex);
-    var barY = Chart.controllers.bar.prototype.calculateBarY.apply(this, [index, datasetIndex]);
-    this.unhideOtherStacks(datasetIndex);
-    return barY;
-  },
-
-  calculateBarBase: function (datasetIndex, index) {
-    this.hideOtherStacks(datasetIndex);
-    var barBase = Chart.controllers.bar.prototype.calculateBarBase.apply(this, [datasetIndex, index]);
-    this.unhideOtherStacks(datasetIndex);
-    return barBase;
-  },
-
-  getBarCount: function () {
-    var stacks = [];
-
-    // put the stack index in the dataset meta
-    Chart.helpers.each(this.chart.data.datasets, function (dataset, datasetIndex) {
-      var meta = this.chart.getDatasetMeta(datasetIndex);
-      if (meta.bar && this.chart.isDatasetVisible(datasetIndex)) {
-        var stackIndex = stacks.indexOf(dataset.stack);
-        if (stackIndex === -1) {
-          stackIndex = stacks.length;
-          stacks.push(dataset.stack);
-        }
-        meta.stackIndex = stackIndex;
-      }
-    }, this);
-
-    this.getMeta().stacks = stacks;
-    return stacks.length;
-  },
-});
-
 sessionStorage.setItem("itemsLivSearch", JSON.stringify([]));
 sessionStorage.setItem("vendorSearch", JSON.stringify([]));
 sessionStorage.setItem("labelSearch", JSON.stringify([]));
