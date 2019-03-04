@@ -773,7 +773,16 @@ function changeRankPercent() {
   curr_not = total.slice(show, total.length - 1)
 
   // clear and redraw everything
-  myBarChart.clear(); // clear everything drawn
+  l = chart_labels.length
+  myBarChart.data.datasets[0].data.splice(0,l)
+  myBarChart.data.datasets[0].backgroundColor.splice(0,l)
+  myBarChart.data.datasets[0].borderColor.splice(0,l)
+
+  myBarChart.data.datasets[1].data.splice(0,l)
+  myBarChart.data.datasets[1].backgroundColor.splice(0,l)
+  myBarChart.data.datasets[1].borderColor.splice(0,l)
+
+  myBarChart.data.labels.splice(0,l)
 
   for (b = 0; b < current.length; b++) {
     item = current[b]
