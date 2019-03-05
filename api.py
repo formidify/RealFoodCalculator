@@ -760,9 +760,6 @@ def get_percent_item(item, yr):
     # if we convert all of the current non-real food purchases to real
     query = """SELECT trim(description) AS description, 100 * totalp AS totalp, 100 * indp AS indp, dollars FROM
                 (SELECT trim(COALESCE(D.description, A.description)) AS description, (dollars / sum) AS totalp, (dollars / total_dollars) AS indp, dollars,
-                MIN(dollars / sum) OVER () AS mintotalp, MAX(dollars / sum) OVER () - MIN(dollars / sum) OVER() AS rangetotalp,
-                MIN(dollars / total_dollars) OVER () AS minindp, MAX(dollars / total_dollars) OVER () - MIN(dollars / total_dollars) OVER() AS rangeindp,
-                MIN(dollars) OVER () AS mindp, MAX(dollars) OVER () - MIN(dollars) OVER() AS rangedp
                 FROM (SELECT trim(description) AS description, (SELECT SUM(cost) AS sum FROM test_data_large WHERE {y}
                 (local IS NOT NULL OR fair IS NOT NULL OR ecological IS NOT NULL OR humane IS NOT NULL))
                 AS sum FROM test_data_large WHERE {y} trim(description) = '{c}' GROUP BY trim(description)) A
@@ -771,10 +768,7 @@ def get_percent_item(item, yr):
                 AS ecological, COALESCE(humane, 'f') AS humane, description, cost, year, trim(description) FROM test_data_large) X
                 WHERE {y} trim(description) = '{c}' AND local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't'
                 GROUP BY trim(description)) B FULL OUTER JOIN (SELECT trim(description) AS description, sum(cost) AS total_dollars FROM test_data_large
-                WHERE {y} trim(description) = '{c}' GROUP BY trim(description)) C ON B.description = C.description) D ON A.description = D.description) Y
-                ORDER BY (1.00 * (totalp - mintotalp) * CASE WHEN rangetotalp = 0 THEN 0 ELSE (1 / rangetotalp) END
-                -  CASE WHEN rangeindp = 0 OR indp = minindp THEN 1.00 * (minindp + rangeindp) ELSE (1.00 * (indp - minindp) / rangeindp) END)
-                DESC;""".format(y = y, c = item)
+                WHERE {y} trim(description) = '{c}' GROUP BY trim(description)) C ON B.description = C.description) D ON A.description = D.description) Y""".format(y = y, c = item)
 
 
     connection = get_connection()
