@@ -1332,8 +1332,8 @@ $(document).ready(function(){table_mixed = $('#mixed_table').DataTable({
 
 // find range of an array
 function range(numbers) {
-    numbers.sort();
-    return numbers[numbers.length - 1] - numbers[0];
+    arr = numbers.slice(0).sort(function(a, b){return b - a});
+    return arr[arr.length - 1] - arr[0];
 }
 // given the attributes of an item and the current sorting, find which index to splice it into the chart
 function findInsertIndexMixed(d) {
