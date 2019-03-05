@@ -659,9 +659,9 @@ def get_bar_data(cat, yr, rk):
 @app.route("/visualization/bar_item", defaults = {'item': '', 'yr': ''})
 @app.route("/visualization/bar_item/<item>+<yr>")
 def get_bar_item(item, yr):
-    yrs = get_all_years()
 
     if yr == 'total':
+        yrs = get_all_years()
         y = 'year IN ({y1}, {y2}, {y3}) AND'.format(y1 = yrs[0], y2 = yrs[1], y3 = yrs[2])
     else:
         y = 'year = ' + str(yr) + ' AND'
@@ -696,8 +696,8 @@ def get_bar_item(item, yr):
 # Hypothetical increase chart methods -------------------------------------------------------------------------------------
 # get increase data for vis page
 # NOTE: items where all four categories (local, ecological, fair, humane) are null will not be included in the calculation
-@app.route("/visualization/percent_data", defaults = {'cat': 'produce', 'yr': 'total'})
-@app.route("/visualization/percent_data/<cat>+<yr>")
+@app.route("/visualization/mixed_data", defaults = {'cat': 'produce', 'yr': 'total'})
+@app.route("/visualization/mixed_data/<cat>+<yr>")
 def get_percent_data(cat, yr):
     items = []
     total_percent = []
@@ -705,7 +705,8 @@ def get_percent_data(cat, yr):
     dollars = []
     # not filtered by year
     if yr == 'total':
-        y = ''
+        yrs = get_all_years()
+        y = 'year IN ({y1}, {y2}, {y3}) AND'.format(y1 = yrs[0], y2 = yrs[1], y3 = yrs[2])
     else:
         y = 'year = ' + str(yr) + ' AND'
 
@@ -743,8 +744,52 @@ def get_percent_data(cat, yr):
         connection.close()
 
     # default ranking order is by a * norm(% in all) - b * norm(% in one) for a = b = 1, but the coefficients can be up to change
-    return flask.jsonify({"items": items[:8], "total_percent": total_percent[:8], "ind_percent": ind_percent[:8], "dollars": dollars[:8]})
+    return flask.jsonify({"items": items, "total_percent": total_percent, "ind_percent": ind_percent, "dollars": dollars})
 
+@app.route("/visualization/mixed_item", defaults = {'item': '', 'yr': ''})
+@app.route("/visualization/mixed_item/<item>+<yr>")
+def get_percent_item(item, yr):
+    data = []
+    # not filtered by year
+    if yr == 'total':
+        yrs = get_all_years()
+        y = 'year IN ({y1}, {y2}, {y3}) AND'.format(y1 = yrs[0], y2 = yrs[1], y3 = yrs[2])
+    else:
+        y = 'year = ' + str(yr) + ' AND'
+
+    # if we convert all of the current non-real food purchases to real
+    query = """SELECT trim(description) AS description, 100 * totalp AS totalp, 100 * indp AS indp, dollars FROM
+                (SELECT trim(COALESCE(D.description, A.description)) AS description, (dollars / sum) AS totalp, (dollars / total_dollars) AS indp, dollars,
+                MIN(dollars / sum) OVER () AS mintotalp, MAX(dollars / sum) OVER () - MIN(dollars / sum) OVER() AS rangetotalp,
+                MIN(dollars / total_dollars) OVER () AS minindp, MAX(dollars / total_dollars) OVER () - MIN(dollars / total_dollars) OVER() AS rangeindp,
+                MIN(dollars) OVER () AS mindp, MAX(dollars) OVER () - MIN(dollars) OVER() AS rangedp
+                FROM (SELECT trim(description) AS description, (SELECT SUM(cost) AS sum FROM test_data_large WHERE {y}
+                (local IS NOT NULL OR fair IS NOT NULL OR ecological IS NOT NULL OR humane IS NOT NULL))
+                AS sum FROM test_data_large WHERE {y} trim(description) = '{c}' GROUP BY trim(description)) A
+                RIGHT JOIN (SELECT trim(COALESCE(B.description, C.description)) AS description, COALESCE(B.dollars, 0) AS dollars, C.total_dollars as total_dollars FROM
+                (SELECT trim(description) AS description, sum(cost) AS dollars FROM (SELECT COALESCE(local, 'f') AS local, COALESCE(fair, 'f') AS fair, COALESCE(ecological, 'f')
+                AS ecological, COALESCE(humane, 'f') AS humane, description, cost, year, trim(description) FROM test_data_large) X
+                WHERE {y} trim(description) = '{c}' AND local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't'
+                GROUP BY trim(description)) B FULL OUTER JOIN (SELECT trim(description) AS description, sum(cost) AS total_dollars FROM test_data_large
+                WHERE {y} trim(description) = '{c}' GROUP BY trim(description)) C ON B.description = C.description) D ON A.description = D.description) Y
+                ORDER BY (1.00 * (totalp - mintotalp) * CASE WHEN rangetotalp = 0 THEN 0 ELSE (1 / rangetotalp) END
+                -  CASE WHEN rangeindp = 0 OR indp = minindp THEN 1.00 * (minindp + rangeindp) ELSE (1.00 * (indp - minindp) / rangeindp) END)
+                DESC;""".format(y = y, c = item)
+
+
+    connection = get_connection()
+    if connection is not None:
+        try:
+            # either this or minimum items allowed to show
+            for row in get_select_query_results(connection, query):
+                data = list(row)
+                print(data)
+        except Exception as e:
+            print(e)
+        connection.close()
+
+    # default ranking order is by a * norm(% in all) - b * norm(% in one) for a = b = 1, but the coefficients can be up to change
+    return flask.jsonify({"data": data})
 
 
 # Time Series chart methods -------------------------------------------------------
