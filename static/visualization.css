@@ -1,0 +1,15 @@
+@font-face { font-family: Delicious; src: url('Modeka.otf'); }
+@font-face { font-family: Yummy; src: url('Montserrat-Light.ttf'); }
+
+#navBar{
+    display: flex;
+    flex-direction: row;
+    background-color: white;
+}
+
+body{
+    /*background-image: url("back2.jpg");*/
+    background-size:100%;
+    background-color: #FAFDFD;
+    font-family: Yummy;
+}
