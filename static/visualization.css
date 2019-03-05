@@ -13,3 +13,22 @@ body{
     background-color: #FAFDFD;
     font-family: Yummy;
 }
+
+a{
+    text-decoration:none;
+    background-color: #ba7e46;
+    font-family:Yummy;
+    font-size: large;
+    font-weight: bold;
+    color: white;
+    width:25%;
+    padding-top:10px;
+    padding-bottom:5px;
+    text-align:center;
+    text-decoration: none;
+    display: inline-block;
+    white-space: nowrap;
+    opacity:1;
+    border-top:1px solid white;
+    border-right:1px solid white;
+}
