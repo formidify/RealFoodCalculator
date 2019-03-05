@@ -688,6 +688,8 @@ function addCatDataPercent(override) {
   if (sessionStorage.currentPercentCat != "" && sessionStorage.currentPercentCat != cat) { 
       remove_cat_percent();
     }
+  console.log(cat)
+  console.log(sessionStorage.currentPercentCat)
   if (sessionStorage.currentTimeCat != cat) {
   e = document.getElementById("rank_percent");
   var rank = e.options[e.selectedIndex].value;
