@@ -1095,6 +1095,7 @@ function changeRankPercent() {
 <div style = "float: left; width: 100%">
 <h1>Hypothetical Increase</h1>
 
+<div>
 <a>First, choose a year:</a>
 <select id = "yearMixed" name="Show:" style = "width: 22%" onchange="changeYearMixed()">
   <option disabled selected value> select an option </option>
@@ -1149,6 +1150,8 @@ function changeRankPercent() {
     </tbody>
 </table>
     </div>
+</div>
+
 </div>
 
 <script>
@@ -1227,7 +1230,7 @@ function searchItemMixed() {
 // initialize the mixed chart
 var myMixedChart;
 ctx20 = document.getElementById("mixedChart").getContext('2d');
- myMixChart = new Chart(ctx20, {
+ myMixedChart = new Chart(ctx20, {
   type: 'bar',
   data: {
     datasets: [{
