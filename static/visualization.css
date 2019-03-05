@@ -1,3 +1,5 @@
+/* CSS styling for the visualization page only */
+
 @font-face { font-family: Delicious; src: url('Modeka.otf'); }
 @font-face { font-family: Yummy; src: url('Montserrat-Light.ttf'); }
 
@@ -21,8 +23,12 @@ h1{
     opacity:1;
 }
 
+h3 {
+
+  font-weight:bold;
+
+}
 body{
-    /*background-image: url("back2.jpg");*/
     background-size:100%;
     background-color: #FAFDFD;
     font-family: Yummy;
