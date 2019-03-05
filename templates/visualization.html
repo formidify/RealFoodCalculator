@@ -67,8 +67,8 @@
  *
  * Options: add/remove existing graph chunk, as well as download.
  */ -->
+ <h2>Quick Look @ This Year's Data</h2>
  <div style = "display: block, width: 100%">
-<h1>Quick Look @ This Year's Data</h1>
 
 <h2>In terms of the bigger picture ...</h2>
 <div class="row">
@@ -409,8 +409,7 @@ for (i = 0; i < 4; i++) {
     <input id="add_percent" type="text" name="text" list = "items_percent" onkeyup = "searchItemPercent()" autocomplete="off">
     <datalist id="items_percent"></datalist>
     <input id = "submit_percent_items" type="submit" value="submit" onclick = "addItemDataPercent('')">
-<a> AND/OR </a>
-<a> Select a category: </a>
+ AND/OR Select a category: 
 <select id = "categoriesPercent">
   <option disabled selected value> select an option </option>
 </select>
@@ -1091,7 +1090,7 @@ function changeRankPercent() {
 <h1>Hypothetical Increase</h1>
 
 <div>
-<a>First, choose a year:</a>
+First, choose a year:
 <select id = "yearMixed" name="Show:" style = "width: 22%" onchange="changeYearMixed()">
   <option disabled selected value> select an option </option>
 </select>
@@ -1112,8 +1111,7 @@ function changeRankPercent() {
     <input id="add_mixed" type="text" name="text" list = "items_mixed" onkeyup = "searchItemMixed()" autocomplete="off">
     <datalist id="items_mixed"></datalist>
     <input id = "submit_mixed_item" type="submit" value="submit" onclick = "addItemDataMixed('')">
-<a> AND/OR </a>
-<a> Select a category: </a>
+AND/OR Select a category: 
 <select id = "categoriesMixed">
   <option disabled selected value> select an option </option>
 </select>
@@ -1727,8 +1725,7 @@ function changeYearMixed() {
     <input id="add_time" type="text" name="text" list = "items_time" onkeyup = "searchItem()" autocomplete="off">
     <datalist id="items_time"></datalist>
     <input id = "submit_item_time" type="submit" value="submit" onclick = "addItemData()">
-<a> AND/OR </a>
-<a> Select a category: </a>
+AND/OR Select a category: 
 <select id = "categoriesTime">
   <option disabled selected value> select an option </option>
 </select>
@@ -2386,14 +2383,14 @@ sessionStorage.setItem("timeDuplicate", JSON.stringify([]));
     <datalist id="items_list"></datalist>
     <input id = "submit_item_liv" type="submit" value="submit" onclick = "addLivItem()">
 
-<a> OR </a>
+OR 
 
     <label for="add">By vendor:</label>
     <input id="vendor_liv" type="text" name="text" list = "vendor_list" onkeyup = "searchLivVendor()" autocomplete="off">
     <datalist id="vendor_list"></datalist>
     <input id = "submit_vendor_liv" type="submit" value="submit" onclick = "addLivVendor()">
-
-<a> OR </a>
+    
+OR 
 
     <label for="add">By label/brand:</label>
     <input id="label_liv" type="text" name="text" list = "label_list" onkeyup = "searchLivLabel()" autocomplete="off">
