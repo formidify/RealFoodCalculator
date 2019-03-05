@@ -816,7 +816,6 @@ function remove_cat_percent() {
   curr_data_percent = ["currMinus", "currSum", "currReal", "currNonreal"]
   curr_cat = JSON.parse(sessionStorage.percentCatCurr)
   total = curr_cat.concat(JSON.parse(sessionStorage.percentCatNot))
-  if (total.length == 0) {return;}
   curr = JSON.parse(sessionStorage.currPercent)
   for (q = 0; q < curr_cat.length; q++) {
     item = curr_cat[q][0]
@@ -838,9 +837,6 @@ function remove_cat_percent() {
   sessionStorage.setItem("currPercent", JSON.stringify(curr));
   sessionStorage.setItem("currentPercentCat", "")
 
-
-  total_t = total[0].map((col, i) => total.map(row => row[i]));
-
   var dup = JSON.parse(sessionStorage.percentDuplicate)
   for (z = 0; z < total.length; z++) {
     item = total[z][0]
@@ -851,6 +847,7 @@ function remove_cat_percent() {
     .draw();
 
   if (dup.includes(item)) {
+    total_t = total[0].map((col, i) => total.map(row => row[i]));
     index = total_t[0].indexOf(item)
     table_percent.row.add([total[index][0], total[index][3], total[index][4], total[index][1],total[index][2]]).draw(false)
     var del = dup.indexOf(item);
@@ -1098,187 +1095,605 @@ function changeRankPercent() {
 <div style = "float: left; width: 100%">
 <h1>Hypothetical Increase</h1>
 
-<div class="row">
-  <div class="column" style = "width: 25%; height: 25%;  float: left">
-    <canvas id="increaseChart1" style="display: block; height: 75px; width: 75px;"></canvas>
-    <canvas id="increaseChart4" style="display: block; height: 75px; width: 75px;"></canvas>
-  </div>
-  <div class="column" style = "width: 25%; height: 25%;  float: left">
-    <canvas id="increaseChart3" style="display: block; height: 75px; width: 75px;"></canvas>
-    <canvas id="increaseChart5" style="display: block; height: 75px; width: 75px;"></canvas>
-  </div>
-  <div class="column" style = "width: 50%; height: 50%; float: left">
-    <a>Items to show:</a>
-  <div class = "control" style = "display: inline-block">
-<select id = "num_items_percent" name="Show:" style = "width: 100%">
-  <option value="5">5</option>
-  <option value="10">10</option>
-  <option value="15">15</option>
-  <option value="20">20</option>
+<a>First, choose a year:</a>
+<select id = "yearMixed" name="Show:" style = "width: 22%" onchange="changeYearMixed()">
+  <option disabled selected value> select an option </option>
 </select>
 </div>
 
-<div style = "display: inline-block; width: 50%">
-<form>
-    <label for="add">Add item:</label>
-    <input id="add" type="text" name="text">
-    <input type="submit" value="Search">
-</form>
+<div class="quantity buttons_added">
+  Showing
+  <input type="button" value="-" class="minus" onclick = "minusMixed()">
+  <div id = "showMixed" style = "display: inline">0</div>
+  <input type="button" value="+" class="plus" onclick = "addMixed()">
+  out of <div id = "allMixed" style = "display: inline">0</div> of the selected category
+
 </div>
-    <canvas id="increaseChart2" style="display: block; height: 300px; width: 300px;"></canvas>
+
+
+<div>
+    <label for="add">Add by item:</label>
+    <input id="add_mixed" type="text" name="text" list = "items_mixed" onkeyup = "searchItemMixed()" autocomplete="off">
+    <datalist id="items_mixed"></datalist>
+    <input id = "submit_mixed_time" type="submit" value="submit" onclick = "addItemDataMixed('')">
+<a> AND/OR </a>
+<a> Select a category: </a>
+<select id = "categoriesMixed">
+  <option disabled selected value> select an option </option>
+</select>
+<input id = "submit_cat_mixed" type="submit" value="submit" onclick = "addCatDataMixed('')">
+</div>
+
+<div>
+  Remove:
+<button class="btnic" id = "canvas_time" onclick = "clearCanvasMixed()"><i class="fa fa-close"></i> Remove all canvas</button>
+<button class="btnic" id = "remove_cat_time" onclick = "remove_cat_mixed()"><i class="fa fa-close"></i> Remove selected category</button>
+<div style = "display:inline" id = "buttons_mixed"></div>
+</div>
+
+<div class="row">
+  <div class="column" style = "width: 60%; height: 30%;  float: left">
+    <canvas id="mixedChart" style="display: block; width: 60%; height: 450px"></canvas>
   </div>
-</div>
-
-
+  <div class="column" style = "width: 40%; height: 30%; display: inline-block;">
+    <table id="mixed_table" class="display" style = "display: inline-block;">
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Dollar amount</th>
+        <th>% Increase for item</th>
+        <th>% Increase for all</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+    </div>
 </div>
 
 <script>
 Chart.defaults.global.plugins.datalabels.display = false
-Chart.Legend.prototype.afterFit = function() {
-    this.height = this.height + 20;
+
+c = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/get_categories/");
+
+c.done(function(results) {
+  cats = results.cats;
+  for (i = 0; i < cats.length; i++) {
+    cat = cats[i]
+    $("select#categoriesMixed").append( $("<option>")
+    .val(cat)
+    .html(cat)
+);
+  }
+});
+
+yrs = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/recent_years");
+
+yrs.done(function(results) {
+  y = results.yrs;
+  for (i = 0; i < y.length; i++) {
+    Y = y[i]
+    if (i == 0) {
+          $("select#yearMixed").append( $("<option selected>")
+    .val(Y)
+    .html(Y)
+    )}
+    else {
+    $("select#yearMixed").append( $("<option>")
+    .val(Y)
+    .html(Y)
+);}
+  }
+  // add for all years
+  $("select#yearMixed").append( $("<option>")
+    .val('total')
+    .html('all 3 years'))
+});
+
+sessionStorage.setItem("currentMixedCat", "") // current investigated category
+sessionStorage.setItem("mixedSearch", JSON.stringify([])); // previous searches
+sessionStorage.setItem("mixedCurrent", JSON.stringify([])); // all the individual items added
+sessionStorage.setItem("mixedCatCurr", JSON.stringify([]));
+sessionStorage.setItem("mixedCatNot", JSON.stringify([]));
+
+sessionStorage.setItem("currMixed", JSON.stringify([])); // current labels stored in chart
+sessionStorage.setItem("currData", JSON.stringify([])); // current data associated with the chart
+sessionStorage.setItem("mixedDuplicate", JSON.stringify([])); // store duplicate entries between individual items and category
+
+
+function searchItemMixed() {
+  x = document.getElementById("add_mixed").value;
+  if (x.length > 1) {
+  searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/get_item/" + x);
+
+  old_searches = JSON.parse(sessionStorage.mixedSearch);
+
+    searches.done(function(results) {
+    if (!arraysEqual(old_searches, results.search)) {
+    sessionStorage.setItem("mixedSearch", JSON.stringify(results.search));
+      var dataList = $("#items_mixed");
+        dataList.empty();
+        if(results.search.length) {
+          for(i=0; i<results.search.length; i++) {
+            item = results.search[i];
+            var opt = $("<option></option>").attr("value", item).attr("text", item);
+            dataList.append(opt);
+          }
+        }
+    }});
+}
 };
 
-
- lineData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/percent_data/produce+total')
- var mixedChart;
-
-lineData.done(function(results) {
-   ctx4 = document.getElementById("increaseChart2").getContext('2d');
-   mixedChart = new Chart(ctx4, {
-    type: 'bar',
-    data: {
-      datasets: [{
-            type: "bar",
-            label: 'Increase in dollar amount',
-            data: results['dollars'],
-            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-            borderColor: 'rgba(75, 192, 192, 1)',
-            yAxisID: "bar",
-            datalabels: {
-            // display labels for this specific dataset
-            display: true,
-            anchor: 'center'
-          }}, {
-            label: 'Percent increase in single item',
-            data: results['ind_percent'],
-            yAxisID: "A",
-            type: 'line',
-              backgroundColor: 'rgba(255, 99, 132, 0.2)',
-              borderColor: 'rgba(255,99,132,1)',
-              fill: false
-          }, {
-            label: 'Percent increase for all purchases',
-            data: results['total_percent'],
-            yAxisID: "B",
-            type: 'line',
-          backgroundColor: 'rgba(75, 00, 1300, 0.2)',
-          borderColor: 'rgba(75, 00, 1300,1)',
-          fill: false
-          }],
-      labels: results['items']
-    },
-    options: {
-      title: {
-        display: true,
-        text: "Hypothetical Increase for total produce"
-      },
-      scales: {
-        yAxes: [{
-          id: 'A',
-          type: 'linear',
-          position: 'left',
-          ticks: {
-            fontColor: 'rgba(255,99,132,1)',
-            max: 100.5,
-            min: -0.5,
-            stepSize: 10,
-            callback: function(value, index, values) {
-                           if (value !== 100.5 && value != -0.5) {
-                               return values[index]
-                           }
-                       }
-          },
-            scaleLabel: {
-            display: true,
-            labelString: 'Percent increase in single item (%)'
-          }
-        }, {
-          id: 'B',
-          type: 'linear',
-          position: 'right',
-          ticks: {
-            fontColor: 'rgba(75, 00, 1300,1)',
-            beginAtZero: true
-          },
-            scaleLabel: {
-            display: true,
-            labelString: 'Percent increase for all purchases (%)'
-          }
-        }, {
-          id: 'bar',
-          type: 'linear',
-          display: false,
-          ticks: {
-            beginAtZero: true
-          }
-        }],
-        plugins: {
+// initialize the mixed chart
+var myMixedChart;
+ctx20 = document.getElementById("mixedChart").getContext('2d');
+ myMixChart = new Chart(ctx20, {
+  type: 'bar',
+  data: {
+    datasets: [{
+          type: "bar",
+          label: 'Increase in dollar amount',
+          data: [],
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          borderColor: 'rgba(75, 192, 192, 1)',
+          yAxisID: "bar",
           datalabels: {
-             display: false,
-             font: {weight: 'bold'},
-             align: 'center',
-             anchor: 'center',
-             clamp: true
-          }
-
+          // display labels for this specific dataset
+          display: true,
+          anchor: 'center'
+        }}, {
+          label: 'Percent increase in single item',
+          yAxisID: "A",
+          type: 'line',
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            borderColor: 'rgba(255,99,132,1)',
+            fill: false
+        }, {
+          label: 'Percent increase for all purchases',
+          yAxisID: "B",
+          type: 'line',
+        backgroundColor: 'rgba(75, 00, 1300, 0.2)',
+        borderColor: 'rgba(75, 00, 1300,1)',
+        fill: false
+        }],
+    labels: []
+  },
+  options: {
+    title: {
+      display: true,
+      text: "Hypothetical Increase for total produce"
+    },
+    scales: {
+      yAxes: [{
+        id: 'A',
+        type: 'linear',
+        position: 'left',
+        ticks: {
+          fontColor: 'rgba(255,99,132,1)',
+          max: 100.5,
+          min: -0.5,
+          stepSize: 10,
+          callback: function(value, index, values) {
+                         if (value !== 100.5 && value != -0.5) {
+                             return values[index]
+                         }
+                     }
+        },
+          scaleLabel: {
+          display: true,
+          labelString: 'Percent increase in single item (%)'
         }
+      }, {
+        id: 'B',
+        type: 'linear',
+        position: 'right',
+        ticks: {
+          fontColor: 'rgba(75, 00, 1300,1)',
+          beginAtZero: true
+        },
+          scaleLabel: {
+          display: true,
+          labelString: 'Percent increase for all purchases (%)'
+        }
+      }, {
+        id: 'bar',
+        type: 'linear',
+        display: false,
+        ticks: {
+          beginAtZero: true
+        }
+      }],
+      plugins: {
+        datalabels: {
+           display: false,
+           font: {weight: 'bold'},
+           align: 'center',
+           anchor: 'center',
+           clamp: true
+        }
+
       }
     }
-})});
+  }
+});
 
-function updateMixedChart(cat, yr){
-   updatedData = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/percent_data/" + cat + "+" + yr);
-  updatedData.done(function(results) {
+var table_mixed;
+$(document).ready(function(){table_mixed = $('#mixed_table').DataTable({
+        dom: 'lBfrtip',
+        buttons: ['copyHtml5', 'csvHtml5', 'excelHtml5']
+    }); });
 
-  data = {
-      datasets: [{
-            type: "bar",
-            label: 'Increase in dollar amount (non-real $ amount of item)',
-            data: results['dollars'],
-            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-            borderColor: 'rgba(75, 192, 192, 1)',
-            yAxisID: "bar",
-            datalabels: {
-            // display labels for this specific dataset
-            display: true,
-            anchor: 'center'
-          }}, {
-            label: 'Percent increase in single item',
-            data: results['ind_percent'],
-            yAxisID: "A",
-            type: 'line',
-              backgroundColor: 'rgba(255, 99, 132, 0.2)',
-              borderColor: 'rgba(255,99,132,1)',
-              fill: false
-          }, {
-            label: 'Percent increase for all purchases',
-            data: results['total_percent'],
-            yAxisID: "B",
-            type: 'line',
-          backgroundColor: 'rgba(75, 00, 1300, 0.2)',
-          borderColor: 'rgba(75, 00, 1300,1)',
-          fill: false
-          }],
-      labels: results['items']
-    };
+// find range of an array
+function range(numbers) {
+    numbers.sort();
+    return [numbers[0], numbers[numbers.length - 1]];
+}
+// given the attributes of an item and the current sorting, find which index to splice it into the chart
+function findInsertIndexMixed(d) {
+  // all, ind, dollar
 
-  mixedChart.data = data;
-  mixedChart.options.title.text = "Hypothetical Increase for " + yr + " " + cat;
+    chart_data = JSON.parse(sessionStorage.currData)
+    chart_labels = JSON.parse(sessionStorage.currMixed)
+    if (chart_data.length > 0) {
+      index = 0;
+    } 
 
-  mixedChart.update();
-    });
+    else {
+    // add into the data
+    chart_labels.push(d[0])
+    chart_data = chart_data.concat([d.slice(1, 4)])
+
+    curr_rank = []
+    chart_data_t = chart_data[0].map((col, i) => chart_data.map(row => row[i]));
+    all_min = Math.min.apply(null, chart_data_t[0])
+    ind_min = Math.min.apply(null, chart_data_t[1])
+
+    // calculation for new ranking order with addition of new item
+    all_range = range(chart_data_t[0])
+    if (all_range != 0) {all_range = 1/all_range;}
+    ind_range = range(chart_data_t[1])
+
+    for (i = 0; i < chart_data_t[1]; i++) {
+      w = chart_data_t[0][i]
+      v = chart_data_t[1][i]
+      if (ind_range == 0 || v == ind_min) {
+        curr_rank.push((w - all_min)*all_range - (ind_min + ind_range))
+      }
+      else{
+        curr_rank.push((w - all_min)*all_range - (v - ind_min) / ind_range)
+      }
+    }
+
+    chart_labels = sortListbyList(chart_labels, curr_rank)
+    chart_data = sortListbyList(chart_data, curr_rank)
+
+    index = chart_labels.indexOf(d[0])
+    sessionStorage.setItem("currMixed", JSON.stringify(chart_labels));
+    sessionStorage.setItem("currData", JSON.stringify(chart_data));
+
+}
+    return index;
+} 
+
+// add single item to the increase chart
+function addItemDataMixed(override) {
+  current_list = JSON.parse(sessionStorage.mixedCurrent)
+
+  if (override != '') {y = override;}
+  else {y = document.getElementById("add_mixed").value;}
+
+  // check input is longer than 1 and has not appeared in current list
+  if (y.length > 1 && !current_list.includes(y)) {
+    e = document.getElementById("yearMixed");
+    var year = e.options[e.selectedIndex].value;
+
+    searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/mixed_item/" + y + "+" + year);
+
+    searches.done(function(results) {
+      data = results.data
+
+      index = findInsertIndexMixed(data)
+
+      // mixed chart order: dollar, ind, all
+      // database results order: all, ind, dollar
+      // table order: item, dollar, ind, all (same as mixed)
+      myMixedChart.data.datasets[0].data.splice(index, 0, data[3])
+      myMixedChart.data.datasets[1].data.splice(index, 0, data[2])
+      myMixedChart.data.datasets[2].data.splice(index, 0, data[1])
+      myMixedChart.data.labels.splice(index, 0, data[0])
+
+      myMixedChart.update();
+      table_mixed.row.add([data[0], data[3], data[2], data[1]]).draw(false)
+
+      // add duplicates to entry
+      dup = JSON.parse(sessionStorage.mixedDuplicate)
+      curr = JSON.parse(sessionStorage.mixedCatCurr)
+      n = JSON.parse(sessionStorage.mixedCatNot)
+      total = curr.concat(n)
+      if (total.length > 0) {
+      total_t = total[0].map((col, i) => total.map(row => row[i]));
+
+      if (total_t[0].includes(y)) {
+        dup.push(y)
+      }
+
+      sessionStorage.setItem("mixedDuplicate", JSON.stringify(dup));
+    }
+
+    })
+    $('#buttons_mixed').append('<button class="btnic" id = "mixed_' + y + '" onclick = "remove_item_mixed(&quot ' + y + '&quot)"><i class="fa fa-close"></i> ' + y + '</button>');
+    sessionStorage.setItem("mixedCurrent", JSON.stringify(current_list.concat([y])));
+
+  }
+}
+
+
+function addCatDataMixed(override) {
+  if (override != '') {cat = override;}
+  else {cat = $("select#categoriesMixed").val();}
+  if (sessionStorage.currentMixedCat != "" && sessionStorage.currentMixedCat != cat) { 
+      remove_cat_mixed();
+    }
+  if (sessionStorage.currentMixedCat != cat) {
+
+  e = document.getElementById("yearMixed");
+  var year = e.options[e.selectedIndex].value;
+  searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/mixed_data/" + cat + "+" + year);
+  searches.done(function(results) {
+
+  // results already sorted given the rank inputted to api.py
+  num_items = Math.min(results.items.length, 3)
+  // new_results = sortCatData(results, num_items)
+
+  // transpose results for easier data wrangling
+  result_list = [results.items, results.total_percent, results.ind_percent, results.dollars]
+  results = result_list[0].map((col, i) => result_list.map(row => row[i]));
+
+  results_curr = results.slice(0, num_items)
+  results_no = results.slice(num_items, results.length)
+  // add data to table
+  for (i = 0; i < num_items; i++) {
+      data = results_curr[i]
+      index = findInsertIndex(data)
+
+      myMixedChart.data.datasets[0].data.splice(index, 0, data[3])
+      myMixedChart.data.datasets[1].data.splice(index, 0, data[2])
+      myMixedChart.data.datasets[2].data.splice(index, 0, data[1])
+      myMixedChart.data.labels.splice(index, 0, data[0])
+  }
+
+  myMixedChart.update();
+
+  show = parseInt($("#showMixed").html()) + results_curr.length
+  all = parseInt($("#allMixed").html()) + results.length
+  $("#showMixed").html(show)
+  $("#allMixed").html(all)
+
+  // add duplicate items
+  dup = JSON.parse(sessionStorage.mixedDuplicate)
+  console.log(dup)
+  curr_ind = JSON.parse(sessionStorage.mixedCurrent)
+
+  for (i = 0; i < results.length; i++) {
+    if (curr_ind.includes(results[i][0])) {
+      dup.push(results[i][0])
+    }
+      table_mixed.row.add([results[i][0], results[i][3], results[i][2], results[i][1]]).draw(false)
+    }
+    sessionStorage.setItem("mixedDuplicate", JSON.stringify(dup));
+
+  sessionStorage.setItem("mixedCatCurr", JSON.stringify(results_curr));
+  sessionStorage.setItem("mixedCatNot", JSON.stringify(results_no));
+  sessionStorage.setItem("currentMixedCat", cat);
+
+  })
+}
 };
 
+function remove_item_mixed(item) {
+  item = item.substring(1)
+
+  curr = JSON.parse(sessionStorage.currMixed) // all the labels currently shown on the plot
+  index = curr.indexOf(item)
+  myMixedChart.data.datasets[0].data.splice(index, 1)
+  myMixedChart.data.datasets[1].data.splice(index, 1)
+  myMixedChart.data.datasets[2].data.splice(index, 1)
+
+  curr.splice(index, 1)
+  myMixedChart.data.labels.splice(index, 1)
+  myMixedChart.update();
+
+  item_id = "[id='mixed_" + item + "']"
+  $(item_id).remove()
+
+  table_mixed.rows( function ( idx, data, node ) {
+        return data[0] === item;
+    } )
+    .remove()
+    .draw();
+
+  // update chart data
+  curr_data = JSON.parse(sessionStorage.currData)
+  curr_data.splice(index, 1)
+  sessionStorage.setItem("currData", JSON.stringify(curr_data));
+
+  // update the list that contains all user-entered individual entries
+  current_list = JSON.parse(sessionStorage.mixedCurrent)
+  index = current_list.indexOf(item)
+  current_list.splice(index, 1)
+  sessionStorage.setItem("mixedCurrent", JSON.stringify(current_list));
+
+  // deal with duplicates
+  curr_cat = JSON.parse(sessionStorage.mixedCatCurr)
+  n = JSON.parse(sessionStorage.mixedCatNot)
+  total = curr_cat.concat(n)
+  console.log(total)
+  // only check duplicates in category if there are items in there
+  if (total.length > 0) {
+  total_t = total[0].map((col, i) => total.map(row => row[i]));
+  console.log(total_t)
+
+  var dup = JSON.parse(sessionStorage.mixedDuplicate)
+  console.log(dup)
+  // add back the duplicate entry if it exists in category data
+  if (dup.includes(item)) {
+    index = total_t[0].indexOf(item)
+    table_mixed.row.add([total[index][0], total[index][3], total[index][2], total[index][1]]).draw(false)
+    var del = dup.indexOf(item);
+    dup.splice(del, 1);
+  }
+}
+
+  sessionStorage.setItem("mixedDuplicate", JSON.stringify(dup))
+}
+
+// remove the category for the increase chart
+function remove_cat_mixed() {
+  curr_cat = JSON.parse(sessionStorage.mixedCatCurr)
+  total = curr_cat.concat(JSON.parse(sessionStorage.mixedCatNot))
+  curr = JSON.parse(sessionStorage.currMixed)
+  curr_data = JSON.parse(sessionStorage.currData)
+  for (q = 0; q < curr_cat.length; q++) {
+    item = curr_cat[q][0]
+    index = curr.indexOf(item)
+    myMixedChart.data.datasets[0].data.splice(index, 1)
+    myMixedChart.data.datasets[1].data.splice(index, 1)
+    myMixedChart.data.datasets[2].data.splice(index, 1)
+    myMixedChart.data.labels.splice(index, 1)
+    curr.splice(index, 1)
+
+    curr_data.splice(index, 1)
+  }
+  myMixedChart.update()
+
+  sessionStorage.setItem("currMixed", JSON.stringify(curr));
+  sessionStorage.setItem("currData", JSON.stringify(curr_data));
+  sessionStorage.setItem("currentMixedCat", "")
+
+
+  var dup = JSON.parse(sessionStorage.mixedDuplicate)
+  for (z = 0; z < total.length; z++) {
+    item = total[z][0]
+    table_mixed.rows( function ( idx, data, node ) {
+        return data[0] === item;
+    } )
+    .remove()
+    .draw();
+
+  if (dup.includes(item)) {
+    total_t = total[0].map((col, i) => total.map(row => row[i]));
+    index = total_t[0].indexOf(item)
+    table_mixed.row.add([total[index][0], total[index][3], total[index][2], total[index][1]]).draw(false)
+    var del = dup.indexOf(item);
+    dup.splice(del, 1);
+  }
+  }
+  sessionStorage.setItem("mixedDuplicate", JSON.stringify(dup))
+  // update html
+  $("#showMixed").html(0)
+  $("#allMixed").html(0)
+  sessionStorage.setItem("mixedCatCurr", JSON.stringify([]));
+  sessionStorage.setItem("mixedCatNot", JSON.stringify([]));
+
+}
+
+// remove one entry for category data
+function minusMixed() {
+  curr_cat = JSON.parse(sessionStorage.mixedCatCurr)
+  if (curr_cat.length > 0) { 
+  curr_not = JSON.parse(sessionStorage.mixedCatNot)
+
+  item = curr_cat[curr_cat.length-1][0]
+  curr = JSON.parse(sessionStorage.currMixed)
+  curr_data = JSON.parse(sessionStorage.currData)
+  index = curr.indexOf(item)
+
+  // update bar chart by removing the lowest ranked 
+  myMixedChart.data.datasets[0].data.splice(index, 1)
+  myMixedChart.data.datasets[1].data.splice(index, 1)
+  myMixedChart.data.datasets[2].data.splice(index, 1)
+  myMixedChart.data.labels.splice(index, 1)
+  myMixedChart.update()
+
+  curr_not.splice(0, 0, curr_cat[curr_cat.length-1]) // add to non-displaying category data
+  curr.splice(index, 1) // remove from current labels
+  curr_data.splice(index, 1)
+  curr_cat.splice(curr_cat.length-1, 1) // remove from current category data
+
+  sessionStorage.setItem("mixedCatCurr", JSON.stringify(curr_cat));
+  sessionStorage.setItem("mixedCatNot", JSON.stringify(curr_not));
+  sessionStorage.setItem("currMixed", JSON.stringify(curr));
+  sessionStorage.setItem("currData", JSON.stringify(curr_data));
+
+  show = parseInt($("#showMixed").html()) - 1
+  $("#showMixed").html(show)
+}
+}
+
+// add an entry from category data
+function addMixed() {
+  curr_not = JSON.parse(sessionStorage.mixedCatNot)
+  if (curr_not.length > 0) { 
+
+  curr_cat = JSON.parse(sessionStorage.mixedCatCurr)
+  item = curr_not[0][0]
+  index = findInsertIndex(curr_not[0])
+
+  myMixedChart.data.datasets[0].data.splice(index, 0, curr_not[0][3])
+  myMixedChart.data.datasets[1].data.splice(index, 0, curr_not[0][2])
+  myMixedChart.data.datasets[2].data.splice(index, 0, curr_not[0][1])
+  myMixedChart.data.labels.splice(index, 0, curr_not[0][0])
+
+  myMixedChart.update()
+
+  curr_cat = curr_cat.concat([curr_not[0]])
+  curr_not.splice(0, 1)
+
+  sessionStorage.setItem("mixedCatCurr", JSON.stringify(curr_cat));
+  sessionStorage.setItem("mixedCatNot", JSON.stringify(curr_not));
+
+  show = parseInt($("#showMixed").html()) + 1
+  $("#showMixed").html(show)
+}
+}
+
+// clear the whole canvas
+function clearCanvasMixed() {
+  current = JSON.parse(sessionStorage.mixedCurrent)
+  for (t = 0; t < current.length; t++) {
+    remove_item_mixed(" " + current[t])
+  }
+  remove_cat_mixed();
+  table_mixed.clear();
+
+  sessionStorage.setItem("currentMixedCat", "") // current investigated category
+  sessionStorage.setItem("mixedSearch", JSON.stringify([])); // previous searches
+  sessionStorage.setItem("mixedCurrent", JSON.stringify([])); // all the individual items added
+  sessionStorage.setItem("mixedCatCurr", JSON.stringify([]));
+  sessionStorage.setItem("mixedCatNot", JSON.stringify([]));
+
+  sessionStorage.setItem("currMixed", JSON.stringify([])); // current labels stored in chart
+  sessionStorage.setItem("currData", JSON.stringify([])); // current data associated with the chart
+  sessionStorage.setItem("mixedDuplicate", JSON.stringify([])); // store duplicate entries between individual items and category
+}
+
+// change the year of all shown items to the given year; and change the associate order
+function changeYearMixed() {
+  // store the important data
+  updateYearCat = sessionStorage.currentMixedCat
+  updateYearItems = JSON.parse(sessionStorage.mixedCurrent)
+  // clear the canvas
+  clearCanvasMixed();
+
+  for (u = 0; u < updateYearItems.length; u++) {
+    addItemDataMixed(updateYearItems[u])
+  }
+
+  if (updateYearCat != '') {
+    sessionStorage.setItem("currentMixedCat", updateYearCat)
+    addCatDataMixed(updateYearCat);
+  }
+}
 
 </script>
 
