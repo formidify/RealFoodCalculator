@@ -1684,6 +1684,7 @@ function clearCanvasMixed() {
 function changeYearMixed() {
   // store the important data
   updateYearCat = sessionStorage.currentMixedCat
+  console.log(updateYearCat)
   updateYearItems = JSON.parse(sessionStorage.mixedCurrent)
   // clear the canvas
   clearCanvasMixed();
