@@ -981,13 +981,13 @@ function sortListbyList(A, B) {
   all.sort(function(a, b) {
     return a.A - b.A;
   });
-  A = [];
-  B = [];
+  C = [];
+  D = [];
   for (var i = 0; i < all.length; i++) {
-     A.push(all[i].A);
-     B.push(all[i].B);
+     C.push(all[i].A);
+     D.push(all[i].B);
   }    
-  return A.reverse();
+  return C.reverse();
 }
 
 // change the ranking method and the associate data
@@ -1154,6 +1154,11 @@ function changeRankPercent() {
 </div>
 
 <script>
+// own round function!!
+function round(value, decimals) {
+  return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
+}
+
 Chart.defaults.global.plugins.datalabels.display = false
 
 c = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/get_categories/");
@@ -1328,7 +1333,7 @@ $(document).ready(function(){table_mixed = $('#mixed_table').DataTable({
 // find range of an array
 function range(numbers) {
     numbers.sort();
-    return [numbers[0], numbers[numbers.length - 1]];
+    return numbers[numbers.length - 1] - numbers[0];
 }
 // given the attributes of an item and the current sorting, find which index to splice it into the chart
 function findInsertIndexMixed(d) {
@@ -1336,7 +1341,8 @@ function findInsertIndexMixed(d) {
 
     chart_data = JSON.parse(sessionStorage.currData)
     chart_labels = JSON.parse(sessionStorage.currMixed)
-    if (chart_data.length > 0) {
+    // if no data in there, then add to be the first one
+    if (chart_data.length == 0) {
       index = 0;
     } 
 
@@ -1347,8 +1353,8 @@ function findInsertIndexMixed(d) {
 
     curr_rank = []
     chart_data_t = chart_data[0].map((col, i) => chart_data.map(row => row[i]));
-    all_min = Math.min.apply(null, chart_data_t[0])
-    ind_min = Math.min.apply(null, chart_data_t[1])
+    all_min = Math.min.apply(null, chart_data_t[0]) // add
+    ind_min = Math.min.apply(null, chart_data_t[1]) // ind
 
     // calculation for new ranking order with addition of new item
     all_range = range(chart_data_t[0])
@@ -1400,12 +1406,12 @@ function addItemDataMixed(override) {
       // database results order: all, ind, dollar
       // table order: item, dollar, ind, all (same as mixed)
       myMixedChart.data.datasets[0].data.splice(index, 0, data[3])
-      myMixedChart.data.datasets[1].data.splice(index, 0, data[2])
-      myMixedChart.data.datasets[2].data.splice(index, 0, data[1])
+      myMixedChart.data.datasets[1].data.splice(index, 0, round(data[2], 2))
+      myMixedChart.data.datasets[2].data.splice(index, 0, round(data[1], 2))
       myMixedChart.data.labels.splice(index, 0, data[0])
 
       myMixedChart.update();
-      table_mixed.row.add([data[0], data[3], data[2], data[1]]).draw(false)
+      table_mixed.row.add([data[0], data[3], round(data[2], 2), round(data[1], 2)]).draw(false)
 
       // add duplicates to entry
       dup = JSON.parse(sessionStorage.mixedDuplicate)
@@ -1461,8 +1467,8 @@ function addCatDataMixed(override) {
       index = findInsertIndex(data)
 
       myMixedChart.data.datasets[0].data.splice(index, 0, data[3])
-      myMixedChart.data.datasets[1].data.splice(index, 0, data[2])
-      myMixedChart.data.datasets[2].data.splice(index, 0, data[1])
+      myMixedChart.data.datasets[1].data.splice(index, 0, round(data[2], 2))
+      myMixedChart.data.datasets[2].data.splice(index, 0, round(data[1], 2))
       myMixedChart.data.labels.splice(index, 0, data[0])
   }
 
@@ -1482,7 +1488,7 @@ function addCatDataMixed(override) {
     if (curr_ind.includes(results[i][0])) {
       dup.push(results[i][0])
     }
-      table_mixed.row.add([results[i][0], results[i][3], results[i][2], results[i][1]]).draw(false)
+      table_mixed.row.add([results[i][0], round(results[i][3], 2), round(results[i][2], 2), round(results[i][1], 2)]).draw(false)
     }
     sessionStorage.setItem("mixedDuplicate", JSON.stringify(dup));
 
