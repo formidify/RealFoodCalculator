@@ -424,8 +424,8 @@ for (i = 0; i < 4; i++) {
 
 <div>
   Remove:
-<button class="btnic" id = "canvas_time" onclick = "clearCanvasPercent()"><i class="fa fa-close"></i> Remove all canvas</button>
-<button class="btnic" id = "remove_cat_time" onclick = "remove_cat_percent()"><i class="fa fa-close"></i> Remove selected category</button>
+<button class="btnic" id = "canvas_percent" onclick = "clearCanvasPercent()"><i class="fa fa-close"></i> Remove all canvas</button>
+<button class="btnic" id = "remove_cat_percent" onclick = "remove_cat_percent()"><i class="fa fa-close"></i> Remove selected category</button>
 <div style = "display:inline" id = "buttons_percent"></div>
 </div>
 
@@ -688,9 +688,7 @@ function addCatDataPercent(override) {
   if (sessionStorage.currentPercentCat != "" && sessionStorage.currentPercentCat != cat) { 
       remove_cat_percent();
     }
-  console.log(cat)
-  console.log(sessionStorage.currentPercentCat)
-  if (sessionStorage.currentTimeCat != cat) {
+  if (sessionStorage.currentPercentCat != cat) {
   e = document.getElementById("rank_percent");
   var rank = e.options[e.selectedIndex].value;
 
