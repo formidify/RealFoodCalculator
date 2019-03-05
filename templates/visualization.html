@@ -961,10 +961,10 @@ function changeYearPercent() {
   // store the important data
   updateYearCat = sessionStorage.currentPercentCat
   updateYearItems = JSON.parse(sessionStorage.percentCurrent)
-  console.log(updatedYearItems)
+  console.log(updateYearItems)
   // clear the canvas
   clearCanvasPercent();
-  console.log(updatedYearItems)
+  console.log(updateYearItems)
   for (u = 0; u < updateYearItems.length; u++) {
     addItemDataPercent(updateYearItems[u])
   }
