@@ -797,7 +797,7 @@ function remove_item_percent(item) {
   total_t = total[0].map((col, i) => total.map(row => row[i]));
   console.log(total_t)
 
-  var dup = JSON.parse(sessionStorage.percentDuplicate)
+  dup = JSON.parse(sessionStorage.percentDuplicate)
   console.log(dup)
   // add back the duplicate entry if it exists in category data
   if (dup.includes(item)) {
@@ -805,10 +805,10 @@ function remove_item_percent(item) {
     table_percent.row.add([total[index][0], total[index][3], total[index][4], total[index][1],total[index][2]]).draw(false)
     var del = dup.indexOf(item);
     dup.splice(del, 1);
+    sessionStorage.setItem("percentDuplicate", JSON.stringify(dup))
   }
 }
 
-  sessionStorage.setItem("percentDuplicate", JSON.stringify(dup))
 }
 
 // remove the category for the percent chart
