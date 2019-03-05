@@ -413,7 +413,7 @@ for (i = 0; i < 4; i++) {
     <label for="add">Add by item:</label>
     <input id="add_percent" type="text" name="text" list = "items_percent" onkeyup = "searchItemPercent()" autocomplete="off">
     <datalist id="items_percent"></datalist>
-    <input id = "submit_percent_time" type="submit" value="submit" onclick = "addItemDataPercent('')">
+    <input id = "submit_percent_items" type="submit" value="submit" onclick = "addItemDataPercent('')">
 <a> AND/OR </a>
 <a> Select a category: </a>
 <select id = "categoriesPercent">
@@ -1115,7 +1115,7 @@ function changeRankPercent() {
     <label for="add">Add by item:</label>
     <input id="add_mixed" type="text" name="text" list = "items_mixed" onkeyup = "searchItemMixed()" autocomplete="off">
     <datalist id="items_mixed"></datalist>
-    <input id = "submit_mixed_time" type="submit" value="submit" onclick = "addItemDataMixed('')">
+    <input id = "submit_mixed_item" type="submit" value="submit" onclick = "addItemDataMixed('')">
 <a> AND/OR </a>
 <a> Select a category: </a>
 <select id = "categoriesMixed">
@@ -1126,8 +1126,8 @@ function changeRankPercent() {
 
 <div>
   Remove:
-<button class="btnic" id = "canvas_time" onclick = "clearCanvasMixed()"><i class="fa fa-close"></i> Remove all canvas</button>
-<button class="btnic" id = "remove_cat_time" onclick = "remove_cat_mixed()"><i class="fa fa-close"></i> Remove selected category</button>
+<button class="btnic" id = "canvas_mixed" onclick = "clearCanvasMixed()"><i class="fa fa-close"></i> Remove all canvas</button>
+<button class="btnic" id = "remove_cat_mixed" onclick = "remove_cat_mixed()"><i class="fa fa-close"></i> Remove selected category</button>
 <div style = "display:inline" id = "buttons_mixed"></div>
 </div>
 
