@@ -1334,7 +1334,7 @@ $(document).ready(function(){table_mixed = $('#mixed_table').DataTable({
 // find range of an array
 function range(numbers) {
     arr = numbers.slice(0).sort(function(a, b){return b - a});
-    return arr[arr.length - 1] - arr[0];
+    return arr[0] - arr[arr.length - 1];
 }
 // given the attributes of an item and the current sorting, find which index to splice it into the chart
 function findInsertIndexMixed(d) {
@@ -1342,6 +1342,8 @@ function findInsertIndexMixed(d) {
 
     chart_data = JSON.parse(sessionStorage.currData)
     chart_labels = JSON.parse(sessionStorage.currMixed)
+    console.log(chart_data)
+    console.log(chart_labels)
     // if no data in there, then add to be the first one
     if (chart_data.length == 0) {
       index = 0;
