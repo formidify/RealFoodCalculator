@@ -1908,7 +1908,7 @@ myLineChart = new Chart(ctx5, {data: lineChartData,
 var table;
 $(document).ready(function(){table = $('#time_table').DataTable({
         dom: 'lBfrtip',
-        buttons: ['copyHtml5', 'csvHtml5', 'excelHtml5']
+        buttons: ['copy', 'csv', 'excel']
     }); });
 
 // add single item to the time series chart
@@ -1995,11 +1995,6 @@ sessionStorage.setItem("timeChartLabels", JSON.stringify(chart_labels)); // labe
 
 // add option to remove
 $('#buttons_time').append('<button class="btnic" id = "time_' + y + '" onclick = "remove_item_time(&quot ' + y + '&quot)"><i class="fa fa-close"></i> ' + y + '</button>');
-  /*
-  show = parseInt($("#showTime").html()) + 1
-  all = parseInt($("#allTime").html()) + 1
-  $("#showTime").html(show)
-  $("#allTime").html(all) */
 
     })
 
@@ -2182,14 +2177,6 @@ function remove_item_time(item) {
     dup.splice(del, 1);
   }
   sessionStorage.setItem("timeDuplicate", JSON.stringify(dup))
-
-
-  /*
-  show = parseInt($("#showTime").html()) - 1
-  all = parseInt($("#allTime").html()) - 1
-  $("#showTime").html(show)
-  $("#allTime").html(all)
-  */
 
 }
 
