@@ -356,3 +356,65 @@ background-color: #736481;
 }
 td:hover {font-weight: bold;}
 
+#sessionTable thead th:nth-child(1), th:nth-child(2), th:nth-child(3),th:nth-child(6), th:nth-child(7){
+width: 8%;
+margin-top: 50px;
+}
+/* Category, Label/Brand, Vendor  */
+#sessionTable thead th:nth-child(1){
+  width: 5%;
+}
+#sessionTable thead th:nth-child(2){
+  width: 5%;
+}
+#sessionTable thead th:nth-child(3){
+  width: 5%;
+}
+/* Description */
+#sessionTable thead th:nth-child(4){
+width: 12%
+}
+/* Product Code, Cost*/
+#sessionTable thead th:nth-child(6){
+width: 5%
+}
+#sessionTable thead th:nth-child(7){
+width: 5%;
+}
+/* Real Qualifications */
+#sessionTable thead th:nth-child(8){
+    width: 3%;
+}
+#sessionTable thead th:nth-child(10){
+    width: 3%;
+}
+#sessionTable thead th:nth-child(12){
+    width: 3%;
+}
+#sessionTable thead th:nth-child(14){
+    width: 3%;
+}
+#sessionTable thead th:nth-child(16){
+    width: 3%;
+}
+/* Notes */
+#sessionTable thead th:nth-child(5){
+    width: 10%;
+}
+/*Descriptions*/
+#sessionTable thead th:nth-child(9), th:nth-child(11), th:nth-child(13),th:nth-child(15),th:nth-child(17){
+   width: 5%;
+}
+#sessionTable td:nth-child(9), td:nth-child(11), td:nth-child(13),td:nth-child(15),td:nth-child(17){
+font-size: 15px;
+}
+/* Real Font*/
+#sessionTable td:nth-child(8), td:nth-child(10), td:nth-child(12),td:nth-child(14),td:nth-child(16){
+font-size: 15px;
+}
+#sessionTable td {
+  text-align: center;
+}
+#results td{
+text-align: center;
+}
