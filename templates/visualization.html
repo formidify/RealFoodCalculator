@@ -1467,7 +1467,7 @@ function addCatDataMixed(override) {
   // add data to table
   for (i = 0; i < num_items; i++) {
       data = results_curr[i]
-      index = findInsertIndex(data)
+      index = findInsertIndexMixed(data)
 
       myMixedChart.data.datasets[0].data.splice(index, 0, data[3])
       myMixedChart.data.datasets[1].data.splice(index, 0, round(data[2], 2))
