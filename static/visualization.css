@@ -7,6 +7,20 @@
     background-color: white;
 }
 
+h1{
+    color:white;
+    width:98%;
+    padding-top: 14px;
+    padding-bottom: 14px;
+    padding-left: 2%;
+    background-color: #ba7e46;
+    font-family: Delicious;
+    /*font-family:Yummy,bold;*/
+    display: inline-block;
+    margin:0;
+    opacity:1;
+}
+
 body{
     /*background-image: url("back2.jpg");*/
     background-size:100%;
