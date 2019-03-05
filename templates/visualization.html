@@ -1347,10 +1347,14 @@ function findInsertIndexMixed(d) {
     // if no data in there, then add to be the first one
     if (chart_data.length == 0) {
       index = 0;
+      chart_labels.push(d[0])
+      chart_data = chart_data.concat([d.slice(1, 4)])
     } 
 
     else {
     // add into the data
+    chart_labels.push(d[0])
+    chart_data = chart_data.concat([d.slice(1, 4)])
 
     curr_rank = []
     chart_data_t = chart_data[0].map((col, i) => chart_data.map(row => row[i]));
@@ -1377,13 +1381,9 @@ function findInsertIndexMixed(d) {
     chart_data = sortListbyList(chart_data, curr_rank)
 
     index = chart_labels.indexOf(d[0])
-    sessionStorage.setItem("currMixed", JSON.stringify(chart_labels));
-    sessionStorage.setItem("currData", JSON.stringify(chart_data));
 
 } 
     // add new data into the chart labels/data
-    chart_labels.push(d[0])
-    chart_data = chart_data.concat([d.slice(1, 4)])
     sessionStorage.setItem("currMixed", JSON.stringify(chart_labels));
     sessionStorage.setItem("currData", JSON.stringify(chart_data));
     return index;
