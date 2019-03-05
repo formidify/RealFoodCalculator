@@ -32,3 +32,104 @@ a{
     border-top:1px solid white;
     border-right:1px solid white;
 }
+
+a:hover{
+    color:white;
+    background-color:#511e03;
+}
+
+a:active{
+    color:white;
+    background-color: #511e03;
+}
+
+/* TABLES */
+
+table {
+  /*table-layout: fixed*/
+  width: 100%;
+  margin-top:15px;
+  border-collapse: collapse;
+}
+/* Month, Year, Add Button */
+thead th:nth-child(1){
+  width: 4%;
+}
+thead th:nth-child(2){
+  width: 4%;
+}
+thead th:nth-child(3){
+  width: 4%;
+}
+/* Description */
+thead th:nth-child(4){
+width: 12%
+}
+/* Category, Vendor, Label/Brand, Product Code */
+thead th:nth-child(5){
+  width: 8%;
+}
+thead th:nth-child(6){
+width: 8%
+}
+thead th:nth-child(7){
+width: 8%
+}
+thead th:nth-child(8){
+width: 8%
+}
+/* Real Qualifications */
+thead th:nth-child(9){
+    width: 3%;
+}
+thead th:nth-child(11){
+    width: 3%;
+}
+thead th:nth-child(13){
+    width: 3%;
+}
+thead th:nth-child(15){
+    width: 3%;
+}
+thead th:nth-child(17){
+    width: 3%;
+}
+/* Notes */
+thead th:nth-child(19){
+    width: 12%;
+}
+/*Descriptions*/
+thead th:nth-child(10), th:nth-child(12), th:nth-child(14),th:nth-child(16),th:nth-child(18){
+   width: 5%;
+}
+td:nth-child(10), td:nth-child(12), td:nth-child(14),td:nth-child(16),td:nth-child(18){
+font-size: 10px;
+}
+th{
+  padding: 15px;
+  text-align: center;
+}
+td{
+  padding: 5px;
+  font-size: 15px;
+}
+th {
+  color: white;
+}
+
+tbody td {
+  text-align: center;
+  cursor:pointer;
+}
+
+tr:nth-child(odd) {
+  background-color: #e2e2e2 ;
+}
+
+tr:nth-child(even) {
+  background-color: #efefef;
+}
+thead th {
+background-color: #736481;
+}
+td:hover {font-weight: bold;}
