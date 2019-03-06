@@ -1529,7 +1529,6 @@ function remove_item_mixed(item) {
   curr.splice(index, 1)
   myMixedChart.data.labels.splice(index, 1)
   myMixedChart.update();
-  console.log(myMixedChart.data.labels);
 
   item_id = "[id='mixed_" + item + "']"
   $(item_id).remove()
@@ -1591,6 +1590,7 @@ function remove_cat_mixed() {
     myMixedChart.data.labels.splice(index, 1)
     curr.splice(index, 1)
     curr_data.splice(index, 1)
+    console.log(myMixedChart.data.labels);
   }
   myMixedChart.update()
 
