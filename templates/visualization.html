@@ -970,20 +970,15 @@ function changeYearPercent() {
 }
 
 function sortListbyList(A, B) {
-  var all = [];
-  for (var i = 0; i < B.length; i++) {
-      all.push({ 'A': A[i], 'B': B[i] });
-  }
-  all.sort(function(a, b) {
-    return a.A - b.A;
+  zip = A.map(function(e, i) {
+    return [e, B[i]]
   });
-  C = [];
-  D = [];
-  for (var i = 0; i < all.length; i++) {
-     C.push(all[i].A);
-     D.push(all[i].B);
-  }    
-  return C.reverse();
+  zip = zip.sort(function(a,b){return b[1] - a[1]})
+  result = []
+  for (s = 0; s < zip.length; s++) {
+    result = result.concat([zip[s][0]])
+  }
+  return result;
 }
 
 // change the ranking method and the associate data
@@ -1330,6 +1325,19 @@ function calcRange(numbers) {
     arr = numbers.slice(0).sort(function(a, b){return b - a});
     return arr[0] - arr[arr.length - 1];
 }
+
+function sortListbyList(A, B) {
+  zip = A.map(function(e, i) {
+    return [e, B[i]]
+  });
+  zip = zip.sort(function(a,b){return b[1] - a[1]})
+  result = []
+  for (s = 0; s < zip.length; s++) {
+    result = result.concat([zip[s][0]])
+  }
+  return result;
+}
+
 // given the attributes of an item and the current sorting, find which index to splice it into the chart
 function findInsertIndexMixed(d) {
   // all, ind, dollar
@@ -1372,6 +1380,7 @@ function findInsertIndexMixed(d) {
     }
     console.log(chart_labels)
     console.log(chart_data)
+    console.log(curr_rank)
     chart_labels = sortListbyList(chart_labels, curr_rank)
     chart_data = sortListbyList(chart_data, curr_rank)
     console.log(chart_labels)
