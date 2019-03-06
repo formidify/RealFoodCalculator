@@ -1530,6 +1530,7 @@ function remove_item_mixed(item) {
   myMixedChart.data.labels.splice(index, 1)
   myMixedChart.update();
 
+  sessionStorage.setItem("currMixed", JSON.stringify(curr));
   item_id = "[id='mixed_" + item + "']"
   $(item_id).remove()
 
