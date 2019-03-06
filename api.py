@@ -758,7 +758,7 @@ def get_percent_item(item, yr):
 
     # if we convert all of the current non-real food purchases to real
     query = """SELECT trim(description) AS description, 100 * totalp AS totalp, 100 * indp AS indp, dollars FROM
-                (SELECT trim(COALESCE(D.description, A.description)) AS description, (dollars / sum) AS totalp, (dollars / total_dollars) AS indp, dollars,
+                (SELECT trim(COALESCE(D.description, A.description)) AS description, (dollars / sum) AS totalp, (dollars / total_dollars) AS indp, dollars
                 FROM (SELECT trim(description) AS description, (SELECT SUM(cost) AS sum FROM test_data_large WHERE {y}
                 (local IS NOT NULL OR fair IS NOT NULL OR ecological IS NOT NULL OR humane IS NOT NULL))
                 AS sum FROM test_data_large WHERE {y} trim(description) = '{c}' GROUP BY trim(description)) A
