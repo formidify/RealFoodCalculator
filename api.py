@@ -696,7 +696,7 @@ def get_bar_item(item, yr):
 # Hypothetical increase chart methods -------------------------------------------------------------------------------------
 # get increase data for vis page
 # NOTE: items where all four categories (local, ecological, fair, humane) are null will not be included in the calculation
-@app.route("/visualization/mixed_data", defaults = {'cat': 'produce', 'yr': 'total'})
+@app.route("/visualization/mixed_data", defaults = {'cat': '', 'yr': ''})
 @app.route("/visualization/mixed_data/<cat>+<yr>")
 def get_percent_data(cat, yr):
     items = []
