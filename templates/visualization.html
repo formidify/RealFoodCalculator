@@ -1660,7 +1660,7 @@ function addMixed() {
 
   curr_cat = JSON.parse(sessionStorage.mixedCatCurr)
   item = curr_not[0][0]
-  index = findInsertIndex(curr_not[0])
+  index = findInsertIndexMixed(curr_not[0])
 
   myMixedChart.data.datasets[0].data.splice(index, 0, curr_not[0][3])
   myMixedChart.data.datasets[1].data.splice(index, 0, curr_not[0][2])
