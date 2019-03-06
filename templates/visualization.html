@@ -1529,6 +1529,7 @@ function remove_item_mixed(item) {
   curr.splice(index, 1)
   myMixedChart.data.labels.splice(index, 1)
   myMixedChart.update();
+  console.log(myMixedChart.data.labels);
 
   item_id = "[id='mixed_" + item + "']"
   $(item_id).remove()
@@ -1599,6 +1600,7 @@ function remove_cat_mixed() {
 
 
   var dup = JSON.parse(sessionStorage.mixedDuplicate)
+  console.log(dup)
   for (z = 0; z < total.length; z++) {
     item = total[z][0]
     table_mixed.rows( function ( idx, data, node ) {
@@ -1689,7 +1691,6 @@ function clearCanvasMixed() {
   for (t = 0; t < current.length; t++) {
     remove_item_mixed(" " + current[t])
   }
-  alert("step 1 done")
   remove_cat_mixed();
   table_mixed.clear();
 
