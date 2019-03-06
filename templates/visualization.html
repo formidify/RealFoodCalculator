@@ -1363,16 +1363,19 @@ function findInsertIndexMixed(d) {
     for (i = 0; i < chart_data_t[1]; i++) {
       w = chart_data_t[0][i]
       v = chart_data_t[1][i]
-      if (ind_range == 0 || v == ind_min) {
-        curr_rank.push((w - all_min)*all_range - (ind_min + ind_range))
-      }
-      else{
-        curr_rank.push((w - all_min)*all_range - (v - ind_min) / ind_range)
-      }
+      //if (ind_range == 0 || v == ind_min) {
+        //curr_rank.push((w - all_min)*all_range - (ind_min + ind_range))
+      //}
+      //else{
+        curr_rank.push((w - all_min)*all_range - v / 100)
+      //}
     }
-
+    console.log(chart_labels)
+    console.log(chart_data)
     chart_labels = sortListbyList(chart_labels, curr_rank)
     chart_data = sortListbyList(chart_data, curr_rank)
+    console.log(chart_labels)
+    console.log(chart_data)
 
     index = chart_labels.indexOf(d[0])
 
