@@ -1326,7 +1326,7 @@ $(document).ready(function(){table_mixed = $('#mixed_table').DataTable({
     }); });
 
 // find range of an array
-function range(numbers) {
+function calcRange(numbers) {
     arr = numbers.slice(0).sort(function(a, b){return b - a});
     return arr[0] - arr[arr.length - 1];
 }
@@ -1349,16 +1349,16 @@ function findInsertIndexMixed(d) {
     // add into the data
     chart_labels.push(d[0])
     chart_data = chart_data.concat([d.slice(1, 4)])
-
+    // chart data order: all, ind, dollars
     curr_rank = []
     chart_data_t = chart_data[0].map((col, i) => chart_data.map(row => row[i]));
-    all_min = Math.min.apply(null, chart_data_t[0]) // add
+    all_min = Math.min.apply(null, chart_data_t[0]) // all
     ind_min = Math.min.apply(null, chart_data_t[1]) // ind
 
     // calculation for new ranking order with addition of new item
-    all_range = range(chart_data_t[0])
+    all_range = calcRange(chart_data_t[0])
     if (all_range != 0) {all_range = 1/all_range;}
-    ind_range = range(chart_data_t[1])
+    ind_range = calcRange(chart_data_t[1])
 
     for (i = 0; i < chart_data_t[1]; i++) {
       w = chart_data_t[0][i]
@@ -1385,7 +1385,7 @@ function findInsertIndexMixed(d) {
 
 // add single item to the increase chart
 function addItemDataMixed(override) {
-  current_list = JSON.parse(sessionStorage.mixedCurrent)
+  current_list = JSON.parse(sessionStorage.mixedCurrent) // list of individual entered data
 
   if (override != '') {y = override;}
   else {y = document.getElementById("add_mixed").value;}
@@ -1398,8 +1398,9 @@ function addItemDataMixed(override) {
     searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/mixed_item/" + y + "+" + year);
 
     searches.done(function(results) {
+      // item, total, ind, dollars
       data = results.data
-
+      console.log(data)
       index = findInsertIndexMixed(data)
 
       // mixed chart order: dollar, ind, all
@@ -1462,8 +1463,8 @@ function addCatDataMixed(override) {
   results_curr = results.slice(0, num_items)
   results_no = results.slice(num_items, results.length)
   // add data to table
-  for (i = 0; i < num_items; i++) {
-      data = results_curr[i]
+  for (h = 0; h < num_items; h++) {
+      data = results_curr[h]
       index = findInsertIndexMixed(data)
 
       myMixedChart.data.datasets[0].data.splice(index, 0, data[3])
@@ -1545,24 +1546,25 @@ function remove_item_mixed(item) {
 
   var dup = JSON.parse(sessionStorage.mixedDuplicate)
   console.log(dup)
-  // add back the duplicate entry if it exists in category data
+  // add back the duplicate entry to the table if it exists in category data
   if (dup.includes(item)) {
     index = total_t[0].indexOf(item)
     table_mixed.row.add([total[index][0], total[index][3], total[index][2], total[index][1]]).draw(false)
     var del = dup.indexOf(item);
     dup.splice(del, 1);
   }
-}
-
   sessionStorage.setItem("mixedDuplicate", JSON.stringify(dup))
+}
 }
 
 // remove the category for the increase chart
 function remove_cat_mixed() {
+  // load existing data
   curr_cat = JSON.parse(sessionStorage.mixedCatCurr)
   total = curr_cat.concat(JSON.parse(sessionStorage.mixedCatNot))
-  curr = JSON.parse(sessionStorage.currMixed)
+  curr = JSON.parse(sessionStorage.currMixed) // current chart labels
   curr_data = JSON.parse(sessionStorage.currData)
+
   for (q = 0; q < curr_cat.length; q++) {
     item = curr_cat[q][0]
     index = curr.indexOf(item)
@@ -1571,7 +1573,6 @@ function remove_cat_mixed() {
     myMixedChart.data.datasets[2].data.splice(index, 1)
     myMixedChart.data.labels.splice(index, 1)
     curr.splice(index, 1)
-
     curr_data.splice(index, 1)
   }
   myMixedChart.update()
@@ -1594,7 +1595,7 @@ function remove_cat_mixed() {
     total_t = total[0].map((col, i) => total.map(row => row[i]));
     index = total_t[0].indexOf(item)
     table_mixed.row.add([total[index][0], total[index][3], total[index][2], total[index][1]]).draw(false)
-    var del = dup.indexOf(item);
+    del = dup.indexOf(item);
     dup.splice(del, 1);
   }
   }
@@ -1604,7 +1605,6 @@ function remove_cat_mixed() {
   $("#allMixed").html(0)
   sessionStorage.setItem("mixedCatCurr", JSON.stringify([]));
   sessionStorage.setItem("mixedCatNot", JSON.stringify([]));
-
 }
 
 // remove one entry for category data
@@ -1907,7 +1907,7 @@ myLineChart = new Chart(ctx5, {data: lineChartData,
 
 var table;
 $(document).ready(function(){table = $('#time_table').DataTable({
-        dom: 'Bfrtip',
+        dom: 'lBfrtip',
         buttons: ['copyHtml5', 'csvHtml5', 'excelHtml5']
     }); });
 

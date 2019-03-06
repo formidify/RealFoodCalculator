@@ -3,6 +3,13 @@
 @font-face { font-family: Delicious; src: url('Modeka.otf'); }
 @font-face { font-family: Yummy; src: url('Montserrat-Light.ttf'); }
 
+input[type="text"], input[type="number"]{
+    width: 150px;
+    padding: 5px;
+    margin: 5px, 5px, 5px, 5px;
+    border-radius: 5px;
+}
+
 #navBar{
     display: flex;
     flex-direction: row;
@@ -28,7 +35,7 @@ h2{
   font-weight:bold;
 
 }
-.rest{
+body{
     background-size:100%;
     background-color: #FAFDFD;
     font-family: Yummy;
