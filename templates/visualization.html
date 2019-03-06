@@ -1580,7 +1580,7 @@ function remove_cat_mixed() {
   total = curr_cat.concat(JSON.parse(sessionStorage.mixedCatNot))
   curr = JSON.parse(sessionStorage.currMixed) // current chart labels
   curr_data = JSON.parse(sessionStorage.currData)
-
+  console.log(curr)
   for (q = 0; q < curr_cat.length; q++) {
     item = curr_cat[q][0]
     index = curr.indexOf(item)
@@ -1589,6 +1589,7 @@ function remove_cat_mixed() {
     myMixedChart.data.datasets[2].data.splice(index, 1)
     myMixedChart.data.labels.splice(index, 1)
     curr.splice(index, 1)
+    console.log(curr)
     curr_data.splice(index, 1)
     console.log(myMixedChart.data.labels);
   }
