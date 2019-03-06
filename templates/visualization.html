@@ -1689,6 +1689,7 @@ function clearCanvasMixed() {
   for (t = 0; t < current.length; t++) {
     remove_item_mixed(" " + current[t])
   }
+  alert("step 1 done")
   remove_cat_mixed();
   table_mixed.clear();
 
@@ -1714,7 +1715,7 @@ function changeYearMixed() {
   clearCanvasMixed();
 
   for (u = 0; u < updateYearItems.length; u++) {
-    addItemDataMixed(updateYearItems[u])
+    addItemDataMixed(updateYearItems[u]);
   }
 
   if (updateYearCat != '') {
