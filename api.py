@@ -757,7 +757,7 @@ def get_percent_item(item, yr):
         y = 'year = ' + str(yr) + ' AND'
 
     # if we convert all of the current non-real food purchases to real
-    query = """SELECT '{c}' AS description, 100 * (dollars / sum) AS totalp, 100 * (dollars / total_dollars) AS indp, dollars
+    query = """SELECT '{c}' AS description, 100 * CASE WHEN sum = 0 THEN 0 ELSE (dollars / sum) END AS totalp, 100 * CASE WHEN total_dollars = 0 THEN 0 ELSE (dollars / total_dollars) END AS indp, dollars
                 FROM (SELECT '{c}' AS description, (SELECT COALESCE(SUM(cost), 0) AS sum FROM test_data_large WHERE {y}
                 (local IS NOT NULL OR fair IS NOT NULL OR ecological IS NOT NULL OR humane IS NOT NULL))
                 AS sum FROM test_data_large) A
