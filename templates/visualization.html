@@ -1478,6 +1478,7 @@ function addCatDataMixed(override) {
   results_curr = results.slice(0, num_items)
   results_no = results.slice(num_items, results.length)
   // add data to table
+  console.log(results)
   for (h = 0; h < num_items; h++) {
       data = results_curr[h]
       index = findInsertIndexMixed(data)
@@ -1564,7 +1565,7 @@ function remove_item_mixed(item) {
   // add back the duplicate entry to the table if it exists in category data
   if (dup.includes(item)) {
     index = total_t[0].indexOf(item)
-    table_mixed.row.add([total[index][0], total[index][3], total[index][2], total[index][1]]).draw(false)
+    table_mixed.row.add([total[index][0], total[index][3], round(total[index][2], 2), round(total[index][1], 2)]).draw(false)
     var del = dup.indexOf(item);
     dup.splice(del, 1);
   }
@@ -1609,7 +1610,7 @@ function remove_cat_mixed() {
   if (dup.includes(item)) {
     total_t = total[0].map((col, i) => total.map(row => row[i]));
     index = total_t[0].indexOf(item)
-    table_mixed.row.add([total[index][0], total[index][3], total[index][2], total[index][1]]).draw(false)
+    table_mixed.row.add([total[index][0], total[index][3], round(total[index][2], 2), round(total[index][1], 2)]).draw(false)
     del = dup.indexOf(item);
     dup.splice(del, 1);
   }
