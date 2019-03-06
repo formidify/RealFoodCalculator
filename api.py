@@ -763,10 +763,10 @@ def get_percent_item(item, yr):
                 (local IS NOT NULL OR fair IS NOT NULL OR ecological IS NOT NULL OR humane IS NOT NULL))
                 AS sum FROM test_data_large WHERE {y} trim(description) = '{c}' GROUP BY trim(description)) A
                 RIGHT JOIN (SELECT trim(COALESCE(B.description, C.description)) AS description, COALESCE(B.dollars, 0) AS dollars, C.total_dollars as total_dollars FROM
-                (SELECT trim(description) AS description, sum(cost) AS dollars FROM (SELECT COALESCE(local, 'f') AS local, COALESCE(fair, 'f') AS fair, COALESCE(ecological, 'f')
+                (SELECT trim(description) AS description, COALESCE(SUM(cost), 0) AS dollars FROM (SELECT COALESCE(local, 'f') AS local, COALESCE(fair, 'f') AS fair, COALESCE(ecological, 'f')
                 AS ecological, COALESCE(humane, 'f') AS humane, description, cost, year, trim(description) FROM test_data_large) X
                 WHERE {y} trim(description) = '{c}' AND local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't'
-                GROUP BY trim(description)) B FULL OUTER JOIN (SELECT trim(description) AS description, sum(cost) AS total_dollars FROM test_data_large
+                GROUP BY trim(description)) B FULL OUTER JOIN (SELECT trim(description) AS description, COALESCE(SUM(cost), 0) AS total_dollars FROM test_data_large
                 WHERE {y} trim(description) = '{c}' GROUP BY trim(description)) C ON B.description = C.description) D ON A.description = D.description) Y""".format(y = y, c = item)
 
 
