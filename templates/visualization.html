@@ -1369,7 +1369,7 @@ function findInsertIndexMixed(d) {
     ind_range = calcRange(chart_data_t[1])
 
     console.log(chart_data_t)
-    for (p = 0; p < chart_data_t[1]; p++) {
+    for (p = 0; p < chart_data_t[1].length; p++) {
       w = chart_data_t[0][p]
       v = chart_data_t[1][p]
       //if (ind_range == 0 || v == ind_min) {
