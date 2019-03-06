@@ -1375,7 +1375,7 @@ function findInsertIndexMixed(d) {
         //curr_rank.push((w - all_min)*all_range - (ind_min + ind_range))
       //}
       //else{
-        curr_rank.push((w - all_min)*all_range - v / 100)
+      curr_rank = curr_rank.concat([(w - all_min)*all_range - v / 100])
       //}
     }
     console.log(chart_labels)
