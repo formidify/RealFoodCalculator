@@ -1365,7 +1365,7 @@ function findInsertIndexMixed(d) {
 
     // calculation for new ranking order with addition of new item
     all_range = calcRange(chart_data_t[0])
-    if (all_range != 0) {all_range = 1/all_range;}
+    if (all_range != 0) {all_range = 1/(all_range + all_min);}
     ind_range = calcRange(chart_data_t[1])
 
     console.log(chart_data_t)
