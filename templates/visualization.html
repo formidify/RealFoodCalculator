@@ -46,28 +46,24 @@
  * ii) By category real vs nonreal purchase by year (yet to be implemented)
  * iii) Top 5 categories/items/labels-brands/vendors by real and nonreal
  * 
- * what time period do we want to do?
  * 2) Percentage of real food in each food category (fully interactive):
  * Pie chart showing the percentage purchase of each food category
  * Stacked bar chart where each column stands for prominent types of food in that category, and color coded into real vs not
- * Buttons: which food category to be investigated, and how many items to show
+ * Buttons: add/remove food category to be investigated, and how many items to show, add/remove individual items given year, remove whole canvas
+ * Update ranking of items by (total $ /real $ / nonreal $ / nonreal $ - real $), and all items are shown in the datatable
  *
  * 3) Most impact/up for change food item (fully interactive):
  * A line chart showing the percentage of increase of purchase for that particular food type plus the percentage real increase for all items in that year
- * a bar chart ranked by the amount of money increase in total of real food purchase
- * Buttons: how many items to shown, ranked from high to low or vice versa, as well as customizable panel to enter and control specific food types to display,
- * as well as which (one or multiple) food categories to be selected for visualization on the joint bar line chart.
- * IMPORTANT: also needs to take into account of what is the most % that Carleton wishes to increase by (so if not a complete switch?? idk)
+ * plus a bar showing the amount of money increase in total of real food purchase
+ * Ranked by the normalized difference between percentage increase for total real food minus percent increase for that one item.
+ * Buttons: how many items to shown, add/remove individual items, add/remove category, remove whole canvas, plus a datatable
  *
  * 4) Time series (fully interactive):
  * A line chart showing the increase in real/non-real/all food purchases for food items of all categories
- * Buttons: how many items to shown, ranked from high to low or vice versa, ranked by real/non-real/all,
- * and by month (1-12, all, sum) and year (2006, 2007, 2008, etc.),
- * as well as customizable panel to enter and control specific food types to display
+ * Buttons: how many items to shown, add/remove individual items, add/remove category, remove whole canvas, plus a datatable
  *
  * 5) Items/labels/vendor mutual charts:
  * Show the distribution of items and labels for a specific vendor (vice versa if investigating a specific label/item)
- * 
  *
  */ -->
 
@@ -93,6 +89,7 @@
 
 <script>
 Chart.defaults.global.defaultFontSize = 20;
+
 // all time total real vs nonreal charts by years
 getData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/total_data')
 
@@ -141,7 +138,7 @@ getData.done(function(results) {
 });
 
 // pie chart
-// load data from Flask; shows all categories
+// load data from Flask; shows all categories by year
 getData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/pie_data')
 
 getData.done(function(results) {
@@ -188,7 +185,6 @@ getData.done(function(results) {
           })
         }],
 
-        // These labels appear in the legend and in the tooltips when hovering different arcs
         labels: result.labels,
         options: {
             responsive: true
@@ -239,7 +235,7 @@ getData.done(function(results) {
       }
     });
 
-    // total
+    // total (of all 3 years)
     yr = years[3]
     result = results.total
     data = {
@@ -297,13 +293,6 @@ getData.done(function(results) {
 
 <script>
 Chart.defaults.global.plugins.datalabels.display = false
-// display time series bar chart for all food items
-ctx0 = document.getElementById("allTimeChart").getContext('2d');
-</script>
-
-
-<script>
-Chart.defaults.global.plugins.datalabels.display = false
 
 Chart.DatasetController.extend({
     name: "BarAlt",
@@ -313,6 +302,7 @@ Chart.DatasetController.extend({
     }
 });
 
+// draw top 5 items/categories/labels/vendors for most recent year
 divs = ["realCatChart", "nonCatChart", "realItemChart", "nonItemChart",
         "realVendChart", "nonVendChart", "realBrandChart", "nonBrandChart"]
 
@@ -378,7 +368,6 @@ for (i = 0; i < 4; i++) {
 }
 });
 </script>
-
 
 
 <h1>Real vs non-real percentage</h1>
@@ -450,22 +439,10 @@ Ranked by (in decreasing order):
     </div>
 </div>
 
-
-<!--  <div id="container-fluid">
- <div id="canvas-holder" style="width:50%;float: left;" \
- class="col-xs-6">
-<canvas id="percentChart1" style="float: left; display: block; height: 75px; width: 75px;"></canvas></div>
-<canvas id="percentChart3" style="float: left; display: block; height: 75px; width: 75px;"></canvas></div>
-<canvas id="percentChart4" style="float: left; display: block; height: 75px; width: 75px;"></canvas></div>
-<canvas id="percentChart5" style="float: left; display: block; height: 75px; width: 75px;"></canvas></div>
-<div id="canvas-holder" style="width:50%;float: right;" \
- class="col-xs-6">
-<canvas id="percentChart2" style="float: right; display: block; height: 300px; width: 300px;"></canvas></div>
-</div> -->
-
 <script>
 Chart.defaults.global.plugins.datalabels.display = false
 
+// get all categories in database
 c = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/get_categories/");
 
 c.done(function(results) {
@@ -479,6 +456,7 @@ c.done(function(results) {
   }
 });
 
+// get most recent years
 yrs = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/recent_years");
 
 yrs.done(function(results) {
@@ -496,7 +474,7 @@ yrs.done(function(results) {
     .html(Y)
 );}
   }
-  // add for all years
+  // add option to choose all 3 years combined
   $("select#yearPercent").append( $("<option>")
     .val('total')
     .html('all 3 years'))
@@ -505,19 +483,19 @@ yrs.done(function(results) {
 sessionStorage.setItem("currentPercentCat", "") // current investigated category
 sessionStorage.setItem("percentSearch", JSON.stringify([])); // previous searches
 sessionStorage.setItem("percentCurrent", JSON.stringify([])); // all the individual items added
-sessionStorage.setItem("percentCatCurr", JSON.stringify([]));
-sessionStorage.setItem("percentCatNot", JSON.stringify([]));
+sessionStorage.setItem("percentCatCurr", JSON.stringify([])); // all categories items currently show in plot
+sessionStorage.setItem("percentCatNot", JSON.stringify([])); // categories items not shown
 
 sessionStorage.setItem("currPercent", JSON.stringify([])); // current labels stored in chart
-sessionStorage.setItem("currReal", JSON.stringify([])); 
-sessionStorage.setItem("currNonreal", JSON.stringify([])); 
-sessionStorage.setItem("currSum", JSON.stringify([])); 
-sessionStorage.setItem("currMinus", JSON.stringify([])); 
+sessionStorage.setItem("currReal", JSON.stringify([])); // real $ purchase of all labels
+sessionStorage.setItem("currNonreal", JSON.stringify([])); // nonreal $ purchase of all labels
+sessionStorage.setItem("currSum", JSON.stringify([])); // total $ purchase of all labels
+sessionStorage.setItem("currMinus", JSON.stringify([])); // nonreal - real $ purchase of all labels
 sessionStorage.setItem("percentDuplicate", JSON.stringify([])); // store duplicate entries between individual items and category
 
 curr_data_percent = ["currMinus", "currSum", "currReal", "currNonreal"]
 
-
+// search for items for percent chart
 function searchItemPercent() {
   x = document.getElementById("add_percent").value;
   if (x.length > 1) {
@@ -541,7 +519,9 @@ function searchItemPercent() {
 }
 };
 
+// rank methods in order
 var rank_methods = ["minus", "add", "real", "nonreal"]
+
 // initialize my bar chart
 var myBarChart;
   ctx2 = document.getElementById("percentChart").getContext('2d');
@@ -562,7 +542,6 @@ var myBarChart;
           borderColor: []
         }
       ],
-      // These labels appear in the legend and in the tooltips when hovering different arcs
       labels: [],
       options: {
           responsive: true,
@@ -585,6 +564,7 @@ var myBarChart;
       }
   });
 
+// datatable initialization
 var table_percent;
 $(document).ready(function(){table_percent = $('#percent_table').DataTable({
         dom: 'lBfrtip',
@@ -593,7 +573,7 @@ $(document).ready(function(){table_percent = $('#percent_table').DataTable({
 
 // given the attributes of an item and the current sorting, find which index to splice it into the chart
 function findInsertIndex(d) {
-  curr_data_percent = ["currMinus", "currSum", "currReal", "currNonreal"]
+    curr_data_percent = ["currMinus", "currSum", "currReal", "currNonreal"]
     e = document.getElementById("rank_percent");
     var rank = e.options[e.selectedIndex].value;
 
@@ -610,14 +590,12 @@ function findInsertIndex(d) {
       }
     }
 
-
     curr = JSON.parse(sessionStorage.currPercent)
     curr.splice(index, 0, d[0])
     console.log(curr)
     sessionStorage.setItem("currPercent", JSON.stringify(curr));
 
-
-    // insert the newly added item to the same spot across all 4 data arrays
+    // insert the newly added item to the same spot across all 4 data arrays of the labels
     for (j = 0; j < 4; j++) {
       arr = JSON.parse(sessionStorage[curr_data_percent[j]])
       arr.splice(index, 0, d[j+1]) // rank_methods.indexOf(rank)
@@ -682,6 +660,7 @@ function addItemDataPercent(override) {
 }
 
 
+// add a category to the percent chart
 function addCatDataPercent(override) {
   if (override != '') {cat = override;}
   else {cat = $("select#categoriesPercent").val();}
@@ -698,8 +677,8 @@ function addCatDataPercent(override) {
   searches.done(function(results) {
 
   // results already sorted given the rank inputted to api.py
+  // choose number of items (at most 3 items shown on the chart from selected category at initialization)
   num_items = Math.min(results.items.length, 3)
-  // new_results = sortCatData(results, num_items)
 
   // transpose results for easier data wrangling
   result_list = [results.items, results.minus, results.sum, results.real, results.nonreal]
@@ -751,6 +730,7 @@ function addCatDataPercent(override) {
 }
 };
 
+// remove single item from the chart and the table
 function remove_item_percent(item) {
   curr_data_percent = ["currMinus", "currSum", "currReal", "currNonreal"]
   item = item.substring(1)
@@ -863,7 +843,7 @@ function remove_cat_percent() {
 
 }
 
-// remove one entry for category data
+// remove one entry for category data from the chart
 function minusPercent() {
   curr_data_percent = ["currMinus", "currSum", "currReal", "currNonreal"]
   curr_cat = JSON.parse(sessionStorage.percentCatCurr)
@@ -903,7 +883,7 @@ function minusPercent() {
 }
 }
 
-// add an entry from category data
+// add an entry from category data to the chart
 function addPercent() {
   curr_not = JSON.parse(sessionStorage.percentCatNot)
   if (curr_not.length > 0) { 
@@ -974,6 +954,7 @@ function changeYearPercent() {
   }
 }
 
+// sort A given the sorted index of B
 function sortListbyList(A, B) {
   zip = A.map(function(e, i) {
     return [e, B[i]]
@@ -986,7 +967,7 @@ function sortListbyList(A, B) {
   return result;
 }
 
-// change the ranking method and the associate data
+// change the ranking method and the associate data/chart
 function changeRankPercent() {
   show = parseInt($("#showPercent").html())
 
@@ -1010,7 +991,6 @@ function changeRankPercent() {
   sessionStorage.setItem("currNonreal", JSON.stringify([])); 
   sessionStorage.setItem("currSum", JSON.stringify([])); 
   sessionStorage.setItem("currMinus", JSON.stringify([])); 
-
 
   // clear and redraw everything
   l = chart_labels.length
@@ -1040,7 +1020,6 @@ function changeRankPercent() {
     myBarChart.data.labels.splice(index_c, 0, item)
   }
 
-
   // re-sort category data
   curr_not = JSON.parse(sessionStorage.percentCatNot)
   curr_cat = JSON.parse(sessionStorage.percentCatCurr)
@@ -1058,6 +1037,7 @@ function changeRankPercent() {
 
   curr_cat = total.slice(0, show)
   curr_not = total.slice(show, total.length)
+
   // put category data onto the chart inorder
   for (a = 0; a < curr_cat.length; a++) {
     data = curr_cat[a]
@@ -1074,11 +1054,9 @@ function changeRankPercent() {
     myBarChart.data.labels.splice(index_a, 0, data[0])
 
   }
-
 }
 
   myBarChart.update()
-
 
   sessionStorage.setItem("percentCatCurr", JSON.stringify(curr_cat));
   sessionStorage.setItem("percentCatNot", JSON.stringify(curr_not));
@@ -1149,7 +1127,7 @@ AND/OR Select a category:
 </div>
 
 <script>
-// own round function!!
+// our own round function
 function round(value, decimals) {
   return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
 }
