@@ -132,7 +132,9 @@ getData.done(function(results) {
       title: {
         display: true,
         text: "Total Real vs. Nonreal Food Purchase by 3 most recent years"
-          }
+          },
+          responsive: true,
+          maintainAspectRatio: false
   }
     })
 });
@@ -345,6 +347,8 @@ for (i = 0; i < 4; i++) {
       type: 'bar',
       data: data,
       options: {
+        responsive: true,
+        maintainAspectRatio: false,
         title: {
               display: true,
               text: title
@@ -542,11 +546,7 @@ var myBarChart;
           borderColor: []
         }
       ],
-      labels: [],
-      options: {
-          responsive: true,
-          maintainAspectRatio: false
-      }
+      labels: []
   },
       type: 'bar',
       options: {
@@ -559,8 +559,9 @@ var myBarChart;
               }]},
               title: {
               display: true
-          }
-
+          },
+          responsive: true,
+          maintainAspectRatio: false
       }
   });
 
@@ -1293,7 +1294,9 @@ ctx20 = document.getElementById("mixedChart").getContext('2d');
         }
 
       }
-    }
+    },
+    responsive: true,
+    maintainAspectRatio: false
   }
 });
 
@@ -2660,7 +2663,9 @@ LivCharts[v] = new Chart(ctx1x[c], {
             title: {
               display: true,
               text: "Distribution of " + t + " for " + s + " by 3 most recent years"
-          }
+          },
+          responsive: true,
+          maintainAspectRatio: false
   }
 })
 };
@@ -2832,7 +2837,8 @@ function addLivVendor() {
     plotByAll("items", y, vr[3], vn[3], l_items, 3, 3);
   })
 }
-
+  
+// plot label charts on the canvas
 function addLivLabel() {
   LivCharts[0].destroy();
   LivCharts[1].destroy();
