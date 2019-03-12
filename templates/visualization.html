@@ -347,8 +347,6 @@ for (i = 0; i < 4; i++) {
       type: 'bar',
       data: data,
       options: {
-        responsive: true,
-        maintainAspectRatio: false,
         title: {
               display: true,
               text: title
@@ -424,7 +422,7 @@ Ranked by (in decreasing order):
 
 <div class="row">
   <div class="column" style = "width: 60%; height: 30%;  float: left">
-    <canvas id="percentChart" style="display: block; width: 60%; height: 450px"></canvas>
+    <canvas id="percentChart" style="display: block; width: 60%; height: 700px"></canvas>
   </div>
   <div class="column" style = "width: 40%; height: 30%; display: inline-block;">
     <table id="percent_table" class="display" style = "display: inline-block;">
@@ -789,7 +787,6 @@ function remove_item_percent(item) {
     sessionStorage.setItem("percentDuplicate", JSON.stringify(dup))
   }
 }
-
 }
 
 // remove the category for the percent chart
@@ -1107,7 +1104,7 @@ AND/OR Select a category:
 
 <div class="row">
   <div class="column" style = "width: 60%; height: 30%;  float: left">
-    <canvas id="mixedChart" style="display: block; width: 60%; height: 450px"></canvas>
+    <canvas id="mixedChart" style="display: block; width: 60%; height: 700px"></canvas>
   </div>
   <div class="column" style = "width: 40%; height: 30%; display: inline-block;">
     <table id="mixed_table" class="display" style = "display: inline-block;">
@@ -1750,7 +1747,7 @@ AND/OR Select a category:
 
 <div class="row">
   <div class="column" style = "width: 60%; height: 30%;  float: left">
-    <canvas id="timeSeriesChart" style="display: block; width: 60%; height: 650px"></canvas>
+    <canvas id="timeSeriesChart" style="display: block; width: 60%; height: 700px"></canvas>
   </div>
   <div class="column" style = "width: 40%; height: 30%; display: inline-block;">
     <table id="time_table" class="display" style = "display: inline-block;">
@@ -1941,7 +1938,6 @@ function addItemData() {
         var head_item = table.columns(4).header();
         $(head_item).html(results.yrs[2]);
       }
-      //datasets = []
       color = "#" + intToARGB(hashCode(y))
 
       cost = results.cost
@@ -1954,13 +1950,9 @@ function addItemData() {
   curr = JSON.parse(sessionStorage.timeCurrCat)
   n = JSON.parse(sessionStorage.timeNotCat)
 
-  console.log(curr)
-  console.log(n)
-
   if (curr.includes(y) || n.includes(y)) {
     dup.push(y)
   }
-  console.log(dup)
   sessionStorage.setItem("timeDuplicate", JSON.stringify(dup));
   
 
@@ -1981,7 +1973,6 @@ function addItemData() {
         myLineChart.data.datasets.push(line)
         table.row.add([y, types[j], cost[j][0], cost[j][1], cost[j][2]]).draw(false)
     }
-// console.log(datasets.toString())
 // add legend for each item
     line = {}
     line.data = 0 // arbitrary
@@ -1990,7 +1981,6 @@ function addItemData() {
     chart_labels.push(line.label)
     line.backgroundColor = color
     line.borderColor = color
-    //line.fillColor = colors[i]
     line.fill = true
     line.showLine = false
     myLineChart.data.datasets.push(line)
@@ -2002,11 +1992,6 @@ sessionStorage.setItem("timeChartLabels", JSON.stringify(chart_labels)); // labe
 
 // add option to remove
 $('#buttons_time').append('<button class="btnic" id = "time_' + y + '" onclick = "remove_item_time(&quot ' + y + '&quot)"><i class="fa fa-close"></i> ' + y + '</button>');
-  /*
-  show = parseInt($("#showTime").html()) + 1
-  all = parseInt($("#allTime").html()) + 1
-  $("#showTime").html(show)
-  $("#allTime").html(all) */
 
     })
 
@@ -2189,14 +2174,6 @@ function remove_item_time(item) {
     dup.splice(del, 1);
   }
   sessionStorage.setItem("timeDuplicate", JSON.stringify(dup))
-
-
-  /*
-  show = parseInt($("#showTime").html()) - 1
-  all = parseInt($("#allTime").html()) - 1
-  $("#showTime").html(show)
-  $("#allTime").html(all)
-  */
 
 }
 
@@ -2663,9 +2640,7 @@ LivCharts[v] = new Chart(ctx1x[c], {
             title: {
               display: true,
               text: "Distribution of " + t + " for " + s + " by 3 most recent years"
-          },
-          responsive: true,
-          maintainAspectRatio: false
+          }
   }
 })
 };
