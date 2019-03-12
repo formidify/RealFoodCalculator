@@ -549,7 +549,9 @@ var myBarChart;
           scales: {
               xAxes: [{
                   stacked: true,
-                  autoSkip: false
+                  ticks: {
+                    autoSkip: false
+                  }
               }],
               yAxes: [{
                   stacked: true
@@ -1281,9 +1283,9 @@ ctx20 = document.getElementById("mixedChart").getContext('2d');
         }
       }],
       xAxes: [{
-        ticks: [{
+        ticks: {
           autoSkip: false
-        }]
+        }
       }],
       plugins: {
         datalabels: {
