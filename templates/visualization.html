@@ -548,7 +548,8 @@ var myBarChart;
       options: {
           scales: {
               xAxes: [{
-                  stacked: true
+                  stacked: true,
+                  autoSkip: false
               }],
               yAxes: [{
                   stacked: true
@@ -1279,6 +1280,11 @@ ctx20 = document.getElementById("mixedChart").getContext('2d');
           beginAtZero: true
         }
       }],
+      xAxes: [{
+        ticks: [{
+          autoSkip: false
+        }]
+      }]
       plugins: {
         datalabels: {
            display: false,
@@ -1502,7 +1508,10 @@ function remove_item_mixed(item) {
   item = item.substring(1)
 
   curr = JSON.parse(sessionStorage.currMixed) // all the labels currently shown on the plot
+  console.log(curr)
   index = curr.indexOf(item)
+  console.log(index)
+  console.log(item)
   myMixedChart.data.datasets[0].data.splice(index, 1)
   myMixedChart.data.datasets[1].data.splice(index, 1)
   myMixedChart.data.datasets[2].data.splice(index, 1)
