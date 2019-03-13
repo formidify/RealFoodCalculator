@@ -528,6 +528,7 @@ def get_quick_data(yr):
     groups = ['category', 'description', 'vendor', 'label_brand']
     type = ['real', 'nonreal']
 
+    curr_year = 2018
 
     for g in groups:
         for t in type:
