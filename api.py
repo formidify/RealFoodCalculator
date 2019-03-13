@@ -501,23 +501,30 @@ def get_total_data():
     yrs.reverse()
     return flask.jsonify({"labels": yrs, "real": real, "nonreal": nonreal})
 
+@app.route("/visualization/bar_data", defaults = {'cat': '', 'yr': '', 'rank': ''})
+@app.route("/visualization/bar_data/<cat>+<yr>+<rk>")
 #---------------------------------
 ######## get data for quick charts
-@app.route("/visualization/quick_data")
-def get_quick_data():
+# default is the most recent year, but can be changed by user from vis page
+@app.route("/visualization/quick_data", defaults = {'yr': 'null'})
+@app.route("/visualization/quick_data/<yr>")
+def get_quick_data(yr):
     dic = {}
-    curr_query = """SELECT MAX(year) AS maxyear FROM test_data_large;"""
-    connection = get_connection()
-    # (but what if we have 2019 but we want to look at 2018? have a button on top saying Not quite the year you are looking for? Go back or move front by 1 year)
-    if connection is not None:
-        try:
-            for row in get_select_query_results(connection, curr_query):
-                curr_year = row[0]
-        except Exception as e:
-            print(e)
-        connection.close()
 
-    curr_year = 2017 # just as initialization
+    curr_year = yr # set to user input
+
+    # for initialization, retrieve current year from database
+    if yr == 'null':
+        curr_query = """SELECT MAX(year) AS maxyear FROM test_data_large;"""
+        connection = get_connection()
+        if connection is not None:
+            try:
+                for row in get_select_query_results(connection, curr_query):
+                    curr_year = row[0]
+            except Exception as e:
+                print(e)
+            connection.close()
+
     groups = ['category', 'description', 'vendor', 'label_brand']
     type = ['real', 'nonreal']
 
@@ -549,6 +556,7 @@ def get_quick_data():
             dic[key] = {"labels": labels[:5], "cost": cost[:5]}
 
     dic['year'] = curr_year
+    dic['all_years'] = get_all_years()
 
     return flask.jsonify(dic)
 

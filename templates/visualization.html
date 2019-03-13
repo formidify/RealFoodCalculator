@@ -270,6 +270,8 @@ getData.done(function(results) {
 
  <div style = "display: block, width: 100%">
   <h3>In terms of a smaller picture ...</h3>
+  <h3>... But not quite the year you are looking for? Go to the 
+    <button type="button" id = "next" onclick = "nextQuick()">following</button> or <button type="button" id = "back" onclick = "backQuick()">preceeding</button> year</h3>
 <div class="row">
   <div class="column" style = "width: 25%; height: 25%;  float: left">
     <canvas id="realCatChart" style="display: block; height: 75px; width: 75px;"></canvas>
@@ -302,6 +304,15 @@ Chart.DatasetController.extend({
     }
 });
 
+var quickCharts = [];
+
+// initialize session variable of all available years and the current selected year
+sessionStorage.setItem('quickAllYears', JSON.stringify([]));
+sessionStorage.setItem('quickCurr', 'null');
+
+drawQuickChart('null'); // draw quick chart without any year input
+
+function drawQuickChart(yr) {
 // draw top 5 items/categories/labels/vendors for most recent year
 divs = ["realCatChart", "nonCatChart", "realItemChart", "nonItemChart",
         "realVendChart", "nonVendChart", "realBrandChart", "nonBrandChart"]
@@ -314,7 +325,7 @@ border = ["rgba(255, 159, 64)", "rgba(54, 162, 235)"]
 prefix = "Top 5 "
 title_parts = ['categories', 'items', 'vendors', 'labels/brands']
 // quick charts
-getData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/quick_data')
+getData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/quick_data/' + yr)
 getData.done(function(results) {
   year = results.year
 for (i = 0; i < 4; i++) {
@@ -363,10 +374,54 @@ for (i = 0; i < 4; i++) {
               }]
       }
   }});
-
+  quickCharts.push(quickBarChart)
   }
 }
 });
+sessionStorage.setItem('quickCurr', results.year);
+sessionStorage.setItem('quickAllYears', JSON.stringify(results['all_years']))
+}
+
+// clear all data on quick chart so that one can be drawn for the newly selected year
+function clearQuickChart() {
+  for (i = 0; i < quickCharts.length; i++) {
+    quickCharts[i].destroy();
+  }
+  quickCharts = [];
+}
+
+// remove the current data and draw for the following year if its data is available in database
+function nextQuick() {
+  curr = sessionStorage.quickCurr + 1;
+  all_years = JSON.parse(sessionStorage.quickAllYears)
+
+  if (!all_years.includes(curr)) {
+    alert(curr + " cannot be selected since it cannot be found in database.")
+  }
+
+  else {
+    clearQuickChart();
+    drawQuickChart(curr);
+    sessionStorage.setItem("quickCurr", curr)
+  }
+}
+
+// remove the current data and draw for the previous year if its data is available in database
+function backQuick() {
+  curr = sessionStorage.quickCurr - 1;
+  all_years = JSON.parse(sessionStorage.quickAllYears)
+
+  if (!all_years.includes(curr)) {
+    alert(curr + " cannot be selected since it cannot be found in database.")
+  }
+
+  else {
+    clearQuickChart();
+    drawQuickChart(curr);
+    sessionStorage.setItem("quickCurr", curr)
+  }
+}
+
 </script>
 
 
