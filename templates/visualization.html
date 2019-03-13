@@ -377,10 +377,10 @@ for (i = 0; i < 4; i++) {
   quickCharts.push(quickBarChart)
   }
 }
-});
 sessionStorage.setItem('quickCurr', results.year);
-sessionStorage.setItem('quickAllYears', JSON.stringify(results['all_years']))
-}
+sessionStorage.setItem('quickAllYears', JSON.stringify(results['all_years']));
+});
+};
 
 // clear all data on quick chart so that one can be drawn for the newly selected year
 function clearQuickChart() {
