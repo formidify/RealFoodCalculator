@@ -419,7 +419,7 @@ def get_all_years():
             print(e)
         connection.close()
 
-    return [2018, 2017, 2016]
+    return yrs
 
 # universal method for multiple charts to get all the distinct categories in the dataset
 @app.route("/visualization/get_categories/")
@@ -457,7 +457,7 @@ def get_recent_years():
             print(e)
         connection.close()
 
-    return flask.jsonify({"yrs": [2018, 2017, 2016]})
+    return flask.jsonify({"yrs": yrs})
 
 # get recent years data straight for visualization (note: different from get_all_years)
 @app.route("/visualization/total_data")
@@ -527,8 +527,6 @@ def get_quick_data(yr):
 
     groups = ['category', 'description', 'vendor', 'label_brand']
     type = ['real', 'nonreal']
-
-    curr_year = 2018
 
     for g in groups:
         for t in type:
