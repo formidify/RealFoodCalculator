@@ -501,8 +501,6 @@ def get_total_data():
     yrs.reverse()
     return flask.jsonify({"labels": yrs, "real": real, "nonreal": nonreal})
 
-@app.route("/visualization/bar_data", defaults = {'cat': '', 'yr': '', 'rank': ''})
-@app.route("/visualization/bar_data/<cat>+<yr>+<rk>")
 #---------------------------------
 ######## get data for quick charts
 # default is the most recent year, but can be changed by user from vis page
