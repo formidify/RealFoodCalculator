@@ -1343,18 +1343,17 @@ function findInsertIndexMixed(d) {
     } 
 
     else {
-    // add into the data
-    chart_labels.push(d[0])
-    chart_data = chart_data.concat([d.slice(1, 4)])
+    // create copy of the data
+    chart_data_new = chart_data.concat([d.slice(1, 4)])
     // chart data order: all, ind, dollars
     curr_rank = []
-    chart_data_t = chart_data[0].map((col, i) => chart_data.map(row => row[i]));
+    chart_data_t = chart_data_new[0].map((col, i) => chart_data_new.map(row => row[i]));
     all_min = Math.min.apply(null, chart_data_t[0]) // all
     ind_min = Math.min.apply(null, chart_data_t[1]) // ind
 
     // calculation for new ranking order with addition of new item
     all_range = calcRange(chart_data_t[0])
-    if (all_range != 0) {all_range = 1/(all_range + all_min);}
+    if (all_range != 0) {all_range = 1/(all_range + all_min);} // = (1 / max)
     ind_range = calcRange(chart_data_t[1])
 
     console.log(chart_data_t)
@@ -1363,22 +1362,27 @@ function findInsertIndexMixed(d) {
       v = chart_data_t[1][p]
       console.log(w)
       console.log(v)
-      //if (ind_range == 0 || v == ind_min) {
-        //curr_rank.push((w - all_min)*all_range - (ind_min + ind_range))
-      //}
-      //else{
+      if (v == 0) {
+        // if v is 0, which implies that dollar and % increase in all are both 0,
+        // then set the second operand as the maximum possible value;
+        // this makes sure that item with 0 possible percentage increase is always ranked last.
+        curr_rank = curr_rank.concat([w * all_range - (ind_range + ind_min) / 100])
+      }
+      else{
       curr_rank = curr_rank.concat([w * all_range - v / 100])
-      //}
+      }
+      // store the value of newly added elements
+      if (p == chart_data_t[1].length - 1) {
+        newvar = curr_rank
+      }
     }
-    console.log(chart_labels)
-    console.log(chart_data)
-    console.log(curr_rank)
-    chart_labels = sortListbyList(chart_labels, curr_rank)
-    chart_data = sortListbyList(chart_data, curr_rank)
-    console.log(chart_labels)
-    console.log(chart_data)
 
-    index = chart_labels.indexOf(d[0])
+    // essentially is sorting itself
+    curr_rank = sortListbyList(curr_rank, curr_rank)
+
+    index = curr_rank.indexOf(newvar)
+    chart_labels.splice(index, 0, d[0])
+    chart_data.splice(index, 0, d.slice(1, 4))
 
 } 
     // add new data into the chart labels/data
