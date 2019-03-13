@@ -106,7 +106,7 @@ def get_products():
     #CHANGED NONE TO N/A
     elif humane == "none":
         humane = "AND test_data_large.humane IS NULL"
-    elif humane == "false":
+    elif humane == "off":
         humane = "AND test_data_large.humane = FALSE"
     else:
         humane = " "
