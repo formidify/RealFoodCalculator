@@ -419,7 +419,7 @@ def get_all_years():
             print(e)
         connection.close()
 
-    return [2018, 2017, 2016]
+    return [2019, 2018, 2017, 2016]
 
 # universal method for multiple charts to get all the distinct categories in the dataset
 @app.route("/visualization/get_categories/")
