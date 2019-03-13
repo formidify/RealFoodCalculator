@@ -2462,13 +2462,60 @@ OR
 
 <div class="row">
   <div class="column" style = "width: 50%; height: 25%;  float: left">
+
+    <div class="quantity buttons_added">
+    Showing
+    <input type="button" value="-" class="minus" onclick = "minusLiv1()">
+    <div id = "showLiv1" style = "display: inline">0</div>
+    <input type="button" value="+" class="plus" onclick = "addLiv1()">
+    out of <div id = "allLiv1" style = "display: inline">0</div> of the selected category
+    </div>
+
     <canvas id="livChart1" style="display: block; height: 60px; width: 50%;"></canvas>
     <canvas id="livChart2" style="display: block; height: 60px; width: 50%;"></canvas>
+    <table id="liv_table1" class="display" style = "display: inline-block;">
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Year 1</th>
+        <th>Year 2</th>
+        <th>Year 3</th>
+        <th>All 3 years</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
   </div>
+
   <div class="column" style = "width: 50%; height: 25%;  float: left">
+
+    <div class="quantity buttons_added">
+    Showing
+    <input type="button" value="-" class="minus" onclick = "minusLiv2()">
+    <div id = "showLiv2" style = "display: inline">0</div>
+    <input type="button" value="+" class="plus" onclick = "addLiv2()">
+    out of <div id = "allLiv2" style = "display: inline">0</div> of the selected category
+
+    </div>
+
     <canvas id="livChart3" style="display: block; height: 60px; width: 50%;"></canvas>
     <canvas id="livChart4" style="display: block; height: 60px; width: 50%;"></canvas>
+        <table id="liv_table2" class="display" style = "display: inline-block;">
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Year 1</th>
+        <th>Year 2</th>
+        <th>Year 3</th>
+        <th>All 3 years</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
   </div>
+
 </div>
 
 
