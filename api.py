@@ -462,7 +462,7 @@ def get_recent_years():
 # get recent years data straight for visualization (note: different from get_all_years)
 @app.route("/visualization/total_data")
 def get_total_data():
-    yrs = get_all_years()
+    yrs = get_all_years()[:3]
     real = []
     nonreal = []
 
@@ -832,7 +832,7 @@ def get_item_time(yrs, item):
 @app.route("/visualization/item_data/<path:item>")
 def get_item_data(item):
 
-    yrs = get_all_years()
+    yrs = get_all_years()[:3]
     print(item)
 
     total, real = get_item_time(yrs, item)
@@ -847,7 +847,7 @@ def get_item_data(item):
 def get_categories_time(cat):
     items = [] # all of the distinct item in the category
     query = """SELECT trim(description), SUM(cost) AS s FROM test_data_large WHERE trim(category) = '{p}' GROUP BY trim(description) ORDER BY s DESC;""".format(p = cat)
-    yrs = get_all_years()
+    yrs = get_all_years()[:3]
 
     connection = get_connection()
     if connection is not None:
@@ -934,7 +934,7 @@ def get_label(search):
 @app.route("/visualization/brand_vendor_data", defaults = {'item': '', 'type': ''})
 @app.route("/visualization/brand_vendor_data/<path:item>+<path:type>")
 def get_brand_vendor_data(item, type):
-    yrs = get_all_years()
+    yrs = get_all_years()[:3]
 
 
     if "'" in item:
