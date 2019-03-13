@@ -403,7 +403,7 @@ def vd_insert_entry():
 # ----------------------------------------------------
 ### UNIVERSAL CHART METHODS (used for more than 1 chart)
 
-# get all years in reverse order
+# get all years in descending order
 def get_all_years():
     yrs = []
 
@@ -457,9 +457,8 @@ def get_recent_years():
             print(e)
         connection.close()
 
-    return flask.jsonify({"yrs": yrs})
+    return flask.jsonify({"yrs": yrs[:3]})
 
-# get recent years data straight for visualization (note: different from get_all_years)
 @app.route("/visualization/total_data")
 def get_total_data():
     yrs = get_all_years()[:3]
