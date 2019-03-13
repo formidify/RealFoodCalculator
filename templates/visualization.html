@@ -382,7 +382,7 @@ sessionStorage.setItem('quickAllYears', JSON.stringify(results['all_years']));
 // clear all data on quick chart so that one can be drawn for the newly selected year
 function clearQuickChart() {
   for (i = 0; i < quickCharts.length; i++) {
-    quickCharts[i].clear();
+    quickCharts[i].destroy();
   }
   quickCharts = [];
 }
