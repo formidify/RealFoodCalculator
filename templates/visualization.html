@@ -392,7 +392,7 @@ function clearQuickChart() {
 
 // remove the current data and draw for the following year if its data is available in database
 function nextQuick() {
-  curr = sessionStorage.quickCurr + 1;
+  curr = parseInt(sessionStorage.quickCurr) + 1;
   all_years = JSON.parse(sessionStorage.quickAllYears)
 
   if (!all_years.includes(curr)) {
@@ -408,7 +408,7 @@ function nextQuick() {
 
 // remove the current data and draw for the previous year if its data is available in database
 function backQuick() {
-  curr = sessionStorage.quickCurr - 1;
+  curr = parseInt(sessionStorage.quickCurr) - 1;
   all_years = JSON.parse(sessionStorage.quickAllYears)
 
   if (!all_years.includes(curr)) {
