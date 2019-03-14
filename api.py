@@ -522,6 +522,7 @@ def get_quick_data(yr):
                 print(e)
             connection.close()
 
+    curr_year = 2019 # set to current year as default
     groups = ['category', 'description', 'vendor', 'label_brand']
     type = ['real', 'nonreal']
 
