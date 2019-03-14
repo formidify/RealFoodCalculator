@@ -1,396 +1,356 @@
 <!DOCTYPE html>
-
 <html lang="en">
-    <head>
-        <link rel="stylesheet" href="../static/styles.css">
-        <title>data-entry</title>
-        <meta charset="utf-8">
-        <meta content="width=device-width, initial-scale=1" name="viewport">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-        <link rel="shortcut icon" href="../static/favicon.ico" type="image/x-icon">
-        <link rel="icon" href="../static/favicon.ico" type="image/x-icon">
+<head>
+  <link rel="stylesheet" href="../static/styles.css">
+  <title>data-entry</title>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1" name="viewport">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <link rel="shortcut icon" href="../static/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="../static/favicon.ico" type="image/x-icon">
+ 
  <script>
+
 window.onload = function (){
-//console.log(localStorage.getItem("savedEntry"));
-//  if ((localStorage.getItem('savedEntry')!= null) || (localStorage.getItem('savedEntry')!="{}") || (localStorage.getItem('savedEntry')!="")){
-if(localStorage.getItem("savedEntry")){
-var savedEntry = JSON.parse(localStorage.getItem('savedEntry'));
-  console.log("savedEntry:", savedEntry);
-  populateSavedItems(savedEntry);
-  localStorage.setItem("isSavedEntry", false);
-  localStorage.removeItem("savedEntry");
+  /*
+  Populate form with data if checkboxes are checked (if savedEntry exists)
+  */
+  if(localStorage.getItem("savedEntry")){
+    var savedEntry = JSON.parse(localStorage.getItem('savedEntry'));
+    populateSavedItems(savedEntry);
+    localStorage.setItem("isSavedEntry", false);
+    localStorage.removeItem("savedEntry");
+    }
+  }
+
+
+// add any new items to exisiting items in entrySession
+if(localStorage.getItem("entrySession")){
+  // entry session is not empty, add items to exisiting list
+  var initializeEntrySession = JSON.parse(localStorage.getItem("entrySession"));
+}else{
+  // entry session is empty, add items to new list
+  var initializeEntrySession = [];
+}
+
+function checkInvalidInputs(){
+  /*
+  Error Checking and Notification for Item Entry  
+  Return False if item does not meet qualifications
+  Return True if item is ready to be inserted into database
+
+  CHECK FOR: 
+    - existence of category, vendor, cost, and description
+    - cost is greater than $0.00
+    - an item has a real qualification if and only if it has a corresponding real description
+  */
+	var invalid = false;
+  var alertIssues = [];
+
+  // Check for existence of category, vendor, description and cost
+  if (document.getElementById("category").value == '%'){
+    invalid = true;
+    alertIssues.push("Choose a category.");
+  }
+  if (document.getElementById("vendor").value == ''){
+    invalid = true;
+    alertIssues.push("Enter a vendor");
+  }
+  if (document.getElementById("description").value == ''){
+    invalid = true;
+    alertIssues.push("Enter a description");
+  }
+  // cost must be greater than $0.00
+  if (document.getElementById("cost").value <= 0.00){
+    invalid = true;
+    alertIssues.push("Enter a valid cost.");
+  }
+  
+  // item has a real qualification if and only if it has a corresponding real description
+  var descriptions = ["local", "fair", "humane", "ecological", "disqualifier"];
+  for (qualification in descriptions){
+    var tag = descriptions[qualification]+"Description";
+    var trueTag = descriptions[qualification]+"-true";
+    var falseTag = qualification+"-false";
+    if (((document.getElementById(tag).value == "")) && (document.getElementById(trueTag).checked)){
+      alertQualification = (descriptions[qualification].charAt(0).toUpperCase() +descriptions[qualification].slice(1)+ " notes do not match "+ descriptions[qualification]+" status.");
+      alertIssues.push(alertQualification);
+      invalid = true;
+    }
+  }
+
+  // alert user that entry is not valid with message
+  if (invalid == true){
+    var  alert = "";
+    for (issue in alertIssues){
+      alert += (alertIssues[issue] + "\r\n");
+    }
+    window.alert(alert);
+  }
+  return invalid;
+}
+
+function submit(){
+  /*
+  If item data meets all error checking qualifications, store item in local storage, clear form, and repopulate
+  fields saved with checkboxes.
+  */
+	if (!checkInvalidInputs()){
+    // retrieve fields' values with checked boxes 
+    var itemsToSave = getItemsToSave();
+    
+    // create list of item's values
+    var thisEntry = [];
+
+    // get item's values from form
+    var inputs = document.querySelectorAll('input[type=text]');
+    var numInputs = document.querySelectorAll('input[type=number]');
+    var categoryInputs = document.querySelectorAll('[name=category]');
+    var radioInputs = document.querySelectorAll('[type=radio]');
+    
+    // add 'category' to item
+    thisEntry.push(categoryInputs[0].value);
+
+    // add all text inputs to item ('vendor', 'brand','description','notes','productCode')
+    for(var i = 0; i < 5; i++) {
+      thisEntry.push(inputs[i].value);
+      inputID = inputs[i].id;
+    }
+
+    // add cost to item 
+    thisEntry.push(numInputs[0].value);
+    numInputs[0].value = '';
+
+    // add real qualifications and descriptions to item
+    thisEntry.push(document.getElementById('local-true').checked);
+    thisEntry.push(document.getElementById('localDescription').value);
+    thisEntry.push(document.getElementById('fair-true').checked);
+    thisEntry.push(document.getElementById('fairDescription').value);
+    thisEntry.push(document.getElementById('ecological-true').checked);
+    thisEntry.push(document.getElementById('ecologicalDescription').value);
+    if (document.getElementById('humane-na').checked){
+      thisEntry.push('N/A');
+    } else{
+      thisEntry.push(document.getElementById('humane-true').checked);
+    }
+    thisEntry.push(document.getElementById('humaneDescription').value);
+    thisEntry.push(document.getElementById('disqualifier-true').checked);
+    thisEntry.push(document.getElementById('disqualifierDescription').value);
+
+    // add item to localStorage
+    initializeEntrySession.push(thisEntry);
+    localStorage.setItem('entrySession', JSON.stringify(initializeEntrySession));
+    
+    // TEST THESE TWO LINES BEFORE TURNING IN
+    // clear form
+    document.getElementById("data-entry-form").reset();
+    // repopulate fields with saved checkboxes
+    populateSavedItems(itemsToSave);
+  } 
+}
+
+function populateItem(description, category, productCode, brand, vendor, local, localDescription, fair, fairDescription, ecological, ecologicalDescription, humane, humaneDescription, disqualifier,disqualfierDescription, notes){
+  /*
+  Function to populate the form fields with a previous item's data.
+  */
+  var item = {"description": description, "category": category, "productCode": productCode, "brand":brand,"vendor":vendor, "local": local, "localDescription": localDescription, "fair": fair, "fairDescription": fairDescription, "ecological": ecological, "ecologicalDescription": ecologicalDescription, "humane": humane, "humaneDescription": humaneDescription, "disqualifier": disqualifier, "disqualifierDescription": disqualfierDescription, "notes":notes}
+	for (var data in item){
+    populateForm(data, item[data]);
   }
 }
 
-/*
-if ((localStorage.getItem("entrySession") == '[]') || (localStorage.getItem("entrySession") == '')){
-    console.log("Entry Session is empty ");
-    var initializeEntrySession = [];
-    //localStorage["entrySession"] = initializeEntrySession;
+function populateForm(dataLabel, value){
+  /*
+  Function to populate a particular field (dataLabel) with value (row)
+  */
 
-}else{
-    console.log("Entry Session is Not empty");
-    var initializeEntrySession = JSON.parse(localStorage.getItem("entrySession"));
-    console.log("Initialized Entry Session", initializeEntrySession);
-}
-*/
+  // transform boolean strings to radio button booleans
+  // display radio button false
+  if (value=="False") {
+      document.getElementById(dataLabel+"-false").checked = true;
+      value = "off";
+  }
+  // display radio button true
+  if (value=="True") {
+      document.getElementById(dataLabel+"-true").checked = true;
+      value = "on";
+  }
+  // display radio button N/A
+  if (value=="None") {
+      document.getElementById(dataLabel+"-na").checked = true;
+      value = "none";
+  }
 
-if(localStorage.getItem("entrySession")){
-console.log("Entry Session is Not empty");
-    var initializeEntrySession = JSON.parse(localStorage.getItem("entrySession"));
-    console.log("Initialized Entry Session", initializeEntrySession);
-}else{
-
-    console.log("Entry Session is empty ");
-    var initializeEntrySession = [];
-
-}
-
-   // var initializeEntrySession = [];
-    //localStorage["entrySession"] = initializeEntrySession;
-
-    function toggleCheckbox(item){
-         console.log("hi we're here");
-         var inputID = item.id;
-         console.log(inputID);
-
-
-         if (typeof(Storage) !== "undefined") {
-              if (!document.getElementById(inputID).checked){
-                  //this may be backwards!!
-                 sessionStorage.removeItem(inputID.slice(0, -6));
-                 console.log("its gone!");
-              }
-              else{
-             //unchecked, save info
-                var thisInput = document.getElementById(inputID.slice(0, -6));
-                console.log(thisInput.value);
-                sessionStorage[inputID.slice(0, -6)] = thisInput.value;
-
-
-              }
+  // populate real descriptions with options from corresponding HTML select input
+  if (dataLabel.includes("Description")){
+      var optionValues = [];
+      var optionList = ('#'+dataLabel+' option');
+      // get all options for a real description
+      $(optionList).each(function() {
+      optionValues.push($(this).val());
+      });
+      var optionStrings = [];
+      for (item in optionValues){
+          var lowerItem = optionValues[item].toLowerCase();
+          optionStrings.push(optionValues[item]);
+          // populate description with select value that matches 
+          if (value == lowerItem){
+            document.getElementById(dataLabel).value = optionValues[item];
+            return;
+          }
         }
-        else {
-            document.getElementById("result").innerHTML = "Sorry, your browser does not support web storage...";
-        }
-    }
-
- function checkInvalidInputs(){
-	var invalid = false;
-        var alertIssues = [];
-        if (document.getElementById("category").value == '%'){
-            invalid = true;
-            alertIssues.push("Choose a category.");
-        }
-        if (document.getElementById("vendor").value == ''){
-             invalid = true;
-            alertIssues.push("Enter a vendor");
-
-        }
-        if (document.getElementById("cost").value <= 0.00){
-              invalid = true;
-              alertIssues.push("Enter a valid cost.");
-        }
-       var descriptions = ["local", "fair", "humane", "ecological", "disqualifier"];
-
-       for (qualification in descriptions){
-       var tag = descriptions[qualification]+"Description";
-       var trueTag = descriptions[qualification]+"-true";
-       console.log("tag is: ", tag);
-       var falseTag = qualification+"-false";
-        if (((document.getElementById(tag).value == "")) && (document.getElementById(trueTag).checked)){
-         // if ((!(document.getElementById(tag).value == ""))){
-            alertQualification = (descriptions[qualification].charAt(0).toUpperCase() +descriptions[qualification].slice(1)+ " notes do not match "+ descriptions[qualification]+" status.");
-           alertIssues.push(alertQualification);
-           invalid = true;
+      // do not allow descriptions that are not in drop down menu to populate
+      // alert user of invalid description
+      if (!optionStrings.includes(value)){
+        alertMsg = (value + " for " + dataLabel.replace("Description", "") + " notes is outdated. Please manually select "+ dataLabel.replace("Description","")+" notes.");
+        window.alert(alertMsg);
       }
+  }
+  // populate all other dataLabels with value given
+  if (!(value=="on") && !(value=="off") && !(value=="none")){
+    document.getElementById(dataLabel).value = value;
+  }
 }
-if (invalid == true){
-        var  alert = "";
-        for (issue in alertIssues){
-             alert += (alertIssues[issue] + "\r\n");
-        }
-        window.alert(alert);
-        }
-        return invalid;
 
-    }
-
-    function submit(){
-
-	if (!checkInvalidInputs()){
-         var itemsToSave = getItemsToSave();
-        var thisEntry = [];
-        var inputs = document.querySelectorAll('input[type=text]');
-
-        var numInputs = document.querySelectorAll('input[type=number]');
-
-        var categoryInputs = document.querySelectorAll('[name=category]');
-	thisEntry.push(categoryInputs[0].value);
-        var radioInputs = document.querySelectorAll('[type=radio]');
-
-        if (sessionStorage.category && (document.getElementById('category-check').checked)){
-        //instead of loading from session storage, load the value that is in the field currently
-            categoryInputs[0].value = sessionStorage.category;
-        }
-        else{
-            categoryInputs[0].value = '%';
-        }
-
-
-        for(var i = 0; i < 5; i++) {
-            thisEntry.push(inputs[i].value);
-
-            inputID = inputs[i].id;
-            //set vendor to thing in session storage
-
-            //finds fields with defined session storage to repopulate fields (based on id tags)
-            if (sessionStorage[inputID]) {
-                var vendorValue = sessionStorage.getItem(inputID);
-
-                if (document.getElementById(inputID + '-check').checked){
-
-                document.getElementById(inputID).value = vendorValue;
-                }
-                else{
-
-                    inputs[i].value = '';
-                    sessionStorage.removeItem(inputID);
-
-                }
-            }
-            else {
-                //if no session storage of input, clear field
-                inputs[i].value = '';
-            }
-        }
-	thisEntry.push(numInputs[0].value);
-
-	numInputs[0].value = '';
-	thisEntry.push(document.getElementById('local-true').checked);
-
-
-	thisEntry.push(document.getElementById('localDescription').value);
-
-	thisEntry.push(document.getElementById('fair-true').checked);
-
-
-        thisEntry.push(document.getElementById('fairDescription').value);
-
-	thisEntry.push(document.getElementById('ecological-true').checked);
-
-
-        thisEntry.push(document.getElementById('ecologicalDescription').value);
-
-	if (document.getElementById('humane-na').checked){
-
-		thisEntry.push('N/A');
-	}
-	else{
-		thisEntry.push(document.getElementById('humane-true').checked);
-	}
-	thisEntry.push(document.getElementById('humaneDescription').value);
-	thisEntry.push(document.getElementById('disqualifier-true').checked);
-
-
-        thisEntry.push(document.getElementById('disqualifierDescription').value);
-
-
-        console.log("This Entry", thisEntry);
-       // localStorage["foodData"] += "/" + JSON.stringify(thisEntry);
-        initializeEntrySession.push(thisEntry);
-        console.log("Entry Session", localStorage.getItem('entrySession'));
-        localStorage.setItem('entrySession', JSON.stringify(initializeEntrySession));
-        populateSavedItems(itemsToSave);
-} }
-
-
-
-    function populateItem(description, category,productCode, brand,vendor,local,localDescription, fair, fairDescription, ecological, ecologicalDescription, humane, humaneDescription, disqualifier,disqualfierDescription, notes){
-      console.log("Description Param:", description);
-      console.log("Category param:", category);
-       var item  = {"description": description, "category": category, "productCode": productCode, "brand":brand,"vendor":vendor, "local": local, "localDescription": localDescription, "fair": fair, "fairDescription": fairDescription, "ecological": ecological, "ecologicalDescription": ecologicalDescription, "humane": humane, "humaneDescription": humaneDescription, "disqualifier": disqualifier, "disqualifierDescription": disqualfierDescription, "notes":notes}
-	for (var data in item){
-           console.log("Data", data);
-           console.log("value", item[data]);
-           populateForm(data, item[data]);
-    }
-    }
-    function populateForm(dataLabel, row){
-
-        if (row=="False") {
-            document.getElementById(dataLabel+"-false").checked = true;
-            console.log("False thing");
-            row = "off";
-        }
-        if (row=="True") {
-            console.log("True thing");
-            document.getElementById(dataLabel+"-true").checked = true;
-            row = "on";
-        }
-        if (row=="None") {
-            document.getElementById(dataLabel+"-na").checked = true;
-            row = "none";
-        }
-        if (dataLabel.includes("Description")){
-           var optionValues = [];
-           var optionList = ('#'+dataLabel+' option');
-           $(optionList).each(function() {
-           optionValues.push($(this).val());
-           });
-           var optionStrings = [];
-           for (item in optionValues){
-               var lowerItem = optionValues[item].toLowerCase();
-               optionStrings.push(optionValues[item]);
-               if (row == lowerItem){
-                  document.getElementById(dataLabel).value = optionValues[item];
-                  return;
-               }
-
-        }
-        if (!optionStrings.includes(row)){
-               alertMsg = (row + " for " + dataLabel.replace("Description", "") + " notes is outdated. Please manually select "+ dataLabel.replace("Description","")+" notes.");
-               window.alert(alertMsg);
-      }
-      }
-      if (!(row=="on") && !(row=="off") && !(row=="none")){
-          document.getElementById(dataLabel).value = row;
-    }
-}
 function searchMatches(){
+  /*
+  Function to search for items that match fields in form 
+  Submits 'data-entry-form' for action on website.py
+  */
     var itemsToSave = getItemsToSave();
     $("#data-entry-form").submit();
     return false;
 }
 
 function getItemsToSave(){
-    itemsToSave = {}
-    $("input:checkbox:checked").each(function() {
-           item = ($(this).attr("name"));
-           itemName = item.slice(0, -5);
-           if (itemName == "real"){
-               var realNames = ["local","fair","ecological","humane","disqualifier"];
-               var saveReal = {};
-               for (real in realNames){
-                   console.log(realNames[real]+"-true");
-                   itemValue = document.getElementById(realNames[real]+"-true").checked;
-                   if (realNames[real]=="humane"){
-                       humaneNaValue = document.getElementById(realNames[real]+"-na").checked;
-                       saveReal[realNames[real]+"-na"]=humaneNaValue;
-                   }
-                   itemDescription = document.getElementById(realNames[real]+"Description").value;
-                   saveReal[realNames[real]]=itemValue;
-                   saveReal[realNames[real]+"Description"]=itemDescription;
-               }
-           itemsToSave[itemName] = saveReal;
-           }else{
-           itemValue = document.getElementById(itemName).value;
-           itemsToSave[itemName] = itemValue;
-          }
-    });    
-console.log("itemsToSave", JSON.stringify(itemsToSave));
-    localStorage.setItem('savedEntry', JSON.stringify(itemsToSave));
-    return itemsToSave;
-}
-function populateSavedItems(items){
-    for (key in items){
-        if (key == "real"){
-            for (realKey in items["real"]){
-               console.log("realKey", realKey, "key", key);
-               console.log("items[key][realKey]", items[key][realKey]);
-               if (!(realKey.includes("Description"))){ 
-                   if (realKey.includes("humane") || (realKey == "humane")){
-                      console.log("Inside Humane");
-                           document.getElementById("humane-na").checked = items[key]["humane-na"];
-            
-                      document.getElementById("humane-true").checked = items[key]["humane"];
-                     if (items[key]["humane"]==false && items[key]["humane-na"]==false){
-                      document.getElementById("humane-false").checked = true;
-               }else{
-                      document.getElementById("humane-false").checked = false;
-                      }
-               }
-               else{
-               
-               document.getElementById(realKey+"-true").checked = items[key][realKey];
-               document.getElementById(realKey+"-false").checked = !(items[key][realKey]);
-               
-             } }else{
-               document.getElementById(realKey).value = items[key][realKey];
-            }
-          }
-        }else{
-        document.getElementById(key).value = items[key];
-        console.log("Updated", key, " to ", items[key]);
+  /*
+  Function to save form fields' values that have the checkbox checked
+  Saves items to local storage 'savedEntry'
+  Returns items to save as dictionary with field/value as key/value pairs
+  */ 
+  itemsToSave = {}
+  // iterate through checkboxes and save associated value to itemsToSave
+  $("input:checkbox:checked").each(function() {
+    item = ($(this).attr("name"));
+    itemName = item.slice(0, -5);
+    // save all real qualifications and descriptions
+    if (itemName == "real"){
+      var realNames = ["local","fair","ecological","humane","disqualifier"];
+      var saveReal = {};
+      for (real in realNames){
+        itemValue = document.getElementById(realNames[real]+"-true").checked;
+        // save humane n/a value
+        if (realNames[real]=="humane"){
+          humaneNaValue = document.getElementById(realNames[real]+"-na").checked;
+          saveReal[realNames[real]+"-na"]=humaneNaValue;
         }
-        checkbox = (key+ "-check");
-        document.getElementById(checkbox).checked = true;
-}
+        itemDescription = document.getElementById(realNames[real]+"Description").value;
+        saveReal[realNames[real]]=itemValue;
+        saveReal[realNames[real]+"Description"]=itemDescription;
+      }
+      itemsToSave[itemName] = saveReal;
+    // save all other fields besides real to itemsToSave
+    } else{
+      itemValue = document.getElementById(itemName).value;
+      itemsToSave[itemName] = itemValue;
+    }
+  }); 
+  // save items to localStorage   
+  localStorage.setItem('savedEntry', JSON.stringify(itemsToSave));
+  return itemsToSave;
 }
 
+function populateSavedItems(items){
+  /*
+  Function to populate form with items saved through checkboxes
+  */
+  for (key in items){
+    if (key == "real"){
+      for (realKey in items["real"]){
+        if (!(realKey.includes("Description"))){ 
+          // choose between repopulating humane true, false, or n/a
+          if (realKey.includes("humane") || (realKey == "humane")){
+            document.getElementById("humane-na").checked = items[key]["humane-na"];
+            document.getElementById("humane-true").checked = items[key]["humane"];
+            if (items[key]["humane"]==false && items[key]["humane-na"]==false){
+              document.getElementById("humane-false").checked = true;
+            } else{
+              document.getElementById("humane-false").checked = false;
+            }
+          // repopulate real qualification as true or false accordingly
+          } else{
+            document.getElementById(realKey+"-true").checked = items[key][realKey];
+            document.getElementById(realKey+"-false").checked = !(items[key][realKey]);
+          } 
+        // repopulate real description with saved description
+        } else{
+          document.getElementById(realKey).value = items[key][realKey];
+        }
+      }
+    // repopulate any key/value pair in items to save that is not a real qualification
+    } else{
+      document.getElementById(key).value = items[key];
+    }
+    // maintain checkbox status as checked
+    checkbox = (key+ "-check");
+    document.getElementById(checkbox).checked = true;
+  }
+}
 </script>
 <script type="text/javascript" src="../static/example.js" defer></script>
-    </head>
+</head>
+
 <body class = "data_entry">
-    <h1>Carleton RFC</h1>
-    <!--<div class="topnav">
-      <nav>
-          <a id="home_btn" href="#">Home</a>
-          <a id="data_entry_btn" href="#">Data Entry</a>
-          <a id="entry_session_btn" href="#">Entry Session</a>
-          <a id="view_download_btn" href="#">View/Download Data</a>
-          <a id="visualization_btn" href="#">Visualization</a>
-      </nav>
-    </div> -->
-    <h2>Adding Items to Current Entry Session</h2>
-   <button id = "EScancel" class="button" onclick="go_to_entry_session();">Go To Entry Session</button>
-    <form action = "data_entry" method = "POST" id = "data-entry-form">
-      <fieldset class = "firstTwoCols">
-        <div class="col1">
-          <div>
-            <div class = "row1">
-              <label for="category">Category</label>
-              <input id="category-check" name="category-keep" type="checkbox">
-            </div>
-            <select id="category" name="category">
-              <option value="%">Choose a Category</option>
-              <option value="dairy">dairy</option>
-              <option value="baked">baked</option>
-              <option value="beverages">beverages</option>
-              <option value="eggs">eggs</option>
-              <option value="grocery">grocery</option>
-              <option value="meat">meat</option>
-              <option value="poultry">poultry</option>
-              <option value="produce">produce</option>
-              <option value="fish">fish</option>
-              <option value="teacoffee">tea or coffee</option>
-            </select>
-          </div>
-          <div class="col2">
-            <div class = "row1">
-              <label for="vendor">Vendor</label>
-              <input id="vendor-check" name="vendor-keep" type="checkbox">
-            </div>
-            <input id="vendor" name="vendor" type="text">
-          </div>
-          <div class="col2">
-            <div class = "row1">
-              <label for="brand">Label/Brand</label>
-              <input id="brand-check" name="brand-keep" type="checkbox">
-            </div>
-            <input id="brand" name="brand" type="text">
-          </div>
+  <h1>Carleton RFC</h1>
+  <h2>Adding Items to Current Entry Session</h2>
+  <button id = "EScancel" class="button" onclick="go_to_entry_session();">Go To Entry Session</button>
+  <form action = "data_entry" method = "POST" id = "data-entry-form">
+    <fieldset class = "firstTwoCols">
+      <div class="col1">
+        <div>
+        <div class = "row1">
+        <label for="category">Category</label>
+        <input id="category-check" name="category-keep" type="checkbox">
         </div>
-      </fieldset>
-      <fieldset >
-        <div class="col1">
-          <div class = "col2">
-            <div class = "row1">
-              <label for="description">Description</label>
-              <input id="description-check" name="description-keep" type="checkbox">
-            </div>
-            <input id="description" name="description" type="text" placeholder="one to two words">
+        <select id="category" name="category">
+          <option value="%">Choose a Category</option>
+          <option value="dairy">dairy</option>
+          <option value="baked">baked</option>
+          <option value="beverages">beverages</option>
+          <option value="eggs">eggs</option>
+          <option value="grocery">grocery</option>
+          <option value="meat">meat</option>
+          <option value="poultry">poultry</option>
+          <option value="produce">produce</option>
+          <option value="fish">fish</option>
+          <option value="teacoffee">tea or coffee</option>
+        </select>
+        </div>
+      <div class="col2">
+        <div class = "row1">
+          <label for="vendor">Vendor</label>
+          <input id="vendor-check" name="vendor-keep" type="checkbox">
+        </div>
+        <input id="vendor" name="vendor" type="text">
+      </div>
+      <div class="col2">
+        <div class = "row1">
+          <label for="brand">Label/Brand</label>
+          <input id="brand-check" name="brand-keep" type="checkbox">
+        </div>
+        <input id="brand" name="brand" type="text">
+      </div>
+      </div>
+    </fieldset>
+    <fieldset>
+      <div class="col1">
+        <div class = "col2">
+          <div class = "row1">
+            <label for="description">Description</label>
+            <input id="description-check" name="description-keep" type="checkbox">
           </div>
+          <input id="description" name="description" type="text" placeholder="one to two words">
+        </div>
           <div class = "col2">
             <div class = "row1">
               <label for="notes">Notes</label>
@@ -538,41 +498,39 @@ function populateSavedItems(items){
             </select>
           </div>
           <input class = "searchSubmit" id = "ESsubmit" type="submit" onclick="return searchMatches();" value="Search for Similar Items"/>
-        </div> <!-- TODO : added div here -->
+        </div> 
       </fieldset>
-      <!-- <input type="submit" onclick="return searchMatches();" value="Search for Similar Items"/> -->
-    </form>
-<button class = "searchSubmit" type="button" id="ESenter" onclick="submit()">Submit Item to Entry Session</button>
-
-    <h3>Past Entries</h3>
-    <table>
+  </form>
+  <button class = "searchSubmit" type="button" id="ESenter" onclick="submit()">Submit Item to Entry Session</button>
+  <h3>Past Entries</h3>
+  <table>
     <thead>
-	<tr>
-        <th></th>
-        <th>Year</th>
-        <th>Month</th>
-        <th>Description</th>
-        <th>Category</th>
-        <th>Product Code</th>
-        <th>Label/ Brand</th>
-        <th>Vendor</th>
-        <th>Local</th>
-        <th></th>
-        <th>Fair</th>
-        <th></th>
-        <th>Ecological</th>
-        <th></th>
-        <th>Humane</th>
-        <th></th>
-        <th>Disqualifier</th>
-        <th></th>
-        <th>Notes</th>
-        </tr>
-     </thead>
-     <tbody>
+    <tr>
+      <th></th>
+      <th>Year</th>
+      <th>Month</th>
+      <th>Description</th>
+      <th>Category</th>
+      <th>Product Code</th>
+      <th>Label/ Brand</th>
+      <th>Vendor</th>
+      <th>Local</th>
+      <th></th>
+      <th>Fair</th>
+      <th></th>
+      <th>Ecological</th>
+      <th></th>
+      <th>Humane</th>
+      <th></th>
+      <th>Disqualifier</th>
+      <th></th>
+      <th>Notes</th>
+    </tr>
+    </thead>
+    <tbody>
 	{% for item in result %}
-        <tr>
-        <td><button onclick="populateItem('{{item.description}}','{{item.category}}','{{item.productCode}}','{{item.brand}}','{{item.vendor}}','{{item.local}}','{{item.localDescription}}','{{item.fair}}','{{item.fairDescription}}','{{item.ecological}}','{{item.ecologicalDescription}}','{{item.humane}}','{{item.humaneDescription}}','{{item.disqualifier}}','{{item.disqualifierDescription}}','{{item.notes}}')">ADD</button></td>
+    <tr>
+    <td><button onclick="populateItem('{{item.description}}','{{item.category}}','{{item.productCode}}','{{item.brand}}','{{item.vendor}}','{{item.local}}','{{item.localDescription}}','{{item.fair}}','{{item.fairDescription}}','{{item.ecological}}','{{item.ecologicalDescription}}','{{item.humane}}','{{item.humaneDescription}}','{{item.disqualifier}}','{{item.disqualifierDescription}}','{{item.notes}}')">ADD</button></td>
     <td> {{item.year}} </td>
     <td> {{item.month}} </td>
     <td onclick="populateForm('description','{{item.description}}')"> {{item.description}} </td>
@@ -591,11 +549,9 @@ function populateSavedItems(items){
     <td onclick="populateForm('disqualifier','{{item.disqualifier}}')"> {{item.disqualifier}} </td>
     <td onclick="populateForm('disqualifierDescription','{{item.disqualifierDescription}}')"> {{item.disqualifierDescription}} </td>
     <td onclick="populateForm('notes','{{item.notes}}')"> {{item.notes}} </td>
-        </tr>
-{% endfor %}
+    </tr>
+  {% endfor %}
     </tbody>
-    </table>
-
+  </table>
 </body>
-
 </html>
