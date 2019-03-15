@@ -3178,13 +3178,13 @@ function minusLiv1() {
 
     // remove element from chart
     LivCharts[0].data.labels.splice(curr[0].length-1, 1)
-    LivCharts[0].data.datasets[0].splice(curr[0].length-1, 1)
-    LivCharts[0].data.datasets[1].splice(curr[0].length-1, 1)
+    LivCharts[0].data.datasets[0].data.splice(curr[0].length-1, 1)
+    LivCharts[0].data.datasets[1].data.splice(curr[0].length-1, 1)
     LivCharts[0].update()
 
     LivCharts[1].data.labels.splice(curr[0].length-1, 1)
-    LivCharts[1].data.datasets[0].splice(curr[0].length-1, 1)
-    LivCharts[1].data.datasets[1].splice(curr[0].length-1, 1)
+    LivCharts[1].data.datasets[0].data.splice(curr[0].length-1, 1)
+    LivCharts[1].data.datasets[1].data.splice(curr[0].length-1, 1)
     LivCharts[1].update()
 
     // add element to the not in chart list
@@ -3218,13 +3218,13 @@ function minusLiv2() {
 
     // remove element from chart
     LivCharts[2].data.labels.splice(curr[0].length-1, 1)
-    LivCharts[2].data.datasets[0].splice(curr[0].length-1, 1)
-    LivCharts[2].data.datasets[1].splice(curr[0].length-1, 1)
+    LivCharts[2].data.datasets[0].data.splice(curr[0].length-1, 1)
+    LivCharts[2].data.datasets[1].data.splice(curr[0].length-1, 1)
     LivCharts[2].update()
 
     LivCharts[3].data.labels.splice(curr[0].length-1, 1)
-    LivCharts[3].data.datasets[0].splice(curr[0].length-1, 1)
-    LivCharts[3].data.datasets[1].splice(curr[0].length-1, 1)
+    LivCharts[3].data.datasets[0].data.splice(curr[0].length-1, 1)
+    LivCharts[3].data.datasets[1].data.splice(curr[0].length-1, 1)
     LivCharts[3].update()
 
     // add element to the not in chart list
