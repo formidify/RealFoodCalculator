@@ -3171,19 +3171,79 @@ function addLivLabel() {
 
 // the below 4 functions control the number of items to show on the 2 sets of distributional charts
 function minusLiv1() {
+  curr = JSON.parse(sessionStorage.currLiv1)
+  if (curr[0].length > 0) {
+    $("#showLiv1").html(parseInt($("#showLiv1").html()) - 1)
+    not = JSON.parse(sessionStorage.notLiv1)
 
+    // remove element from chart
+    LivCharts[0].data.labels.splice(curr[0].length-1, 1)
+    LivCharts[0].data.datasets[0].splice(curr[0].length-1, 1)
+    LivCharts[0].data.datasets[1].splice(curr[0].length-1, 1)
+
+    LivCharts[1].data.labels.splice(curr[0].length-1, 1)
+    LivCharts[1].data.datasets[0].splice(curr[0].length-1, 1)
+    LivCharts[1].data.datasets[1].splice(curr[0].length-1, 1)
+
+    // add element to the not in chart list
+    not[0].splice(0, 0, curr[0][curr[0].length-1])
+    not[1].splice(0, 0, curr[1][curr[1].length-1])
+    not[2].splice(0, 0, curr[2][curr[2].length-1])
+
+    // remove last element from curr data list
+    curr[0].splice(curr[0].length-1, 1)
+    curr[1].splice(curr[0].length-1, 1)
+    curr[2].splice(curr[0].length-1, 1)
+
+    sessionStorage.setItem("currLiv1", JSON.stringify(curr))
+    sessionStorage.setItem("notLiv1", JSON.stringify(not))
+  }
 }
 
 function addLiv1() {
-
+  not = JSON.parse(sessionStorage.notLiv1)
+  if (not[0].length > 0) {
+    $("#showLiv1").html(parseInt($("#showLiv1").html()) + 1)
+    curr = JSON.parse(sessionStorage.currLiv1)
+  }
 }
 
 function minusLiv2() {
+  curr = JSON.parse(sessionStorage.currLiv2)
+  if (curr[0].length > 0) {
+    $("#showLiv2").html(parseInt($("#showLiv2").html()) - 1)
+    not = JSON.parse(sessionStorage.notLiv2)
 
+    // remove element from chart
+    LivCharts[2].data.labels.splice(curr[0].length-1, 1)
+    LivCharts[2].data.datasets[0].splice(curr[0].length-1, 1)
+    LivCharts[2].data.datasets[1].splice(curr[0].length-1, 1)
+
+    LivCharts[3].data.labels.splice(curr[0].length-1, 1)
+    LivCharts[3].data.datasets[0].splice(curr[0].length-1, 1)
+    LivCharts[3].data.datasets[1].splice(curr[0].length-1, 1)
+
+    // add element to the not in chart list
+    not[0].splice(0, 0, curr[0][curr[0].length-1])
+    not[1].splice(0, 0, curr[1][curr[1].length-1])
+    not[2].splice(0, 0, curr[2][curr[2].length-1])
+
+    // remove last element from curr data list
+    curr[0].splice(curr[0].length-1, 1)
+    curr[1].splice(curr[0].length-1, 1)
+    curr[2].splice(curr[0].length-1, 1)
+
+    sessionStorage.setItem("currLiv2", JSON.stringify(curr))
+    sessionStorage.setItem("notLiv2", JSON.stringify(not))
+  }
 }
 
 function addLiv2() {
-
+  not = JSON.parse(sessionStorage.notLiv2)
+  if (not[0].length > 0) {
+    $("#showLiv2").html(parseInt($("#showLiv2").html()) + 1)
+    curr = JSON.parse(sessionStorage.currLiv2)
+  }
 }
 </script>
 
