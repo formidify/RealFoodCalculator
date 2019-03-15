@@ -2602,6 +2602,13 @@ sessionStorage.setItem("itemsLivSearch", JSON.stringify([]));
 sessionStorage.setItem("vendorSearch", JSON.stringify([]));
 sessionStorage.setItem("labelSearch", JSON.stringify([]));
 
+// data that are shown and not shown in a plot (by real and non-real)
+// each list contains 3 separate lists: label, real data, nonreal data, with the same lengths
+sessionStorage.setItem("currLiv1", JSON.stringify([]));
+sessionStorage.setItem("notLiv1", JSON.stringify([]));
+sessionStorage.setItem("currLiv2", JSON.stringify([]));
+sessionStorage.setItem("notLiv2", JSON.stringify([]));
+
 // initiate tables
 var table1;
 var table2;
@@ -2901,15 +2908,12 @@ function addLivItem() {
     datasets1 = {}
     datasets2 = {}
 
+    // labels for the data
+    l_label = results['label_brand']
+    l_vendor = results['vendor']
 
     dr = results['label_brand real']
     dn = results['label_brand nonreal']
-
-    dr = dr[0].map((col, i) => dr.map(row => row[i]));
-    dn = dn[0].map((col, i) => dn.map(row => row[i]));
-
-    l_label = results['label_brand']
-    l_vendor = results['vendor']
 
     // replace empty string with NA
     for (i = 0; i < l_label.length; i++) {
@@ -2924,33 +2928,54 @@ function addLivItem() {
       }
     }
 
-    console.log(l_label)
-    console.log(l_vendor)
-    // plot by year and by all, and insert data into the datatables
-    plotByYear("label/brand", y, dr.slice(0, 3), dn.slice(0,3), l_label, 0, 0);
-    plotByAll("label/brand", y, dr[3], dn[3], l_label, 1, 1);
+    // make sure it shows at most 5 items on the chart at most
+    num_items1 = Math.min(5, dr.length)
+    sessionStorage.setItem("currLiv1", JSON.stringify([l_label.slice(0, num_items1), dr.slice(0, num_items1), dn.slice(0, num_items1)]))
+    sessionStorage.setItem("notLiv1", JSON.stringify([l_label.slice(num_items1, dr.length), dr.slice(num_items1, dr.length), dn.slice(num_items1, dr.length)]))
 
+    // fill in the datatables
+    for (i = 0; i < l_label.length; i++) {
+      table1.row.add([l_label[i], "real", dr[i][0], dr[i][1], dr[i][2], dr[i][3]]).draw(false)
+      table1.row.add([l_label[i], "nonreal", dn[i][0], dn[i][1], dn[i][2], dn[i][3]]).draw(false)
+    }
+
+    // filter dataframes and transpose datalists
+    dr = dr.slice(0, num_items1)
+    dn = dn.slice(0, num_items1)
+    dr = dr[0].map((col, i) => dr.map(row => row[i]));
+    dn = dn[0].map((col, i) => dn.map(row => row[i]));
+
+    // plot by year and by all, and insert data into the datatables
+    plotByYear("label/brand", y, dr.slice(0, 3), dn.slice(0,3), l_label.slice(0, num_items1), 0, 0);
+    plotByAll("label/brand", y, dr[3], dn[3], l_label.slice(0, num_items1), 1, 1);
+
+
+    // perform the same procedures for the second distributional chart as well
     vr = results['vendor real']
     vn = results['vendor nonreal']
 
+    num_items2 = Math.min(5, vr.length)
+    sessionStorage.setItem("currLiv2", JSON.stringify([l_vendor.slice(0, num_items2), vr.slice(0, num_items2), vn.slice(0, num_items2)]))
+    sessionStorage.setItem("notLiv2", JSON.stringify([l_vendor.slice(num_items2, vr.length), vr.slice(num_items2, vr.length), vn.slice(num_items2, vr.length)]))
+
+    // fill in the datatables
+    for (i = 0; i < l_vendor.length; i++) {
+      table2.row.add([l_vendor[i], "real", vr[i][0], vr[i][1], vr[i][2], vr[i][3]]).draw(false)
+      table2.row.add([l_vendor[i], "nonreal", vn[i][0], vn[i][1], vn[i][2], vn[i][3]]).draw(false)
+    }
+
+    vr = vr.slice(0, num_items2)
+    vn = vn.slice(0, num_items2)
     vr = vr[0].map((col, i) => vr.map(row => row[i]));
     vn = vn[0].map((col, i) => vn.map(row => row[i]));
 
-    plotByYear("vendor", y, vr.slice(0, 3), vn.slice(0,3), l_vendor, 2, 2);
-    plotByAll("vendor", y, vr[3], vn[3], l_vendor, 3, 3);
+    plotByYear("vendor", y, vr.slice(0, 3), vn.slice(0,3), l_vendor.slice(0, num_items2), 2, 2);
+    plotByAll("vendor", y, vr[3], vn[3], l_vendor.slice(0, num_items2), 3, 3);
 
-    console.log(l_label)
-    console.log(l_vendor)
-    for (i = 0; i < l_label.length; i++) {
-      table1.row.add([l_label[i], "real", dr[0][i], dr[1][i], dr[2][i], dr[3][i]]).draw(false)
-      table1.row.add([l_label[i], "nonreal", dn[0][i], dn[1][i], dn[2][i], dn[3][i]]).draw(false)
-    }
-
-    for (i = 0; i < l_vendor.length; i++) {
-      table2.row.add([l_vendor[i], "real", vr[0][i], vr[1][i], vr[2][i], vr[3][i]]).draw(false)
-      table2.row.add([l_vendor[i], "nonreal", vn[0][i], vn[1][i], vn[2][i], vn[3][i]]).draw(false)
-    }
-
+    $("#showLiv1").html(num_items1)
+    $("#allLiv1").html(l_label.length)
+    $("#showLiv2").html(num_items2)
+    $("#allLiv2").html(l_vendor.length)
   })
 }
 
@@ -2980,12 +3005,6 @@ function addLivVendor() {
     var head_item = table2.columns(0).header();
     $(head_item).html("Items");
 
-    dr = results['label_brand real']
-    dn = results['label_brand nonreal']
-
-    dr = dr[0].map((col, i) => dr.map(row => row[i]));
-    dn = dn[0].map((col, i) => dn.map(row => row[i]));
-
     l_label = results['label_brand']
     l_items = results['description']
 
@@ -3002,28 +3021,55 @@ function addLivVendor() {
       }
     }
 
-    plotByYear("label/brand", y, dr.slice(0, 3), dn.slice(0,3), l_label, 0, 0);
-    plotByAll("label/brand", y, dr[3], dn[3], l_label, 1, 1);
+    dr = results['label_brand real']
+    dn = results['label_brand nonreal']
 
+    // make sure it shows at most 5 items on the chart at most
+    num_items1 = Math.min(5, dr.length)
+    sessionStorage.setItem("currLiv1", JSON.stringify([l_label.slice(0, num_items1), dr.slice(0, num_items1), dn.slice(0, num_items1)]))
+    sessionStorage.setItem("notLiv1", JSON.stringify([l_label.slice(num_items1, dr.length), dr.slice(num_items1, dr.length), dn.slice(num_items1, dr.length)]))
+
+    // fill in the datatables
+    for (i = 0; i < l_label.length; i++) {
+      table1.row.add([l_label[i], "real", dr[i][0], dr[i][1], dr[i][2], dr[i][3]]).draw(false)
+      table1.row.add([l_label[i], "nonreal", dn[i][0], dn[i][1], dn[i][2], dn[i][3]]).draw(false)
+    }
+
+    // filter dataframes and transpose datalists
+    dr = dr.slice(0, num_items1)
+    dn = dn.slice(0, num_items1)
+    dr = dr[0].map((col, i) => dr.map(row => row[i]));
+    dn = dn[0].map((col, i) => dn.map(row => row[i]));
+
+    plotByYear("label/brand", y, dr.slice(0, 3), dn.slice(0,3), l_label.slice(0, num_items1), 0, 0);
+    plotByAll("label/brand", y, dr[3], dn[3], l_label.slice(0, num_items1), 1, 1);
+
+    // do it for the items' distribution now
     vr = results['description real']
     vn = results['description nonreal']
 
+    num_items2 = Math.min(5, vr.length)
+    sessionStorage.setItem("currLiv2", JSON.stringify([l_items.slice(0, num_items2), vr.slice(0, num_items2), vn.slice(0, num_items2)]))
+    sessionStorage.setItem("notLiv2", JSON.stringify([l_items.slice(num_items2, vr.length), vr.slice(num_items2, vr.length), vn.slice(num_items2, vr.length)]))
+
+    // fill in the datatables
+    for (i = 0; i < l_items.length; i++) {
+      table2.row.add([l_items[i], "real", vr[i][0], vr[i][1], vr[i][2], vr[i][3]]).draw(false)
+      table2.row.add([l_items[i], "nonreal", vn[i][0], vn[i][1], vn[i][2], vn[i][3]]).draw(false)
+    }
+
+    vr = vr.slice(0, num_items2)
+    vn = vn.slice(0, num_items2)
     vr = vr[0].map((col, i) => vr.map(row => row[i]));
     vn = vn[0].map((col, i) => vn.map(row => row[i]));
 
-    plotByYear("items", y, vr.slice(0, 3), vn.slice(0,3), l_items, 2, 2);
-    plotByAll("items", y, vr[3], vn[3], l_items, 3, 3);
+    plotByYear("items", y, vr.slice(0, 3), vn.slice(0,3), l_items.slice(0, num_items2), 2, 2);
+    plotByAll("items", y, vr[3], vn[3], l_items.slice(0, num_items2), 3, 3);
 
-    for (i = 0; i < l_label.length; i++) {
-      table1.row.add([l_label[i], "real", dr[0][i], dr[1][i], dr[2][i], dr[3][i]]).draw(false)
-      table1.row.add([l_label[i], "nonreal", dn[0][i], dn[1][i], dn[2][i], dn[3][i]]).draw(false)
-    }
-
-    for (i = 0; i < l_items.length; i++) {
-      table2.row.add([l_items[i], "real", vr[0][i], vr[1][i], vr[2][i], vr[3][i]]).draw(false)
-      table2.row.add([l_items[i], "nonreal", vn[0][i], vn[1][i], vn[2][i], vn[3][i]]).draw(false)
-    }
-
+    $("#showLiv1").html(num_items1)
+    $("#allLiv1").html(l_label.length)
+    $("#showLiv2").html(num_items2)
+    $("#allLiv2").html(l_items.length)
   })
 }
   
@@ -3054,12 +3100,6 @@ function addLivLabel() {
     var head_item = table2.columns(0).header();
     $(head_item).html("Vendor");
 
-    dr = results['description real']
-    dn = results['description nonreal']
-
-    dr = dr[0].map((col, i) => dr.map(row => row[i]));
-    dn = dn[0].map((col, i) => dn.map(row => row[i]));
-
     l_items = results['description']
     l_vendor = results['vendor']
 
@@ -3076,27 +3116,56 @@ function addLivLabel() {
       }
     }
 
-    plotByYear("items", y, dr.slice(0, 3), dn.slice(0,3), l_items, 0, 0);
-    plotByAll("items", y, dr[3], dn[3], l_items, 1, 1);
+    dr = results['description real']
+    dn = results['description nonreal']
+
+    // make sure it shows at most 5 items on the chart at most
+    num_items1 = Math.min(5, dr.length)
+    sessionStorage.setItem("currLiv1", JSON.stringify([l_label.slice(0, num_items1), dr.slice(0, num_items1), dn.slice(0, num_items1)]))
+    sessionStorage.setItem("notLiv1", JSON.stringify([l_label.slice(num_items1, dr.length), dr.slice(num_items1, dr.length), dn.slice(num_items1, dr.length)]))
+
+    // fill in the datatables
+    for (i = 0; i < l_items.slice(0, num_items1).length; i++) {
+      table1.row.add([l_items[i], "real", dr[i][0], dr[i][1], dr[i][2], dr[i][3]]).draw(false)
+      table1.row.add([l_items[i], "nonreal", dn[i][0], dn[i][1], dn[i][2], dn[i][3]]).draw(false)
+    }
+
+    // filter dataframes and transpose datalists
+    dr = dr.slice(0, num_items1)
+    dn = dn.slice(0, num_items1)
+    dr = dr[0].map((col, i) => dr.map(row => row[i]));
+    dn = dn[0].map((col, i) => dn.map(row => row[i]));
+
+
+    plotByYear("items", y, dr.slice(0, 3), dn.slice(0,3), l_items.slice(0, num_items1), 0, 0);
+    plotByAll("items", y, dr[3], dn[3], l_items.slice(0, num_items1), 1, 1);
 
     vr = results['vendor real']
     vn = results['vendor nonreal']
 
+    num_items2 = Math.min(5, vr.length)
+    sessionStorage.setItem("currLiv2", JSON.stringify([l_vendor.slice(0, num_items2), vr.slice(0, num_items2), vn.slice(0, num_items2)]))
+    sessionStorage.setItem("notLiv2", JSON.stringify([l_vendor.slice(num_items2, vr.length), vr.slice(num_items2, vr.length), vn.slice(num_items2, vr.length)]))
+
+    // fill in the datatables
+    for (i = 0; i < l_vendor.length; i++) {
+      table2.row.add([l_vendor[i], "real", vr[i][0], vr[i][1], vr[i][2], vr[i][3]]).draw(false)
+      table2.row.add([l_vendor[i], "nonreal", vn[i][0], vn[i][1], vn[i][2], vn[i][3]]).draw(false)
+    }
+
+    vr = vr.slice(0, num_items2)
+    vn = vn.slice(0, num_items2)
     vr = vr[0].map((col, i) => vr.map(row => row[i]));
     vn = vn[0].map((col, i) => vn.map(row => row[i]));
 
-    plotByYear("vendor", y, vr.slice(0, 3), vn.slice(0,3), l_vendor, 2, 2);
-    plotByAll("vendor", y, vr[3], vn[3], l_vendor, 3, 3);
+    plotByYear("vendor", y, vr.slice(0, 3), vn.slice(0,3), l_vendor.slice(0, num_items2), 2, 2);
+    plotByAll("vendor", y, vr[3], vn[3], l_vendor.slice(0, num_items2), 3, 3);
 
-    for (i = 0; i < l_items.length; i++) {
-      table1.row.add([l_items[i], "real", dr[0][i], dr[1][i], dr[2][i], dr[3][i]]).draw(false)
-      table1.row.add([l_items[i], "nonreal", dn[0][i], dn[1][i], dn[2][i], dn[3][i]]).draw(false)
-    }
+    $("#showLiv1").html(num_items1)
+    $("#allLiv1").html(l_items.length)
+    $("#showLiv2").html(num_items2)
+    $("#allLiv2").html(l_vendor.length)
 
-    for (i = 0; i < l_vendor.length; i++) {
-      table2.row.add([l_vendor[i], "real", vr[0][i], vr[1][i], vr[2][i], vr[3][i]]).draw(false)
-      table2.row.add([l_vendor[i], "nonreal", vn[0][i], vn[1][i], vn[2][i], vn[3][i]]).draw(false)
-    }
   })
 }
 
