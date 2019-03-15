@@ -2927,11 +2927,12 @@ function addLivItem() {
         l_vendor[i] = "NA"
       }
     }
-
+    console.log(dr)
+    console.log(dn)
     // make sure it shows at most 5 items on the chart at most
     num_items1 = Math.min(5, dr.length)
     sessionStorage.setItem("currLiv1", JSON.stringify([l_label.slice(0, num_items1), dr.slice(0, num_items1), dn.slice(0, num_items1)]))
-    sessionStorage.setItem("notLiv1", JSON.stringify([l_label.slice(num_items1, dr.length), dr.slice(num_items1, dr.length), dn.slice(num_items1, dr.length)]))
+    sessionStorage.setItem("notLiv1", JSON.stringify([l_label.slice(num_items1, l_label.length), dr.slice(num_items1, dr.length), dn.slice(num_items1, dn.length)]))
 
     // fill in the datatables
     for (i = 0; i < l_label.length; i++) {
@@ -3121,8 +3122,8 @@ function addLivLabel() {
 
     // make sure it shows at most 5 items on the chart at most
     num_items1 = Math.min(5, dr.length)
-    sessionStorage.setItem("currLiv1", JSON.stringify([l_label.slice(0, num_items1), dr.slice(0, num_items1), dn.slice(0, num_items1)]))
-    sessionStorage.setItem("notLiv1", JSON.stringify([l_label.slice(num_items1, dr.length), dr.slice(num_items1, dr.length), dn.slice(num_items1, dr.length)]))
+    sessionStorage.setItem("currLiv1", JSON.stringify([l_items.slice(0, num_items1), dr.slice(0, num_items1), dn.slice(0, num_items1)]))
+    sessionStorage.setItem("notLiv1", JSON.stringify([l_items.slice(num_items1, dr.length), dr.slice(num_items1, dr.length), dn.slice(num_items1, dr.length)]))
 
     // fill in the datatables
     for (i = 0; i < l_items.length; i++) {
