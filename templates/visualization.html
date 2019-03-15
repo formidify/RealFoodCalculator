@@ -3199,6 +3199,9 @@ function minusLiv1() {
     curr[1].splice(curr[0].length-1, 1)
     curr[2].splice(curr[0].length-1, 1)
 
+        console.log(curr)
+    console.log(not)
+
     sessionStorage.setItem("currLiv1", JSON.stringify(curr))
     sessionStorage.setItem("notLiv1", JSON.stringify(not))
   }
@@ -3233,6 +3236,9 @@ function addLiv1() {
     not[1].splice(0, 1)
     not[2].splice(0, 1)
 
+        console.log(curr)
+    console.log(not)
+
     sessionStorage.setItem("currLiv1", JSON.stringify(curr))
     sessionStorage.setItem("notLiv1", JSON.stringify(not))
   }
@@ -3265,6 +3271,9 @@ function minusLiv2() {
     curr[0].splice(curr[0].length-1, 1)
     curr[1].splice(curr[1].length-1, 1)
     curr[2].splice(curr[2].length-1, 1)
+
+        console.log(curr)
+    console.log(not)
 
     sessionStorage.setItem("currLiv2", JSON.stringify(curr))
     sessionStorage.setItem("notLiv2", JSON.stringify(not))
@@ -3299,6 +3308,9 @@ function addLiv2() {
     not[0].splice(0, 1)
     not[1].splice(0, 1)
     not[2].splice(0, 1)
+
+    console.log(curr)
+    console.log(not)
 
     sessionStorage.setItem("currLiv2", JSON.stringify(curr))
     sessionStorage.setItem("notLiv2", JSON.stringify(not))
