@@ -2474,10 +2474,10 @@ OR
     <canvas id="livChart1" style="display: block; height: 60px; width: 50%;"></canvas>
     <canvas id="livChart2" style="display: block; height: 60px; width: 50%;"></canvas>
 
-    <table id="liv_table1" class="display" style = "display: inline-block;">
+    <table id="liv_table1" class="display" style = "display: inline-block; width: 45%">
     <thead>
       <tr>
-        <th>Item</th>
+        <th>Variable</th>
         <th>Type</th>
         <th>Year 1</th>
         <th>Year 2</th>
@@ -2505,10 +2505,10 @@ OR
     <canvas id="livChart3" style="display: block; height: 60px; width: 50%;"></canvas>
     <canvas id="livChart4" style="display: block; height: 60px; width: 50%;"></canvas>
 
-    <table id="liv_table2" class="display" style = "display: inline-block;">
+    <table id="liv_table2" class="display" style = "display: inline-block; width: 45%">
     <thead>
       <tr>
-        <th>Item</th>
+        <th>Variable</th>
         <th>Type</th>
         <th>Year 1</th>
         <th>Year 2</th>
@@ -2881,6 +2881,11 @@ function addLivItem() {
     yrs = results.yrs
 
     updateLivColumn(yrs);
+    var head_item = table1.columns(0).header();
+    $(head_item).html("label");
+
+    var head_item = table2.columns(0).header();
+    $(head_item).html("vendor");
 
     data_label_year = {}
     data_label_all = {}
@@ -2919,6 +2924,8 @@ function addLivItem() {
       }
     }
 
+    console.log(l_label)
+    console.log(l_vendor)
     // plot by year and by all, and insert data into the datatables
     plotByYear("label/brand", y, dr.slice(0, 3), dn.slice(0,3), l_label, 0, 0);
     plotByAll("label/brand", y, dr[3], dn[3], l_label, 1, 1);
@@ -2932,6 +2939,8 @@ function addLivItem() {
     plotByYear("vendor", y, vr.slice(0, 3), vn.slice(0,3), l_vendor, 2, 2);
     plotByAll("vendor", y, vr[3], vn[3], l_vendor, 3, 3);
 
+    console.log(l_label)
+    console.log(l_vendor)
     for (i = 0; i < l_label.length; i++) {
       table1.row.add([l_label[i], "real", dr[0][i], dr[1][i], dr[2][i], dr[3][i]])
       table1.row.add([l_label[i], "nonreal", dn[0][i], dn[1][i], dn[2][i], dn[3][i]])
@@ -2964,6 +2973,12 @@ function addLivVendor() {
     yrs = results.yrs
 
     updateLivColumn(yrs);
+
+    var head_item = table1.columns(0).header();
+    $(head_item).html("label");
+
+    var head_item = table2.columns(0).header();
+    $(head_item).html("items");
 
     dr = results['label_brand real']
     dn = results['label_brand nonreal']
@@ -3032,6 +3047,12 @@ function addLivLabel() {
     yrs = results.yrs
 
     updateLivColumn(yrs);
+
+    var head_item = table1.columns(0).header();
+    $(head_item).html("items");
+
+    var head_item = table2.columns(0).header();
+    $(head_item).html("vendor");
 
     dr = results['description real']
     dn = results['description nonreal']
