@@ -3213,8 +3213,8 @@ function addLiv1() {
     // add element to chart by year
     LivCharts[0].data.labels.splice(curr[0].length, 0, not[0][0])
     for (i = 0; i < 3; i++) {
-      LivCharts[0].data.datasets[0].data.splice(curr[0].length, 0, not[1][0][i])
-      LivCharts[0].data.datasets[1].data.splice(curr[0].length, 0, not[2][0][i])
+      LivCharts[0].data.datasets[2*i].data.splice(curr[0].length, 0, not[1][0][i])
+      LivCharts[0].data.datasets[2*i+1].data.splice(curr[0].length, 0, not[2][0][i])
     }
     LivCharts[0].update()
 
@@ -3280,8 +3280,8 @@ function addLiv2() {
     // add element to chart
     LivCharts[2].data.labels.splice(curr[0].length, 0, not[0][0])
     for (i = 0; i < 3; i++) {
-      LivCharts[2].data.datasets[0].data.splice(curr[0].length, 0, not[1][0][i])
-      LivCharts[2].data.datasets[1].data.splice(curr[0].length, 0, not[2][0][i])
+      LivCharts[2].data.datasets[2*i].data.splice(curr[0].length, 0, not[1][0][i])
+      LivCharts[2].data.datasets[2*i+1].data.splice(curr[0].length, 0, not[2][0][i])
     }
     LivCharts[2].update()
 
