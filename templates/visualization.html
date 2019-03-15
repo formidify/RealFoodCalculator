@@ -520,7 +520,7 @@ c.done(function(results) {
     // add option for all categories
     $("select#categoriesPercent").append( $("<option>")
     .val("all")
-    .html("all")
+    .html("all"));
 });
 
 // get most recent years
@@ -1213,7 +1213,7 @@ c.done(function(results) {
   }
   $("select#categoriesMixed").append( $("<option>")
     .val("all")
-    .html("all")
+    .html("all"));
 });
 
 yrs = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/recent_years");
@@ -1911,7 +1911,7 @@ c.done(function(results) {
   }
   $("select#categoriesTime").append( $("<option>")
     .val("all")
-    .html("all")
+    .html("all"));
 });
 
 sessionStorage.setItem("currentTimeCat", "") // current investigated category
