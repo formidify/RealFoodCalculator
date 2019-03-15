@@ -2882,10 +2882,10 @@ function addLivItem() {
 
     updateLivColumn(yrs);
     var head_item = table1.columns(0).header();
-    $(head_item).html("label");
+    $(head_item).html("Label");
 
     var head_item = table2.columns(0).header();
-    $(head_item).html("vendor");
+    $(head_item).html("Vendor");
 
     data_label_year = {}
     data_label_all = {}
@@ -2942,13 +2942,13 @@ function addLivItem() {
     console.log(l_label)
     console.log(l_vendor)
     for (i = 0; i < l_label.length; i++) {
-      table1.row.add([l_label[i], "real", dr[0][i], dr[1][i], dr[2][i], dr[3][i]])
-      table1.row.add([l_label[i], "nonreal", dn[0][i], dn[1][i], dn[2][i], dn[3][i]])
+      table1.row.add([l_label[i], "real", dr[0][i], dr[1][i], dr[2][i], dr[3][i]]).draw(false)
+      table1.row.add([l_label[i], "nonreal", dn[0][i], dn[1][i], dn[2][i], dn[3][i]]).draw(false)
     }
 
     for (i = 0; i < l_vendor.length; i++) {
-      table2.row.add([l_vendor[i], "real", vr[0][i], vr[1][i], vr[2][i], vr[3][i]])
-      table2.row.add([l_vendor[i], "nonreal", vn[0][i], vn[1][i], vn[2][i], vn[3][i]])
+      table2.row.add([l_vendor[i], "real", vr[0][i], vr[1][i], vr[2][i], vr[3][i]]).draw(false)
+      table2.row.add([l_vendor[i], "nonreal", vn[0][i], vn[1][i], vn[2][i], vn[3][i]]).draw(false)
     }
 
   })
@@ -2975,10 +2975,10 @@ function addLivVendor() {
     updateLivColumn(yrs);
 
     var head_item = table1.columns(0).header();
-    $(head_item).html("label");
+    $(head_item).html("Label");
 
     var head_item = table2.columns(0).header();
-    $(head_item).html("items");
+    $(head_item).html("Items");
 
     dr = results['label_brand real']
     dn = results['label_brand nonreal']
@@ -3015,13 +3015,13 @@ function addLivVendor() {
     plotByAll("items", y, vr[3], vn[3], l_items, 3, 3);
 
     for (i = 0; i < l_label.length; i++) {
-      table1.row.add([l_label[i], "real", dr[0][i], dr[1][i], dr[2][i], dr[3][i]])
-      table1.row.add([l_label[i], "nonreal", dn[0][i], dn[1][i], dn[2][i], dn[3][i]])
+      table1.row.add([l_label[i], "real", dr[0][i], dr[1][i], dr[2][i], dr[3][i]]).draw(false)
+      table1.row.add([l_label[i], "nonreal", dn[0][i], dn[1][i], dn[2][i], dn[3][i]]).draw(false)
     }
 
     for (i = 0; i < l_items.length; i++) {
-      table2.row.add([l_items[i], "real", vr[0][i], vr[1][i], vr[2][i], vr[3][i]])
-      table2.row.add([l_items[i], "nonreal", vn[0][i], vn[1][i], vn[2][i], vn[3][i]])
+      table2.row.add([l_items[i], "real", vr[0][i], vr[1][i], vr[2][i], vr[3][i]]).draw(false)
+      table2.row.add([l_items[i], "nonreal", vn[0][i], vn[1][i], vn[2][i], vn[3][i]]).draw(false)
     }
 
   })
@@ -3049,10 +3049,10 @@ function addLivLabel() {
     updateLivColumn(yrs);
 
     var head_item = table1.columns(0).header();
-    $(head_item).html("items");
+    $(head_item).html("Items");
 
     var head_item = table2.columns(0).header();
-    $(head_item).html("vendor");
+    $(head_item).html("Vendor");
 
     dr = results['description real']
     dn = results['description nonreal']
@@ -3089,13 +3089,13 @@ function addLivLabel() {
     plotByAll("vendor", y, vr[3], vn[3], l_vendor, 3, 3);
 
     for (i = 0; i < l_items.length; i++) {
-      table1.row.add([l_items[i], "real", dr[0][i], dr[1][i], dr[2][i], dr[3][i]])
-      table1.row.add([l_items[i], "nonreal", dn[0][i], dn[1][i], dn[2][i], dn[3][i]])
+      table1.row.add([l_items[i], "real", dr[0][i], dr[1][i], dr[2][i], dr[3][i]]).draw(false)
+      table1.row.add([l_items[i], "nonreal", dn[0][i], dn[1][i], dn[2][i], dn[3][i]]).draw(false)
     }
 
     for (i = 0; i < l_vendor.length; i++) {
-      table2.row.add([l_vendor[i], "real", vr[0][i], vr[1][i], vr[2][i], vr[3][i]])
-      table2.row.add([l_vendor[i], "nonreal", vn[0][i], vn[1][i], vn[2][i], vn[3][i]])
+      table2.row.add([l_vendor[i], "real", vr[0][i], vr[1][i], vr[2][i], vr[3][i]]).draw(false)
+      table2.row.add([l_vendor[i], "nonreal", vn[0][i], vn[1][i], vn[2][i], vn[3][i]]).draw(false)
     }
   })
 }
