@@ -22,25 +22,25 @@ import requests
 
 app = flask.Flask(__name__, static_folder='static', template_folder='templates')
 
-@app.route('/')
 """
 Render html for the home page
 """
+@app.route('/')
 def homepage():
     return render_template('home.html')
 
-@app.route('/login')
 """
 Render html for the login page
 """
+@app.route('/login')
 def login():
     return render_template("login.html")
 
-@app.route('/entry_session', methods=['POST','GET'])
 """
 Render html for the entry session page
 If 'entry-session-form' in entry_session.html is submitted, generate api url to insert items into database.  
 """
+@app.route('/entry_session', methods=['POST','GET'])
 def entrySession():
     labels = ['category','vendor', 'brand','description','notes','productCode', 'cost','local','localDescription', 'fair', 'fairDescription','ecological','ecologicalDescription','humane','humaneDescription','disqualifier','disqualifierDescription']
     api_url = 'http://cmc307-06.mathcs.carleton.edu:5001/add_entry?'
@@ -77,12 +77,12 @@ def entrySession():
                      r = requests.get(api_url_item)
     return render_template('entry_session.html')
 
-@app.route('/data_entry', methods = ['POST', 'GET'])
 """
 Render html for data entry page (this route can only be accessed through entry session)
 If 'data-entry-form' in data_entry.html is submitted, generate api url to search for similar items. 
 Retrieve and display results of api call.  
 """
+@app.route('/data_entry', methods = ['POST', 'GET'])
 def result():
     result =[{}]
     api_url = 'http://cmc307-06.mathcs.carleton.edu:5001/test_data_large?'
@@ -99,19 +99,19 @@ def result():
         return render_template("data_entry.html",result = r)
     return render_template("data_entry.html", result = result)
 
-@app.route('/view_download')
 """
 Render html for the view and download page
 NOTE: API URL generation for this page happens in javascript of view_download.html
 """
+@app.route('/view_download')
 def viewDownload():
     return render_template("view_download.html")
 
-@app.route('/visualization')
 """
 Render html for the visualization page
 NOTE: API URL generation for this page happens in visualization.html
 """
+@app.route('/visualization')
 def visualization():
     return render_template('visualization.html')
 
