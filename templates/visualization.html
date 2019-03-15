@@ -2843,22 +2843,22 @@ function updateLivColumn(yrs) {
   if (updatedLivColumn) {
     updatedLivColumn = false;
     var head_item = table1.columns(2).header();
-    $(head_item).html(results.yrs[0]);
+    $(head_item).html(yrs[0]);
 
     var head_item = table1.columns(3).header();
-    $(head_item).html(results.yrs[1]);
+    $(head_item).html(yrs[1]);
 
     var head_item = table1.columns(4).header();
-    $(head_item).html(results.yrs[2]);
+    $(head_item).html(yrs[2]);
 
     var head_item = table2.columns(2).header();
-    $(head_item).html(results.yrs[0]);
+    $(head_item).html(yrs[0]);
 
     var head_item = table2.columns(3).header();
-    $(head_item).html(results.yrs[1]);
+    $(head_item).html(yrs[1]);
 
     var head_item = table2.columns(4).header();
-    $(head_item).html(results.yrs[2]);
+    $(head_item).html(yrs[2]);
   }
 }
 // below functions read in user submitted data and re-draw all the plots
