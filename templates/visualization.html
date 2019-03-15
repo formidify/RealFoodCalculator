@@ -3207,6 +3207,30 @@ function addLiv1() {
   if (not[0].length > 0) {
     $("#showLiv1").html(parseInt($("#showLiv1").html()) + 1)
     curr = JSON.parse(sessionStorage.currLiv1)
+
+    // add element to chart
+    LivCharts[0].data.labels.splice(curr[0].length, 0, not[0][0])
+    LivCharts[0].data.datasets[0].data.splice(curr[0].length, 0, not[1][0].slice(0,3))
+    LivCharts[0].data.datasets[1].data.splice(curr[0].length, 0, not[2][0].slice(0,3))
+    LivCharts[0].update()
+
+    LivCharts[1].data.labels.splice(curr[0].length, 0, not[0][0])
+    LivCharts[1].data.datasets[0].data.splice(curr[0].length, 0, not[1][0][3])
+    LivCharts[1].data.datasets[1].data.splice(curr[0].length, 0, not[2][0][3])
+    LivCharts[1].update()
+
+    // add element to the current in chart list
+    curr[0].splice(0, 0, not[0][0])
+    curr[1].splice(0, 0, not[1][0])
+    curr[2].splice(0, 0, not[2][0])
+
+    // remove last element from not showing data list
+    not[0].splice(0, 1)
+    not[1].splice(0, 1)
+    not[2].splice(0, 1)
+
+    sessionStorage.setItem("currLiv1", JSON.stringify(curr))
+    sessionStorage.setItem("notLiv1", JSON.stringify(not))
   }
 }
 
@@ -3247,6 +3271,31 @@ function addLiv2() {
   if (not[0].length > 0) {
     $("#showLiv2").html(parseInt($("#showLiv2").html()) + 1)
     curr = JSON.parse(sessionStorage.currLiv2)
+
+
+    // add element to chart
+    LivCharts[2].data.labels.splice(curr[0].length, 0, not[0][0])
+    LivCharts[2].data.datasets[0].data.splice(curr[0].length, 0, not[1][0].slice(0,3))
+    LivCharts[2].data.datasets[1].data.splice(curr[0].length, 0, not[2][0].slice(0,3))
+    LivCharts[2].update()
+
+    LivCharts[3].data.labels.splice(curr[0].length, 0, not[0][0])
+    LivCharts[3].data.datasets[0].data.splice(curr[0].length, 0, not[1][0][3])
+    LivCharts[3].data.datasets[1].data.splice(curr[0].length, 0, not[2][0][3])
+    LivCharts[3].update()
+
+    // add element to the current in chart list
+    curr[0].splice(0, 0, not[0][0])
+    curr[1].splice(0, 0, not[1][0])
+    curr[2].splice(0, 0, not[2][0])
+
+    // remove last element from not showing data list
+    not[0].splice(0, 1)
+    not[1].splice(0, 1)
+    not[2].splice(0, 1)
+
+    sessionStorage.setItem("currLiv2", JSON.stringify(curr))
+    sessionStorage.setItem("notLiv2", JSON.stringify(not))
   }
 }
 </script>
