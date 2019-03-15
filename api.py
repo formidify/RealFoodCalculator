@@ -634,7 +634,7 @@ def get_bar_data(cat, yr, rk):
     if cat == 'all':
         cat = ''
     else:
-        cat = 'trim(category) = \'' + cat + '\''
+        cat = 'trim(category) = \'' + cat + '\' AND'
 
     # not filtered by year
     query = """SELECT COALESCE(Z.description, B.description)
@@ -642,11 +642,11 @@ def get_bar_data(cat, yr, rk):
             AS real, COALESCE(B.nonreal, 0)
             AS nonreal, (COALESCE(nonreal,0) - COALESCE(real,0)) AS minus, (COALESCE(nonreal,0) + COALESCE(real,0)) AS sum
             FROM (SELECT trim(description) AS description, SUM(cost)
-            AS real FROM test_data_large WHERE {y} {c} AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't')
+            AS real FROM test_data_large WHERE {y} {c} (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't')
             GROUP BY trim(description)) Z FULL OUTER JOIN (SELECT trim(description) AS description, SUM(cost) AS nonreal FROM
             (SELECT COALESCE(local, 'f') AS local, COALESCE(fair, 'f') AS fair, COALESCE(ecological, 'f') AS ecological, COALESCE(humane, 'f') AS humane,
             description, cost, year, category FROM test_data_large) X
-                WHERE {y} {c} AND local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't' GROUP BY trim(description)) B
+                WHERE {y} {c} local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't' GROUP BY trim(description)) B
                 ON Z.description = B.description ORDER BY {r};""".format(y = y, c = cat, r = q_rk[rks.index(rk)])
 
     # todo: query should also take account of the years
@@ -718,15 +718,20 @@ def get_percent_data(cat, yr):
     # not filtered by year
     if yr == 'total':
         yrs = get_all_years()
-        y = 'year IN ({y1}, {y2}, {y3}) AND'.format(y1 = yrs[0], y2 = yrs[1], y3 = yrs[2])
+        yr = 'year IN ({y1}, {y2}, {y3})'.format(y1 = yrs[0], y2 = yrs[1], y3 = yrs[2])
     else:
-        y = 'year = ' + str(yr) + ' AND'
+        yr = 'year = ' + str(yr)
 
+    y = yr + ' AND '
     # if user is interested in all categories at once
+     # needs to account for where {y} {c}
     if cat == 'all':
         cat = ''
+        phrase = 'WHERE ' + yr + ' '
     else:
-        cat = 'trim(category) = \'' + cat + '\''
+        cat = 'trim(category) = \'' + cat + '\' AND'
+        phrase = 'WHERE' + y + 'trim(category) = \'' + cat + '\' '
+
 
     # if we convert all of the current non-real food purchases to real
     query = """SELECT trim(description) AS description, 100 * totalp AS totalp, 100 * indp AS indp, dollars FROM
@@ -736,15 +741,15 @@ def get_percent_data(cat, yr):
                 MIN(dollars) OVER () AS mindp, MAX(dollars) OVER () - MIN(dollars) OVER() AS rangedp
                 FROM (SELECT trim(description) AS description, (SELECT SUM(cost) AS sum FROM test_data_large WHERE {y}
                 (local IS NOT NULL OR fair IS NOT NULL OR ecological IS NOT NULL OR humane IS NOT NULL))
-                AS sum FROM test_data_large WHERE {y} {c} GROUP BY trim(description)) A
+                AS sum FROM test_data_large WHERE {p} GROUP BY trim(description)) A
                 RIGHT JOIN (SELECT trim(COALESCE(B.description, C.description)) AS description, COALESCE(B.dollars, 0) AS dollars, C.total_dollars as total_dollars FROM
                 (SELECT trim(description) AS description, sum(cost) AS dollars FROM (SELECT COALESCE(local, 'f') AS local, COALESCE(fair, 'f') AS fair, COALESCE(ecological, 'f')
                 AS ecological, COALESCE(humane, 'f') AS humane, description, cost, year, category FROM test_data_large) X
-                WHERE {y} {c} AND local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't'
+                WHERE {y} {c} local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't'
                 GROUP BY trim(description)) B FULL OUTER JOIN (SELECT trim(description) AS description, sum(cost) AS total_dollars FROM test_data_large
-                WHERE {y} {c} GROUP BY trim(description)) C ON B.description = C.description) D ON A.description = D.description) Y
+                WHERE {p} GROUP BY trim(description)) C ON B.description = C.description) D ON A.description = D.description) Y
                 ORDER BY (1.00 * (totalp - mintotalp) * CASE WHEN rangetotalp = 0 THEN 0 ELSE (1 / rangetotalp) END
-                - CASE WHEN indp = 0 THEN (minindp + rangeindp) ELSE indp END) DESC;""".format(y = y, c = cat)
+                - CASE WHEN indp = 0 THEN (minindp + rangeindp) ELSE indp END) DESC;""".format(y = y, c = cat, p = phrase)
 
 
     connection = get_connection()
