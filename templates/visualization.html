@@ -2468,7 +2468,7 @@ OR
     <input type="button" value="-" class="minus" onclick = "minusLiv1()">
     <div id = "showLiv1" style = "display: inline">0</div>
     <input type="button" value="+" class="plus" onclick = "addLiv1()">
-    out of <div id = "allLiv1" style = "display: inline">0</div> of the selected category
+    out of <div id = "allLiv1" style = "display: inline">0</div> of the results
     </div> 
 
     <canvas id="livChart1" style="display: block; height: 60px; width: 50%;"></canvas>
@@ -2498,7 +2498,7 @@ OR
     <input type="button" value="-" class="minus" onclick = "minusLiv2()">
     <div id = "showLiv2" style = "display: inline">0</div>
     <input type="button" value="+" class="plus" onclick = "addLiv2()">
-    out of <div id = "allLiv2" style = "display: inline">0</div> of the selected category
+    out of <div id = "allLiv2" style = "display: inline">0</div> of the results
 
     </div>
 
@@ -3125,7 +3125,7 @@ function addLivLabel() {
     sessionStorage.setItem("notLiv1", JSON.stringify([l_label.slice(num_items1, dr.length), dr.slice(num_items1, dr.length), dn.slice(num_items1, dr.length)]))
 
     // fill in the datatables
-    for (i = 0; i < l_items.slice(0, num_items1).length; i++) {
+    for (i = 0; i < l_items.length; i++) {
       table1.row.add([l_items[i], "real", dr[i][0], dr[i][1], dr[i][2], dr[i][3]]).draw(false)
       table1.row.add([l_items[i], "nonreal", dn[i][0], dn[i][1], dn[i][2], dn[i][3]]).draw(false)
     }
