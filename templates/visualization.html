@@ -2933,6 +2933,8 @@ function addLivItem() {
     num_items1 = Math.min(5, dr.length)
     sessionStorage.setItem("currLiv1", JSON.stringify([l_label.slice(0, num_items1), dr.slice(0, num_items1), dn.slice(0, num_items1)]))
     sessionStorage.setItem("notLiv1", JSON.stringify([l_label.slice(num_items1, l_label.length), dr.slice(num_items1, dr.length), dn.slice(num_items1, dn.length)]))
+    console.log(JSON.parse(sessionStorage.currLiv1))
+    console.log(JSON.parse(sessionStorage.notLiv1))
 
     // fill in the datatables
     for (i = 0; i < l_label.length; i++) {
