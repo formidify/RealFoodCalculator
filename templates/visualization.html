@@ -3185,9 +3185,8 @@ function minusLiv1() {
     LivCharts[0].update()
 
     LivCharts[1].data.labels.splice(curr[0].length-1, 1)
-    for (i = 0; i < 6; i++) {
-      LivCharts[1].data.datasets[i].data.splice(curr[0].length-1, 1)
-    }
+    LivCharts[1].data.datasets[0].data.splice(curr[0].length-1, 1)
+    LivCharts[1].data.datasets[1].data.splice(curr[0].length-1, 1)
     LivCharts[1].update()
 
     // add element to the not in chart list
@@ -3253,9 +3252,8 @@ function minusLiv2() {
     LivCharts[2].update()
 
     LivCharts[3].data.labels.splice(curr[0].length-1, 1)
-    for (i = 0; i < 6; i++) {
-      LivCharts[3].data.datasets[i].data.splice(curr[0].length-1, 1)
-    }
+    LivCharts[3].data.datasets[0].data.splice(curr[0].length-1, 1)
+    LivCharts[3].data.datasets[1].data.splice(curr[0].length-1, 1)
     LivCharts[3].update()
 
     // add element to the not in chart list
