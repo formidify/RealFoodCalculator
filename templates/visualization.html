@@ -3199,10 +3199,10 @@ function minusLiv1() {
 
     // remove last element from curr data list
     curr[0].splice(curr[0].length-1, 1)
-    curr[1].splice(curr[0].length-1, 1)
-    curr[2].splice(curr[0].length-1, 1)
+    curr[1].splice(curr[1].length-1, 1)
+    curr[2].splice(curr[2].length-1, 1)
 
-        console.log(curr)
+    console.log(curr)
     console.log(not)
 
     sessionStorage.setItem("currLiv1", JSON.stringify(curr))
@@ -3231,8 +3231,8 @@ function addLiv1() {
 
     // add element to the current in chart list
     curr[0].splice(curr[0].length, 0, not[0][0])
-    curr[1].splice(curr[0].length, 0, not[1][0])
-    curr[2].splice(curr[0].length, 0, not[2][0])
+    curr[1].splice(curr[1].length, 0, not[1][0])
+    curr[2].splice(curr[2].length, 0, not[2][0])
 
     // remove last element from not showing data list
     not[0].splice(0, 1)
@@ -3304,8 +3304,8 @@ function addLiv2() {
 
     // add element to the current in chart list
     curr[0].splice(curr[0].length, 0, not[0][0])
-    curr[1].splice(curr[0].length, 0, not[1][0])
-    curr[2].splice(curr[0].length, 0, not[2][0])
+    curr[1].splice(curr[1].length, 0, not[1][0])
+    curr[2].splice(curr[2].length, 0, not[2][0])
 
     // remove last element from not showing data list
     not[0].splice(0, 1)
