@@ -2462,22 +2462,23 @@ OR
 
 <div class="row">
   <div class="column" style = "width: 50%; height: 25%;  float: left">
-    <!--
+
     <div class="quantity buttons_added">
     Showing
     <input type="button" value="-" class="minus" onclick = "minusLiv1()">
     <div id = "showLiv1" style = "display: inline">0</div>
     <input type="button" value="+" class="plus" onclick = "addLiv1()">
     out of <div id = "allLiv1" style = "display: inline">0</div> of the selected category
-    </div> -->
+    </div> 
 
     <canvas id="livChart1" style="display: block; height: 60px; width: 50%;"></canvas>
     <canvas id="livChart2" style="display: block; height: 60px; width: 50%;"></canvas>
-    <!--
+
     <table id="liv_table1" class="display" style = "display: inline-block;">
     <thead>
       <tr>
         <th>Item</th>
+        <th>Type</th>
         <th>Year 1</th>
         <th>Year 2</th>
         <th>Year 3</th>
@@ -2487,11 +2488,11 @@ OR
     <tbody>
     </tbody>
 </table>
--->
+
   </div>
 
   <div class="column" style = "width: 50%; height: 25%;  float: left">
-    <!--
+
     <div class="quantity buttons_added">
     Showing
     <input type="button" value="-" class="minus" onclick = "minusLiv2()">
@@ -2499,15 +2500,16 @@ OR
     <input type="button" value="+" class="plus" onclick = "addLiv2()">
     out of <div id = "allLiv2" style = "display: inline">0</div> of the selected category
 
-    </div> -->
+    </div>
 
     <canvas id="livChart3" style="display: block; height: 60px; width: 50%;"></canvas>
     <canvas id="livChart4" style="display: block; height: 60px; width: 50%;"></canvas>
-    <!--
+
     <table id="liv_table2" class="display" style = "display: inline-block;">
     <thead>
       <tr>
         <th>Item</th>
+        <th>Type</th>
         <th>Year 1</th>
         <th>Year 2</th>
         <th>Year 3</th>
@@ -2516,7 +2518,7 @@ OR
     </thead>
     <tbody>
     </tbody>
-</table> -->
+</table> 
   </div>
 
 </div>
@@ -2599,6 +2601,22 @@ Chart.controllers.groupableBar = Chart.controllers.bar.extend({
 sessionStorage.setItem("itemsLivSearch", JSON.stringify([]));
 sessionStorage.setItem("vendorSearch", JSON.stringify([]));
 sessionStorage.setItem("labelSearch", JSON.stringify([]));
+
+// initiate tables
+var table1;
+var table2;
+$(document).ready(function(){
+  table1 = $('#liv_table1').DataTable({
+        dom: 'lBfrtip',
+        buttons: ['copyHtml5', 'csvHtml5', 'excelHtml5']
+    }); 
+  table2 = $('#liv_table2').DataTable({
+      dom: 'lBfrtip',
+      buttons: ['copyHtml5', 'csvHtml5', 'excelHtml5']
+  }); 
+});
+
+var updatedLivColumn = true; // set table columns to specific years
 
 var ctx10 = document.getElementById("livChart1").getContext('2d');
 var ctx11 = document.getElementById("livChart2").getContext('2d');
@@ -2820,12 +2838,38 @@ function plotByAll(t, s, r, n, l, v, c) {
       }
     })
 }
+
+function updateLivColumn(yrs) {
+  if (updatedLivColumn) {
+    updatedLivColumn = false;
+    var head_item = table1.columns(2).header();
+    $(head_item).html(results.yrs[0]);
+
+    var head_item = table1.columns(3).header();
+    $(head_item).html(results.yrs[1]);
+
+    var head_item = table1.columns(4).header();
+    $(head_item).html(results.yrs[2]);
+
+    var head_item = table2.columns(2).header();
+    $(head_item).html(results.yrs[0]);
+
+    var head_item = table2.columns(3).header();
+    $(head_item).html(results.yrs[1]);
+
+    var head_item = table2.columns(4).header();
+    $(head_item).html(results.yrs[2]);
+  }
+}
 // below functions read in user submitted data and re-draw all the plots
 function addLivItem() {
   LivCharts[0].destroy();
   LivCharts[1].destroy();
   LivCharts[2].destroy();
   LivCharts[3].destroy();
+
+  table1.clear();
+  table2.clear();
 
   y = document.getElementById("item_liv").value.trim();
 
@@ -2835,6 +2879,8 @@ function addLivItem() {
     label_brand = results.label_brand
     vendor = results.vendor
     yrs = results.yrs
+
+    updateLivColumn(yrs);
 
     data_label_year = {}
     data_label_all = {}
@@ -2886,6 +2932,16 @@ function addLivItem() {
     plotByYear("vendor", y, vr.slice(0, 3), vn.slice(0,3), l_vendor, 2, 2);
     plotByAll("vendor", y, vr[3], vn[3], l_vendor, 3, 3);
 
+    for (i = 0; i < l_label.length; i++) {
+      table1.row.add([l_label[i], "real", dr[0][i], dr[1][i], dr[2][i], dr[3][i]])
+      table1.row.add([l_label[i], "nonreal", dn[0][i], dn[1][i], dn[2][i], dn[3][i]])
+    }
+
+    for (i = 0; i < l_vendor.length; i++) {
+      table2.row.add([l_vendor[i], "real", vr[0][i], vr[1][i], vr[2][i], vr[3][i]])
+      table2.row.add([l_vendor[i], "nonreal", vn[0][i], vn[1][i], vn[2][i], vn[3][i]])
+    }
+
   })
 }
 
@@ -2895,6 +2951,9 @@ function addLivVendor() {
   LivCharts[2].destroy();
   LivCharts[3].destroy();
 
+  table1.clear();
+  table2.clear();
+
   y = document.getElementById("vendor_liv").value.trim();
 
   searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/brand_vendor_data/" + y + "+vendor");
@@ -2903,6 +2962,8 @@ function addLivVendor() {
     label_brand = results.label_brand
     description = results.description
     yrs = results.yrs
+
+    updateLivColumn(yrs);
 
     dr = results['label_brand real']
     dn = results['label_brand nonreal']
@@ -2937,6 +2998,17 @@ function addLivVendor() {
 
     plotByYear("items", y, vr.slice(0, 3), vn.slice(0,3), l_items, 2, 2);
     plotByAll("items", y, vr[3], vn[3], l_items, 3, 3);
+
+    for (i = 0; i < l_label.length; i++) {
+      table1.row.add([l_label[i], "real", dr[0][i], dr[1][i], dr[2][i], dr[3][i]])
+      table1.row.add([l_label[i], "nonreal", dn[0][i], dn[1][i], dn[2][i], dn[3][i]])
+    }
+
+    for (i = 0; i < l_items.length; i++) {
+      table2.row.add([l_items[i], "real", vr[0][i], vr[1][i], vr[2][i], vr[3][i]])
+      table2.row.add([l_items[i], "nonreal", vn[0][i], vn[1][i], vn[2][i], vn[3][i]])
+    }
+
   })
 }
   
@@ -2947,6 +3019,9 @@ function addLivLabel() {
   LivCharts[2].destroy();
   LivCharts[3].destroy();
 
+  table1.clear();
+  table2.clear();
+
   y = document.getElementById("label_liv").value.trim();
 
   searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/brand_vendor_data/" + y + "+brand");
@@ -2956,6 +3031,7 @@ function addLivLabel() {
     vendor = results.vendor
     yrs = results.yrs
 
+    updateLivColumn(yrs);
 
     dr = results['description real']
     dn = results['description nonreal']
@@ -2990,6 +3066,16 @@ function addLivLabel() {
 
     plotByYear("vendor", y, vr.slice(0, 3), vn.slice(0,3), l_vendor, 2, 2);
     plotByAll("vendor", y, vr[3], vn[3], l_vendor, 3, 3);
+
+    for (i = 0; i < l_items.length; i++) {
+      table1.row.add([l_items[i], "real", dr[0][i], dr[1][i], dr[2][i], dr[3][i]])
+      table1.row.add([l_items[i], "nonreal", dn[0][i], dn[1][i], dn[2][i], dn[3][i]])
+    }
+
+    for (i = 0; i < l_vendor.length; i++) {
+      table2.row.add([l_vendor[i], "real", vr[0][i], vr[1][i], vr[2][i], vr[3][i]])
+      table2.row.add([l_vendor[i], "nonreal", vn[0][i], vn[1][i], vn[2][i], vn[3][i]])
+    }
   })
 }
 
