@@ -3178,13 +3178,16 @@ function minusLiv1() {
 
     // remove element from chart
     LivCharts[0].data.labels.splice(curr[0].length-1, 1)
-    LivCharts[0].data.datasets[0].data.splice(curr[0].length-1, 1)
-    LivCharts[0].data.datasets[1].data.splice(curr[0].length-1, 1)
+    // remove 3 (years) * 2 (types) configurations from datasets
+    for (i = 0; i < 6; i++) {
+      LivCharts[0].data.datasets[i].data.splice(curr[0].length-1, 1)
+    }
     LivCharts[0].update()
 
     LivCharts[1].data.labels.splice(curr[0].length-1, 1)
-    LivCharts[1].data.datasets[0].data.splice(curr[0].length-1, 1)
-    LivCharts[1].data.datasets[1].data.splice(curr[0].length-1, 1)
+    for (i = 0; i < 6; i++) {
+      LivCharts[1].data.datasets[i].data.splice(curr[0].length-1, 1)
+    }
     LivCharts[1].update()
 
     // add element to the not in chart list
@@ -3208,10 +3211,12 @@ function addLiv1() {
     $("#showLiv1").html(parseInt($("#showLiv1").html()) + 1)
     curr = JSON.parse(sessionStorage.currLiv1)
 
-    // add element to chart
+    // add element to chart by year
     LivCharts[0].data.labels.splice(curr[0].length, 0, not[0][0])
-    LivCharts[0].data.datasets[0].data.splice(curr[0].length, 0, not[1][0].slice(0,3))
-    LivCharts[0].data.datasets[1].data.splice(curr[0].length, 0, not[2][0].slice(0,3))
+    for (i = 0; i < 3; i++) {
+      LivCharts[0].data.datasets[0].data.splice(curr[0].length, 0, not[1][0][i])
+      LivCharts[0].data.datasets[1].data.splice(curr[0].length, 0, not[2][0][i])
+    }
     LivCharts[0].update()
 
     LivCharts[1].data.labels.splice(curr[0].length, 0, not[0][0])
@@ -3242,13 +3247,15 @@ function minusLiv2() {
 
     // remove element from chart
     LivCharts[2].data.labels.splice(curr[0].length-1, 1)
-    LivCharts[2].data.datasets[0].data.splice(curr[0].length-1, 1)
-    LivCharts[2].data.datasets[1].data.splice(curr[0].length-1, 1)
+    for (i = 0; i < 6; i++) {
+      LivCharts[2].data.datasets[i].data.splice(curr[0].length-1, 1)
+    }
     LivCharts[2].update()
 
     LivCharts[3].data.labels.splice(curr[0].length-1, 1)
-    LivCharts[3].data.datasets[0].data.splice(curr[0].length-1, 1)
-    LivCharts[3].data.datasets[1].data.splice(curr[0].length-1, 1)
+    for (i = 0; i < 6; i++) {
+      LivCharts[3].data.datasets[i].data.splice(curr[0].length-1, 1)
+    }
     LivCharts[3].update()
 
     // add element to the not in chart list
@@ -3272,11 +3279,12 @@ function addLiv2() {
     $("#showLiv2").html(parseInt($("#showLiv2").html()) + 1)
     curr = JSON.parse(sessionStorage.currLiv2)
 
-
     // add element to chart
     LivCharts[2].data.labels.splice(curr[0].length, 0, not[0][0])
-    LivCharts[2].data.datasets[0].data.splice(curr[0].length, 0, not[1][0].slice(0,3))
-    LivCharts[2].data.datasets[1].data.splice(curr[0].length, 0, not[2][0].slice(0,3))
+    for (i = 0; i < 3; i++) {
+      LivCharts[2].data.datasets[0].data.splice(curr[0].length, 0, not[1][0][i])
+      LivCharts[2].data.datasets[1].data.splice(curr[0].length, 0, not[2][0][i])
+    }
     LivCharts[2].update()
 
     LivCharts[3].data.labels.splice(curr[0].length, 0, not[0][0])
