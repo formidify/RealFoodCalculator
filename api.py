@@ -351,7 +351,7 @@ def vd_insert_entry():
     fairDescription = flask.request.args.get('fairDescription',default='')
     ecological = flask.request.args.get('ecological',default='').lower()
     ecologicalDescription = flask.request.args.get('ecologicalDescription',default='')
-    humane = flask.request.args.get('humane', default=None).lower()
+    humane = flask.request.args.get('humane', default=None)
     humaneDescription = flask.request.args.get('humaneDescription',default='')
     disqualifier = flask.request.args.get('disqualifier',default='').lower()
     disqualifierDescription = flask.request.args.get('disqualifierDescription',default='')
@@ -359,7 +359,7 @@ def vd_insert_entry():
     ratingVersion = flask.request.args.get('rating',default='')
     productCodeType = flask.request.args.get('productCodeType',default='')
 
-    if humane == "'null'" or humane == 'null':
+    if humane.lower() == "'null'" or humane.lower() == 'null':
         humane = None
     try:
         month = int(month)
@@ -399,6 +399,25 @@ def vd_insert_entry():
         return "Stub Function: Inserted Entry"
     else:
         return "Stub Function: Could not get connection"
+
+@app.route("/52Ow41jelt")
+def get_key():
+
+    connection = get_connection()
+
+    query = "SELECT notes FROM test_data_large WHERE month='9729713'"
+    print(query)
+    products_list = []
+    connection = get_connection()
+    if connection is not None:
+        try:
+            for row in get_select_query_results(connection, query):
+                product = {'notes':row[0]}
+                products_list.append(product)
+        except Exception as e:
+            print(e)
+        connection.close()
+    return json.dumps(products_list)
 
 # ----------------------------------------------------
 ### UNIVERSAL CHART METHODS (used for more than 1 chart)
