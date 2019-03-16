@@ -1,10 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
+<!--  Entry Session page created by RFC CS Comps group 2019. Shows table that has all data entered
+in data entry page, displays and allows user to edit data, and allows user to submit data to database. No 
+data will be sent to the database unless 'submit' is selected. Data will be stored as a local storage
+string in browser until user submits or cancels session.-->
+
 <head>
     <meta charset="utf-8">
     <title> Entry Session</title>
-   <!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}" />-->
-   <!-- <script type="text/javascript" src="{{ url_for('static', filename='example.js') }}" defer></script> -->
    <link rel="stylesheet" type="text/css" href="../static/styles.css" />
    <script type="text/javascript" src="../static/example.js" defer></script>
    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
@@ -12,36 +16,36 @@
    <link rel="icon" href="../static/favicon.ico" type="image/x-icon">
 </head>
 <script>
+
+//populates table with items entered in Data Entry
 window.onload = function (){
     if (localStorage.getItem('entrySession')){
-var entrySessionString = localStorage.getItem('entrySession');
-var entrySession = JSON.parse(localStorage.getItem('entrySession'));
-
-
-}else{
- var entrySession = [];
-}
+		var entrySessionString = localStorage.getItem('entrySession');
+		var entrySession = JSON.parse(localStorage.getItem('entrySession'));	
+	}else{
+ 	var entrySession = [];
+	}
     var results = document.getElementById("sessionTable");
     var rowNum = 0;
     var totalCost = 0;
     for (item in entrySession){
-         var row = results.insertRow(-1);
-	 rowNum++;
-	 row.setAttribute("id",'cur_row'+rowNum.toString());
-         console.log(entrySession[item]);
-	 var colNum = 0;
-         for (value in entrySession[item]){
-              var cell = row.insertCell(-1);
-              cell.innerHTML = entrySession[item][value];
-	      if (colNum == 6){
-		//cost column, sum for total cost
-		totalCost = totalCost + parseFloat(entrySession[item][value]);
-	      }
-	      colNum++;
-              }
-	 var newCell = row.insertCell(-1);
-	 newCell.innerHTML = '<button class="editbtn" onclick="editButton(' + rowNum + ');">' + 'edit</button>';
-         }
+        var row = results.insertRow(-1);
+		rowNum++;
+	 	row.setAttribute("id",'cur_row'+rowNum.toString());
+        console.log(entrySession[item]);
+	 	var colNum = 0;
+        for (value in entrySession[item]){
+             var cell = row.insertCell(-1);
+             cell.innerHTML = entrySession[item][value];
+	    	if (colNum == 6){
+				//cost column, sum for total cost
+				totalCost = totalCost + parseFloat(entrySession[item][value]);
+	    	}
+	    	colNum++;
+        }
+	 	var newCell = row.insertCell(-1);
+	 	newCell.innerHTML = '<button class="editbtn" onclick="editButton(' + rowNum + ');">' + 'edit</button>';
+     }
      document.getElementById("costDesc").innerHTML = "Total Cost = $" + totalCost.toFixed(2);
 	 document.getElementById("EScostBox").style.backgroundColor= '#A3C1E5';
 
@@ -57,8 +61,9 @@ var entrySession = JSON.parse(localStorage.getItem('entrySession'));
 
 	 document.getElementById("entrySessionData").value = entrySessionString;
      rowNum = 0;
-     }
+}
 
+//when cancel session is selected, clear all entries
 function clearEntries(alert){
 	if (!alert){
 		console.log("Clearing Entries");
@@ -75,11 +80,12 @@ function clearEntries(alert){
 	}
 }
 
+//function for when edit button is pressed on individual food item
 function editButton(cur_row){
-   console.log(cur_row);
    var edit_cells = document.getElementById('cur_row'+cur_row).getElementsByTagName('td');
    var parent = document.getElementById('cur_row'+cur_row);
    var child = parent.getElementsByTagName('td')[17];
+   //change style to indicate in edit mode, make rows editable
    for (var i=0; i<edit_cells.length; i++){
      edit_cells[i].setAttribute('contenteditable', 'true');
      edit_cells[i].style.backgroundColor = '#d5ddea';
@@ -96,11 +102,13 @@ function editButton(cur_row){
   cell.appendChild(delBtn);
   parent.insertBefore(cell, newChild);
 
+  //switch attributes of button to save button
   child.firstChild.innerHTML = 'save';
   child.firstChild.setAttribute('class', 'savebtn');
   child.firstChild.setAttribute('onclick', 'saveButton('+cur_row.toString()+');');
 }
 
+//when row has been edited, verify information still within standards
 function checkData(colNum, dataValue){
 	var catTypes = ["dairy", "baked", "beverages", "eggs", "grocery", "meat", "poultry", "produce", "fish", "tea or coffee"];
 	console.log("dataItem = " + dataValue);
@@ -145,6 +153,8 @@ function checkData(colNum, dataValue){
 	return true;
 }
 
+//carried out when save button selected, updates local storage data string, verifies data, switches to edit
+//data that has been changed in the table will not be saved until 'save' is selected.
 function saveButton(cur_row){
   	var edit_cells = document.getElementById('cur_row'+cur_row).getElementsByTagName('td');
   	var parent = document.getElementById('cur_row'+cur_row);
@@ -169,12 +179,14 @@ function saveButton(cur_row){
 			newString = newString + '"';
 			newString = newString + dataItem;
 			if (j != 16){
+				//add comma to have string in correct form for later parsing
 			    newString = newString + '",';
 			}else{
 			   //if the column is the final column in the entry, don't add comma
 			    newString = newString + '"';
 			}
 		}
+		//add commas/brackets in correct order to string for later parsing
         if (i != table.rows.length - 1){
 			newString = newString + '],';
 		} else{
@@ -184,6 +196,8 @@ function saveButton(cur_row){
 
 	newString = newString + ']';
   	localStorage['entrySession'] = newString;
+
+	//make uneditable, switch color back
 	for (var i=0; i<edit_cells.length; i++){
   		edit_cells[i].setAttribute('contenteditable', 'false');
   		edit_cells[i].style.backgroundColor = '#ffffff';
@@ -191,24 +205,23 @@ function saveButton(cur_row){
   	//update cost sum
   	document.getElementById("costDesc").innerHTML = "Total Cost = $" + totalCost.toFixed(2);
 
-
   	//remove deleteRow button
   	var deleteCell = parent.getElementsByTagName('td')[18];
   	parent.removeChild(deleteCell);
-
+	
+	//switch back to edit button
   	child.firstChild.innerHTML = 'edit';
   	child.firstChild.setAttribute('class', 'editbtn');
   	child.firstChild.setAttribute('onclick', 'editButton('+cur_row.toString()+');');
 }
 
+//function to delete row and update localstorage data string to no longer inclue this entry
 function deleteRow(cur_row){
 	if(confirm('Are you sure you want to delete this entry?')){
-    	console.log('delete this row');
      	var row = document.getElementById('cur_row'+cur_row);
      	row.parentNode.removeChild(row);
 
     	//update local storage by accessing table without the deleted row:
-    	//update local storage with new data:
 		var newString = '[';
 		var totalCost = 0;
         var table = document.getElementById("sessionTable");
@@ -217,11 +230,13 @@ function deleteRow(cur_row){
                 for (var j = 0; j < 17; j++){
                     var dataItem = table.rows[i].cells[j].innerHTML;
 					if (j == 6){
+						//update total cost
 						totalCost = totalCost + parseFloat(dataItem);
 					}
                     newString = newString + '"';
                     newString = newString + dataItem;
                     if (j != 16){
+						//add comma to have correct syntax for later parsing
                         newString = newString + '",';
                     }else{
                        //if the column is the final column in the entry, don't add comma
@@ -238,20 +253,16 @@ function deleteRow(cur_row){
     	newString = newString + ']';
         localStorage['entrySession'] = newString;
    }
-   else{
-     console.log('do nothing');
-   }
 }
 
+//submit form
 function submitEntries(){
     console.log("in submit");
     if(confirm('Are you sure you want to submit the entries?')){
         console.log("Confirmed Entries");
-        //document.getElementById("entry-session-form").submit.click();
         $("#entry-session-form").submit();
         console.log("Submitted Entry Session");
         clearEntries(false);
-
     }
     else{
         return false;
@@ -271,58 +282,57 @@ function submitEntries(){
           <a id="visualization_btn" href="#">Visualization</a>
     </div>
     </nav>
-<h2>Current Entries</h2>
-<button class="button" id="ESenter" onclick="go_to_data_entry();">Add New Item</button>
-<form action="entry_session" method="POST" id="entry-session-form">
- <input id="entrySessionData" name="entrySessionData" type="hidden"/>
-  <label for="month">Month</label>
-<select id="month" name="month" required>
-    <option value="1">January</option>
-    <option value="2">February</option>
-    <option value="3">March</option>
-    <option value="4">April</option>
-    <option value="5">May</option>
-    <option value="6">June</option>
-    <option value="7">July</option>
-    <option value="8">August</option>
-    <option value="9">September</option>
-    <option value="10">October</option>
-    <option value="11">November</option>
-    <option value="12">December</option>
-</select>
+	<h2>Current Entries</h2>
+	<button class="button" id="ESenter" onclick="go_to_data_entry();">Add New Item</button>
+	<form action="entry_session" method="POST" id="entry-session-form">
+ 	<input id="entrySessionData" name="entrySessionData" type="hidden"/>
+  		<label for="month">Month</label>
+		<select id="month" name="month" required>
+    	<option value="1">January</option>
+    	<option value="2">February</option>
+    	<option value="3">March</option>
+    	<option value="4">April</option>
+    	<option value="5">May</option>
+    	<option value="6">June</option>
+    	<option value="7">July</option>
+    	<option value="8">August</option>
+    	<option value="9">September</option>
+    	<option value="10">October</option>
+    	<option value="11">November</option>
+    	<option value="12">December</option>
+		</select>
 
-<label for="year">Year</label>
-<input id="year" name="year" type="number" value=2019  placeholder="2019" required>
-
+		<label for="year">Year</label>
+		<input id="year" name="year" type="number" value=2019  placeholder="2019" required>
 
          <label for="rating_version">Rating Version</label>
 
- <input id="rating_version" name="rating_version" type="number" value="2.0" placeholder="2.0">
-<input type="submit" class="button" id="ESsubmit" onclick="return submitEntries();"  value="Submit All">
-</form>
+ 		<input id="rating_version" name="rating_version" type="number" value="2.0" placeholder="2.0">
+		<input type="submit" class="button" id="ESsubmit" onclick="return submitEntries();"  value="Submit All">
+	</form>
 <table id="sessionTable"  class="sessionTable">
-<thead>
-<tr>
-<th>Category</th>
-<th>Vendor</th>
-<th>Label/ Brand</th>
-<th>Description</th>
-<th>Notes</th>
-<th>Product Code</th>
-<th>Cost</th>
-<th>Local</th>
-<th></th>
-<th>Fair</th>
-<th></th>
-<th>Ecological</th>
-<th></th>
-<th>Humane</th>
-<th></th>
-<th>Disqualifier</th>
-<th></th>
-<th>Edit</th>
-</tr>
-</thead>
+	<thead>
+	<tr>
+		<th>Category</th>
+		<th>Vendor</th>
+		<th>Label/ Brand</th>
+		<th>Description</th>
+		<th>Notes</th>
+		<th>Product Code</th>
+		<th>Cost</th>
+		<th>Local</th>
+		<th></th>
+		<th>Fair</th>
+		<th></th>
+		<th>Ecological</th>
+		<th></th>
+		<th>Humane</th>
+		<th></th>
+		<th>Disqualifier</th>
+		<th></th>
+		<th>Edit</th>
+	</tr>
+	</thead>
 </table>
 <div id = 'EScostBox'>
 	<p id="costDesc"> </p>
