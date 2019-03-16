@@ -3,7 +3,6 @@
     Chae Kim, Syd Botz, Claudia Naughton, Bryce Barton, James Yang
 
 TO DO:
-- make a separate config.py file for password security
 - change table from "test_data" to other name
 '''
 from flask import Flask, render_template, session
@@ -11,12 +10,7 @@ import sys
 import flask
 import simplejson as json
 import psycopg2
-
-
-#from config import password
-#from config import database
-#from config import user
-
+import config
 
 app = flask.Flask(__name__, static_folder='static', template_folder='templates')
 
@@ -28,10 +22,10 @@ def get_connection():
     '''
     connection = None
     try:
-        connection = psycopg2.connect(dbname='RealFood',
-                                      user='RealFood',
-                                      password='L00kB4uL3@p',
-                                      host='localhost')
+        connection = psycopg2.connect(dbname=config.database,
+                                      user=config.user,
+                                      password=config.password,
+                                      host=config.host)
     except Exception as e:
         print("This is exception")
         print(e)
@@ -254,7 +248,8 @@ def insert_entry():
     else:
         return "Stub Function: Could not get connection"
 
-""" THINGS CHAE CHANGED """
+#~~~~~BEGIN: USED EXCLUSIVELY FOR VIEW_DOWNLOAD PAGE~~~~~~~#
+# finds the exact match of the row in html table being edited and deletes it
 @app.route("/delete_entry")
 def delete_entry():
 
@@ -331,6 +326,8 @@ def delete_entry():
     else:
         return "Stub Function: Could not get connection"
 
+# adds entry exactly the way it is reflected in the current html table
+# different from normal entry in that it gives more fields to edit
 @app.route("/vd_add_entry")
 def vd_insert_entry():
 
@@ -399,7 +396,9 @@ def vd_insert_entry():
         return "Stub Function: Inserted Entry"
     else:
         return "Stub Function: Could not get connection"
+#~~~~~END : USED EXCLUSIVELY FOR VIEW_DOWNLOAD PAGE~~~~~~~#
 
+# getting key for encryption in login
 @app.route("/52Ow41jelt")
 def get_key():
 
@@ -1091,15 +1090,4 @@ def get_brand_vendor_data(item, type):
 
 
 if __name__ == '__main__':
-    """if len(sys.argv) != 3:
-        print('Usage: {0} host port'.format(sys.argv[0]))
-        print('  Example: {0} perlman.mathcs.carleton.edu 5101'.format(sys.argv[0]))
-        exit()
-    """
-#    host = sys.argv[1]
-    host = 'cmc307-06.mathcs.carleton.edu'
-#   port = int(sys.argv[2])
-#   host=host
-    port= 5001
-    print('Using Port: '+ sys.argv[0])
-    app.run(host=host,port=port, debug=True)
+    app.run(host=config.webhost,port=int(config.port), debug=True)
