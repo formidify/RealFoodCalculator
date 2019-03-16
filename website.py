@@ -119,4 +119,4 @@ if __name__ == '__main__':
     # run website on http://realfoodnetwork.carleton.edu:2019
     # 'realfoodnetwork.carleton.edu' can also be assessed with 'cmc307-06.mathcs.carleton.edu' 
     host='realfoodnetwork.carleton.edu'
-    app.run(host=host, port=2019, debug=True)
+    app.run(host="localhost", port=2019, debug=True)
