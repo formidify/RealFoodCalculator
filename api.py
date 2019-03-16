@@ -456,7 +456,6 @@ def get_categories():
             print(e)
         connection.close()
 
-    print(cats)
     return flask.jsonify({"cats": cats})
 
 # get recent years data straight to visualization.html (note: different from get_all_years)
@@ -621,9 +620,6 @@ def get_pie_data():
     dic['total'] = {"data": data, "labels": labels}
     dic['labels'] = yrs[:3] + ['total'] # add labels to the dictionary
 
-    print(data)
-    print(labels)
-
     return flask.jsonify(dic)
 
 
@@ -718,8 +714,6 @@ def get_bar_item(item, yr):
         except Exception as e:
             print(e)
         connection.close()
-
-    print(data)
 
     return flask.jsonify({"data": list(data)})
 
@@ -817,7 +811,6 @@ def get_percent_item(item, yr):
             # either this or minimum items allowed to show
             for row in get_select_query_results(connection, query):
                 data = list(row)
-                print(data)
         except Exception as e:
             print(e)
         connection.close()
@@ -868,9 +861,7 @@ def get_item_time(yrs, item):
 @app.route("/visualization/item_data", defaults = {'item': ''})
 @app.route("/visualization/item_data/<path:item>")
 def get_item_data(item):
-
     yrs = get_all_years()[:3]
-    print(item)
 
     total, real = get_item_time(yrs, item)
 
@@ -919,6 +910,7 @@ def get_categories_time(cat):
 ###### All the methods below are for item, label, brand chart
 
 # return results that match the input item
+# used by all item searches in visualization.html
 @app.route("/visualization/get_item", defaults = {'search': ''})
 @app.route("/visualization/get_item/<search>")
 def get_item(search):
@@ -933,7 +925,6 @@ def get_item(search):
         except Exception as e:
             print(e)
         connection.close()
-    print(results)
     return flask.jsonify({"search": results})
 
 # return results that match the input vendor
@@ -951,7 +942,6 @@ def get_vendor(search):
         except Exception as e:
             print(e)
         connection.close()
-    print(results)
     return flask.jsonify({"search": results})
 
 # return results that match the input label/brand
@@ -969,7 +959,6 @@ def get_label(search):
         except Exception as e:
             print(e)
         connection.close()
-    print(results)
     return flask.jsonify({"search": results})
 
 
@@ -1091,16 +1080,6 @@ def get_brand_vendor_data(item, type):
 
                 N1.append(n1)
                 N2.append(n2)
-
-            print(R1)
-            print(R2)
-            print(N1)
-            print(N2)
-            print(l1)
-            print(l2)
-
-
-
 
         except Exception as e:
             print(e)
