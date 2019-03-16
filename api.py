@@ -412,7 +412,7 @@ def get_key():
     if connection is not None:
         try:
             for row in get_select_query_results(connection, query):
-                product = {'notes':row[0]}
+                product = {'random':row[0]}
                 products_list.append(product)
         except Exception as e:
             print(e)

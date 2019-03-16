@@ -10,7 +10,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
         <link rel="stylesheet" type="text/css" href="../static/visualization.css" />
-        <script type="text/javascript" src="../static/example.js" defer></script>
+        <script type="text/javascript" src="../static/website.js" defer></script>
 
         <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
         <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
@@ -45,7 +45,7 @@
  * i) Total real vs nonreal food purchase by year
  * ii) By category real vs nonreal purchase by year (yet to be implemented)
  * iii) Top 5 categories/items/labels-brands/vendors by real and nonreal
- * 
+ *
  * 2) Percentage of real food in each food category (fully interactive):
  * Pie chart showing the percentage purchase of each food category
  * Stacked bar chart where each column stands for prominent types of food in that category, and color coded into real vs not
@@ -270,7 +270,7 @@ getData.done(function(results) {
 
  <div style = "display: block, width: 100%">
   <h3>In terms of a smaller picture ...</h3>
-  <h3>... But not quite the year you are looking for? Go to the 
+  <h3>... But not quite the year you are looking for? Go to the
     <button type="button" id = "next" onclick = "nextQuick()">following</button> or <button type="button" id = "back" onclick = "backQuick()">preceeding</button> year!!</h3>
 <div class="row">
   <div class="column" style = "width: 25%; height: 25%;  float: left">
@@ -467,7 +467,7 @@ Ranked by (in decreasing order):
     <input id="add_percent" type="text" name="text" list = "items_percent" onkeyup = "searchItemPercent()" autocomplete="off">
     <datalist id="items_percent"></datalist>
     <input id = "submit_percent_items" type="submit" value="submit" onclick = "addItemDataPercent('')">
- AND/OR Select a category: 
+ AND/OR Select a category:
 <select id = "categoriesPercent">
   <option disabled selected value> select an option </option>
 </select>
@@ -669,7 +669,7 @@ function findInsertIndex(d) {
       sessionStorage.setItem(curr_data_percent[j], JSON.stringify(arr));
     }
     return index;
-} 
+}
 
 // add single item to the time series chart
 function addItemDataPercent(override) {
@@ -731,7 +731,7 @@ function addItemDataPercent(override) {
 function addCatDataPercent(override) {
   if (override != '') {cat = override;}
   else {cat = $("select#categoriesPercent").val();}
-  if (sessionStorage.currentPercentCat != "" && sessionStorage.currentPercentCat != cat) { 
+  if (sessionStorage.currentPercentCat != "" && sessionStorage.currentPercentCat != cat) {
       remove_cat_percent();
     }
   if (sessionStorage.currentPercentCat != cat) {
@@ -913,14 +913,14 @@ function remove_cat_percent() {
 function minusPercent() {
   curr_data_percent = ["currMinus", "currSum", "currReal", "currNonreal"]
   curr_cat = JSON.parse(sessionStorage.percentCatCurr)
-  if (curr_cat.length > 0) { 
+  if (curr_cat.length > 0) {
   curr_not = JSON.parse(sessionStorage.percentCatNot)
 
   item = curr_cat[curr_cat.length-1][0]
   curr = JSON.parse(sessionStorage.currPercent)
   index = curr.indexOf(item)
 
-  // update bar chart by removing the lowest ranked 
+  // update bar chart by removing the lowest ranked
   myBarChart.data.datasets[0].data.splice(index, 1)
   myBarChart.data.datasets[1].data.splice(index, 1)
   myBarChart.data.labels.splice(index, 1)
@@ -952,7 +952,7 @@ function minusPercent() {
 // add an entry from category data to the chart
 function addPercent() {
   curr_not = JSON.parse(sessionStorage.percentCatNot)
-  if (curr_not.length > 0) { 
+  if (curr_not.length > 0) {
 
   curr_cat = JSON.parse(sessionStorage.percentCatCurr)
   item = curr_not[0][0]
@@ -995,10 +995,10 @@ function clearCanvasPercent() {
   sessionStorage.setItem("percentCatNot", JSON.stringify([]));
 
   sessionStorage.setItem("currPercent", JSON.stringify([])); // current labels stored in chart
-  sessionStorage.setItem("currReal", JSON.stringify([])); 
-  sessionStorage.setItem("currNonreal", JSON.stringify([])); 
-  sessionStorage.setItem("currSum", JSON.stringify([])); 
-  sessionStorage.setItem("currMinus", JSON.stringify([])); 
+  sessionStorage.setItem("currReal", JSON.stringify([]));
+  sessionStorage.setItem("currNonreal", JSON.stringify([]));
+  sessionStorage.setItem("currSum", JSON.stringify([]));
+  sessionStorage.setItem("currMinus", JSON.stringify([]));
   sessionStorage.setItem("percentDuplicate", JSON.stringify([]));
 }
 
@@ -1053,10 +1053,10 @@ function changeRankPercent() {
   current_data = current_data[0].map((col, i) => current_data.map(row => row[i]));
 
   sessionStorage.setItem("currPercent", JSON.stringify([])); // current labels stored in chart
-  sessionStorage.setItem("currReal", JSON.stringify([])); 
-  sessionStorage.setItem("currNonreal", JSON.stringify([])); 
-  sessionStorage.setItem("currSum", JSON.stringify([])); 
-  sessionStorage.setItem("currMinus", JSON.stringify([])); 
+  sessionStorage.setItem("currReal", JSON.stringify([]));
+  sessionStorage.setItem("currNonreal", JSON.stringify([]));
+  sessionStorage.setItem("currSum", JSON.stringify([]));
+  sessionStorage.setItem("currMinus", JSON.stringify([]));
 
   // clear and redraw everything
   l = chart_labels.length
@@ -1156,7 +1156,7 @@ First, choose a year:
     <input id="add_mixed" type="text" name="text" list = "items_mixed" onkeyup = "searchItemMixed()" autocomplete="off">
     <datalist id="items_mixed"></datalist>
     <input id = "submit_mixed_item" type="submit" value="submit" onclick = "addItemDataMixed('')">
-AND/OR Select a category: 
+AND/OR Select a category:
 <select id = "categoriesMixed">
   <option disabled selected value> select an option </option>
 </select>
@@ -1410,7 +1410,7 @@ function findInsertIndexMixed(d) {
       index = 0;
       chart_labels.push(d[0])
       chart_data = chart_data.concat([d.slice(1, 4)])
-    } 
+    }
 
     else {
     // create copy of the data
@@ -1454,12 +1454,12 @@ function findInsertIndexMixed(d) {
     chart_labels.splice(index, 0, d[0])
     chart_data.splice(index, 0, d.slice(1, 4))
 
-} 
+}
     // add new data into the chart labels/data
     sessionStorage.setItem("currMixed", JSON.stringify(chart_labels));
     sessionStorage.setItem("currData", JSON.stringify(chart_data));
     return index;
-} 
+}
 
 // add single item to the increase chart
 function addItemDataMixed(override) {
@@ -1518,7 +1518,7 @@ function addItemDataMixed(override) {
 function addCatDataMixed(override) {
   if (override != '') {cat = override;}
   else {cat = $("select#categoriesMixed").val();}
-  if (sessionStorage.currentMixedCat != "" && sessionStorage.currentMixedCat != cat) { 
+  if (sessionStorage.currentMixedCat != "" && sessionStorage.currentMixedCat != cat) {
       remove_cat_mixed();
     }
   console.log(sessionStorage.currentMixedCat)
@@ -1696,7 +1696,7 @@ function remove_cat_mixed() {
 // remove one entry for category data
 function minusMixed() {
   curr_cat = JSON.parse(sessionStorage.mixedCatCurr)
-  if (curr_cat.length > 0) { 
+  if (curr_cat.length > 0) {
   curr_not = JSON.parse(sessionStorage.mixedCatNot)
 
   item = curr_cat[curr_cat.length-1][0]
@@ -1704,7 +1704,7 @@ function minusMixed() {
   curr_data = JSON.parse(sessionStorage.currData)
   index = curr.indexOf(item)
 
-  // update bar chart by removing the lowest ranked 
+  // update bar chart by removing the lowest ranked
   myMixedChart.data.datasets[0].data.splice(index, 1)
   myMixedChart.data.datasets[1].data.splice(index, 1)
   myMixedChart.data.datasets[2].data.splice(index, 1)
@@ -1729,7 +1729,7 @@ function minusMixed() {
 // add an entry from category data
 function addMixed() {
   curr_not = JSON.parse(sessionStorage.mixedCatNot)
-  if (curr_not.length > 0) { 
+  if (curr_not.length > 0) {
 
   curr_cat = JSON.parse(sessionStorage.mixedCatCurr)
   item = curr_not[0][0]
@@ -1813,7 +1813,7 @@ function changeYearMixed() {
     <input id="add_time" type="text" name="text" list = "items_time" onkeyup = "searchItem()" autocomplete="off">
     <datalist id="items_time"></datalist>
     <input id = "submit_item_time" type="submit" value="submit" onclick = "addItemData()">
-AND/OR Select a category: 
+AND/OR Select a category:
 <select id = "categoriesTime">
   <option disabled selected value> select an option </option>
 </select>
@@ -2040,7 +2040,7 @@ function addItemData() {
     dup.push(y)
   }
   sessionStorage.setItem("timeDuplicate", JSON.stringify(dup));
-  
+
 
 
     for (j = 0; j < types.length; j++) {
@@ -2454,14 +2454,14 @@ sessionStorage.setItem("timeDuplicate", JSON.stringify([]));
     <datalist id="items_list"></datalist>
     <input id = "submit_item_liv" type="submit" value="submit" onclick = "addLivItem()">
 
-OR 
+OR
 
     <label for="add">By vendor:</label>
     <input id="vendor_liv" type="text" name="text" list = "vendor_list" onkeyup = "searchLivVendor()" autocomplete="off">
     <datalist id="vendor_list"></datalist>
     <input id = "submit_vendor_liv" type="submit" value="submit" onclick = "addLivVendor()">
 
-OR 
+OR
 
     <label for="add">By label/brand:</label>
     <input id="label_liv" type="text" name="text" list = "label_list" onkeyup = "searchLivLabel()" autocomplete="off">
@@ -2479,7 +2479,7 @@ OR
     <div id = "showLiv1" style = "display: inline">0</div>
     <input type="button" value="+" class="plus" onclick = "addLiv1()">
     out of <div id = "allLiv1" style = "display: inline">0</div> of the results
-    </div> 
+    </div>
 
     <canvas id="livChart1" style="display: block; height: 60px; width: 50%;"></canvas>
     <canvas id="livChart2" style="display: block; height: 60px; width: 50%;"></canvas>
@@ -2528,7 +2528,7 @@ OR
     </thead>
     <tbody>
     </tbody>
-</table> 
+</table>
   </div>
 
 </div>
@@ -2626,11 +2626,11 @@ $(document).ready(function(){
   table1 = $('#liv_table1').DataTable({
         dom: 'lBfrtip',
         buttons: ['copyHtml5', 'csvHtml5', 'excelHtml5']
-    }); 
+    });
   table2 = $('#liv_table2').DataTable({
       dom: 'lBfrtip',
       buttons: ['copyHtml5', 'csvHtml5', 'excelHtml5']
-  }); 
+  });
 });
 
 var updatedLivColumn = true; // set table columns to specific years
@@ -3085,7 +3085,7 @@ function addLivVendor() {
     $("#allLiv2").html(l_items.length)
   })
 }
-  
+
 // plot label charts on the canvas
 function addLivLabel() {
   LivCharts[0].destroy();

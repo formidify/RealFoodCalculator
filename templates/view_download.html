@@ -4,64 +4,254 @@
     <meta charset="utf-8">
     <title> View/Download Data </title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}" />
-    <script type="text/javascript" src="{{ url_for('static', filename='example.js') }}" defer></script>
+    <script type="text/javascript" src="../static/website.js" defer></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <link rel="shortcut icon" href="../static/favicon.ico" type="image/x-icon">
     <link rel="icon" href="../static/favicon.ico" type="image/x-icon">
-    <!--<script type="text/javascript" src="../static/library/node_modules/file-saverjs/FileSaver.js"></script>
-    <script type="text/javascript" src="../static/library/node_modules/tableexport/src/stable/js/tableexport.js"></script>-->
+    <script>
+    // gets called by go button on page
+    function vd_go_btn() {
+      // resets table (in case new query initiated)
+      var orderBy = document.getElementById("category");
+      var table = document.getElementById('results');
+      var table_len = table.getElementsByTagName('tr').length;
+      for (var row=table_len-1; row>0; row--){
+        table.deleteRow(row);
+      }
+
+      // puts together query string based on input in field
+      var inputDict = {};
+      var queryStrings = [];
+      var inputList = document.getElementsByTagName("input");
+      for (var i=0; i<inputList.length; i++){
+        var element = inputList[i];
+        if (element.value != ""){
+          inputDict[element.getAttribute("placeholder")]=element.value;
+          queryStrings.push(element.getAttribute("placeholder").toLowerCase()+"="+element.value+"&");
+        }
+      }
+      queryStrings.push("orderBy="+orderBy.value);
+      console.log("queryString -> " + queryStrings);
+      var query = getBaseApiURL()+"/test_data_large?";
+      for (var i=0; i<queryStrings.length; i++){
+        var str = queryStrings[i];
+        query = query+str;
+      }
+
+      var search_result={};
+
+      fetch(query)
+        .then(res => res.json())
+        .then((out) => {
+          search_result=out;
+          // this function dynamically adds row to table
+          append_json(out);})
+        .catch(err => { throw err });
+
+      console.log('Checkout this search result! ', search_result)
+    }
+
+    // add rows to html table
+    function append_json(data){
+      var table = document.getElementById('results');
+      console.log(table.getAttribute("id"));
+      var cur_row = 0;
+      data.forEach(function(object) {
+        // value of contenteditable attribute gets switched to make the content editable.
+        var tr = document.createElement('tr');
+        tr.innerHTML =
+        '<td>'+'<button class="editbtn" onclick="editbtn(' +
+        cur_row.toString()+');">' + 'edit</button></td>' +
+        '<td contenteditable=false title="month">' + object.month + '</td>' +
+        '<td contenteditable=false title= "year">' + object.year + '</td>' +
+        '<td contenteditable=false title="description">' + object.description + '</td>' +
+        '<td contenteditable=false title="category">' + object.category + '</td>' +
+        '<td contenteditable=false title="productCode">' + object.productCode + '</td>' +
+        '<td contenteditable=false title="productCodeType">' + object.productCodeType + '</td>' +
+        '<td contenteditable=false title="brand">' + object.brand + '</td>' +
+        '<td contenteditable=false title="vendor">' + object.vendor + '</td>' +
+        '<td contenteditable=false title="rating">' + object.rating + '</td>' +
+        '<td contenteditable=false title="local">' + object.local + '</td>' +
+        '<td contenteditable=false title="localDescription">' + object.localDescription + '</td>' +
+        '<td contenteditable=false title="fair">' + object.fair + '</td>' +
+        '<td contenteditable=false title="fairDescription">' + object.fairDescription + '</td>' +
+        '<td contenteditable=false title="ecological">' + object.ecological + '</td>' +
+        '<td contenteditable=false title="ecologicalDescription">' + object.ecologicalDescription + '</td>' +
+        '<td contenteditable=false title="humane">' + object.humane + '</td>' +
+        '<td contenteditable=false title="humaneDescription">' + object.humaneDescription + '</td>' +
+        '<td contenteditable=false title="disqualifier">' + object.disqualifier + '</td>' +
+        '<td contenteditable=false title="disqualfierDescription">' + object.disqualifierDescription + '</td>' +
+        '<td contenteditable=false title="cost">' + object.cost + '</td>' +
+        '<td contenteditable=false title="notes" >' + object.notes + '</td>' +
+        '<td contenteditable=false title="facility" >' + object.facility + '</td>';
+        table.appendChild(tr);
+        // giving each row and id number for ease of reference later
+        tr.setAttribute("id",'cur_row'+cur_row.toString());
+        tr.setAttribute("class", "can_updt");
+        cur_row++;
+      });
+    }
+
+    // gets called when edit button on each row is clicked
+    function editbtn(cur_row){
+
+      origInfo={}
+      // this gets row in which the edit button was pressed for
+      // finds the exact edit button that was pressed
+      var edit_cells = document.getElementById('cur_row'+cur_row).getElementsByTagName('td');
+      var parent = document.getElementById('cur_row'+cur_row);
+      var child = parent.getElementsByTagName('td')[0];
+
+      // turn all fields of one row into editable fields
+      for (var i=1; i<edit_cells.length; i++){
+        var cur_cell = edit_cells[i];
+        cur_cell.setAttribute('contenteditable', 'true');
+        // save the original info - used to query for entry to delete later
+        origInfo[cur_cell.getAttribute("title")]=cur_cell.innerHTML;
+      }
+
+      localStorage.setItem("origInfo",JSON.stringify(origInfo));
+      // deletes edit button in question
+      child.remove();
+
+      // create save button and put it in place of edit button
+      var cell = document.createElement('td');
+      var para = document.createElement("button");
+      para.innerHTML='save';
+      para.setAttribute('class','savebtn');
+      para.setAttribute('onclick', 'savebtn('+cur_row.toString()+');');
+      cell.appendChild(para);
+
+      var new_child = parent.getElementsByTagName('td')[0];
+      console.log(new_child.innerHTML);
+      parent.insertBefore(cell, new_child);
+    }
+
+    function savebtn(cur_row){
+      var newInfo={};
+      var queryStrings=[];
+      var addQueryStrings=[];
+      // get exact row being worked on
+      var edit_cells = document.getElementById('cur_row'+cur_row).getElementsByTagName('td');
+      var parent = document.getElementById('cur_row'+cur_row);
+      // get exact save button that was clicked
+      var child = parent.getElementsByTagName('td')[0];
+      // make content not editable again
+      // also save all the edits made into newInfo
+      for (var i=1; i<edit_cells.length; i++){
+        var cur_cell=edit_cells[i];
+        cur_cell.setAttribute('contenteditable', 'false');
+        newInfo[cur_cell.getAttribute("title")]=cur_cell.innerHTML;
+      }
+      // remove save button
+      child.remove();
+      var origInfo = JSON.parse(localStorage.getItem("origInfo"));
+
+      // create query string to add the new information
+      for (var key in newInfo){
+        addQueryStrings.push(key+"="+newInfo[key]+"&");
+      }
+      // create query string to find and delete old information
+      for (var key in origInfo){
+        queryStrings.push(key+"="+origInfo[key]+"&");
+      }
+
+      var add_query = "";
+      for (var i=0; i<addQueryStrings.length; i++){
+        var str = addQueryStrings[i];
+        add_query = add_query+str;
+      }
+      var base_query = "";
+      for (var i=0; i<queryStrings.length; i++){
+        var str = queryStrings[i];
+        base_query = base_query+str;
+      }
+
+      var add_url = getBaseApiURL()+"/vd_add_entry?"+add_query.substring(0,add_query.length - 1);
+      var del_url = getBaseApiURL()+"/delete_entry?"+base_query.substring(0,base_query.length - 1);
+      console.log("add_url -> " + add_url);
+      console.log("delete_url ->" + del_url);
+
+      // add the new entry into database
+      fetch(add_url)
+        .then(res => res.text())
+        .then((out) => {
+          return out;})
+        .catch(err => { throw err });
+
+      // delete old entry
+      fetch(del_url)
+        .then(res => res.text())
+        .then((out) => {
+        })
+        .catch(err => { throw err });
+
+      // create edit button and put in place of save button
+      var cell = document.createElement('td');
+      var para = document.createElement("button");
+      para.innerHTML='edit';
+      para.setAttribute('class','editbtn');
+      para.setAttribute('onclick', 'editbtn('+cur_row.toString()+');');
+      cell.appendChild(para);
+
+      var new_child = parent.getElementsByTagName('td')[0];
+      parent.insertBefore(cell, new_child);
+    }
+
+    function downloadCSV(csv, filename) {
+        var csvFile;
+        var downloadLink;
+
+        // CSV file
+        csvFile = new Blob([csv], {type: "text/csv"});
+
+        // Download link
+        downloadLink = document.createElement("a");
+
+        // File name
+        downloadLink.download = filename;
+
+        // Create a link to the file
+        downloadLink.href = window.URL.createObjectURL(csvFile);
+
+        // Hide download link
+        downloadLink.style.display = "none";
+
+        // Add the link to DOM
+        document.body.appendChild(downloadLink);
+
+        // Click download link
+        downloadLink.click();
+    }
+
+    function exportTableToCSV(filename) {
+      var csv = [];
+      var rows = document.querySelectorAll("table tr");
+      for (var i = 0; i < rows.length; i++) {
+        var row = [], cols = rows[i].querySelectorAll("td, th");
+        for (var j = 1; j < cols.length; j++){
+          //
+          row.push('"'+cols[j].innerText+'"');
+        }
+        csv.push(row.join(","));
+      }
+      // Download CSV file
+      downloadCSV(csv.join("\n"), filename);
+    }
+    </script>
 </head>
 <body>
     <h1>Carleton RFC</h1>
     <nav>
       <div id="navBar">
           <a id="home_btn" href="#">Home</a>
-          <!--<a id="data_entry_btn" href="#">Data Entry</a>-->
           <a id="entry_session_btn" href="#">Entry Session</a>
           <a id="view_download_btn" href="#">View/Download Data</a>
           <a id="visualization_btn" href="#">Visualization</a>
       </div>
     </nav>
-    <!--
-        <a href=''>Home</a>
-        <a href=''>Data Entry Session</a>
-        <a href=''>Data Visualization</a>
-    -->
 
     <h2>View/Download Data</h2>
-<!--
-    <style>
-        /*table */
-        table {
-            font-family: "Arial", arial, Sans-serif;
-            border-collapse: collapse;
-            width: 75%;
-        }
-        th, td {
-            border: 1px solid;
-            text-align: left;
-            padding: 8px;
-        }
-
-        /*hover buttons */
-        .dropdown-content {
-          display: none;
-          position: absolute;
-          z-index: 1;
-        }
-
-        .dropdown-content a {
-          color: black;
-          text-decoration: none;
-          display: block;
-        }
-
-        .dropdown:hover .dropdown-content {
-          display: block;
-        }
-
-    </style>
--->
         Sort By:
             <select id="category">
                 <option value="year,month">Date</option>
@@ -114,12 +304,6 @@
             <th>Costs</th>
             <th>Notes</th>
             <th>Facility</th>
-
-            <!-- <th>Vendor</th>
-            <th>Desc.</th>
-            <th>Category</th>
-            <th>Real</th>
-            <th>Entry Date</th> -->
         </tr>
     </thead>
     </table>
