@@ -16,6 +16,8 @@ function initialize() {
     redirect_to_login();
   }
 
+  // extra step taken so if someone tries to manually set the sessionStorage
+  //  will also check where you got redirected from.
   if (logged_in && !window.location.href.includes("/rfc_login")){
     if (document.referrer.includes("/rfc_login")){
     }else if (document.referrer.includes("/rfc_home")){
@@ -136,7 +138,7 @@ function redirect_to_login(){
 }
 
 function getBaseApiURL() {
-  // TODO : unhard-code this!!
+  // TODO : figure out how to unhard-code this!!
   var api_port = 5001;
   var baseURL = window.location.protocol + '//' + 'cmc307-06.mathcs.carleton.edu' + ':' + api_port;
   return baseURL;
