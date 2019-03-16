@@ -12,11 +12,24 @@ function initialize() {
 
   // if not logged in but attempting to get onto another page of website
   //  , redirect to login page.
-  if (!window.location.href.includes("/login") && !(logged_in)){
+  if (!window.location.href.includes("/rfc_login") && !(logged_in)){
     redirect_to_login();
   }
 
-  if (window.location.href.includes("/login")){
+  if (logged_in && !window.location.href.includes("/rfc_login")){
+    if (document.referrer.includes("/rfc_login")){
+    }else if (document.referrer.includes("/rfc_home")){
+    }else if (document.referrer.includes("/entry_session")){
+    }else if (document.referrer.includes("/data_entry")){
+    }else if (document.referrer.includes("/visualization")){
+    }else if (document.referrer.includes("/rfc_view_download")){
+    }else{
+      sessionStorage.removeItem("logged_in");
+      redirect_to_login();
+    }
+  }
+
+  if (window.location.href.includes("/rfc_login")){
     // get user input and use login() funct. below to check credentials.
     var login_btn = document.getElementById('login_btn');
     login_btn.onclick = function() {
@@ -65,7 +78,7 @@ function initialize() {
 //BUTTON FUCTIONS
 function go_to_home() {
   console.log("Recognizing home button");
-  document.location.href = (getBaseWebURL() + "/");
+  document.location.href = (getBaseWebURL() + "/rfc_home");
 }
 
 function go_to_data_entry(){
@@ -80,7 +93,7 @@ function go_to_entry_session(){
 
 function go_to_view_download() {
   console.log("Recognizing view download button");
-  document.location.href = (getBaseWebURL() + "/view_download");
+  document.location.href = (getBaseWebURL() + "/rfc_view_download");
 }
 
 function go_to_visualization() {
@@ -91,10 +104,12 @@ function go_to_visualization() {
 // checks whether login credentials are correct
 function login(inputID, inputPW) {
   var query = getBaseApiURL()+"/52Ow41jelt"
+  console.log(query);
   fetch(query)
   .then(function(u){ return u.json();})
   .then(function(data){
-    var key = data[0].notes;
+    var key = data[0].random;
+    console.log(key);
     var eActualID ="U2FsdGVkX18wOFwtwuBHkOYPeQ3dUlcl7NUNj2b0ms9SgTlq4hj3lBLwKlmMR+ar"
     var eActualPW ="U2FsdGVkX1+O7Wb3KqZ0qK1e7lrRWgqqipFG/N5cgjg="
     var dActualID = CryptoJS.AES.decrypt(eActualID, key).toString(CryptoJS.enc.Utf8);
@@ -117,7 +132,7 @@ function try_again(){
 
 function redirect_to_login(){
   console.log("Redirecting to log in page")
-  document.location.href=(getBaseWebURL() + "/login");
+  document.location.href=(getBaseWebURL() + "/rfc_login");
 }
 
 function getBaseApiURL() {
