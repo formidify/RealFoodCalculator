@@ -106,7 +106,7 @@ def get_products():
     #CHANGED NONE TO N/A
     elif humane == "none":
         humane = "AND test_data_large.humane IS NULL"
-    elif humane == "false":
+    elif humane == "off":
         humane = "AND test_data_large.humane = FALSE"
     else:
         humane = " "
@@ -403,7 +403,7 @@ def vd_insert_entry():
 # ----------------------------------------------------
 ### UNIVERSAL CHART METHODS (used for more than 1 chart)
 
-# get all years in reverse order
+# get all years in descending order
 def get_all_years():
     yrs = []
 
@@ -419,7 +419,7 @@ def get_all_years():
             print(e)
         connection.close()
 
-    return [2018, 2017, 2016]
+    return [2019, 2018, 2017]
 
 # universal method for multiple charts to get all the distinct categories in the dataset
 @app.route("/visualization/get_categories/")
@@ -440,7 +440,7 @@ def get_categories():
     print(cats)
     return flask.jsonify({"cats": cats})
 
-# get recent years data straight from visualization
+# get recent years data straight to visualization.html (note: different from get_all_years)
 @app.route("/visualization/recent_years")
 def get_recent_years():
     yrs = []
@@ -457,28 +457,75 @@ def get_recent_years():
             print(e)
         connection.close()
 
-    return flask.jsonify({"yrs": [2018, 2017, 2016]})
+    return flask.jsonify({"yrs": [2019, 2018, 2017]})
 
-#---------------------------------
-######## get data for quick charts
-@app.route("/visualization/quick_data")
-def get_quick_data():
-    dic = {}
-    curr_query = """SELECT MAX(year) AS maxyear FROM test_data_large;"""
+# used for first chart on the page; extracts real vs nonreal purchase for data for everything in a single year for most recent years
+@app.route("/visualization/total_data")
+def get_total_data():
+    yrs = get_all_years()[:3]
+    real = []
+    nonreal = []
+
+    # build queries for the total chart
+    query_real = """SELECT year, s FROM (SELECT {y0} AS year, COALESCE(SUM(cost),0) AS s FROM test_data_large WHERE year = {y0}
+        AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't') UNION
+        SELECT {y1} AS year, COALESCE(SUM(cost),0) AS s FROM test_data_large WHERE year = {y1}
+        AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't') UNION
+        SELECT {y2} AS year, COALESCE(SUM(cost),0) AS s FROM test_data_large WHERE year = {y2}
+        AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't')) AS X ORDER BY year;
+        """.format(y0 = yrs[0], y1 = yrs[1], y2 = yrs[2])
+
+    query_nonreal = """SELECT year, s FROM (SELECT {y0} AS year, COALESCE(SUM(cost),0) AS s
+            FROM (SELECT COALESCE(local, 'f') AS local, COALESCE(fair, 'f') AS fair, COALESCE(ecological, 'f')
+            AS ecological, COALESCE(humane, 'f') AS humane, cost, year FROM test_data_large) A WHERE year = {y0}
+        AND local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't' UNION
+        SELECT {y1} AS year, COALESCE(SUM(cost),0) AS s FROM (SELECT COALESCE(local, 'f') AS local, COALESCE(fair, 'f') AS fair, COALESCE(ecological, 'f')
+            AS ecological, COALESCE(humane, 'f') AS humane, cost, year FROM test_data_large) B WHERE year = {y1}
+        AND local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't' UNION
+        SELECT {y2} AS year, COALESCE(SUM(cost),0) AS s FROM (SELECT COALESCE(local, 'f') AS local, COALESCE(fair, 'f') AS fair, COALESCE(ecological, 'f')
+            AS ecological, COALESCE(humane, 'f') AS humane, cost, year FROM test_data_large) C WHERE year = {y2}
+        AND local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't') AS X ORDER BY year;
+        """.format(y0 = yrs[0], y1 = yrs[1], y2 = yrs[2])
+
     connection = get_connection()
-    # (but what if we have 2019 but we want to look at 2018? have a button on top saying Not quite the year you are looking for? Go back or move front by 1 year)
     if connection is not None:
         try:
-            for row in get_select_query_results(connection, curr_query):
-                curr_year = row[0]
+            for row in get_select_query_results(connection, query_real):
+                real.append(row[1])
+            for row in get_select_query_results(connection, query_nonreal):
+                nonreal.append(row[1])
         except Exception as e:
             print(e)
         connection.close()
 
-    curr_year = 2018 # just as initialization
+    yrs.reverse()
+    return flask.jsonify({"labels": yrs, "real": real, "nonreal": nonreal})
+
+#---------------------------------
+######## get data for quick charts
+# default is the most recent year, but can be changed by user from vis page
+@app.route("/visualization/quick_data", defaults = {'yr': 'null'})
+@app.route("/visualization/quick_data/<yr>")
+def get_quick_data(yr):
+    dic = {}
+
+    curr_year = yr # set to user input
+
+    # for initialization, retrieve current year from database
+    if yr == 'null':
+        curr_query = """SELECT MAX(year) AS maxyear FROM test_data_large;"""
+        connection = get_connection()
+        if connection is not None:
+            try:
+                for row in get_select_query_results(connection, curr_query):
+                    curr_year = row[0]
+            except Exception as e:
+                print(e)
+            connection.close()
+        curr_year = 2019 # set to current year as default
+
     groups = ['category', 'description', 'vendor', 'label_brand']
     type = ['real', 'nonreal']
-
 
     for g in groups:
         for t in type:
@@ -507,6 +554,7 @@ def get_quick_data():
             dic[key] = {"labels": labels[:5], "cost": cost[:5]}
 
     dic['year'] = curr_year
+    dic['all_years'] = get_all_years()
 
     return flask.jsonify(dic)
 
@@ -520,7 +568,7 @@ def get_pie_data():
 
     yrs = get_all_years()
 
-    query = """SELECT trim(category), SUM(cost) AS c_cost FROM test_data_large GROUP BY trim(category) ORDER BY trim(category) DESC;"""
+    query = """SELECT trim(category), SUM(cost) AS c_cost FROM test_data_large WHERE year IN ({y1}, {y2}, {y3}) GROUP BY trim(category) ORDER BY trim(category) DESC;""".format(y1 = yrs[0], y2 = yrs[1], y3 = yrs[2])
 
     for i in range(3): # 3 most recent years
 
@@ -573,12 +621,20 @@ def get_bar_data(cat, yr, rk):
     s = []
 
     rks = ['minus', 'add', 'real', 'nonreal']
-    q_rk = ['(COALESCE(nonreal,0) - COALESCE(real,0))', '(COALESCE(nonreal,0) + COALESCE(real,0)) desc', 'COALESCE(real,0) desc', 'COALESCE(nonreal,0) desc']
+    q_rk = ['(COALESCE(nonreal,0) - COALESCE(real,0)) desc', '(COALESCE(nonreal,0) + COALESCE(real,0)) desc', 'COALESCE(real,0) desc', 'COALESCE(nonreal,0) desc']
+
+    yrs = get_all_years()
 
     if yr == 'total':
-        y = ''
+        y = 'year IN ({y1}, {y2}, {y3}) AND'.format(y1 = yrs[0], y2 = yrs[1], y3 = yrs[2])
     else:
         y = 'year = ' + str(yr) + ' AND'
+
+    # if user is interested in all categories at once
+    if cat == 'all':
+        cat = ''
+    else:
+        cat = 'trim(category) = \'' + cat + '\' AND'
 
     # not filtered by year
     query = """SELECT COALESCE(Z.description, B.description)
@@ -586,11 +642,11 @@ def get_bar_data(cat, yr, rk):
             AS real, COALESCE(B.nonreal, 0)
             AS nonreal, (COALESCE(nonreal,0) - COALESCE(real,0)) AS minus, (COALESCE(nonreal,0) + COALESCE(real,0)) AS sum
             FROM (SELECT trim(description) AS description, SUM(cost)
-            AS real FROM test_data_large WHERE {y} category = '{c}' AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't')
+            AS real FROM test_data_large WHERE {y} {c} (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't')
             GROUP BY trim(description)) Z FULL OUTER JOIN (SELECT trim(description) AS description, SUM(cost) AS nonreal FROM
             (SELECT COALESCE(local, 'f') AS local, COALESCE(fair, 'f') AS fair, COALESCE(ecological, 'f') AS ecological, COALESCE(humane, 'f') AS humane,
             description, cost, year, category FROM test_data_large) X
-                WHERE {y} category = '{c}' AND local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't' GROUP BY trim(description)) B
+                WHERE {y} {c} local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't' GROUP BY trim(description)) B
                 ON Z.description = B.description ORDER BY {r};""".format(y = y, c = cat, r = q_rk[rks.index(rk)])
 
     # todo: query should also take account of the years
@@ -615,16 +671,23 @@ def get_bar_data(cat, yr, rk):
 @app.route("/visualization/bar_item", defaults = {'item': '', 'yr': ''})
 @app.route("/visualization/bar_item/<item>+<yr>")
 def get_bar_item(item, yr):
+
+    if yr == 'total':
+        yrs = get_all_years()
+        y = 'year IN ({y1}, {y2}, {y3}) AND'.format(y1 = yrs[0], y2 = yrs[1], y3 = yrs[2])
+    else:
+        y = 'year = ' + str(yr) + ' AND'
+
     query = """SELECT COALESCE(Z.description, B.description)
         AS description, (COALESCE(B.nonreal,0) - COALESCE(Z.real,0)) AS minus, (COALESCE(B.nonreal,0) + COALESCE(Z.real,0)) AS sum,
         COALESCE(Z.real, 0) AS real, COALESCE(B.nonreal, 0) AS nonreal
         FROM (SELECT '{d}' AS description, COALESCE(SUM(cost), 0)
-        AS real FROM test_data_large WHERE year = {y} AND trim(description) ='{d}' AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't'))
+        AS real FROM test_data_large WHERE {y} trim(description) ='{d}' AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't'))
         Z FULL OUTER JOIN (SELECT '{d}' AS description, COALESCE(SUM(cost), 0) AS nonreal FROM
         (SELECT COALESCE(local, 'f') AS local, COALESCE(fair, 'f') AS fair, COALESCE(ecological, 'f') AS ecological, COALESCE(humane, 'f') AS humane,
         description, cost, year, category FROM test_data_large) X
-            WHERE year = {y} AND trim(description) = '{d}' AND local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't') B
-            ON Z.description = B.description ORDER BY (COALESCE(nonreal,0) - COALESCE(real,0)) desc;""".format(y = yr, d = item)
+            WHERE {y} trim(description) = '{d}' AND local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't') B
+            ON Z.description = B.description ORDER BY (COALESCE(nonreal,0) - COALESCE(real,0)) desc;""".format(y = y, d = item)
 
     data = []
     connection = get_connection()
@@ -637,14 +700,16 @@ def get_bar_item(item, yr):
             print(e)
         connection.close()
 
-    return flask.jsonify({"data": data})
+    print(data)
+
+    return flask.jsonify({"data": list(data)})
 
 
 # Hypothetical increase chart methods -------------------------------------------------------------------------------------
 # get increase data for vis page
 # NOTE: items where all four categories (local, ecological, fair, humane) are null will not be included in the calculation
-@app.route("/visualization/percent_data", defaults = {'cat': 'produce', 'yr': 'total'})
-@app.route("/visualization/percent_data/<cat>+<yr>")
+@app.route("/visualization/mixed_data", defaults = {'cat': '', 'yr': ''})
+@app.route("/visualization/mixed_data/<cat>+<yr>")
 def get_percent_data(cat, yr):
     items = []
     total_percent = []
@@ -652,9 +717,21 @@ def get_percent_data(cat, yr):
     dollars = []
     # not filtered by year
     if yr == 'total':
-        y = ''
+        yrs = get_all_years()
+        yr = 'year IN ({y1}, {y2}, {y3})'.format(y1 = yrs[0], y2 = yrs[1], y3 = yrs[2])
     else:
-        y = 'year = ' + str(yr) + ' AND'
+        yr = 'year = ' + str(yr)
+
+    y = yr + ' AND '
+    # if user is interested in all categories at once
+     # needs to account for where {y} {c}
+    if cat == 'all':
+        cat = ''
+        phrase = 'WHERE ' + yr + ' '
+    else:
+        cat = 'trim(category) = \'' + cat + '\' AND'
+        phrase = 'WHERE' + y + 'trim(category) = \'' + cat + '\' '
+
 
     # if we convert all of the current non-real food purchases to real
     query = """SELECT trim(description) AS description, 100 * totalp AS totalp, 100 * indp AS indp, dollars FROM
@@ -664,16 +741,15 @@ def get_percent_data(cat, yr):
                 MIN(dollars) OVER () AS mindp, MAX(dollars) OVER () - MIN(dollars) OVER() AS rangedp
                 FROM (SELECT trim(description) AS description, (SELECT SUM(cost) AS sum FROM test_data_large WHERE {y}
                 (local IS NOT NULL OR fair IS NOT NULL OR ecological IS NOT NULL OR humane IS NOT NULL))
-                AS sum FROM test_data_large WHERE {y} category = '{c}' GROUP BY trim(description)) A
+                AS sum FROM test_data_large {p} GROUP BY trim(description)) A
                 RIGHT JOIN (SELECT trim(COALESCE(B.description, C.description)) AS description, COALESCE(B.dollars, 0) AS dollars, C.total_dollars as total_dollars FROM
                 (SELECT trim(description) AS description, sum(cost) AS dollars FROM (SELECT COALESCE(local, 'f') AS local, COALESCE(fair, 'f') AS fair, COALESCE(ecological, 'f')
                 AS ecological, COALESCE(humane, 'f') AS humane, description, cost, year, category FROM test_data_large) X
-                WHERE {y} category = '{c}' AND local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't'
+                WHERE {y} {c} local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't'
                 GROUP BY trim(description)) B FULL OUTER JOIN (SELECT trim(description) AS description, sum(cost) AS total_dollars FROM test_data_large
-                WHERE {y} category = '{c}' GROUP BY description) C ON B.description = C.description) D ON A.description = D.description) Y
+                {p} GROUP BY trim(description)) C ON B.description = C.description) D ON A.description = D.description) Y
                 ORDER BY (1.00 * (totalp - mintotalp) * CASE WHEN rangetotalp = 0 THEN 0 ELSE (1 / rangetotalp) END
-                -  CASE WHEN rangeindp = 0 OR indp = minindp THEN 1.00 * (minindp + rangeindp) ELSE (1.00 * (indp - minindp) / rangeindp) END)
-                DESC;""".format(y = y, c = cat)
+                - CASE WHEN indp = 0 THEN (minindp + rangeindp) ELSE indp END) DESC;""".format(y = y, c = cat, p = phrase)
 
 
     connection = get_connection()
@@ -690,8 +766,45 @@ def get_percent_data(cat, yr):
         connection.close()
 
     # default ranking order is by a * norm(% in all) - b * norm(% in one) for a = b = 1, but the coefficients can be up to change
-    return flask.jsonify({"items": items[:8], "total_percent": total_percent[:8], "ind_percent": ind_percent[:8], "dollars": dollars[:8]})
+    return flask.jsonify({"items": items, "total_percent": total_percent, "ind_percent": ind_percent, "dollars": dollars})
 
+@app.route("/visualization/mixed_item", defaults = {'item': '', 'yr': ''})
+@app.route("/visualization/mixed_item/<item>+<yr>")
+def get_percent_item(item, yr):
+    data = []
+    # not filtered by year
+    if yr == 'total':
+        yrs = get_all_years()
+        y = 'year IN ({y1}, {y2}, {y3}) AND'.format(y1 = yrs[0], y2 = yrs[1], y3 = yrs[2])
+    else:
+        y = 'year = ' + str(yr) + ' AND'
+
+    # if we convert all of the current non-real food purchases to real
+    query = """SELECT '{c}' AS description, 100 * CASE WHEN sum = 0 THEN 0 ELSE (dollars / sum) END AS totalp, 100 * CASE WHEN total_dollars = 0 THEN 0 ELSE (dollars / total_dollars) END AS indp, dollars
+                FROM (SELECT '{c}' AS description, (SELECT COALESCE(SUM(cost), 0) AS sum FROM test_data_large WHERE {y}
+                (local IS NOT NULL OR fair IS NOT NULL OR ecological IS NOT NULL OR humane IS NOT NULL))
+                AS sum FROM test_data_large) A
+                RIGHT JOIN (SELECT '{c}' AS description, COALESCE(B.dollars, 0) AS dollars, C.total_dollars as total_dollars FROM
+                (SELECT '{c}' AS description, COALESCE(SUM(cost), 0) AS dollars FROM (SELECT COALESCE(local, 'f') AS local, COALESCE(fair, 'f') AS fair, COALESCE(ecological, 'f')
+                AS ecological, COALESCE(humane, 'f') AS humane, description, cost, year, trim(description) FROM test_data_large) X
+                WHERE {y} trim(description) = '{c}' AND local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't'
+                ) B FULL OUTER JOIN (SELECT '{c}' AS description, COALESCE(SUM(cost), 0) AS total_dollars FROM test_data_large
+                WHERE {y} trim(description) = '{c}') C ON B.description = C.description) D ON A.description = D.description;""".format(y = y, c = item)
+
+
+    connection = get_connection()
+    if connection is not None:
+        try:
+            # either this or minimum items allowed to show
+            for row in get_select_query_results(connection, query):
+                data = list(row)
+                print(data)
+        except Exception as e:
+            print(e)
+        connection.close()
+
+    # default ranking order is by a * norm(% in all) - b * norm(% in one) for a = b = 1, but the coefficients can be up to change
+    return flask.jsonify({"data": data})
 
 
 # Time Series chart methods -------------------------------------------------------
@@ -737,7 +850,7 @@ def get_item_time(yrs, item):
 @app.route("/visualization/item_data/<path:item>")
 def get_item_data(item):
 
-    yrs = get_all_years()
+    yrs = get_all_years()[:3]
     print(item)
 
     total, real = get_item_time(yrs, item)
@@ -750,9 +863,15 @@ def get_item_data(item):
 @app.route("/visualization/get_categories_time/", defaults = {'cat': ''})
 @app.route("/visualization/get_categories_time/<cat>")
 def get_categories_time(cat):
+    # if user is interested in all categories at once
+    if cat == 'all':
+        cat = ''
+    else:
+        cat = 'WHERE trim(category) = \'' + cat + '\''
+
     items = [] # all of the distinct item in the category
-    query = """SELECT trim(description), SUM(cost) AS s FROM test_data_large WHERE trim(category) = '{p}' GROUP BY description ORDER BY s DESC;""".format(p = cat)
-    yrs = get_all_years()
+    query = """SELECT trim(description), SUM(cost) AS s FROM test_data_large {p} GROUP BY trim(description) ORDER BY s DESC;""".format(p = cat)
+    yrs = get_all_years()[:3]
 
     connection = get_connection()
     if connection is not None:
@@ -839,7 +958,7 @@ def get_label(search):
 @app.route("/visualization/brand_vendor_data", defaults = {'item': '', 'type': ''})
 @app.route("/visualization/brand_vendor_data/<path:item>+<path:type>")
 def get_brand_vendor_data(item, type):
-    yrs = get_all_years()
+    yrs = get_all_years()[:3]
 
 
     if "'" in item:
@@ -897,7 +1016,7 @@ def get_brand_vendor_data(item, type):
         AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't') UNION
         SELECT {y2} AS year, COALESCE(SUM(cost),0) AS s FROM test_data_large WHERE year = {y2} AND trim({k}) = '{i}' AND trim({a}) = '{l}'
         AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't') UNION
-        SELECT 9999 AS year, COALESCE(SUM(cost),0) AS s FROM test_data_large WHERE trim({k}) = '{i}' AND trim({a}) = '{l}'
+        SELECT 9999 AS year, COALESCE(SUM(cost),0) AS s FROM test_data_large WHERE {y} trim({k}) = '{i}' AND trim({a}) = '{l}'
         AND (local = 't' OR fair = 't' OR ecological = 't' OR humane = 't')) AS X ORDER BY year;
         """
             query_nonreal = """SELECT s, year FROM (SELECT {y0} AS year, COALESCE(SUM(cost),0) AS s
@@ -911,10 +1030,11 @@ def get_brand_vendor_data(item, type):
             AS ecological, COALESCE(humane, 'f') AS humane, cost, year, {k}, {a} FROM test_data_large) C WHERE year = {y2} AND trim({k}) = '{i}' AND trim({a}) = '{l}'
         AND local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't' UNION
         SELECT 9999 AS year, COALESCE(SUM(cost),0) AS s FROM (SELECT COALESCE(local, 'f') AS local, COALESCE(fair, 'f') AS fair, COALESCE(ecological, 'f')
-            AS ecological, COALESCE(humane, 'f') AS humane, cost, year, {k}, {a} FROM test_data_large) D WHERE trim({k}) = '{i}' AND trim({a}) = '{l}'
+            AS ecological, COALESCE(humane, 'f') AS humane, cost, year, {k}, {a} FROM test_data_large) D WHERE {y} trim({k}) = '{i}' AND trim({a}) = '{l}'
         AND local <> 't' AND fair <> 't' AND ecological <> 't' AND humane <> 't') AS X ORDER BY year;
         """
 
+            y = 'year IN ({y1}, {y2}, {y3}) AND'.format(y1 = yrs[0], y2 = yrs[1], y3 = yrs[2])
 
             for l in l1:
 
@@ -923,9 +1043,9 @@ def get_brand_vendor_data(item, type):
                 # 9999 is for all years
                 r1 = []
                 r2 = []
-                query_a = query_real.format(y0 = yrs[0], y1 = yrs[1], y2 = yrs[2], i = item, k = key, a = key_a, l = l)
+                query_a = query_real.format(y = y, y0 = yrs[0], y1 = yrs[1], y2 = yrs[2], i = item, k = key, a = key_a, l = l)
 
-                query_a_nonreal = query_nonreal.format(y0 = yrs[0], y1 = yrs[1], y2 = yrs[2], i = item, k = key, a = key_a, l = l)
+                query_a_nonreal = query_nonreal.format(y = y, y0 = yrs[0], y1 = yrs[1], y2 = yrs[2], i = item, k = key, a = key_a, l = l)
 
                 for row in get_select_query_results(connection, query_a):
                     r1.append(row[0])
@@ -941,9 +1061,9 @@ def get_brand_vendor_data(item, type):
                     l = l.replace("'", "''")
                 n1 = []
                 n2 = []
-                query_b = query_real.format(y0 = yrs[0], y1 = yrs[1], y2 = yrs[2], i = item, k = key, a = key_b, l = l)
+                query_b = query_real.format(y = y, y0 = yrs[0], y1 = yrs[1], y2 = yrs[2], i = item, k = key, a = key_b, l = l)
 
-                query_b_nonreal = query_nonreal.format(y0 = yrs[0], y1 = yrs[1], y2 = yrs[2], i = item, k = key, a = key_b, l = l)
+                query_b_nonreal = query_nonreal.format(y = y, y0 = yrs[0], y1 = yrs[1], y2 = yrs[2], i = item, k = key, a = key_b, l = l)
 
                 for row in get_select_query_results(connection, query_b):
                     n1.append(row[0])

@@ -8,9 +8,8 @@
         <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
         <script src="https://codepen.io/anon/pen/aWapBE.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<!--         <meta content="width=device-width, initial-scale=1" name="viewport"> -->
-        <!--<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}" />-->
-       <!-- <link rel="stylesheet" type="text/css" href="../static/styles.css" /> -->
+
+        <link rel="stylesheet" type="text/css" href="../static/visualization.css" />
         <script type="text/javascript" src="../static/example.js" defer></script>
 
         <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
@@ -25,73 +24,254 @@
         <link rel="icon" href="../static/favicon.ico" type="image/x-icon">
 
     </head>
+
 <body>
+<h1>Carleton RFC</h1>
+<nav>
+<div id="navBar">
+      <a id="home_btn" href="#">Home</a>
+      <a class="cur_page" id="entry_session_btn" href="#">Entry Session</a>
+      <a id="view_download_btn" href="#">View/Download Data</a>
+      <a id="visualization_btn" href="#">Visualization</a>
+</div>
+</nav>
 
-    <h1>Carleton RFC</h1>
-    <div class="topnav">
-      <nav>
-          <a id="home_btn" href="#">Home</a>
-          <!--<a id="data_entry_btn" href="#">Data Entry</a>-->
-          <a id="entry_session_btn" href="#">Entry Session</a>
-          <a id="view_download_btn" href="#">View/Download Data</a>
-          <a id="visualization_btn" href="#">Visualization</a>
-      </nav>
-    </div>
-    <!--
-    <a>Data Entry Session</a>
-    <a>Data Visualization</a>
-    <a>View/Download Files</a>
-    -->
 
-<!-- /* Real food calculator visualization page using d3.js
+<!-- /* Real food calculator visualization page using Chart.js
  * Author: James Yang (part of the Real Food Calculator comps group)
  *
  * Visualization types:
- * what time period do we want to do?
- * 1) Percentage of real food in each food category:
+ * 1) Quick look at our data using general non-interactive charts
+ * i) Total real vs nonreal food purchase by year
+ * ii) By category real vs nonreal purchase by year (yet to be implemented)
+ * iii) Top 5 categories/items/labels-brands/vendors by real and nonreal
+ * 
+ * 2) Percentage of real food in each food category (fully interactive):
  * Pie chart showing the percentage purchase of each food category
  * Stacked bar chart where each column stands for prominent types of food in that category, and color coded into real vs not
- * Buttons: which food category to be investigated, and how many items to show
+ * Buttons: add/remove food category to be investigated, and how many items to show, add/remove individual items given year, remove whole canvas
+ * Update ranking of items by (total $ /real $ / nonreal $ / nonreal $ - real $), and all items are shown in the datatable
  *
- * 2) Most impact/up for change food item:
- * A line chart showing the percentage of increase of purchase for that particular food type plus
- * a bar chart ranked by the amount of money increase in total of real food purchase
- * Buttons: how many items to shown, ranked from high to low or vice versa, as well as customizable panel to enter and control specific food types to display,
- * as well as which (one or multiple) food categories to be selected for visualization on the joint bar line chart.
- * IMPORTANT: also needs to take into account of what is the most % that Carleton wishes to increase by (so if not a complete switch?? idk)
+ * 3) Most impact/up for change food item (fully interactive):
+ * A line chart showing the percentage of increase of purchase for that particular food type plus the percentage real increase for all items in that year
+ * plus a bar showing the amount of money increase in total of real food purchase
+ * Ranked by the normalized difference between percentage increase for total real food minus percent increase for that one item.
+ * Buttons: how many items to shown, add/remove individual items, add/remove category, remove whole canvas, plus a datatable
  *
- * 3) Time series:
+ * 4) Time series (fully interactive):
  * A line chart showing the increase in real/non-real/all food purchases for food items of all categories
- * Buttons: how many items to shown, ranked from high to low or vice versa, ranked by real/non-real/all,
- * and by month (1-12, all, sum) and year (2006, 2007, 2008, etc.),
- * as well as customizable panel to enter and control specific food types to display
+ * Buttons: how many items to shown, add/remove individual items, add/remove category, remove whole canvas, plus a datatable
  *
- * 4) Other graphs:
- * - graphs that serve as motivating students to engage in the initiatives
- * - comprehensive customizable graphs (limited to a certain scope) that can be fully customized (need to discuss with real food people, may not be necessary)
+ * 5) Items/labels/vendor mutual charts:
+ * Show the distribution of items and labels for a specific vendor (vice versa if investigating a specific label/item)
  *
- * Options: add/remove existing graph chunk, as well as download.
  */ -->
+
+ <h2>Quick Look @ This Year's Data</h2>
  <div style = "display: block, width: 100%">
-<h1>Quick Look @ This Year's Data</h1>
 
-<a>Not quite the year you are looking for? Go more recent or historical.</a>
-
+<h3>In terms of the bigger picture ...</h3>
 <div class="row">
-  <div class="column" style = "width: 33%; height: 15%;  float: left">
+  <div class="column" style = "width: 50%; height: 25%;  float: left">
     <canvas id="allTimeChart" style="display: block; height: 75px; width: 75px;"></canvas>
   </div>
-  <div class="column" style = "width: 33%; height: 15%;  float: left">
+  <div class="column" style = "width: 25%; height: 25%;  float: left">
     <canvas id="percentChart1" style="display: block; height: 75px; width: 75px;"></canvas>
     <canvas id="percentChart4" style="display: block; height: 75px; width: 75px;"></canvas>
   </div>
-  <div class="column" style = "width: 33%; height: 15%;  float: left">
+  <div class="column" style = "width: 25%; height: 25%;  float: left">
     <canvas id="percentChart3" style="display: block; height: 75px; width: 75px;"></canvas>
     <canvas id="percentChart5" style="display: block; height: 75px; width: 75px;"></canvas>
   </div>
 </div>
 
+</div>
 
+<script>
+Chart.defaults.global.defaultFontSize = 20;
+
+// all time total real vs nonreal charts by years
+getData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/total_data')
+
+getData.done(function(results) {
+  data = {
+    labels: results.labels,
+    datasets: [
+    {
+      data: results.real,
+      label: "real",
+      borderWidth: 2,
+      backgroundColor: Array(results.real.length).fill('rgba(99,132,255, 0.2)'),
+      borderColor: Array(results.real.length).fill('rgba(99,132,255,1)')
+    },
+    {
+      data: results.nonreal,
+      label: "nonreal",
+      borderWidth: 2,
+      backgroundColor: Array(results.nonreal.length).fill('rgba(255,99,132, 0.2)'),
+      borderColor: Array(results.nonreal.length).fill('rgba(255,99,132, 1)')
+    }
+    ]
+  }
+
+  ctx = document.getElementById("allTimeChart").getContext('2d');
+  totalChart = new Chart(ctx, {type: 'bar', data:data,
+    options: {
+    scales: {
+      yAxes: [{
+        ticks: {
+          min: 0
+        },
+      }],
+      xAxes: [{
+        ticks: {
+          autoSkip: false
+        }
+      }]
+    },
+      title: {
+        display: true,
+        text: "Total Real vs. Nonreal Food Purchase by 3 most recent years"
+          }
+  }
+    })
+});
+
+// pie chart
+// load data from Flask; shows all categories by year
+getData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/pie_data')
+
+getData.done(function(results) {
+    years = results.labels
+    // year 1
+    yr = years[0]
+    result = results[yr]
+    data = {
+        datasets: [{
+            data: result.data,
+            backgroundColor: palette('tol', result.data.length).map(function(hex) {
+            return '#' + hex;
+          })
+        }],
+
+        // These labels appear in the legend and in the tooltips when hovering different arcs
+        labels: result.labels,
+        options: {
+            responsive: true
+        }
+    };
+
+     ctx1 = document.getElementById("percentChart1").getContext('2d');
+    myPieChart1 = new Chart(ctx1, {
+        type: 'pie',
+        data: data ,
+        options: {
+          title: {
+              display: true,
+              position: 'bottom',
+              text: yr
+          }
+      }
+    });
+
+    // year 2
+    yr = years[1]
+    result = results[yr]
+    data = {
+        datasets: [{
+            data: result.data,
+            backgroundColor: palette('tol', result.data.length).map(function(hex) {
+            return '#' + hex;
+          })
+        }],
+
+        labels: result.labels,
+        options: {
+            responsive: true
+        }
+    };
+
+     ctx6 = document.getElementById("percentChart3").getContext('2d');
+    myPieChart2 = new Chart(ctx6, {
+        type: 'pie',
+        data: data ,
+        options: {
+          title: {
+              display: true,
+              position: 'bottom',
+              text: yr
+          }
+      }
+    });
+
+    // year 3
+    yr = years[2]
+    result = results[yr]
+    data = {
+        datasets: [{
+            data: result.data,
+            backgroundColor: palette('tol', result.data.length).map(function(hex) {
+            return '#' + hex;
+          })
+        }],
+
+        // These labels appear in the legend and in the tooltips when hovering different arcs
+        labels: result.labels,
+        options: {
+            responsive: true
+        }
+    };
+
+     ctx7 = document.getElementById("percentChart4").getContext('2d');
+    myPieChart3 = new Chart(ctx7, {
+        type: 'pie',
+        data: data ,
+        options: {
+          title: {
+              display: true,
+              position: 'bottom',
+              text: yr
+          }
+      }
+    });
+
+    // total (of all 3 years)
+    yr = years[3]
+    result = results.total
+    data = {
+        datasets: [{
+            data: result.data,
+            backgroundColor: palette('tol', result.data.length).map(function(hex) {
+            return '#' + hex;
+          })
+        }],
+
+        // These labels appear in the legend and in the tooltips when hovering different arcs
+        labels: result.labels,
+        options: {
+            responsive: true
+        }
+    };
+
+     ctx8 = document.getElementById("percentChart5").getContext('2d');
+    myPieChart4 = new Chart(ctx8, {
+        type: 'pie',
+        data: data ,
+        options: {
+          title: {
+              display: true,
+              position: 'bottom',
+              text: yr
+          }
+      }
+    });
+})
+</script>
+
+ <div style = "display: block, width: 100%">
+  <h3>In terms of a smaller picture ...</h3>
+  <h3>... But not quite the year you are looking for? Go to the 
+    <button type="button" id = "next" onclick = "nextQuick()">following</button> or <button type="button" id = "back" onclick = "backQuick()">preceeding</button> year!!</h3>
 <div class="row">
   <div class="column" style = "width: 25%; height: 25%;  float: left">
     <canvas id="realCatChart" style="display: block; height: 75px; width: 75px;"></canvas>
@@ -115,13 +295,6 @@
 
 <script>
 Chart.defaults.global.plugins.datalabels.display = false
-// display time series bar chart for all food items
-ctx0 = document.getElementById("allTimeChart").getContext('2d');
-</script>
-
-
-<script>
-Chart.defaults.global.plugins.datalabels.display = false
 
 Chart.DatasetController.extend({
     name: "BarAlt",
@@ -131,18 +304,40 @@ Chart.DatasetController.extend({
     }
 });
 
+var divs = ["realCatChart", "nonCatChart", "realItemChart", "nonItemChart",
+        "realVendChart", "nonVendChart", "realBrandChart", "nonBrandChart"]
+var quickCharts = [];
+var ctQ = [];
+
+
+for (i = 0; i < 4; i++) {
+  for (j = 0; j < 2; j++) {
+    ctx_quick = document.getElementById(divs[2*i + j]).getContext('2d');
+    ctQ.push(ctx_quick);
+    quickCharts.push(new Chart(ctx_quick, {type: 'bar', options: {scales: {yAxes: [{ticks: {min: 0}}]}}}));
+  }
+}
+
+// initialize session variable of all available years and the current selected year
+sessionStorage.setItem('quickAllYears', JSON.stringify([]));
+sessionStorage.setItem('quickCurr', 'null');
+
+drawQuickChart('null'); // draw quick chart without any year input
+
+function drawQuickChart(yr) {
+// draw top 5 items/categories/labels/vendors for most recent year
 divs = ["realCatChart", "nonCatChart", "realItemChart", "nonItemChart",
         "realVendChart", "nonVendChart", "realBrandChart", "nonBrandChart"]
 
 groups = ['category', 'description', 'vendor', 'label_brand']
 type = ['real', 'nonreal']
-background = ["rgba(255, 159, 64, 0.2)", "rgba(54, 162, 235, 0.2)"]
-border = ["rgba(255, 159, 64)", "rgba(54, 162, 235)"]
+background = ["rgba(99,132,255, 0.2)", "rgba(255,99,132, 0.2)"]
+border = ["rgba(99,132,255)", "rgba(255,99,132)"]
 
 prefix = "Top 5 "
 title_parts = ['categories', 'items', 'vendors', 'labels/brands']
 // quick charts
-getData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/quick_data')
+getData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/quick_data/' + yr)
 getData.done(function(results) {
   year = results.year
 for (i = 0; i < 4; i++) {
@@ -162,14 +357,11 @@ for (i = 0; i < 4; i++) {
           borderColor: border[j]
       }],
       // These labels appear in the legend and in the tooltips when hovering different arcs
-      labels: labels,
-      options: {
-          responsive: true
-      }
+      labels: labels
   };
   title = prefix + title_parts[i] + " " + year + " in " + type[j] + " food"
-  ctx = document.getElementById(divs[2*i + j]).getContext('2d');
-  quickBarChart = new Chart(ctx, {
+  //ctx = document.getElementById(divs[2*i + j]).getContext('2d');
+  quickCharts[2*i + j] = new Chart(ctQ[2*i + j], {
       type: 'bar',
       data: data,
       options: {
@@ -180,7 +372,8 @@ for (i = 0; i < 4; i++) {
           scales: {
           xAxes: [{
             ticks: {
-              autoSkip: false
+              autoSkip: false,
+              fontSize: 14
             }
           }],
           yAxes: [{
@@ -190,19 +383,61 @@ for (i = 0; i < 4; i++) {
               }]
       }
   }});
-
   }
 }
+sessionStorage.setItem('quickCurr', results.year);
+sessionStorage.setItem('quickAllYears', JSON.stringify(results['all_years']));
 });
-</script>
+};
 
+// clear all data on quick chart so that one can be drawn for the newly selected year
+function clearQuickChart() {
+  for (i = 0; i < quickCharts.length; i++) {
+    quickCharts[i].destroy();
+  }
+  quickCharts = [];
+}
+
+// remove the current data and draw for the following year if its data is available in database
+function nextQuick() {
+  curr = parseInt(sessionStorage.quickCurr) + 1;
+  all_years = JSON.parse(sessionStorage.quickAllYears)
+
+  if (!all_years.includes(curr)) {
+    alert(curr + " cannot be selected since it cannot be found in database.")
+  }
+
+  else {
+    clearQuickChart();
+    drawQuickChart(curr);
+    sessionStorage.setItem("quickCurr", curr)
+  }
+}
+
+// remove the current data and draw for the previous year if its data is available in database
+function backQuick() {
+  curr = parseInt(sessionStorage.quickCurr) - 1;
+  all_years = JSON.parse(sessionStorage.quickAllYears)
+
+  if (!all_years.includes(curr)) {
+    alert(curr + " cannot be selected since it cannot be found in database.")
+  }
+
+  else {
+    clearQuickChart();
+    drawQuickChart(curr);
+    sessionStorage.setItem("quickCurr", curr)
+  }
+}
+
+</script>
 
 
 <h1>Real vs non-real percentage</h1>
 
 <div style = "display: block; width: 100%">
-<a>First, choose a year:</a>
-<select id = "yearPercent" name="Show:" style = "width: 22%">
+First, choose a year:
+<select id = "yearPercent" name="Show:" style = "width: 5%" onchange="changeYearPercent()">
   <option disabled selected value> select an option </option>
 </select>
 </div>
@@ -218,8 +453,8 @@ for (i = 0; i < 4; i++) {
 
 
 <div style = "display: block">
-<a>Ranked by (in decreasing order):</a>
-<select id = "rank_percent" name="Show:" style = "width: 22%">
+Ranked by (in decreasing order):
+<select id = "rank_percent" name="Show:" style = "width: 12%" onchange="changeRankPercent()">
   <option value="minus" selected>Nonreal $ minus Real $</option>
   <option value="add">Total $ purchase</option>
   <option value="real">Real $ purchase</option>
@@ -231,27 +466,26 @@ for (i = 0; i < 4; i++) {
     <label for="add">Add by item:</label>
     <input id="add_percent" type="text" name="text" list = "items_percent" onkeyup = "searchItemPercent()" autocomplete="off">
     <datalist id="items_percent"></datalist>
-    <input id = "submit_percent_time" type="submit" value="submit" onclick = "addItemDataPercent()">
-<a> AND/OR </a>
-<a> Select a category: </a>
+    <input id = "submit_percent_items" type="submit" value="submit" onclick = "addItemDataPercent('')">
+ AND/OR Select a category: 
 <select id = "categoriesPercent">
   <option disabled selected value> select an option </option>
 </select>
-<input id = "submit_cat_percent" type="submit" value="submit" onclick = "addCatDataPercent()">
+<input id = "submit_cat_percent" type="submit" value="submit" onclick = "addCatDataPercent('')">
 </div>
 
 <div>
   Remove:
-<button class="btnic" id = "canvas_time" onclick = "clearCanvasPercent()"><i class="fa fa-close"></i> Remove all canvas</button>
-<button class="btnic" id = "remove_cat_time" onclick = "remove_cat_percent()"><i class="fa fa-close"></i> Remove selected category</button>
+<button class="btnic" id = "canvas_percent" onclick = "clearCanvasPercent()"><i class="fa fa-close"></i> Remove all canvas</button>
+<button class="btnic" id = "remove_cat_percent" onclick = "remove_cat_percent()"><i class="fa fa-close"></i> Remove selected category</button>
 <div style = "display:inline" id = "buttons_percent"></div>
 </div>
 
 <div class="row">
-  <div class="column" style = "width: 60%; height: 25%;  float: left">
-    <canvas id="percentChart" style="display: block; width: 60%; height: 400px"></canvas>
+  <div class="column" style = "width: 60%; height: 30%;  float: left">
+    <canvas id="percentChart" style="display: block; width: 60%; height: 700px"></canvas>
   </div>
-  <div class="column" style = "width: 40%; height: 25%; display: inline-block;">
+  <div class="column" style = "width: 40%; height: 30%; display: inline-block;">
     <table id="percent_table" class="display" style = "display: inline-block;">
     <thead>
       <tr>
@@ -268,22 +502,10 @@ for (i = 0; i < 4; i++) {
     </div>
 </div>
 
-
-<!--  <div id="container-fluid">
- <div id="canvas-holder" style="width:50%;float: left;" \
- class="col-xs-6">
-<canvas id="percentChart1" style="float: left; display: block; height: 75px; width: 75px;"></canvas></div>
-<canvas id="percentChart3" style="float: left; display: block; height: 75px; width: 75px;"></canvas></div>
-<canvas id="percentChart4" style="float: left; display: block; height: 75px; width: 75px;"></canvas></div>
-<canvas id="percentChart5" style="float: left; display: block; height: 75px; width: 75px;"></canvas></div>
-<div id="canvas-holder" style="width:50%;float: right;" \
- class="col-xs-6">
-<canvas id="percentChart2" style="float: right; display: block; height: 300px; width: 300px;"></canvas></div>
-</div> -->
-
 <script>
 Chart.defaults.global.plugins.datalabels.display = false
 
+// get all categories in database
 c = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/get_categories/");
 
 c.done(function(results) {
@@ -295,8 +517,13 @@ c.done(function(results) {
     .html(cat)
 );
   }
+    // add option for all categories
+    $("select#categoriesPercent").append( $("<option>")
+    .val("all")
+    .html("all"));
 });
 
+// get most recent years
 yrs = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/recent_years");
 
 yrs.done(function(results) {
@@ -313,26 +540,29 @@ yrs.done(function(results) {
     .val(Y)
     .html(Y)
 );}
-  }});
+  }
+  // add option to choose all 3 years combined
+  $("select#yearPercent").append( $("<option>")
+    .val('total')
+    .html('all 3 years'))
+});
 
 sessionStorage.setItem("currentPercentCat", "") // current investigated category
 sessionStorage.setItem("percentSearch", JSON.stringify([])); // previous searches
-sessionStorage.setItem("percentCurrent", JSON.stringify([])); // previous searches
-
-sessionStorage.setItem("percentCatCurr", JSON.stringify([]));
-sessionStorage.setItem("percentCatNot", JSON.stringify([]));
+sessionStorage.setItem("percentCurrent", JSON.stringify([])); // all the individual items added
+sessionStorage.setItem("percentCatCurr", JSON.stringify([])); // all categories items currently show in plot
+sessionStorage.setItem("percentCatNot", JSON.stringify([])); // categories items not shown
 
 sessionStorage.setItem("currPercent", JSON.stringify([])); // current labels stored in chart
-sessionStorage.setItem("currReal", JSON.stringify([])); 
-sessionStorage.setItem("currNonreal", JSON.stringify([])); 
-sessionStorage.setItem("currSum", JSON.stringify([])); 
-sessionStorage.setItem("currMinus", JSON.stringify([])); 
+sessionStorage.setItem("currReal", JSON.stringify([])); // real $ purchase of all labels
+sessionStorage.setItem("currNonreal", JSON.stringify([])); // nonreal $ purchase of all labels
+sessionStorage.setItem("currSum", JSON.stringify([])); // total $ purchase of all labels
+sessionStorage.setItem("currMinus", JSON.stringify([])); // nonreal - real $ purchase of all labels
+sessionStorage.setItem("percentDuplicate", JSON.stringify([])); // store duplicate entries between individual items and category
 
 curr_data_percent = ["currMinus", "currSum", "currReal", "currNonreal"]
 
-
-sessionStorage.setItem("percentSort", ""); // store the current ranking method
-
+// search for items for percent chart
 function searchItemPercent() {
   x = document.getElementById("add_percent").value;
   if (x.length > 1) {
@@ -356,7 +586,9 @@ function searchItemPercent() {
 }
 };
 
+// rank methods in order
 var rank_methods = ["minus", "add", "real", "nonreal"]
+
 // initialize my bar chart
 var myBarChart;
   ctx2 = document.getElementById("percentChart").getContext('2d');
@@ -377,29 +609,29 @@ var myBarChart;
           borderColor: []
         }
       ],
-      // These labels appear in the legend and in the tooltips when hovering different arcs
-      labels: [],
-      options: {
-          responsive: true,
-          maintainAspectRatio: false
-      }
+      labels: []
   },
       type: 'bar',
       options: {
           scales: {
               xAxes: [{
-                  stacked: true
+                  stacked: true,
+                  ticks: {
+                    autoSkip: false
+                  }
               }],
               yAxes: [{
                   stacked: true
               }]},
               title: {
               display: true
-          }
-
+          },
+          responsive: true,
+          maintainAspectRatio: false
       }
   });
 
+// datatable initialization
 var table_percent;
 $(document).ready(function(){table_percent = $('#percent_table').DataTable({
         dom: 'lBfrtip',
@@ -408,60 +640,44 @@ $(document).ready(function(){table_percent = $('#percent_table').DataTable({
 
 // given the attributes of an item and the current sorting, find which index to splice it into the chart
 function findInsertIndex(d) {
+    curr_data_percent = ["currMinus", "currSum", "currReal", "currNonreal"]
     e = document.getElementById("rank_percent");
     var rank = e.options[e.selectedIndex].value;
 
     val = d[rank_methods.indexOf(rank) + 1]
 
     chart_data = JSON.parse(sessionStorage[curr_data_percent[rank_methods.indexOf(rank)]])
-    /*
-    index = 0
 
-    if (rank == 'minus') {
-      for (i = chart_data.length - 1; i >= 0; i--) {
-        if (val > chart_data[i]) {
-          index = i + 1;
-          break;
-        }
-      }
-      index = 0;
-    }
-    */
     index = chart_data.length;
-    for (i = 0; i < chart_data.length; i++) {
-      if (val > chart_data[i]) {
-        index = i;
+    console.log(chart_data)
+    for (k = 0; k < chart_data.length; k++) {
+      if (val > chart_data[k]) {
+        index = k;
         break;
       }
     }
 
-
     curr = JSON.parse(sessionStorage.currPercent)
     curr.splice(index, 0, d[0])
-
+    console.log(curr)
     sessionStorage.setItem("currPercent", JSON.stringify(curr));
 
-    chart_data.splice(index, 0, d[rank_methods.indexOf(rank) + 1])
-    sessionStorage.setItem("currPercent", JSON.stringify(chart_data));
-
-    // insert the newly added item to the same spot across all 4 data arrays
+    // insert the newly added item to the same spot across all 4 data arrays of the labels
     for (j = 0; j < 4; j++) {
       arr = JSON.parse(sessionStorage[curr_data_percent[j]])
-      arr.splice(index, 0, d[i+1])
+      arr.splice(index, 0, d[j+1]) // rank_methods.indexOf(rank)
       sessionStorage.setItem(curr_data_percent[j], JSON.stringify(arr));
     }
     return index;
 } 
 
-// do not necessarily need right now
-function sortCatData(arr, num) {
-  return
-}
-
 // add single item to the time series chart
-function addItemDataPercent() {
-  current_list = JSON.parse(sessionStorage.percentCurrent);
-  y = document.getElementById("add_percent").value;
+function addItemDataPercent(override) {
+  current_list = JSON.parse(sessionStorage.percentCurrent)
+
+  if (override != '') {y = override;}
+  else {y = document.getElementById("add_percent").value;}
+  console.log(current_list)
   // check input is longer than 1 and has not appeared in current list
   if (y.length > 1 && !current_list.includes(y)) {
     e = document.getElementById("yearPercent");
@@ -470,42 +686,55 @@ function addItemDataPercent() {
     searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/bar_item/" + y + "+" + year);
 
     searches.done(function(results) {
-
       // elements by index: item, real, nonreal, minus, sum
       data = results.data
+
       index = findInsertIndex(data)
 
       myBarChart.data.datasets[0].data.splice(index, 0, data[3])
-      myBarChart.data.datasets[0].backgroundColor.push('rgba(255, 99, 132, 0.2)')
-      myBarChart.data.datasets[0].borderColor.push('rgba(255, 99, 132, 1)')
+      myBarChart.data.datasets[0].backgroundColor.push('rgba(99,132,255, 0.2)')
+      myBarChart.data.datasets[0].borderColor.push('rgba(99,132,255, 1)')
 
       myBarChart.data.datasets[1].data.splice(index, 0, data[4])
-      myBarChart.data.datasets[1].backgroundColor.push('rgba(255, 159, 64, 0.2)')
-      myBarChart.data.datasets[1].borderColor.push('rgba(255, 159, 64, 1)')
+      myBarChart.data.datasets[1].backgroundColor.push('rgba(255,99,132, 0.2)')
+      myBarChart.data.datasets[1].borderColor.push('rgba(255,99,132, 1)')
 
       myBarChart.data.labels.splice(index, 0, data[0])
-
 
       myBarChart.update();
       table_percent.row.add([data[0], data[3], data[4], data[1], data[2]]).draw(false)
 
+      // add duplicates to entry
+      dup = JSON.parse(sessionStorage.percentDuplicate)
+      curr = JSON.parse(sessionStorage.percentCatCurr)
+      n = JSON.parse(sessionStorage.percentCatNot)
+      total = curr.concat(n)
+      if (total.length > 0) {
+      total_t = total[0].map((col, i) => total.map(row => row[i]));
 
-// add option to remove
-$('#buttons_percent').append('<button class="btnic" id = "percent_' + y + '" onclick = "remove_percent_time(&quot ' + y + '&quot)"><i class="fa fa-close"></i> ' + y + '</button>');
+      if (total_t[0].includes(y)) {
+        dup.push(y)
+      }
+
+      sessionStorage.setItem("percentDuplicate", JSON.stringify(dup));
+    }
 
     })
-
+    $('#buttons_percent').append('<button class="btnic" id = "percent_' + y + '" onclick = "remove_item_percent(&quot ' + y + '&quot)"><i class="fa fa-close"></i> ' + y + '</button>');
     sessionStorage.setItem("percentCurrent", JSON.stringify(current_list.concat([y])));
+
   }
 }
 
 
-function addCatDataPercent() {
-  cat = $("select#categoriesPercent").val();
+// add a category to the percent chart
+function addCatDataPercent(override) {
+  if (override != '') {cat = override;}
+  else {cat = $("select#categoriesPercent").val();}
   if (sessionStorage.currentPercentCat != "" && sessionStorage.currentPercentCat != cat) { 
-      remove_cat_time();
+      remove_cat_percent();
     }
-  if (sessionStorage.currentTimeCat != cat) {
+  if (sessionStorage.currentPercentCat != cat) {
   e = document.getElementById("rank_percent");
   var rank = e.options[e.selectedIndex].value;
 
@@ -515,9 +744,8 @@ function addCatDataPercent() {
   searches.done(function(results) {
 
   // results already sorted given the rank inputted to api.py
+  // choose number of items (at most 3 items shown on the chart from selected category at initialization)
   num_items = Math.min(results.items.length, 3)
-  console.log(num_items)
-  // new_results = sortCatData(results, num_items)
 
   // transpose results for easier data wrangling
   result_list = [results.items, results.minus, results.sum, results.real, results.nonreal]
@@ -525,20 +753,19 @@ function addCatDataPercent() {
 
   results_curr = results.slice(0, num_items)
   results_no = results.slice(num_items, results.length)
-  console.log(results)
   // add data to table
   for (i = 0; i < num_items; i++) {
       data = results_curr[i]
       index = findInsertIndex(data)
 
       myBarChart.data.datasets[0].data.splice(index, 0, data[3])
-      myBarChart.data.datasets[0].backgroundColor.push('rgba(255, 99, 132, 0.2)')
-      myBarChart.data.datasets[0].borderColor.push('rgba(255, 99, 132, 1)')
+      myBarChart.data.datasets[0].backgroundColor.push('rgba(99,132,255, 0.2)')
+      myBarChart.data.datasets[0].borderColor.push('rgba(99,132,255, 1)')
 
       myBarChart.data.datasets[1].data.splice(index, 0, data[4])
-      myBarChart.data.datasets[1].backgroundColor.push('rgba(255, 159, 64, 0.2)')
-      myBarChart.data.datasets[1].borderColor.push('rgba(255, 159, 64, 1)')
-
+      myBarChart.data.datasets[1].backgroundColor.push('rgba(255,99,132, 0.2)')
+      myBarChart.data.datasets[1].borderColor.push('rgba(255,99,132, 1)')
+      console.log(myBarChart.data.labels)
       myBarChart.data.labels.splice(index, 0, data[0])
   }
 
@@ -548,9 +775,19 @@ function addCatDataPercent() {
   all = parseInt($("#allPercent").html()) + results.length
   $("#showPercent").html(show)
   $("#allPercent").html(all)
+
+  // add duplicate items
+  dup = JSON.parse(sessionStorage.percentDuplicate)
+  console.log(dup)
+  curr_ind = JSON.parse(sessionStorage.percentCurrent)
+
   for (i = 0; i < results.length; i++) {
-      table.row.add(results[i]).draw(false)
+    if (curr_ind.includes(results[i][0])) {
+      dup.push(results[i][0])
     }
+      table_percent.row.add([results[i][0], results[i][3], results[i][4], results[i][1],results[i][2]]).draw(false)
+    }
+    sessionStorage.setItem("percentDuplicate", JSON.stringify(dup));
 
   sessionStorage.setItem("percentCatCurr", JSON.stringify(results_curr));
   sessionStorage.setItem("percentCatNot", JSON.stringify(results_no));
@@ -560,72 +797,336 @@ function addCatDataPercent() {
 }
 };
 
+// remove single item from the chart and the table
+function remove_item_percent(item) {
+  curr_data_percent = ["currMinus", "currSum", "currReal", "currNonreal"]
+  item = item.substring(1)
 
-function remove_cat_percent() {
+  curr = JSON.parse(sessionStorage.currPercent) // all the labels currently shown on the plot
+  index = curr.indexOf(item)
+  myBarChart.data.datasets[0].data.splice(index, 1)
 
-}
+  myBarChart.data.datasets[1].data.splice(index, 1)
 
-
-
-
-
-
-
-
-
-
-
-let num_items = document.querySelector('#num_items_percent');
-let rank = document.querySelector('#rank_percent');
-
-// manually added items
-var new_real = [];
-var new_nonreal = [];
-var new_label = [];
-
-
-// update bar chart
-function updateBarChart(cat, yr){
-   updatedData = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/bar_data/" + cat + "+" + yr);
-  updatedData.done(function(results) {
-   real_color = Array(results.items.length).fill('rgba(255, 99, 132, 0.2)')
-   nonreal_color = Array(results.items.length).fill('rgba(255, 159, 64, 0.2)')
-
-   real_border_color = Array(results.items.length).fill('rgba(255,99,132,1)')
-   nonreal_border_color = Array(results.items.length).fill('rgba(255, 159, 64, 1)')
-
-  data = {
-      datasets: [{
-          label: "real",
-          data: results.real,
-          borderWidth: 2,
-          backgroundColor: real_color,
-          borderColor: real_border_color
-      },
-      {
-          label: "non-real",
-          data: results.nonreal,
-          borderWidth: 2,
-          backgroundColor: nonreal_color,
-          borderColor: nonreal_border_color
-        }
-      ],
-      // These labels appear in the legend and in the tooltips when hovering different arcs
-      labels: results.items,
-      options: {
-          responsive: true
-      }
-  };
-
-  myBarChart.data = data;
-  myBarChart.options.title.text = yr + " purchase of " + cat;
-
+  curr.splice(index, 1)
+  myBarChart.data.labels.splice(index, 1)
   myBarChart.update();
-    })
+
+  item_id = "[id='percent_" + item + "']"
+  $(item_id).remove()
+
+  table_percent.rows( function ( idx, data, node ) {
+        return data[0] === item;
+    } )
+    .remove()
+    .draw();
+
+    sessionStorage.setItem("currPercent", JSON.stringify(curr));
+    for (j = 0; j < 4; j++) {
+      arr = JSON.parse(sessionStorage[curr_data_percent[j]])
+      arr.splice(index, 1)
+      sessionStorage.setItem(curr_data_percent[j], JSON.stringify(arr));
+    }
+
+    // update the list that contains all user-entered individual entries
+    current_list = JSON.parse(sessionStorage.percentCurrent)
+    index = current_list.indexOf(item)
+    current_list.splice(index, 1)
+    sessionStorage.setItem("percentCurrent", JSON.stringify(current_list));
+
+  // deal with duplicates
+  curr_cat = JSON.parse(sessionStorage.percentCatCurr)
+  n = JSON.parse(sessionStorage.percentCatNot)
+  total = curr_cat.concat(n)
+  console.log(total)
+  // only check duplicates in category if there are items in there
+  if (total.length > 0) {
+  total_t = total[0].map((col, i) => total.map(row => row[i]));
+  console.log(total_t)
+
+  dup = JSON.parse(sessionStorage.percentDuplicate)
+  console.log(dup)
+  // add back the duplicate entry if it exists in category data
+  if (dup.includes(item)) {
+    index = total_t[0].indexOf(item)
+    table_percent.row.add([total[index][0], total[index][3], total[index][4], total[index][1],total[index][2]]).draw(false)
+    var del = dup.indexOf(item);
+    dup.splice(del, 1);
+    sessionStorage.setItem("percentDuplicate", JSON.stringify(dup))
+  }
+}
 }
 
+// remove the category for the percent chart
+function remove_cat_percent() {
+  curr_data_percent = ["currMinus", "currSum", "currReal", "currNonreal"]
+  curr_cat = JSON.parse(sessionStorage.percentCatCurr)
+  total = curr_cat.concat(JSON.parse(sessionStorage.percentCatNot))
+  curr = JSON.parse(sessionStorage.currPercent)
+  for (q = 0; q < curr_cat.length; q++) {
+    item = curr_cat[q][0]
+    index = curr.indexOf(item)
+    myBarChart.data.datasets[0].data.splice(index, 1)
 
+    myBarChart.data.datasets[1].data.splice(index, 1)
+    myBarChart.data.labels.splice(index, 1)
+    curr.splice(index, 1)
 
+    for (j = 0; j < 4; j++) {
+      arr = JSON.parse(sessionStorage[curr_data_percent[j]])
+      arr.splice(index, 1)
+      sessionStorage.setItem(curr_data_percent[j], JSON.stringify(arr));
+    }
+  }
+  myBarChart.update()
+
+  sessionStorage.setItem("currPercent", JSON.stringify(curr));
+  sessionStorage.setItem("currentPercentCat", "")
+
+  dup = JSON.parse(sessionStorage.percentDuplicate)
+  for (z = 0; z < total.length; z++) {
+    item = total[z][0]
+    table_percent.rows( function ( idx, data, node ) {
+        return data[0] === item;
+    } )
+    .remove()
+    .draw();
+
+  if (dup.includes(item)) {
+    total_t = total[0].map((col, i) => total.map(row => row[i]));
+    index = total_t[0].indexOf(item)
+    table_percent.row.add([total[index][0], total[index][3], total[index][4], total[index][1],total[index][2]]).draw(false)
+    var del = dup.indexOf(item);
+    dup.splice(del, 1);
+  }
+  }
+  sessionStorage.setItem("percentDuplicate", JSON.stringify(dup))
+  // update html
+  $("#showPercent").html(0)
+  $("#allPercent").html(0)
+  sessionStorage.setItem("percentCatCurr", JSON.stringify([]));
+  sessionStorage.setItem("percentCatNot", JSON.stringify([]));
+
+}
+
+// remove one entry for category data from the chart
+function minusPercent() {
+  curr_data_percent = ["currMinus", "currSum", "currReal", "currNonreal"]
+  curr_cat = JSON.parse(sessionStorage.percentCatCurr)
+  if (curr_cat.length > 0) { 
+  curr_not = JSON.parse(sessionStorage.percentCatNot)
+
+  item = curr_cat[curr_cat.length-1][0]
+  curr = JSON.parse(sessionStorage.currPercent)
+  index = curr.indexOf(item)
+
+  // update bar chart by removing the lowest ranked 
+  myBarChart.data.datasets[0].data.splice(index, 1)
+  myBarChart.data.datasets[1].data.splice(index, 1)
+  myBarChart.data.labels.splice(index, 1)
+  myBarChart.data.datasets[0].backgroundColor.splice(0, 1)
+  myBarChart.data.datasets[0].borderColor.splice(0, 1)
+  myBarChart.data.datasets[1].backgroundColor.splice(0, 1)
+  myBarChart.data.datasets[1].borderColor.splice(0, 1)
+  myBarChart.update()
+
+  curr_not.splice(0, 0, curr_cat[curr_cat.length-1]) // add to non-displaying category data
+  curr.splice(index, 1) // remove from current labels
+  curr_cat.splice(curr_cat.length-1, 1) // remove from current category data
+
+  for (j = 0; j < 4; j++) {
+    arr = JSON.parse(sessionStorage[curr_data_percent[j]])
+    arr.splice(index, 1)
+    sessionStorage.setItem(curr_data_percent[j], JSON.stringify(arr));
+  }
+
+  sessionStorage.setItem("percentCatCurr", JSON.stringify(curr_cat));
+  sessionStorage.setItem("percentCatNot", JSON.stringify(curr_not));
+  sessionStorage.setItem("currPercent", JSON.stringify(curr));
+
+  show = parseInt($("#showPercent").html()) - 1
+  $("#showPercent").html(show)
+}
+}
+
+// add an entry from category data to the chart
+function addPercent() {
+  curr_not = JSON.parse(sessionStorage.percentCatNot)
+  if (curr_not.length > 0) { 
+
+  curr_cat = JSON.parse(sessionStorage.percentCatCurr)
+  item = curr_not[0][0]
+  index = findInsertIndex(curr_not[0])
+
+  myBarChart.data.datasets[0].data.splice(index, 0, curr_not[0][3])
+  myBarChart.data.datasets[1].data.splice(index, 0, curr_not[0][4])
+  myBarChart.data.labels.splice(index, 0, curr_not[0][0])
+  myBarChart.data.datasets[0].backgroundColor.push('rgba(99,132,255, 0.2)')
+  myBarChart.data.datasets[0].borderColor.push('rgba(99,132,255, 1)')
+  myBarChart.data.datasets[1].backgroundColor.push('rgba(255,99,132, 0.2)')
+  myBarChart.data.datasets[1].borderColor.push('rgba(255,99,132, 1)')
+
+  myBarChart.update()
+
+  curr_cat = curr_cat.concat([curr_not[0]])
+  curr_not.splice(0, 1)
+
+  sessionStorage.setItem("percentCatCurr", JSON.stringify(curr_cat));
+  sessionStorage.setItem("percentCatNot", JSON.stringify(curr_not));
+
+  show = parseInt($("#showPercent").html()) + 1
+  $("#showPercent").html(show)
+}
+}
+
+// clear the whole canvas
+function clearCanvasPercent() {
+  current = JSON.parse(sessionStorage.percentCurrent)
+  for (t = 0; t < current.length; t++) {
+    remove_item_percent(" " + current[t])
+  }
+  remove_cat_percent();
+  table_percent.clear();
+
+  sessionStorage.setItem("currentPercentCat", "") // current investigated category
+  sessionStorage.setItem("percentSearch", JSON.stringify([])); // previous searches
+  sessionStorage.setItem("percentCurrent", JSON.stringify([])); // all the individual items added
+  sessionStorage.setItem("percentCatCurr", JSON.stringify([]));
+  sessionStorage.setItem("percentCatNot", JSON.stringify([]));
+
+  sessionStorage.setItem("currPercent", JSON.stringify([])); // current labels stored in chart
+  sessionStorage.setItem("currReal", JSON.stringify([])); 
+  sessionStorage.setItem("currNonreal", JSON.stringify([])); 
+  sessionStorage.setItem("currSum", JSON.stringify([])); 
+  sessionStorage.setItem("currMinus", JSON.stringify([])); 
+  sessionStorage.setItem("percentDuplicate", JSON.stringify([]));
+}
+
+// change the year of all shown items to the given year; and change the associate order
+function changeYearPercent() {
+  // store the important data
+  updateYearCat = sessionStorage.currentPercentCat
+  updateYearItems = JSON.parse(sessionStorage.percentCurrent)
+  console.log(updateYearItems)
+  // clear the canvas
+  clearCanvasPercent();
+  console.log(updateYearItems)
+  for (u = 0; u < updateYearItems.length; u++) {
+    addItemDataPercent(updateYearItems[u])
+  }
+
+  if (updateYearCat != '') {
+    addCatDataPercent(updateYearCat);
+  }
+}
+
+// sort A given the sorted index of B
+function sortListbyList(A, B) {
+  zip = A.map(function(e, i) {
+    return [e, B[i]]
+  });
+  zip = zip.sort(function(a,b){return b[1] - a[1]})
+  result = []
+  for (s = 0; s < zip.length; s++) {
+    result = result.concat([zip[s][0]])
+  }
+  return result;
+}
+
+// change the ranking method and the associate data/chart
+function changeRankPercent() {
+  show = parseInt($("#showPercent").html())
+
+  e = document.getElementById("rank_percent");
+  var rank = e.options[e.selectedIndex].value;
+  rank_index = rank_methods.indexOf(rank)
+
+  // load individual data
+  current = JSON.parse(sessionStorage.percentCurrent)
+  chart_labels = JSON.parse(sessionStorage.currPercent)
+  minus = JSON.parse(sessionStorage["currMinus"])
+  sum = JSON.parse(sessionStorage["currSum"])
+  real = JSON.parse(sessionStorage["currReal"])
+  nonreal = JSON.parse(sessionStorage["currNonreal"])
+
+  current_data = [minus, sum, real, nonreal]
+  current_data = current_data[0].map((col, i) => current_data.map(row => row[i]));
+
+  sessionStorage.setItem("currPercent", JSON.stringify([])); // current labels stored in chart
+  sessionStorage.setItem("currReal", JSON.stringify([])); 
+  sessionStorage.setItem("currNonreal", JSON.stringify([])); 
+  sessionStorage.setItem("currSum", JSON.stringify([])); 
+  sessionStorage.setItem("currMinus", JSON.stringify([])); 
+
+  // clear and redraw everything
+  l = chart_labels.length
+  myBarChart.data.datasets[0].data.splice(0,l)
+  myBarChart.data.datasets[0].backgroundColor.splice(0,l)
+  myBarChart.data.datasets[0].borderColor.splice(0,l)
+
+  myBarChart.data.datasets[1].data.splice(0,l)
+  myBarChart.data.datasets[1].backgroundColor.splice(0,l)
+  myBarChart.data.datasets[1].borderColor.splice(0,l)
+
+  myBarChart.data.labels.splice(0,l)
+
+  for (b = 0; b < current.length; b++) {
+    item = current[b]
+    index_b = chart_labels.indexOf(item)
+    index_c = findInsertIndex([item, minus[index_b],sum[index_b], real[index_b], nonreal[index_b]])
+
+    myBarChart.data.datasets[0].data.splice(index_c, 0, real[index_b])
+    myBarChart.data.datasets[0].backgroundColor.push('rgba(99,132,255, 0.2)')
+    myBarChart.data.datasets[0].borderColor.push('rgba(99,132,255, 1)')
+
+    myBarChart.data.datasets[1].data.splice(index_c, 0, nonreal[index_b])
+    myBarChart.data.datasets[1].backgroundColor.push('rgba(255,99,132, 0.2)')
+    myBarChart.data.datasets[1].borderColor.push('rgba(255,99,132, 1)')
+
+    myBarChart.data.labels.splice(index_c, 0, item)
+  }
+
+  // re-sort category data
+  curr_not = JSON.parse(sessionStorage.percentCatNot)
+  curr_cat = JSON.parse(sessionStorage.percentCatCurr)
+
+  total = curr_cat.concat(curr_not)
+
+  // do not do anything if no category data is used
+  console.log(total)
+  if (total.length > 0) {
+  total_t = total[0].map((col, i) => total.map(row => row[i]));
+  sorting = total_t[1 + rank_index]
+  console.log(sorting)
+
+  total = sortListbyList(total, sorting)
+
+  curr_cat = total.slice(0, show)
+  curr_not = total.slice(show, total.length)
+
+  // put category data onto the chart inorder
+  for (a = 0; a < curr_cat.length; a++) {
+    data = curr_cat[a]
+    index_a = findInsertIndex(data)
+
+    myBarChart.data.datasets[0].data.splice(index_a, 0, data[3])
+    myBarChart.data.datasets[0].backgroundColor.push('rgba(99,132,255, 0.2)')
+    myBarChart.data.datasets[0].borderColor.push('rgba(99,132,255, 1)')
+
+    myBarChart.data.datasets[1].data.splice(index_a, 0, data[4])
+    myBarChart.data.datasets[1].backgroundColor.push('rgba(255,99,132, 0.2)')
+    myBarChart.data.datasets[1].borderColor.push('rgba(255,99,132, 1)')
+
+    myBarChart.data.labels.splice(index_a, 0, data[0])
+
+  }
+}
+
+  myBarChart.update()
+
+  sessionStorage.setItem("percentCatCurr", JSON.stringify(curr_cat));
+  sessionStorage.setItem("percentCatNot", JSON.stringify(curr_not));
+}
 
 </script>
 
@@ -633,187 +1134,663 @@ function updateBarChart(cat, yr){
 <div style = "float: left; width: 100%">
 <h1>Hypothetical Increase</h1>
 
-<div class="row">
-  <div class="column" style = "width: 25%; height: 25%;  float: left">
-    <canvas id="increaseChart1" style="display: block; height: 75px; width: 75px;"></canvas>
-    <canvas id="increaseChart4" style="display: block; height: 75px; width: 75px;"></canvas>
-  </div>
-  <div class="column" style = "width: 25%; height: 25%;  float: left">
-    <canvas id="increaseChart3" style="display: block; height: 75px; width: 75px;"></canvas>
-    <canvas id="increaseChart5" style="display: block; height: 75px; width: 75px;"></canvas>
-  </div>
-  <div class="column" style = "width: 50%; height: 50%; float: left">
-    <a>Items to show:</a>
-  <div class = "control" style = "display: inline-block">
-<select id = "num_items_percent" name="Show:" style = "width: 100%">
-  <option value="5">5</option>
-  <option value="10">10</option>
-  <option value="15">15</option>
-  <option value="20">20</option>
+<div>
+First, choose a year:
+<select id = "yearMixed" name="Show:" style = "width: 5%" onchange="changeYearMixed()">
+  <option disabled selected value> select an option </option>
 </select>
 </div>
 
-<div style = "display: inline-block; width: 50%">
-<form>
-    <label for="add">Add item:</label>
-    <input id="add" type="text" name="text">
-    <input type="submit" value="Search">
-</form>
-</div>
-    <canvas id="increaseChart2" style="display: block; height: 300px; width: 300px;"></canvas>
-  </div>
+<div class="quantity buttons_added">
+  Showing
+  <input type="button" value="-" class="minus" onclick = "minusMixed()">
+  <div id = "showMixed" style = "display: inline">0</div>
+  <input type="button" value="+" class="plus" onclick = "addMixed()">
+  out of <div id = "allMixed" style = "display: inline">0</div> of the selected category
+
 </div>
 
+
+<div>
+    <label for="add">Add by item:</label>
+    <input id="add_mixed" type="text" name="text" list = "items_mixed" onkeyup = "searchItemMixed()" autocomplete="off">
+    <datalist id="items_mixed"></datalist>
+    <input id = "submit_mixed_item" type="submit" value="submit" onclick = "addItemDataMixed('')">
+AND/OR Select a category: 
+<select id = "categoriesMixed">
+  <option disabled selected value> select an option </option>
+</select>
+<input id = "submit_cat_mixed" type="submit" value="submit" onclick = "addCatDataMixed('')">
+</div>
+
+<div>
+  Remove:
+<button class="btnic" id = "canvas_mixed" onclick = "clearCanvasMixed()"><i class="fa fa-close"></i> Remove all canvas</button>
+<button class="btnic" id = "remove_cat_mixed" onclick = "remove_cat_mixed()"><i class="fa fa-close"></i> Remove selected category</button>
+<div style = "display:inline" id = "buttons_mixed"></div>
+</div>
+
+<div class="row">
+  <div class="column" style = "width: 60%; height: 30%;  float: left">
+    <canvas id="mixedChart" style="display: block; width: 60%; height: 700px"></canvas>
+  </div>
+  <div class="column" style = "width: 40%; height: 30%; display: inline-block;">
+    <table id="mixed_table" class="display" style = "display: inline-block;">
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Dollar amount</th>
+        <th>% Increase for item</th>
+        <th>% Increase for all</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+    </div>
+</div>
 
 </div>
 
 <script>
+// our own round function
+function round(value, decimals) {
+  return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
+}
+
 Chart.defaults.global.plugins.datalabels.display = false
-Chart.Legend.prototype.afterFit = function() {
-    this.height = this.height + 20;
+
+c = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/get_categories/");
+
+c.done(function(results) {
+  cats = results.cats;
+  for (i = 0; i < cats.length; i++) {
+    cat = cats[i]
+    $("select#categoriesMixed").append( $("<option>")
+    .val(cat)
+    .html(cat)
+);
+  }
+  $("select#categoriesMixed").append( $("<option>")
+    .val("all")
+    .html("all"));
+});
+
+yrs = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/recent_years");
+
+yrs.done(function(results) {
+  y = results.yrs;
+  for (i = 0; i < y.length; i++) {
+    Y = y[i]
+    if (i == 0) {
+          $("select#yearMixed").append( $("<option selected>")
+    .val(Y)
+    .html(Y)
+    )}
+    else {
+    $("select#yearMixed").append( $("<option>")
+    .val(Y)
+    .html(Y)
+);}
+  }
+  // add for all years
+  $("select#yearMixed").append( $("<option>")
+    .val('total')
+    .html('all 3 years'))
+});
+
+sessionStorage.setItem("currentMixedCat", "") // current investigated category
+sessionStorage.setItem("mixedSearch", JSON.stringify([])); // previous searches
+sessionStorage.setItem("mixedCurrent", JSON.stringify([])); // all the individual items added
+sessionStorage.setItem("mixedCatCurr", JSON.stringify([]));
+sessionStorage.setItem("mixedCatNot", JSON.stringify([]));
+
+sessionStorage.setItem("currMixed", JSON.stringify([])); // current labels stored in chart
+sessionStorage.setItem("currData", JSON.stringify([])); // current data associated with the chart
+sessionStorage.setItem("mixedDuplicate", JSON.stringify([])); // store duplicate entries between individual items and category
+
+
+function searchItemMixed() {
+  x = document.getElementById("add_mixed").value;
+  if (x.length > 1) {
+  searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/get_item/" + x);
+
+  old_searches = JSON.parse(sessionStorage.mixedSearch);
+
+    searches.done(function(results) {
+    if (!arraysEqual(old_searches, results.search)) {
+    sessionStorage.setItem("mixedSearch", JSON.stringify(results.search));
+      var dataList = $("#items_mixed");
+        dataList.empty();
+        if(results.search.length) {
+          for(i=0; i<results.search.length; i++) {
+            item = results.search[i];
+            var opt = $("<option></option>").attr("value", item).attr("text", item);
+            dataList.append(opt);
+          }
+        }
+    }});
+}
 };
 
-
- lineData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/percent_data/produce+total')
- var mixedChart;
-
-lineData.done(function(results) {
-   ctx4 = document.getElementById("increaseChart2").getContext('2d');
-   mixedChart = new Chart(ctx4, {
-    type: 'bar',
-    data: {
-      datasets: [{
-            type: "bar",
-            label: 'Increase in dollar amount',
-            data: results['dollars'],
-            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-            borderColor: 'rgba(75, 192, 192, 1)',
-            yAxisID: "bar",
-            datalabels: {
-            // display labels for this specific dataset
-            display: true,
-            anchor: 'center'
-          }}, {
-            label: 'Percent increase in single item',
-            data: results['ind_percent'],
-            yAxisID: "A",
-            type: 'line',
-              backgroundColor: 'rgba(255, 99, 132, 0.2)',
-              borderColor: 'rgba(255,99,132,1)',
-              fill: false
-          }, {
-            label: 'Percent increase for all purchases',
-            data: results['total_percent'],
-            yAxisID: "B",
-            type: 'line',
-          backgroundColor: 'rgba(75, 00, 1300, 0.2)',
-          borderColor: 'rgba(75, 00, 1300,1)',
-          fill: false
-          }],
-      labels: results['items']
-    },
-    options: {
-      title: {
-        display: true,
-        text: "Hypothetical Increase for total produce"
-      },
-      scales: {
-        yAxes: [{
-          id: 'A',
-          type: 'linear',
-          position: 'left',
-          ticks: {
-            fontColor: 'rgba(255,99,132,1)',
-            max: 100.5,
-            min: -0.5,
-            stepSize: 10,
-            callback: function(value, index, values) {
-                           if (value !== 100.5 && value != -0.5) {
-                               return values[index]
-                           }
-                       }
-          },
-            scaleLabel: {
-            display: true,
-            labelString: 'Percent increase in single item (%)'
-          }
-        }, {
-          id: 'B',
-          type: 'linear',
-          position: 'right',
-          ticks: {
-            fontColor: 'rgba(75, 00, 1300,1)',
-            beginAtZero: true
-          },
-            scaleLabel: {
-            display: true,
-            labelString: 'Percent increase for all purchases (%)'
-          }
-        }, {
-          id: 'bar',
-          type: 'linear',
-          display: false,
-          ticks: {
-            beginAtZero: true
-          }
-        }],
-        plugins: {
+// initialize the mixed chart
+var myMixedChart;
+ctx20 = document.getElementById("mixedChart").getContext('2d');
+ myMixedChart = new Chart(ctx20, {
+  type: 'bar',
+  data: {
+    datasets: [{
+          type: "bar",
+          label: 'Increase in dollar amount',
+          data: [],
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          borderColor: 'rgba(75, 192, 192, 1)',
+          yAxisID: "bar",
           datalabels: {
-             display: false,
-             font: {weight: 'bold'},
-             align: 'center',
-             anchor: 'center',
-             clamp: true
-          }
-
+          // display labels for this specific dataset
+          display: true,
+          anchor: 'center'
+        }}, {
+          label: 'Percent increase in single item',
+          yAxisID: "A",
+          type: 'line',
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            borderColor: 'rgba(255,99,132,1)',
+            fill: false
+        }, {
+          label: 'Percent increase for all purchases',
+          yAxisID: "B",
+          type: 'line',
+        backgroundColor: 'rgba(75, 00, 1300, 0.2)',
+        borderColor: 'rgba(75, 00, 1300,1)',
+        fill: false
+        }],
+    labels: []
+  },
+  options: {
+    title: {
+      display: true,
+      text: "Hypothetical Increase for total produce"
+    },
+    scales: {
+      yAxes: [{
+        id: 'A',
+        type: 'linear',
+        position: 'left',
+        ticks: {
+          fontColor: 'rgba(255,99,132,1)',
+          max: 100.5,
+          min: -0.5,
+          stepSize: 10,
+          callback: function(value, index, values) {
+                         if (value !== 100.5 && value != -0.5) {
+                             return values[index]
+                         }
+                     }
+        },
+          scaleLabel: {
+          display: true,
+          labelString: 'Percent increase in single item (%)'
         }
+      }, {
+        id: 'B',
+        type: 'linear',
+        position: 'right',
+        ticks: {
+          fontColor: 'rgba(75, 00, 1300,1)',
+          beginAtZero: true
+        },
+          scaleLabel: {
+          display: true,
+          labelString: 'Percent increase for all purchases (%)'
+        }
+      }, {
+        id: 'bar',
+        type: 'linear',
+        display: false,
+        ticks: {
+          beginAtZero: true
+        }
+      }],
+      xAxes: [{
+        ticks: {
+          autoSkip: false
+        }
+      }],
+      plugins: {
+        datalabels: {
+           display: false,
+           font: {weight: 'bold'},
+           align: 'center',
+           anchor: 'center',
+           clamp: true
+        }
+
+      }
+    },
+    responsive: true,
+    maintainAspectRatio: false
+  }
+});
+
+var table_mixed;
+$(document).ready(function(){table_mixed = $('#mixed_table').DataTable({
+        dom: 'lBfrtip',
+        buttons: ['copyHtml5', 'csvHtml5', 'excelHtml5']
+    }); });
+
+// find range of an array
+function calcRange(numbers) {
+    arr = numbers.slice(0).sort(function(a, b){return b - a});
+    return arr[0] - arr[arr.length - 1];
+}
+
+function sortListbyList(A, B) {
+  zip = A.map(function(e, i) {
+    return [e, B[i]]
+  });
+  zip = zip.sort(function(a,b){return b[1] - a[1]})
+  result = []
+  for (s = 0; s < zip.length; s++) {
+    result = result.concat([zip[s][0]])
+  }
+  return result;
+}
+
+// given the attributes of an item and the current sorting, find which index to splice it into the chart
+function findInsertIndexMixed(d) {
+  // all, ind, dollar
+
+    chart_data = JSON.parse(sessionStorage.currData)
+    chart_labels = JSON.parse(sessionStorage.currMixed)
+    console.log(chart_data)
+    console.log(chart_labels)
+    // if no data in there, then add to be the first one
+    if (chart_data.length == 0) {
+      index = 0;
+      chart_labels.push(d[0])
+      chart_data = chart_data.concat([d.slice(1, 4)])
+    } 
+
+    else {
+    // create copy of the data
+    chart_data_new = chart_data.concat([d.slice(1, 4)])
+    // chart data order: all, ind, dollars
+    curr_rank = []
+    chart_data_t = chart_data_new[0].map((col, i) => chart_data_new.map(row => row[i]));
+    all_min = Math.min.apply(null, chart_data_t[0]) // all
+    ind_min = Math.min.apply(null, chart_data_t[1]) // ind
+
+    // calculation for new ranking order with addition of new item
+    all_range = calcRange(chart_data_t[0])
+    if (all_range != 0) {all_range = 1/(all_range + all_min);} // = (1 / max)
+    ind_range = calcRange(chart_data_t[1])
+
+    console.log(chart_data_t)
+    for (p = 0; p < chart_data_t[1].length; p++) {
+      w = chart_data_t[0][p]
+      v = chart_data_t[1][p]
+      console.log(w)
+      console.log(v)
+      if (v == 0) {
+        // if v is 0, which implies that dollar and % increase in all are both 0,
+        // then set the second operand as the maximum possible value;
+        // this makes sure that item with 0 possible percentage increase is always ranked last.
+        curr_rank = curr_rank.concat([w * all_range - (ind_range + ind_min) / 100])
+      }
+      else{
+      curr_rank = curr_rank.concat([w * all_range - v / 100])
+      }
+      // store the value of newly added elements
+      if (p == chart_data_t[1].length - 1) {
+        newvar = curr_rank[chart_data_t[1].length - 1]
       }
     }
-})});
 
-function updateMixedChart(cat, yr){
-   updatedData = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/percent_data/" + cat + "+" + yr);
-  updatedData.done(function(results) {
+    // essentially is sorting itself
+    curr_rank = sortListbyList(curr_rank, curr_rank)
 
-  data = {
-      datasets: [{
-            type: "bar",
-            label: 'Increase in dollar amount (non-real $ amount of item)',
-            data: results['dollars'],
-            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-            borderColor: 'rgba(75, 192, 192, 1)',
-            yAxisID: "bar",
-            datalabels: {
-            // display labels for this specific dataset
-            display: true,
-            anchor: 'center'
-          }}, {
-            label: 'Percent increase in single item',
-            data: results['ind_percent'],
-            yAxisID: "A",
-            type: 'line',
-              backgroundColor: 'rgba(255, 99, 132, 0.2)',
-              borderColor: 'rgba(255,99,132,1)',
-              fill: false
-          }, {
-            label: 'Percent increase for all purchases',
-            data: results['total_percent'],
-            yAxisID: "B",
-            type: 'line',
-          backgroundColor: 'rgba(75, 00, 1300, 0.2)',
-          borderColor: 'rgba(75, 00, 1300,1)',
-          fill: false
-          }],
-      labels: results['items']
-    };
+    index = curr_rank.indexOf(newvar)
+    chart_labels.splice(index, 0, d[0])
+    chart_data.splice(index, 0, d.slice(1, 4))
 
-  mixedChart.data = data;
-  mixedChart.options.title.text = "Hypothetical Increase for " + yr + " " + cat;
+} 
+    // add new data into the chart labels/data
+    sessionStorage.setItem("currMixed", JSON.stringify(chart_labels));
+    sessionStorage.setItem("currData", JSON.stringify(chart_data));
+    return index;
+} 
 
-  mixedChart.update();
-    });
+// add single item to the increase chart
+function addItemDataMixed(override) {
+  current_list = JSON.parse(sessionStorage.mixedCurrent) // list of individual entered data
+
+  if (override != '') {y = override;}
+  else {y = document.getElementById("add_mixed").value;}
+
+  // check input is longer than 1 and has not appeared in current list
+  if (y.length > 1 && !current_list.includes(y)) {
+    e = document.getElementById("yearMixed");
+    var year = e.options[e.selectedIndex].value;
+
+    searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/mixed_item/" + y + "+" + year);
+
+    searches.done(function(results) {
+      // item, total, ind, dollars
+      data = results.data
+      console.log(data)
+      index = findInsertIndexMixed(data)
+
+      // mixed chart order: dollar, ind, all
+      // database results order: all, ind, dollar
+      // table order: item, dollar, ind, all (same as mixed)
+      myMixedChart.data.datasets[0].data.splice(index, 0, data[3])
+      myMixedChart.data.datasets[1].data.splice(index, 0, round(data[2], 3))
+      myMixedChart.data.datasets[2].data.splice(index, 0, round(data[1], 3))
+      myMixedChart.data.labels.splice(index, 0, data[0])
+
+      myMixedChart.update();
+      table_mixed.row.add([data[0], data[3], round(data[2], 3), round(data[1], 3)]).draw(false)
+
+      // add duplicates to entry
+      dup = JSON.parse(sessionStorage.mixedDuplicate)
+      curr = JSON.parse(sessionStorage.mixedCatCurr)
+      n = JSON.parse(sessionStorage.mixedCatNot)
+      total = curr.concat(n)
+      if (total.length > 0) {
+      total_t = total[0].map((col, i) => total.map(row => row[i]));
+
+      if (total_t[0].includes(y)) {
+        dup.push(y)
+      }
+
+      sessionStorage.setItem("mixedDuplicate", JSON.stringify(dup));
+    }
+
+    })
+    $('#buttons_mixed').append('<button class="btnic" id = "mixed_' + y + '" onclick = "remove_item_mixed(&quot ' + y + '&quot)"><i class="fa fa-close"></i> ' + y + '</button>');
+    sessionStorage.setItem("mixedCurrent", JSON.stringify(current_list.concat([y])));
+
+  }
+}
+
+
+function addCatDataMixed(override) {
+  if (override != '') {cat = override;}
+  else {cat = $("select#categoriesMixed").val();}
+  if (sessionStorage.currentMixedCat != "" && sessionStorage.currentMixedCat != cat) { 
+      remove_cat_mixed();
+    }
+  console.log(sessionStorage.currentMixedCat)
+  console.log(cat)
+  if (sessionStorage.currentMixedCat != cat) {
+
+  e = document.getElementById("yearMixed");
+  var year = e.options[e.selectedIndex].value;
+  searches = $.get("http://cmc307-06.mathcs.carleton.edu:5001/visualization/mixed_data/" + cat + "+" + year);
+  searches.done(function(results) {
+
+  // results already sorted given the rank inputted to api.py
+  num_items = Math.min(results.items.length, 3)
+  // new_results = sortCatData(results, num_items)
+
+  // transpose results for easier data wrangling
+  result_list = [results.items, results.total_percent, results.ind_percent, results.dollars]
+  results = result_list[0].map((col, i) => result_list.map(row => row[i]));
+
+  results_curr = results.slice(0, num_items)
+  results_no = results.slice(num_items, results.length)
+  // add data to table
+  console.log(results)
+  for (h = 0; h < num_items; h++) {
+      data = results_curr[h]
+      index = findInsertIndexMixed(data)
+
+      myMixedChart.data.datasets[0].data.splice(index, 0, data[3])
+      myMixedChart.data.datasets[1].data.splice(index, 0, round(data[2], 3))
+      myMixedChart.data.datasets[2].data.splice(index, 0, round(data[1], 3))
+      myMixedChart.data.labels.splice(index, 0, data[0])
+  }
+
+  myMixedChart.update();
+
+  show = parseInt($("#showMixed").html()) + results_curr.length
+  all = parseInt($("#allMixed").html()) + results.length
+  $("#showMixed").html(show)
+  $("#allMixed").html(all)
+
+  // add duplicate items
+  dup = JSON.parse(sessionStorage.mixedDuplicate)
+  console.log(dup)
+  curr_ind = JSON.parse(sessionStorage.mixedCurrent)
+
+  for (i = 0; i < results.length; i++) {
+    if (curr_ind.includes(results[i][0])) {
+      dup.push(results[i][0])
+    }
+      table_mixed.row.add([results[i][0], round(results[i][3], 3), round(results[i][2], 3), round(results[i][1], 3)]).draw(false)
+    }
+    sessionStorage.setItem("mixedDuplicate", JSON.stringify(dup));
+
+  sessionStorage.setItem("mixedCatCurr", JSON.stringify(results_curr));
+  sessionStorage.setItem("mixedCatNot", JSON.stringify(results_no));
+  sessionStorage.setItem("currentMixedCat", cat);
+
+  })
+}
 };
 
+function remove_item_mixed(item) {
+  item = item.substring(1)
+
+  curr = JSON.parse(sessionStorage.currMixed) // all the labels currently shown on the plot
+  console.log(curr)
+  index = curr.indexOf(item)
+  console.log(index)
+  console.log(item)
+  myMixedChart.data.datasets[0].data.splice(index, 1)
+  myMixedChart.data.datasets[1].data.splice(index, 1)
+  myMixedChart.data.datasets[2].data.splice(index, 1)
+
+  curr.splice(index, 1)
+  myMixedChart.data.labels.splice(index, 1)
+  myMixedChart.update();
+
+  sessionStorage.setItem("currMixed", JSON.stringify(curr));
+  item_id = "[id='mixed_" + item + "']"
+  $(item_id).remove()
+
+  table_mixed.rows( function ( idx, data, node ) {
+        return data[0] === item;
+    } )
+    .remove()
+    .draw();
+
+  // update chart data
+  curr_data = JSON.parse(sessionStorage.currData)
+  curr_data.splice(index, 1)
+  sessionStorage.setItem("currData", JSON.stringify(curr_data));
+
+  // update the list that contains all user-entered individual entries
+  current_list = JSON.parse(sessionStorage.mixedCurrent)
+  index = current_list.indexOf(item)
+  current_list.splice(index, 1)
+  sessionStorage.setItem("mixedCurrent", JSON.stringify(current_list));
+
+  // deal with duplicates
+  curr_cat = JSON.parse(sessionStorage.mixedCatCurr)
+  n = JSON.parse(sessionStorage.mixedCatNot)
+  total = curr_cat.concat(n)
+  console.log(total)
+  // only check duplicates in category if there are items in there
+  if (total.length > 0) {
+  total_t = total[0].map((col, i) => total.map(row => row[i]));
+  console.log(total_t)
+
+  var dup = JSON.parse(sessionStorage.mixedDuplicate)
+  console.log(dup)
+  // add back the duplicate entry to the table if it exists in category data
+  if (dup.includes(item)) {
+    index = total_t[0].indexOf(item)
+    table_mixed.row.add([total[index][0], total[index][3], round(total[index][2], 3), round(total[index][1], 3)]).draw(false)
+    var del = dup.indexOf(item);
+    dup.splice(del, 1);
+  }
+  sessionStorage.setItem("mixedDuplicate", JSON.stringify(dup))
+}
+}
+
+// remove the category for the increase chart
+function remove_cat_mixed() {
+  // load existing data
+  curr_cat = JSON.parse(sessionStorage.mixedCatCurr)
+  total = curr_cat.concat(JSON.parse(sessionStorage.mixedCatNot))
+  curr = JSON.parse(sessionStorage.currMixed) // current chart labels
+  curr_data = JSON.parse(sessionStorage.currData)
+  console.log(curr)
+  for (q = 0; q < curr_cat.length; q++) {
+    item = curr_cat[q][0]
+    index = curr.indexOf(item)
+    myMixedChart.data.datasets[0].data.splice(index, 1)
+    myMixedChart.data.datasets[1].data.splice(index, 1)
+    myMixedChart.data.datasets[2].data.splice(index, 1)
+    myMixedChart.data.labels.splice(index, 1)
+    curr.splice(index, 1)
+    console.log(curr)
+    curr_data.splice(index, 1)
+    console.log(myMixedChart.data.labels);
+  }
+  myMixedChart.update()
+
+  sessionStorage.setItem("currMixed", JSON.stringify(curr));
+  sessionStorage.setItem("currData", JSON.stringify(curr_data));
+  sessionStorage.setItem("currentMixedCat", "")
+
+
+  var dup = JSON.parse(sessionStorage.mixedDuplicate)
+  console.log(dup)
+  for (z = 0; z < total.length; z++) {
+    item = total[z][0]
+    table_mixed.rows( function ( idx, data, node ) {
+        return data[0] === item;
+    } )
+    .remove()
+    .draw();
+
+  if (dup.includes(item)) {
+    total_t = total[0].map((col, i) => total.map(row => row[i]));
+    index = total_t[0].indexOf(item)
+    table_mixed.row.add([total[index][0], total[index][3], round(total[index][2], 3), round(total[index][1], 3)]).draw(false)
+    del = dup.indexOf(item);
+    dup.splice(del, 1);
+  }
+  }
+  sessionStorage.setItem("mixedDuplicate", JSON.stringify(dup))
+  // update html
+  $("#showMixed").html(0)
+  $("#allMixed").html(0)
+  sessionStorage.setItem("mixedCatCurr", JSON.stringify([]));
+  sessionStorage.setItem("mixedCatNot", JSON.stringify([]));
+}
+
+// remove one entry for category data
+function minusMixed() {
+  curr_cat = JSON.parse(sessionStorage.mixedCatCurr)
+  if (curr_cat.length > 0) { 
+  curr_not = JSON.parse(sessionStorage.mixedCatNot)
+
+  item = curr_cat[curr_cat.length-1][0]
+  curr = JSON.parse(sessionStorage.currMixed)
+  curr_data = JSON.parse(sessionStorage.currData)
+  index = curr.indexOf(item)
+
+  // update bar chart by removing the lowest ranked 
+  myMixedChart.data.datasets[0].data.splice(index, 1)
+  myMixedChart.data.datasets[1].data.splice(index, 1)
+  myMixedChart.data.datasets[2].data.splice(index, 1)
+  myMixedChart.data.labels.splice(index, 1)
+  myMixedChart.update()
+
+  curr_not.splice(0, 0, curr_cat[curr_cat.length-1]) // add to non-displaying category data
+  curr.splice(index, 1) // remove from current labels
+  curr_data.splice(index, 1)
+  curr_cat.splice(curr_cat.length-1, 1) // remove from current category data
+
+  sessionStorage.setItem("mixedCatCurr", JSON.stringify(curr_cat));
+  sessionStorage.setItem("mixedCatNot", JSON.stringify(curr_not));
+  sessionStorage.setItem("currMixed", JSON.stringify(curr));
+  sessionStorage.setItem("currData", JSON.stringify(curr_data));
+
+  show = parseInt($("#showMixed").html()) - 1
+  $("#showMixed").html(show)
+}
+}
+
+// add an entry from category data
+function addMixed() {
+  curr_not = JSON.parse(sessionStorage.mixedCatNot)
+  if (curr_not.length > 0) { 
+
+  curr_cat = JSON.parse(sessionStorage.mixedCatCurr)
+  item = curr_not[0][0]
+  index = findInsertIndexMixed(curr_not[0])
+
+  myMixedChart.data.datasets[0].data.splice(index, 0, curr_not[0][3])
+  myMixedChart.data.datasets[1].data.splice(index, 0, curr_not[0][2])
+  myMixedChart.data.datasets[2].data.splice(index, 0, curr_not[0][1])
+  myMixedChart.data.labels.splice(index, 0, curr_not[0][0])
+
+  myMixedChart.update()
+
+  curr_cat = curr_cat.concat([curr_not[0]])
+  curr_not.splice(0, 1)
+
+  sessionStorage.setItem("mixedCatCurr", JSON.stringify(curr_cat));
+  sessionStorage.setItem("mixedCatNot", JSON.stringify(curr_not));
+
+  show = parseInt($("#showMixed").html()) + 1
+  $("#showMixed").html(show)
+}
+}
+
+// clear the whole canvas
+function clearCanvasMixed() {
+  current = JSON.parse(sessionStorage.mixedCurrent)
+  for (t = 0; t < current.length; t++) {
+    remove_item_mixed(" " + current[t])
+  }
+  remove_cat_mixed();
+  table_mixed.clear();
+
+  sessionStorage.setItem("currentMixedCat", "") // current investigated category
+  sessionStorage.setItem("mixedSearch", JSON.stringify([])); // previous searches
+  sessionStorage.setItem("mixedCurrent", JSON.stringify([])); // all the individual items added
+  sessionStorage.setItem("mixedCatCurr", JSON.stringify([]));
+  sessionStorage.setItem("mixedCatNot", JSON.stringify([]));
+
+  sessionStorage.setItem("currMixed", JSON.stringify([])); // current labels stored in chart
+  sessionStorage.setItem("currData", JSON.stringify([])); // current data associated with the chart
+  sessionStorage.setItem("mixedDuplicate", JSON.stringify([])); // store duplicate entries between individual items and category
+}
+
+// change the year of all shown items to the given year; and change the associate order
+function changeYearMixed() {
+  // store the important data
+  updateYearCat = sessionStorage.currentMixedCat
+  console.log(updateYearCat)
+  updateYearItems = JSON.parse(sessionStorage.mixedCurrent)
+  console.log(updateYearItems)
+  // clear the canvas
+  clearCanvasMixed();
+
+  for (u = 0; u < updateYearItems.length; u++) {
+    addItemDataMixed(updateYearItems[u]);
+  }
+
+  if (updateYearCat != '') {
+    addCatDataMixed(updateYearCat);
+  }
+}
 
 </script>
 
@@ -836,8 +1813,7 @@ function updateMixedChart(cat, yr){
     <input id="add_time" type="text" name="text" list = "items_time" onkeyup = "searchItem()" autocomplete="off">
     <datalist id="items_time"></datalist>
     <input id = "submit_item_time" type="submit" value="submit" onclick = "addItemData()">
-<a> AND/OR </a>
-<a> Select a category: </a>
+AND/OR Select a category: 
 <select id = "categoriesTime">
   <option disabled selected value> select an option </option>
 </select>
@@ -853,10 +1829,10 @@ function updateMixedChart(cat, yr){
 </div>
 
 <div class="row">
-  <div class="column" style = "width: 60%; height: 25%;  float: left">
-    <canvas id="timeSeriesChart" style="display: block; width: 60%; height: 800px"></canvas>
+  <div class="column" style = "width: 60%; height: 30%;  float: left">
+    <canvas id="timeSeriesChart" style="display: block; width: 60%; height: 700px"></canvas>
   </div>
-  <div class="column" style = "width: 40%; height: 25%; display: inline-block;">
+  <div class="column" style = "width: 40%; height: 30%; display: inline-block;">
     <table id="time_table" class="display" style = "display: inline-block;">
     <thead>
       <tr>
@@ -933,6 +1909,9 @@ c.done(function(results) {
     .html(cat)
 );
   }
+  $("select#categoriesTime").append( $("<option>")
+    .val("all")
+    .html("all"));
 });
 
 sessionStorage.setItem("currentTimeCat", "") // current investigated category
@@ -1045,7 +2024,6 @@ function addItemData() {
         var head_item = table.columns(4).header();
         $(head_item).html(results.yrs[2]);
       }
-      //datasets = []
       color = "#" + intToARGB(hashCode(y))
 
       cost = results.cost
@@ -1058,13 +2036,9 @@ function addItemData() {
   curr = JSON.parse(sessionStorage.timeCurrCat)
   n = JSON.parse(sessionStorage.timeNotCat)
 
-  console.log(curr)
-  console.log(n)
-
   if (curr.includes(y) || n.includes(y)) {
     dup.push(y)
   }
-  console.log(dup)
   sessionStorage.setItem("timeDuplicate", JSON.stringify(dup));
   
 
@@ -1085,7 +2059,6 @@ function addItemData() {
         myLineChart.data.datasets.push(line)
         table.row.add([y, types[j], cost[j][0], cost[j][1], cost[j][2]]).draw(false)
     }
-// console.log(datasets.toString())
 // add legend for each item
     line = {}
     line.data = 0 // arbitrary
@@ -1094,7 +2067,6 @@ function addItemData() {
     chart_labels.push(line.label)
     line.backgroundColor = color
     line.borderColor = color
-    //line.fillColor = colors[i]
     line.fill = true
     line.showLine = false
     myLineChart.data.datasets.push(line)
@@ -1106,11 +2078,6 @@ sessionStorage.setItem("timeChartLabels", JSON.stringify(chart_labels)); // labe
 
 // add option to remove
 $('#buttons_time').append('<button class="btnic" id = "time_' + y + '" onclick = "remove_item_time(&quot ' + y + '&quot)"><i class="fa fa-close"></i> ' + y + '</button>');
-  /*
-  show = parseInt($("#showTime").html()) + 1
-  all = parseInt($("#allTime").html()) + 1
-  $("#showTime").html(show)
-  $("#allTime").html(all) */
 
     })
 
@@ -1280,9 +2247,10 @@ function remove_item_time(item) {
       index = curr.indexOf(item)
     }
     if (n.includes(item)) {
-      index = curr.length + not.indexOf(item)
+      index = curr.length + n.indexOf(item)
     }
-
+    console.log(dup)
+    console.log(item)
     cost = JSON.parse(sessionStorage.timeCatCost)
     for (j = 0; j < types.length; j++) {
       table.row.add([item, types[j], cost[j][index][0], cost[j][index][1], cost[j][index][2]]).draw(false)
@@ -1292,14 +2260,6 @@ function remove_item_time(item) {
     dup.splice(del, 1);
   }
   sessionStorage.setItem("timeDuplicate", JSON.stringify(dup))
-
-
-  /*
-  show = parseInt($("#showTime").html()) - 1
-  all = parseInt($("#allTime").html()) - 1
-  $("#showTime").html(show)
-  $("#allTime").html(all)
-  */
 
 }
 
@@ -1487,21 +2447,21 @@ sessionStorage.setItem("timeDuplicate", JSON.stringify([]));
 
 
 <div style = "float:left; width: 100%">
-  <h1>Item, Vendor and Label - The Exciting Love Trio</h1>
+  <h1>Item, Vendor and Label</h1>
 
     <label for="add">Search By item:</label>
     <input id="item_liv" type="text" name="text" list = "items_list" onkeyup = "searchLivItem()" autocomplete="off">
     <datalist id="items_list"></datalist>
     <input id = "submit_item_liv" type="submit" value="submit" onclick = "addLivItem()">
 
-<a> OR </a>
+OR 
 
     <label for="add">By vendor:</label>
     <input id="vendor_liv" type="text" name="text" list = "vendor_list" onkeyup = "searchLivVendor()" autocomplete="off">
     <datalist id="vendor_list"></datalist>
     <input id = "submit_vendor_liv" type="submit" value="submit" onclick = "addLivVendor()">
 
-<a> OR </a>
+OR 
 
     <label for="add">By label/brand:</label>
     <input id="label_liv" type="text" name="text" list = "label_list" onkeyup = "searchLivLabel()" autocomplete="off">
@@ -1512,19 +2472,71 @@ sessionStorage.setItem("timeDuplicate", JSON.stringify([]));
 
 <div class="row">
   <div class="column" style = "width: 50%; height: 25%;  float: left">
+
+    <div class="quantity buttons_added">
+    Showing
+    <input type="button" value="-" class="minus" onclick = "minusLiv1()">
+    <div id = "showLiv1" style = "display: inline">0</div>
+    <input type="button" value="+" class="plus" onclick = "addLiv1()">
+    out of <div id = "allLiv1" style = "display: inline">0</div> of the results
+    </div> 
+
     <canvas id="livChart1" style="display: block; height: 60px; width: 50%;"></canvas>
     <canvas id="livChart2" style="display: block; height: 60px; width: 50%;"></canvas>
+
+    <table id="liv_table1" class="display" style = "display: block; width: 45%">
+    <thead>
+      <tr>
+        <th>Variable</th>
+        <th>Type</th>
+        <th>Year 1</th>
+        <th>Year 2</th>
+        <th>Year 3</th>
+        <th>All 3 years</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
   </div>
+
   <div class="column" style = "width: 50%; height: 25%;  float: left">
+
+    <div class="quantity buttons_added">
+    Showing
+    <input type="button" value="-" class="minus" onclick = "minusLiv2()">
+    <div id = "showLiv2" style = "display: inline">0</div>
+    <input type="button" value="+" class="plus" onclick = "addLiv2()">
+    out of <div id = "allLiv2" style = "display: inline">0</div> of the results
+
+    </div>
+
     <canvas id="livChart3" style="display: block; height: 60px; width: 50%;"></canvas>
     <canvas id="livChart4" style="display: block; height: 60px; width: 50%;"></canvas>
+
+    <table id="liv_table2" class="display" style = "display: block; width: 45%">
+    <thead>
+      <tr>
+        <th>Variable</th>
+        <th>Type</th>
+        <th>Year 1</th>
+        <th>Year 2</th>
+        <th>Year 3</th>
+        <th>All 3 years</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table> 
   </div>
+
 </div>
 
 
 
 <script>
-// create new chart type for stacked grouped bar chart
+  // create new chart type for stacked grouped bar chart
 Chart.defaults.groupableBar = Chart.helpers.clone(Chart.defaults.bar);
 
 var helpers = Chart.helpers;
@@ -1599,6 +2611,29 @@ Chart.controllers.groupableBar = Chart.controllers.bar.extend({
 sessionStorage.setItem("itemsLivSearch", JSON.stringify([]));
 sessionStorage.setItem("vendorSearch", JSON.stringify([]));
 sessionStorage.setItem("labelSearch", JSON.stringify([]));
+
+// data that are shown and not shown in a plot (by real and non-real)
+// each list contains 3 separate lists: label, real data, nonreal data, with the same lengths
+sessionStorage.setItem("currLiv1", JSON.stringify([]));
+sessionStorage.setItem("notLiv1", JSON.stringify([]));
+sessionStorage.setItem("currLiv2", JSON.stringify([]));
+sessionStorage.setItem("notLiv2", JSON.stringify([]));
+
+// initiate tables
+var table1;
+var table2;
+$(document).ready(function(){
+  table1 = $('#liv_table1').DataTable({
+        dom: 'lBfrtip',
+        buttons: ['copyHtml5', 'csvHtml5', 'excelHtml5']
+    }); 
+  table2 = $('#liv_table2').DataTable({
+      dom: 'lBfrtip',
+      buttons: ['copyHtml5', 'csvHtml5', 'excelHtml5']
+  }); 
+});
+
+var updatedLivColumn = true; // set table columns to specific years
 
 var ctx10 = document.getElementById("livChart1").getContext('2d');
 var ctx11 = document.getElementById("livChart2").getContext('2d');
@@ -1820,12 +2855,38 @@ function plotByAll(t, s, r, n, l, v, c) {
       }
     })
 }
+
+function updateLivColumn(yrs) {
+  if (updatedLivColumn) {
+    updatedLivColumn = false;
+    var head_item = table1.columns(2).header();
+    $(head_item).html(yrs[0]);
+
+    var head_item = table1.columns(3).header();
+    $(head_item).html(yrs[1]);
+
+    var head_item = table1.columns(4).header();
+    $(head_item).html(yrs[2]);
+
+    var head_item = table2.columns(2).header();
+    $(head_item).html(yrs[0]);
+
+    var head_item = table2.columns(3).header();
+    $(head_item).html(yrs[1]);
+
+    var head_item = table2.columns(4).header();
+    $(head_item).html(yrs[2]);
+  }
+}
 // below functions read in user submitted data and re-draw all the plots
 function addLivItem() {
   LivCharts[0].destroy();
   LivCharts[1].destroy();
   LivCharts[2].destroy();
   LivCharts[3].destroy();
+
+  table1.clear();
+  table2.clear();
 
   y = document.getElementById("item_liv").value.trim();
 
@@ -1835,6 +2896,13 @@ function addLivItem() {
     label_brand = results.label_brand
     vendor = results.vendor
     yrs = results.yrs
+
+    updateLivColumn(yrs);
+    var head_item = table1.columns(0).header();
+    $(head_item).html("Label");
+
+    var head_item = table2.columns(0).header();
+    $(head_item).html("Vendor");
 
     data_label_year = {}
     data_label_all = {}
@@ -1850,15 +2918,12 @@ function addLivItem() {
     datasets1 = {}
     datasets2 = {}
 
+    // labels for the data
+    l_label = results['label_brand']
+    l_vendor = results['vendor']
 
     dr = results['label_brand real']
     dn = results['label_brand nonreal']
-
-    dr = dr[0].map((col, i) => dr.map(row => row[i]));
-    dn = dn[0].map((col, i) => dn.map(row => row[i]));
-
-    l_label = results['label_brand']
-    l_vendor = results['vendor']
 
     // replace empty string with NA
     for (i = 0; i < l_label.length; i++) {
@@ -1872,19 +2937,58 @@ function addLivItem() {
         l_vendor[i] = "NA"
       }
     }
+    console.log(dr)
+    console.log(dn)
+    // make sure it shows at most 5 items on the chart at most
+    num_items1 = Math.min(5, dr.length)
+    sessionStorage.setItem("currLiv1", JSON.stringify([l_label.slice(0, num_items1), dr.slice(0, num_items1), dn.slice(0, num_items1)]))
+    sessionStorage.setItem("notLiv1", JSON.stringify([l_label.slice(num_items1, l_label.length), dr.slice(num_items1, dr.length), dn.slice(num_items1, dn.length)]))
+    console.log(JSON.parse(sessionStorage.currLiv1))
+    console.log(JSON.parse(sessionStorage.notLiv1))
 
-    plotByYear("label/brand", y, dr.slice(0, 3), dn.slice(0,3), l_label, 0, 0);
-    plotByAll("label/brand", y, dr[3], dn[3], l_label, 1, 1);
+    // fill in the datatables
+    for (i = 0; i < l_label.length; i++) {
+      table1.row.add([l_label[i], "real", dr[i][0], dr[i][1], dr[i][2], dr[i][3]]).draw(false)
+      table1.row.add([l_label[i], "nonreal", dn[i][0], dn[i][1], dn[i][2], dn[i][3]]).draw(false)
+    }
 
+    // filter dataframes and transpose datalists
+    dr = dr.slice(0, num_items1)
+    dn = dn.slice(0, num_items1)
+    dr = dr[0].map((col, i) => dr.map(row => row[i]));
+    dn = dn[0].map((col, i) => dn.map(row => row[i]));
+
+    // plot by year and by all, and insert data into the datatables
+    plotByYear("label/brand", y, dr.slice(0, 3), dn.slice(0,3), l_label.slice(0, num_items1), 0, 0);
+    plotByAll("label/brand", y, dr[3], dn[3], l_label.slice(0, num_items1), 1, 1);
+
+
+    // perform the same procedures for the second distributional chart as well
     vr = results['vendor real']
     vn = results['vendor nonreal']
 
+    num_items2 = Math.min(5, vr.length)
+    sessionStorage.setItem("currLiv2", JSON.stringify([l_vendor.slice(0, num_items2), vr.slice(0, num_items2), vn.slice(0, num_items2)]))
+    sessionStorage.setItem("notLiv2", JSON.stringify([l_vendor.slice(num_items2, vr.length), vr.slice(num_items2, vr.length), vn.slice(num_items2, vr.length)]))
+
+    // fill in the datatables
+    for (i = 0; i < l_vendor.length; i++) {
+      table2.row.add([l_vendor[i], "real", vr[i][0], vr[i][1], vr[i][2], vr[i][3]]).draw(false)
+      table2.row.add([l_vendor[i], "nonreal", vn[i][0], vn[i][1], vn[i][2], vn[i][3]]).draw(false)
+    }
+
+    vr = vr.slice(0, num_items2)
+    vn = vn.slice(0, num_items2)
     vr = vr[0].map((col, i) => vr.map(row => row[i]));
     vn = vn[0].map((col, i) => vn.map(row => row[i]));
 
-    plotByYear("vendor", y, vr.slice(0, 3), vn.slice(0,3), l_vendor, 2, 2);
-    plotByAll("vendor", y, vr[3], vn[3], l_vendor, 3, 3);
+    plotByYear("vendor", y, vr.slice(0, 3), vn.slice(0,3), l_vendor.slice(0, num_items2), 2, 2);
+    plotByAll("vendor", y, vr[3], vn[3], l_vendor.slice(0, num_items2), 3, 3);
 
+    $("#showLiv1").html(num_items1)
+    $("#allLiv1").html(l_label.length)
+    $("#showLiv2").html(num_items2)
+    $("#allLiv2").html(l_vendor.length)
   })
 }
 
@@ -1893,6 +2997,9 @@ function addLivVendor() {
   LivCharts[1].destroy();
   LivCharts[2].destroy();
   LivCharts[3].destroy();
+
+  table1.clear();
+  table2.clear();
 
   y = document.getElementById("vendor_liv").value.trim();
 
@@ -1903,11 +3010,13 @@ function addLivVendor() {
     description = results.description
     yrs = results.yrs
 
-    dr = results['label_brand real']
-    dn = results['label_brand nonreal']
+    updateLivColumn(yrs);
 
-    dr = dr[0].map((col, i) => dr.map(row => row[i]));
-    dn = dn[0].map((col, i) => dn.map(row => row[i]));
+    var head_item = table1.columns(0).header();
+    $(head_item).html("Label");
+
+    var head_item = table2.columns(0).header();
+    $(head_item).html("Items");
 
     l_label = results['label_brand']
     l_items = results['description']
@@ -1925,25 +3034,67 @@ function addLivVendor() {
       }
     }
 
-    plotByYear("label/brand", y, dr.slice(0, 3), dn.slice(0,3), l_label, 0, 0);
-    plotByAll("label/brand", y, dr[3], dn[3], l_label, 1, 1);
+    dr = results['label_brand real']
+    dn = results['label_brand nonreal']
 
+    // make sure it shows at most 5 items on the chart at most
+    num_items1 = Math.min(5, dr.length)
+    sessionStorage.setItem("currLiv1", JSON.stringify([l_label.slice(0, num_items1), dr.slice(0, num_items1), dn.slice(0, num_items1)]))
+    sessionStorage.setItem("notLiv1", JSON.stringify([l_label.slice(num_items1, dr.length), dr.slice(num_items1, dr.length), dn.slice(num_items1, dr.length)]))
+
+    // fill in the datatables
+    for (i = 0; i < l_label.length; i++) {
+      table1.row.add([l_label[i], "real", dr[i][0], dr[i][1], dr[i][2], dr[i][3]]).draw(false)
+      table1.row.add([l_label[i], "nonreal", dn[i][0], dn[i][1], dn[i][2], dn[i][3]]).draw(false)
+    }
+
+    // filter dataframes and transpose datalists
+    dr = dr.slice(0, num_items1)
+    dn = dn.slice(0, num_items1)
+    dr = dr[0].map((col, i) => dr.map(row => row[i]));
+    dn = dn[0].map((col, i) => dn.map(row => row[i]));
+
+    plotByYear("label/brand", y, dr.slice(0, 3), dn.slice(0,3), l_label.slice(0, num_items1), 0, 0);
+    plotByAll("label/brand", y, dr[3], dn[3], l_label.slice(0, num_items1), 1, 1);
+
+    // do it for the items' distribution now
     vr = results['description real']
     vn = results['description nonreal']
 
+    num_items2 = Math.min(5, vr.length)
+    sessionStorage.setItem("currLiv2", JSON.stringify([l_items.slice(0, num_items2), vr.slice(0, num_items2), vn.slice(0, num_items2)]))
+    sessionStorage.setItem("notLiv2", JSON.stringify([l_items.slice(num_items2, vr.length), vr.slice(num_items2, vr.length), vn.slice(num_items2, vr.length)]))
+
+    // fill in the datatables
+    for (i = 0; i < l_items.length; i++) {
+      table2.row.add([l_items[i], "real", vr[i][0], vr[i][1], vr[i][2], vr[i][3]]).draw(false)
+      table2.row.add([l_items[i], "nonreal", vn[i][0], vn[i][1], vn[i][2], vn[i][3]]).draw(false)
+    }
+
+    vr = vr.slice(0, num_items2)
+    vn = vn.slice(0, num_items2)
     vr = vr[0].map((col, i) => vr.map(row => row[i]));
     vn = vn[0].map((col, i) => vn.map(row => row[i]));
 
-    plotByYear("items", y, vr.slice(0, 3), vn.slice(0,3), l_items, 2, 2);
-    plotByAll("items", y, vr[3], vn[3], l_items, 3, 3);
+    plotByYear("items", y, vr.slice(0, 3), vn.slice(0,3), l_items.slice(0, num_items2), 2, 2);
+    plotByAll("items", y, vr[3], vn[3], l_items.slice(0, num_items2), 3, 3);
+
+    $("#showLiv1").html(num_items1)
+    $("#allLiv1").html(l_label.length)
+    $("#showLiv2").html(num_items2)
+    $("#allLiv2").html(l_items.length)
   })
 }
-
+  
+// plot label charts on the canvas
 function addLivLabel() {
   LivCharts[0].destroy();
   LivCharts[1].destroy();
   LivCharts[2].destroy();
   LivCharts[3].destroy();
+
+  table1.clear();
+  table2.clear();
 
   y = document.getElementById("label_liv").value.trim();
 
@@ -1954,12 +3105,13 @@ function addLivLabel() {
     vendor = results.vendor
     yrs = results.yrs
 
+    updateLivColumn(yrs);
 
-    dr = results['description real']
-    dn = results['description nonreal']
+    var head_item = table1.columns(0).header();
+    $(head_item).html("Items");
 
-    dr = dr[0].map((col, i) => dr.map(row => row[i]));
-    dn = dn[0].map((col, i) => dn.map(row => row[i]));
+    var head_item = table2.columns(0).header();
+    $(head_item).html("Vendor");
 
     l_items = results['description']
     l_vendor = results['vendor']
@@ -1977,20 +3129,208 @@ function addLivLabel() {
       }
     }
 
-    plotByYear("items", y, dr.slice(0, 3), dn.slice(0,3), l_items, 0, 0);
-    plotByAll("items", y, dr[3], dn[3], l_items, 1, 1);
+    dr = results['description real']
+    dn = results['description nonreal']
+
+    // make sure it shows at most 5 items on the chart at most
+    num_items1 = Math.min(5, dr.length)
+    sessionStorage.setItem("currLiv1", JSON.stringify([l_items.slice(0, num_items1), dr.slice(0, num_items1), dn.slice(0, num_items1)]))
+    sessionStorage.setItem("notLiv1", JSON.stringify([l_items.slice(num_items1, dr.length), dr.slice(num_items1, dr.length), dn.slice(num_items1, dr.length)]))
+
+    // fill in the datatables
+    for (i = 0; i < l_items.length; i++) {
+      table1.row.add([l_items[i], "real", dr[i][0], dr[i][1], dr[i][2], dr[i][3]]).draw(false)
+      table1.row.add([l_items[i], "nonreal", dn[i][0], dn[i][1], dn[i][2], dn[i][3]]).draw(false)
+    }
+
+    // filter dataframes and transpose datalists
+    dr = dr.slice(0, num_items1)
+    dn = dn.slice(0, num_items1)
+    dr = dr[0].map((col, i) => dr.map(row => row[i]));
+    dn = dn[0].map((col, i) => dn.map(row => row[i]));
+
+
+    plotByYear("items", y, dr.slice(0, 3), dn.slice(0,3), l_items.slice(0, num_items1), 0, 0);
+    plotByAll("items", y, dr[3], dn[3], l_items.slice(0, num_items1), 1, 1);
 
     vr = results['vendor real']
     vn = results['vendor nonreal']
 
+    num_items2 = Math.min(5, vr.length)
+    sessionStorage.setItem("currLiv2", JSON.stringify([l_vendor.slice(0, num_items2), vr.slice(0, num_items2), vn.slice(0, num_items2)]))
+    sessionStorage.setItem("notLiv2", JSON.stringify([l_vendor.slice(num_items2, vr.length), vr.slice(num_items2, vr.length), vn.slice(num_items2, vr.length)]))
+
+    // fill in the datatables
+    for (i = 0; i < l_vendor.length; i++) {
+      table2.row.add([l_vendor[i], "real", vr[i][0], vr[i][1], vr[i][2], vr[i][3]]).draw(false)
+      table2.row.add([l_vendor[i], "nonreal", vn[i][0], vn[i][1], vn[i][2], vn[i][3]]).draw(false)
+    }
+
+    vr = vr.slice(0, num_items2)
+    vn = vn.slice(0, num_items2)
     vr = vr[0].map((col, i) => vr.map(row => row[i]));
     vn = vn[0].map((col, i) => vn.map(row => row[i]));
 
-    plotByYear("vendor", y, vr.slice(0, 3), vn.slice(0,3), l_vendor, 2, 2);
-    plotByAll("vendor", y, vr[3], vn[3], l_vendor, 3, 3);
+    plotByYear("vendor", y, vr.slice(0, 3), vn.slice(0,3), l_vendor.slice(0, num_items2), 2, 2);
+    plotByAll("vendor", y, vr[3], vn[3], l_vendor.slice(0, num_items2), 3, 3);
+
+    $("#showLiv1").html(num_items1)
+    $("#allLiv1").html(l_items.length)
+    $("#showLiv2").html(num_items2)
+    $("#allLiv2").html(l_vendor.length)
+
   })
 }
+
+// the below 4 functions control the number of items to show on the 2 sets of distributional charts
+function minusLiv1() {
+  curr = JSON.parse(sessionStorage.currLiv1)
+  if (curr[0].length > 0) {
+    $("#showLiv1").html(parseInt($("#showLiv1").html()) - 1)
+    not = JSON.parse(sessionStorage.notLiv1)
+
+    // remove element from chart
+    LivCharts[0].data.labels.splice(curr[0].length-1, 1)
+    // remove 3 (years) * 2 (types) configurations from datasets
+    for (i = 0; i < 6; i++) {
+      LivCharts[0].data.datasets[i].data.splice(curr[0].length-1, 1)
+    }
+    LivCharts[0].update()
+
+    LivCharts[1].data.labels.splice(curr[0].length-1, 1)
+    LivCharts[1].data.datasets[0].data.splice(curr[0].length-1, 1)
+    LivCharts[1].data.datasets[1].data.splice(curr[0].length-1, 1)
+    LivCharts[1].update()
+
+    // add element to the not in chart list
+    not[0].splice(0, 0, curr[0][curr[0].length-1])
+    not[1].splice(0, 0, curr[1][curr[1].length-1])
+    not[2].splice(0, 0, curr[2][curr[2].length-1])
+
+    // remove last element from curr data list
+    curr[0].splice(curr[0].length-1, 1)
+    curr[1].splice(curr[1].length-1, 1)
+    curr[2].splice(curr[2].length-1, 1)
+
+    console.log(curr)
+    console.log(not)
+
+    sessionStorage.setItem("currLiv1", JSON.stringify(curr))
+    sessionStorage.setItem("notLiv1", JSON.stringify(not))
+  }
+}
+
+function addLiv1() {
+  not = JSON.parse(sessionStorage.notLiv1)
+  if (not[0].length > 0) {
+    $("#showLiv1").html(parseInt($("#showLiv1").html()) + 1)
+    curr = JSON.parse(sessionStorage.currLiv1)
+
+    // add element to chart by year
+    LivCharts[0].data.labels.splice(curr[0].length, 0, not[0][0])
+    for (i = 0; i < 3; i++) {
+      LivCharts[0].data.datasets[2*i].data.splice(curr[0].length, 0, not[1][0][i])
+      LivCharts[0].data.datasets[2*i+1].data.splice(curr[0].length, 0, not[2][0][i])
+    }
+    LivCharts[0].update()
+
+    LivCharts[1].data.labels.splice(curr[0].length, 0, not[0][0])
+    LivCharts[1].data.datasets[0].data.splice(curr[0].length, 0, not[1][0][3])
+    LivCharts[1].data.datasets[1].data.splice(curr[0].length, 0, not[2][0][3])
+    LivCharts[1].update()
+
+    // add element to the current in chart list
+    curr[0].splice(curr[0].length, 0, not[0][0])
+    curr[1].splice(curr[1].length, 0, not[1][0])
+    curr[2].splice(curr[2].length, 0, not[2][0])
+
+    // remove last element from not showing data list
+    not[0].splice(0, 1)
+    not[1].splice(0, 1)
+    not[2].splice(0, 1)
+
+        console.log(curr)
+    console.log(not)
+
+    sessionStorage.setItem("currLiv1", JSON.stringify(curr))
+    sessionStorage.setItem("notLiv1", JSON.stringify(not))
+  }
+}
+
+function minusLiv2() {
+  curr = JSON.parse(sessionStorage.currLiv2)
+  if (curr[0].length > 0) {
+    $("#showLiv2").html(parseInt($("#showLiv2").html()) - 1)
+    not = JSON.parse(sessionStorage.notLiv2)
+
+    // remove element from chart
+    LivCharts[2].data.labels.splice(curr[0].length-1, 1)
+    for (i = 0; i < 6; i++) {
+      LivCharts[2].data.datasets[i].data.splice(curr[0].length-1, 1)
+    }
+    LivCharts[2].update()
+
+    LivCharts[3].data.labels.splice(curr[0].length-1, 1)
+    LivCharts[3].data.datasets[0].data.splice(curr[0].length-1, 1)
+    LivCharts[3].data.datasets[1].data.splice(curr[0].length-1, 1)
+    LivCharts[3].update()
+
+    // add element to the not in chart list
+    not[0].splice(0, 0, curr[0][curr[0].length-1])
+    not[1].splice(0, 0, curr[1][curr[1].length-1])
+    not[2].splice(0, 0, curr[2][curr[2].length-1])
+
+    // remove last element from curr data list
+    curr[0].splice(curr[0].length-1, 1)
+    curr[1].splice(curr[1].length-1, 1)
+    curr[2].splice(curr[2].length-1, 1)
+
+        console.log(curr)
+    console.log(not)
+
+    sessionStorage.setItem("currLiv2", JSON.stringify(curr))
+    sessionStorage.setItem("notLiv2", JSON.stringify(not))
+  }
+}
+
+function addLiv2() {
+  not = JSON.parse(sessionStorage.notLiv2)
+  if (not[0].length > 0) {
+    $("#showLiv2").html(parseInt($("#showLiv2").html()) + 1)
+    curr = JSON.parse(sessionStorage.currLiv2)
+
+    // add element to chart
+    LivCharts[2].data.labels.splice(curr[0].length, 0, not[0][0])
+    for (i = 0; i < 3; i++) {
+      LivCharts[2].data.datasets[2*i].data.splice(curr[0].length, 0, not[1][0][i])
+      LivCharts[2].data.datasets[2*i+1].data.splice(curr[0].length, 0, not[2][0][i])
+    }
+    LivCharts[2].update()
+
+    LivCharts[3].data.labels.splice(curr[0].length, 0, not[0][0])
+    LivCharts[3].data.datasets[0].data.splice(curr[0].length, 0, not[1][0][3])
+    LivCharts[3].data.datasets[1].data.splice(curr[0].length, 0, not[2][0][3])
+    LivCharts[3].update()
+
+    // add element to the current in chart list
+    curr[0].splice(curr[0].length, 0, not[0][0])
+    curr[1].splice(curr[1].length, 0, not[1][0])
+    curr[2].splice(curr[2].length, 0, not[2][0])
+
+    // remove last element from not showing data list
+    not[0].splice(0, 1)
+    not[1].splice(0, 1)
+    not[2].splice(0, 1)
+
+    console.log(curr)
+    console.log(not)
+
+    sessionStorage.setItem("currLiv2", JSON.stringify(curr))
+    sessionStorage.setItem("notLiv2", JSON.stringify(not))
+  }
+}
 </script>
+
 </body>
 
 
