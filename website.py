@@ -1,15 +1,15 @@
 '''
-    website.py - Python Flask Web Framework 
+    website.py - Python Flask Web Framework
     Code by Real Food Calculator Comps: Bryce Barton, Syd Botz, Chae Kim, Claudia Naughton, James Yang
     Last Updated March 14, 2019
 
-    Code hosts website at http://realfoodnetwork.carleton.edu:2019 
-    Renders html templates for url endpoints: 
+    Code hosts website at http://realfoodnetwork.carleton.edu:2019
+    Renders html templates for url endpoints:
         - '/' goes renders home.html
         - '/login' renders login.html
-        - '/entry_session' renders entry_session.html 
-        - '/data_entry' renders data_entry.html 
-        - '/view_download' renders view_download.html 
+        - '/entry_session' renders entry_session.html
+        - '/data_entry' renders data_entry.html
+        - '/view_download' renders view_download.html
         - '/visualization' renders visualization.html
 '''
 
@@ -38,7 +38,7 @@ def login():
 
 """
 Render html for the entry session page
-If 'entry-session-form' in entry_session.html is submitted, generate api url to insert items into database.  
+If 'entry-session-form' in entry_session.html is submitted, generate api url to insert items into database.
 """
 @app.route('/entry_session', methods=['POST','GET'])
 def entrySession():
@@ -79,8 +79,8 @@ def entrySession():
 
 """
 Render html for data entry page (this route can only be accessed through entry session)
-If 'data-entry-form' in data_entry.html is submitted, generate api url to search for similar items. 
-Retrieve and display results of api call.  
+If 'data-entry-form' in data_entry.html is submitted, generate api url to search for similar items.
+Retrieve and display results of api call.
 """
 @app.route('/data_entry', methods = ['POST', 'GET'])
 def result():
@@ -117,6 +117,6 @@ def visualization():
 
 if __name__ == '__main__':
     # run website on http://realfoodnetwork.carleton.edu:2019
-    # 'realfoodnetwork.carleton.edu' can also be assessed with 'cmc307-06.mathcs.carleton.edu' 
+    # 'realfoodnetwork.carleton.edu' can also be assessed with 'cmc307-06.mathcs.carleton.edu'
     host='realfoodnetwork.carleton.edu'
-    app.run(host="localhost", port=2019, debug=True)
+    app.run(host=host, port=2019, debug=True)

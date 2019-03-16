@@ -3,7 +3,6 @@
     Chae Kim, Syd Botz, Claudia Naughton, Bryce Barton, James Yang
 
 TO DO:
-- make a separate config.py file for password security
 - change table from "test_data" to other name
 '''
 from flask import Flask, render_template, session
@@ -249,7 +248,8 @@ def insert_entry():
     else:
         return "Stub Function: Could not get connection"
 
-""" THINGS CHAE CHANGED """
+#~~~~~BEGIN: USED EXCLUSIVELY FOR VIEW_DOWNLOAD PAGE~~~~~~~#
+# finds the exact match of the row in html table being edited and deletes it
 @app.route("/delete_entry")
 def delete_entry():
 
@@ -326,6 +326,8 @@ def delete_entry():
     else:
         return "Stub Function: Could not get connection"
 
+# adds entry exactly the way it is reflected in the current html table
+# different from normal entry in that it gives more fields to edit
 @app.route("/vd_add_entry")
 def vd_insert_entry():
 
@@ -394,7 +396,9 @@ def vd_insert_entry():
         return "Stub Function: Inserted Entry"
     else:
         return "Stub Function: Could not get connection"
+#~~~~~END : USED EXCLUSIVELY FOR VIEW_DOWNLOAD PAGE~~~~~~~#
 
+# getting key for encryption in login
 @app.route("/52Ow41jelt")
 def get_key():
 
