@@ -649,7 +649,6 @@ function findInsertIndex(d) {
     chart_data = JSON.parse(sessionStorage[curr_data_percent[rank_methods.indexOf(rank)]])
 
     index = chart_data.length;
-    console.log(chart_data)
     for (k = 0; k < chart_data.length; k++) {
       if (val > chart_data[k]) {
         index = k;
@@ -659,7 +658,6 @@ function findInsertIndex(d) {
 
     curr = JSON.parse(sessionStorage.currPercent)
     curr.splice(index, 0, d[0])
-    console.log(curr)
     sessionStorage.setItem("currPercent", JSON.stringify(curr));
 
     // insert the newly added item to the same spot across all 4 data arrays of the labels
@@ -677,7 +675,6 @@ function addItemDataPercent(override) {
 
   if (override != '') {y = override;}
   else {y = document.getElementById("add_percent").value;}
-  console.log(current_list)
   // check input is longer than 1 and has not appeared in current list
   if (y.length > 1 && !current_list.includes(y)) {
     e = document.getElementById("yearPercent");
@@ -765,7 +762,6 @@ function addCatDataPercent(override) {
       myBarChart.data.datasets[1].data.splice(index, 0, data[4])
       myBarChart.data.datasets[1].backgroundColor.push('rgba(255,99,132, 0.2)')
       myBarChart.data.datasets[1].borderColor.push('rgba(255,99,132, 1)')
-      console.log(myBarChart.data.labels)
       myBarChart.data.labels.splice(index, 0, data[0])
   }
 
@@ -778,7 +774,6 @@ function addCatDataPercent(override) {
 
   // add duplicate items
   dup = JSON.parse(sessionStorage.percentDuplicate)
-  console.log(dup)
   curr_ind = JSON.parse(sessionStorage.percentCurrent)
 
   for (i = 0; i < results.length; i++) {
@@ -838,14 +833,11 @@ function remove_item_percent(item) {
   curr_cat = JSON.parse(sessionStorage.percentCatCurr)
   n = JSON.parse(sessionStorage.percentCatNot)
   total = curr_cat.concat(n)
-  console.log(total)
   // only check duplicates in category if there are items in there
   if (total.length > 0) {
   total_t = total[0].map((col, i) => total.map(row => row[i]));
-  console.log(total_t)
 
   dup = JSON.parse(sessionStorage.percentDuplicate)
-  console.log(dup)
   // add back the duplicate entry if it exists in category data
   if (dup.includes(item)) {
     index = total_t[0].indexOf(item)
@@ -1007,10 +999,8 @@ function changeYearPercent() {
   // store the important data
   updateYearCat = sessionStorage.currentPercentCat
   updateYearItems = JSON.parse(sessionStorage.percentCurrent)
-  console.log(updateYearItems)
   // clear the canvas
   clearCanvasPercent();
-  console.log(updateYearItems)
   for (u = 0; u < updateYearItems.length; u++) {
     addItemDataPercent(updateYearItems[u])
   }
@@ -1093,11 +1083,9 @@ function changeRankPercent() {
   total = curr_cat.concat(curr_not)
 
   // do not do anything if no category data is used
-  console.log(total)
   if (total.length > 0) {
   total_t = total[0].map((col, i) => total.map(row => row[i]));
   sorting = total_t[1 + rank_index]
-  console.log(sorting)
 
   total = sortListbyList(total, sorting)
 
@@ -1403,8 +1391,6 @@ function findInsertIndexMixed(d) {
 
     chart_data = JSON.parse(sessionStorage.currData)
     chart_labels = JSON.parse(sessionStorage.currMixed)
-    console.log(chart_data)
-    console.log(chart_labels)
     // if no data in there, then add to be the first one
     if (chart_data.length == 0) {
       index = 0;
@@ -1426,12 +1412,9 @@ function findInsertIndexMixed(d) {
     if (all_range != 0) {all_range = 1/(all_range + all_min);} // = (1 / max)
     ind_range = calcRange(chart_data_t[1])
 
-    console.log(chart_data_t)
     for (p = 0; p < chart_data_t[1].length; p++) {
       w = chart_data_t[0][p]
       v = chart_data_t[1][p]
-      console.log(w)
-      console.log(v)
       if (v == 0) {
         // if v is 0, which implies that dollar and % increase in all are both 0,
         // then set the second operand as the maximum possible value;
@@ -1478,7 +1461,6 @@ function addItemDataMixed(override) {
     searches.done(function(results) {
       // item, total, ind, dollars
       data = results.data
-      console.log(data)
       index = findInsertIndexMixed(data)
 
       // mixed chart order: dollar, ind, all
@@ -1521,8 +1503,6 @@ function addCatDataMixed(override) {
   if (sessionStorage.currentMixedCat != "" && sessionStorage.currentMixedCat != cat) { 
       remove_cat_mixed();
     }
-  console.log(sessionStorage.currentMixedCat)
-  console.log(cat)
   if (sessionStorage.currentMixedCat != cat) {
 
   e = document.getElementById("yearMixed");
@@ -1541,7 +1521,6 @@ function addCatDataMixed(override) {
   results_curr = results.slice(0, num_items)
   results_no = results.slice(num_items, results.length)
   // add data to table
-  console.log(results)
   for (h = 0; h < num_items; h++) {
       data = results_curr[h]
       index = findInsertIndexMixed(data)
@@ -1559,9 +1538,8 @@ function addCatDataMixed(override) {
   $("#showMixed").html(show)
   $("#allMixed").html(all)
 
-  // add duplicate items
+  // add back duplicate items
   dup = JSON.parse(sessionStorage.mixedDuplicate)
-  console.log(dup)
   curr_ind = JSON.parse(sessionStorage.mixedCurrent)
 
   for (i = 0; i < results.length; i++) {
@@ -1584,10 +1562,7 @@ function remove_item_mixed(item) {
   item = item.substring(1)
 
   curr = JSON.parse(sessionStorage.currMixed) // all the labels currently shown on the plot
-  console.log(curr)
   index = curr.indexOf(item)
-  console.log(index)
-  console.log(item)
   myMixedChart.data.datasets[0].data.splice(index, 1)
   myMixedChart.data.datasets[1].data.splice(index, 1)
   myMixedChart.data.datasets[2].data.splice(index, 1)
@@ -1621,14 +1596,11 @@ function remove_item_mixed(item) {
   curr_cat = JSON.parse(sessionStorage.mixedCatCurr)
   n = JSON.parse(sessionStorage.mixedCatNot)
   total = curr_cat.concat(n)
-  console.log(total)
   // only check duplicates in category if there are items in there
   if (total.length > 0) {
   total_t = total[0].map((col, i) => total.map(row => row[i]));
-  console.log(total_t)
 
   var dup = JSON.parse(sessionStorage.mixedDuplicate)
-  console.log(dup)
   // add back the duplicate entry to the table if it exists in category data
   if (dup.includes(item)) {
     index = total_t[0].indexOf(item)
@@ -1647,7 +1619,6 @@ function remove_cat_mixed() {
   total = curr_cat.concat(JSON.parse(sessionStorage.mixedCatNot))
   curr = JSON.parse(sessionStorage.currMixed) // current chart labels
   curr_data = JSON.parse(sessionStorage.currData)
-  console.log(curr)
   for (q = 0; q < curr_cat.length; q++) {
     item = curr_cat[q][0]
     index = curr.indexOf(item)
@@ -1656,9 +1627,7 @@ function remove_cat_mixed() {
     myMixedChart.data.datasets[2].data.splice(index, 1)
     myMixedChart.data.labels.splice(index, 1)
     curr.splice(index, 1)
-    console.log(curr)
     curr_data.splice(index, 1)
-    console.log(myMixedChart.data.labels);
   }
   myMixedChart.update()
 
@@ -1668,7 +1637,6 @@ function remove_cat_mixed() {
 
 
   var dup = JSON.parse(sessionStorage.mixedDuplicate)
-  console.log(dup)
   for (z = 0; z < total.length; z++) {
     item = total[z][0]
     table_mixed.rows( function ( idx, data, node ) {
@@ -1777,9 +1745,7 @@ function clearCanvasMixed() {
 function changeYearMixed() {
   // store the important data
   updateYearCat = sessionStorage.currentMixedCat
-  console.log(updateYearCat)
   updateYearItems = JSON.parse(sessionStorage.mixedCurrent)
-  console.log(updateYearItems)
   // clear the canvas
   clearCanvasMixed();
 
@@ -2228,9 +2194,7 @@ function remove_item_time(item) {
   sessionStorage.setItem("timeConfigs", JSON.stringify(total_configs));
   sessionStorage.setItem("timeChartLabels", JSON.stringify(timeChartLabels));
 
-  //item_id = "#time_" + item
   item_id = "[id='time_" + item + "']"
-  console.log(item_id)
   $(item_id).remove()
 
   table.rows( function ( idx, data, node ) {
@@ -2249,8 +2213,6 @@ function remove_item_time(item) {
     if (n.includes(item)) {
       index = curr.length + n.indexOf(item)
     }
-    console.log(dup)
-    console.log(item)
     cost = JSON.parse(sessionStorage.timeCatCost)
     for (j = 0; j < types.length; j++) {
       table.row.add([item, types[j], cost[j][index][0], cost[j][index][1], cost[j][index][2]]).draw(false)
@@ -2304,9 +2266,6 @@ function remove_cat_time() {
     item = total[z]
 
   if (dup.includes(item)) {
-    console.log(dup)
-    console.log(item)
-    console.log(total)
     index = total.indexOf(item)
     for (j = 0; j < types.length; j++) {
       table.row.add([item, types[j], cost[j][index][0], cost[j][index][1], cost[j][index][2]]).draw(false)
@@ -2357,9 +2316,6 @@ function minusTime() {
   total_configs = removeElements(["real " + item, "total " + item], total_configs)
   myLineChart.update();
 
-  console.log(total_configs)
-  console.log(timeChartLabels)
-
   sessionStorage.setItem("timeConfigs", JSON.stringify(total_configs));
   sessionStorage.setItem("timeChartLabels", JSON.stringify(timeChartLabels));
 
@@ -2390,7 +2346,6 @@ function addTime() {
         line.label = types[j] + " " + y
         total_configs.push(line.label)
         chart_labels.push(line.label)
-        //line.backgroundColor = colors[i]
         line.borderColor = color
         line.fill = false
         if (j > 0) {
@@ -2398,8 +2353,6 @@ function addTime() {
         }
         myLineChart.data.datasets.push(line)
     }
-// console.log(datasets.toString())
-// add legend for each item
     line = {}
     line.data = 0 // arbitrary
     line.type = 'line'
@@ -2407,14 +2360,11 @@ function addTime() {
     chart_labels.push(line.label)
     line.backgroundColor = color
     line.borderColor = color
-    //line.fillColor = colors[i]
     line.fill = true
     line.showLine = false
     myLineChart.data.datasets.push(line)
 
   myLineChart.update();
-  console.log(total_configs)
-  console.log(chart_labels)
   sessionStorage.setItem("timeConfigs", JSON.stringify(total_configs));
   sessionStorage.setItem("timeChartLabels", JSON.stringify(chart_labels));
 
@@ -2762,8 +2712,6 @@ LivCharts[v] = new Chart(ctx1x[c], {
               display: function(context) {
                 if (context.datasetIndex % 2) {
                 non_real_data = d[context.datasetIndex - 1].data[context.dataIndex]
-                // console.log(non_real_data)
-                // console.log((context.datasetIndex % 2) && (context.dataset.data[context.dataIndex] > 0 || non_real_data > 0))
               }
               else {
                 non_real_data = -1
@@ -2937,14 +2885,10 @@ function addLivItem() {
         l_vendor[i] = "NA"
       }
     }
-    console.log(dr)
-    console.log(dn)
     // make sure it shows at most 5 items on the chart at most
     num_items1 = Math.min(5, dr.length)
     sessionStorage.setItem("currLiv1", JSON.stringify([l_label.slice(0, num_items1), dr.slice(0, num_items1), dn.slice(0, num_items1)]))
     sessionStorage.setItem("notLiv1", JSON.stringify([l_label.slice(num_items1, l_label.length), dr.slice(num_items1, dr.length), dn.slice(num_items1, dn.length)]))
-    console.log(JSON.parse(sessionStorage.currLiv1))
-    console.log(JSON.parse(sessionStorage.notLiv1))
 
     // fill in the datatables
     for (i = 0; i < l_label.length; i++) {
@@ -3212,9 +3156,6 @@ function minusLiv1() {
     curr[1].splice(curr[1].length-1, 1)
     curr[2].splice(curr[2].length-1, 1)
 
-    console.log(curr)
-    console.log(not)
-
     sessionStorage.setItem("currLiv1", JSON.stringify(curr))
     sessionStorage.setItem("notLiv1", JSON.stringify(not))
   }
@@ -3249,9 +3190,6 @@ function addLiv1() {
     not[1].splice(0, 1)
     not[2].splice(0, 1)
 
-        console.log(curr)
-    console.log(not)
-
     sessionStorage.setItem("currLiv1", JSON.stringify(curr))
     sessionStorage.setItem("notLiv1", JSON.stringify(not))
   }
@@ -3284,9 +3222,6 @@ function minusLiv2() {
     curr[0].splice(curr[0].length-1, 1)
     curr[1].splice(curr[1].length-1, 1)
     curr[2].splice(curr[2].length-1, 1)
-
-        console.log(curr)
-    console.log(not)
 
     sessionStorage.setItem("currLiv2", JSON.stringify(curr))
     sessionStorage.setItem("notLiv2", JSON.stringify(not))
@@ -3321,9 +3256,6 @@ function addLiv2() {
     not[0].splice(0, 1)
     not[1].splice(0, 1)
     not[2].splice(0, 1)
-
-    console.log(curr)
-    console.log(not)
 
     sessionStorage.setItem("currLiv2", JSON.stringify(curr))
     sessionStorage.setItem("notLiv2", JSON.stringify(not))
