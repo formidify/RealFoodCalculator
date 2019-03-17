@@ -36,9 +36,8 @@
 </div>
 </nav>
 
-
 <!-- /* Real food calculator visualization page using Chart.js
- * Author: James Yang (part of the Real Food Calculator comps group)
+ * Author: James Yang, Bryce Barton, Syd Botz, Chae Kim, Claudia Naughton
  *
  * Visualization types:
  * 1) Quick look at our data using general non-interactive charts
@@ -88,6 +87,12 @@
 </div>
 
 <script>
+
+/**
+  * Plot the year by year real vs nonreal distribution (bar)
+  * Also year by year real vs nonreal dollar purchase per category (pie)
+**/
+
 Chart.defaults.global.defaultFontSize = 20;
 
 // all time total real vs nonreal charts by years
@@ -294,6 +299,11 @@ getData.done(function(results) {
 </div>
 
 <script>
+
+/**
+  * Show the top 5 items/categories/labels/vendors in terms of real and nonreal food purchase (bar)
+**/
+
 Chart.defaults.global.plugins.datalabels.display = false
 
 Chart.DatasetController.extend({
@@ -324,6 +334,7 @@ sessionStorage.setItem('quickCurr', 'null');
 
 drawQuickChart('null'); // draw quick chart without any year input
 
+// take year input and show top 5 data for that given year; most recent year if input is 'null'
 function drawQuickChart(yr) {
 // draw top 5 items/categories/labels/vendors for most recent year
 divs = ["realCatChart", "nonCatChart", "realItemChart", "nonItemChart",
@@ -356,11 +367,9 @@ for (i = 0; i < 4; i++) {
           backgroundColor: background[j],
           borderColor: border[j]
       }],
-      // These labels appear in the legend and in the tooltips when hovering different arcs
       labels: labels
   };
   title = prefix + title_parts[i] + " " + year + " in " + type[j] + " food"
-  //ctx = document.getElementById(divs[2*i + j]).getContext('2d');
   quickCharts[2*i + j] = new Chart(ctQ[2*i + j], {
       type: 'bar',
       data: data,
@@ -429,7 +438,6 @@ function backQuick() {
     sessionStorage.setItem("quickCurr", curr)
   }
 }
-
 </script>
 
 
@@ -503,6 +511,10 @@ Ranked by (in decreasing order):
 </div>
 
 <script>
+
+/**
+  * Interactive plot showing the real vs nonreal dollar purchase for single items for a year (bar)
+**/
 Chart.defaults.global.plugins.datalabels.display = false
 
 // get all categories in database
@@ -517,7 +529,7 @@ c.done(function(results) {
     .html(cat)
 );
   }
-    // add option for all categories
+    // add option to choose all categories at once
     $("select#categoriesPercent").append( $("<option>")
     .val("all")
     .html("all"));
@@ -553,13 +565,14 @@ sessionStorage.setItem("percentCurrent", JSON.stringify([])); // all the individ
 sessionStorage.setItem("percentCatCurr", JSON.stringify([])); // all categories items currently show in plot
 sessionStorage.setItem("percentCatNot", JSON.stringify([])); // categories items not shown
 
-sessionStorage.setItem("currPercent", JSON.stringify([])); // current labels stored in chart
+sessionStorage.setItem("currPercent", JSON.stringify([])); // current labels stored in chart (ranked)
 sessionStorage.setItem("currReal", JSON.stringify([])); // real $ purchase of all labels
 sessionStorage.setItem("currNonreal", JSON.stringify([])); // nonreal $ purchase of all labels
 sessionStorage.setItem("currSum", JSON.stringify([])); // total $ purchase of all labels
 sessionStorage.setItem("currMinus", JSON.stringify([])); // nonreal - real $ purchase of all labels
 sessionStorage.setItem("percentDuplicate", JSON.stringify([])); // store duplicate entries between individual items and category
 
+// array storing the four associated data values of each item
 curr_data_percent = ["currMinus", "currSum", "currReal", "currNonreal"]
 
 // search for items for percent chart
@@ -591,45 +604,45 @@ var rank_methods = ["minus", "add", "real", "nonreal"]
 
 // initialize my bar chart
 var myBarChart;
-  ctx2 = document.getElementById("percentChart").getContext('2d');
-  myBarChart = new Chart(ctx2, {
-    data:{
-      datasets: [{
-          label: "real",
-          data: [],
-          borderWidth: 2,
-          backgroundColor: [],
-          borderColor: []
-      },
-      {
-          label: "non-real",
-          data: [],
-          borderWidth: 2,
-          backgroundColor: [],
-          borderColor: []
-        }
-      ],
-      labels: []
-  },
-      type: 'bar',
-      options: {
-          scales: {
-              xAxes: [{
-                  stacked: true,
-                  ticks: {
-                    autoSkip: false
-                  }
-              }],
-              yAxes: [{
-                  stacked: true
-              }]},
-              title: {
-              display: true
-          },
-          responsive: true,
-          maintainAspectRatio: false
+ctx2 = document.getElementById("percentChart").getContext('2d');
+myBarChart = new Chart(ctx2, {
+  data:{
+    datasets: [{
+        label: "real",
+        data: [],
+        borderWidth: 2,
+        backgroundColor: [],
+        borderColor: []
+    },
+    {
+        label: "non-real",
+        data: [],
+        borderWidth: 2,
+        backgroundColor: [],
+        borderColor: []
       }
-  });
+    ],
+    labels: []
+},
+    type: 'bar',
+    options: {
+        scales: {
+            xAxes: [{
+                stacked: true,
+                ticks: {
+                  autoSkip: false
+                }
+            }],
+            yAxes: [{
+                stacked: true
+            }]},
+            title: {
+            display: true
+        },
+        responsive: true,
+        maintainAspectRatio: false
+    }
+});
 
 // datatable initialization
 var table_percent;
@@ -638,7 +651,7 @@ $(document).ready(function(){table_percent = $('#percent_table').DataTable({
         buttons: ['copyHtml5', 'csvHtml5', 'excelHtml5']
     }); });
 
-// given the attributes of an item and the current sorting, find which index to splice it into the chart
+// given the data of an item and the current sorting, find which index to put it into the chart
 function findInsertIndex(d) {
     curr_data_percent = ["currMinus", "currSum", "currReal", "currNonreal"]
     e = document.getElementById("rank_percent");
@@ -655,7 +668,6 @@ function findInsertIndex(d) {
         break;
       }
     }
-
     curr = JSON.parse(sessionStorage.currPercent)
     curr.splice(index, 0, d[0])
     sessionStorage.setItem("currPercent", JSON.stringify(curr));
@@ -670,9 +682,9 @@ function findInsertIndex(d) {
 } 
 
 // add single item to the time series chart
+// override is for when we want to add data manually (not just called by html)
 function addItemDataPercent(override) {
   current_list = JSON.parse(sessionStorage.percentCurrent)
-
   if (override != '') {y = override;}
   else {y = document.getElementById("add_percent").value;}
   // check input is longer than 1 and has not appeared in current list
@@ -686,7 +698,7 @@ function addItemDataPercent(override) {
       // elements by index: item, real, nonreal, minus, sum
       data = results.data
 
-      index = findInsertIndex(data)
+      index = findInsertIndex(data) // find index to insert
 
       myBarChart.data.datasets[0].data.splice(index, 0, data[3])
       myBarChart.data.datasets[0].backgroundColor.push('rgba(99,132,255, 0.2)')
@@ -701,7 +713,7 @@ function addItemDataPercent(override) {
       myBarChart.update();
       table_percent.row.add([data[0], data[3], data[4], data[1], data[2]]).draw(false)
 
-      // add duplicates to entry
+      // add duplicates to session storage
       dup = JSON.parse(sessionStorage.percentDuplicate)
       curr = JSON.parse(sessionStorage.percentCatCurr)
       n = JSON.parse(sessionStorage.percentCatNot)
@@ -717,12 +729,12 @@ function addItemDataPercent(override) {
     }
 
     })
+    // add html buttons for removal
     $('#buttons_percent').append('<button class="btnic" id = "percent_' + y + '" onclick = "remove_item_percent(&quot ' + y + '&quot)"><i class="fa fa-close"></i> ' + y + '</button>');
     sessionStorage.setItem("percentCurrent", JSON.stringify(current_list.concat([y])));
 
   }
 }
-
 
 // add a category to the percent chart
 function addCatDataPercent(override) {
@@ -893,7 +905,7 @@ function remove_cat_percent() {
   }
   }
   sessionStorage.setItem("percentDuplicate", JSON.stringify(dup))
-  // update html
+  // update how much to show on each page
   $("#showPercent").html(0)
   $("#allPercent").html(0)
   sessionStorage.setItem("percentCatCurr", JSON.stringify([]));
@@ -1004,7 +1016,6 @@ function changeYearPercent() {
   for (u = 0; u < updateYearItems.length; u++) {
     addItemDataPercent(updateYearItems[u])
   }
-
   if (updateYearCat != '') {
     addCatDataPercent(updateYearCat);
   }
@@ -1115,7 +1126,6 @@ function changeRankPercent() {
   sessionStorage.setItem("percentCatCurr", JSON.stringify(curr_cat));
   sessionStorage.setItem("percentCatNot", JSON.stringify(curr_not));
 }
-
 </script>
 
 
@@ -1181,6 +1191,10 @@ AND/OR Select a category:
 </div>
 
 <script>
+/**
+  * Plot the hypothetical increase data for each item (bar)
+**/
+
 // our own round function
 function round(value, decimals) {
   return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
@@ -1237,7 +1251,7 @@ sessionStorage.setItem("currMixed", JSON.stringify([])); // current labels store
 sessionStorage.setItem("currData", JSON.stringify([])); // current data associated with the chart
 sessionStorage.setItem("mixedDuplicate", JSON.stringify([])); // store duplicate entries between individual items and category
 
-
+// search for items in mixed chart
 function searchItemMixed() {
   x = document.getElementById("add_mixed").value;
   if (x.length > 1) {
@@ -1275,7 +1289,6 @@ ctx20 = document.getElementById("mixedChart").getContext('2d');
           borderColor: 'rgba(75, 192, 192, 1)',
           yAxisID: "bar",
           datalabels: {
-          // display labels for this specific dataset
           display: true,
           anchor: 'center'
         }}, {
@@ -1387,8 +1400,7 @@ function sortListbyList(A, B) {
 
 // given the attributes of an item and the current sorting, find which index to splice it into the chart
 function findInsertIndexMixed(d) {
-  // all, ind, dollar
-
+    // all, ind, dollar
     chart_data = JSON.parse(sessionStorage.currData)
     chart_labels = JSON.parse(sessionStorage.currMixed)
     // if no data in there, then add to be the first one
@@ -1496,7 +1508,7 @@ function addItemDataMixed(override) {
   }
 }
 
-
+// add category to the mixed chart
 function addCatDataMixed(override) {
   if (override != '') {cat = override;}
   else {cat = $("select#categoriesMixed").val();}
@@ -1748,11 +1760,9 @@ function changeYearMixed() {
   updateYearItems = JSON.parse(sessionStorage.mixedCurrent)
   // clear the canvas
   clearCanvasMixed();
-
   for (u = 0; u < updateYearItems.length; u++) {
     addItemDataMixed(updateYearItems[u]);
   }
-
   if (updateYearCat != '') {
     addCatDataMixed(updateYearCat);
   }
@@ -2006,8 +2016,6 @@ function addItemData() {
     dup.push(y)
   }
   sessionStorage.setItem("timeDuplicate", JSON.stringify(dup));
-  
-
 
     for (j = 0; j < types.length; j++) {
         line = {}
@@ -2025,7 +2033,7 @@ function addItemData() {
         myLineChart.data.datasets.push(line)
         table.row.add([y, types[j], cost[j][0], cost[j][1], cost[j][2]]).draw(false)
     }
-// add legend for each item
+    // add legend for each item
     line = {}
     line.data = 0 // arbitrary
     line.type = 'line'
@@ -2044,9 +2052,7 @@ sessionStorage.setItem("timeChartLabels", JSON.stringify(chart_labels)); // labe
 
 // add option to remove
 $('#buttons_time').append('<button class="btnic" id = "time_' + y + '" onclick = "remove_item_time(&quot ' + y + '&quot)"><i class="fa fa-close"></i> ' + y + '</button>');
-
     })
-
     sessionStorage.setItem("timeCurrent", JSON.stringify(current_list.concat([y])));
   }
 }
@@ -2074,17 +2080,17 @@ function addCatData() {
     myLineChart.data.labels = results.yrs
 
     // update column years
-          if (updatedTimeColumn) {
-        updatedTimeColumn = false;
-        var head_item = table.columns(2).header();
-        $(head_item).html(results.yrs[0]);
+    if (updatedTimeColumn) {
+      updatedTimeColumn = false;
+      var head_item = table.columns(2).header();
+      $(head_item).html(results.yrs[0]);
 
-        var head_item = table.columns(3).header();
-        $(head_item).html(results.yrs[1]);
+      var head_item = table.columns(3).header();
+      $(head_item).html(results.yrs[1]);
 
-        var head_item = table.columns(4).header();
-        $(head_item).html(results.yrs[2]);
-      }
+      var head_item = table.columns(4).header();
+      $(head_item).html(results.yrs[2]);
+    }
 
     chart_labels = JSON.parse(sessionStorage.timeChartLabels);
     total_configs = JSON.parse(sessionStorage.timeConfigs)
@@ -2101,7 +2107,6 @@ function addCatData() {
 
         total_configs.push(line.label)
         chart_labels.push(line.label)
-        //line.backgroundColor = colors[i]
         color = "#" + intToARGB(hashCode(items[i]))
         colors.push(color)
         line.borderColor = color
@@ -2118,7 +2123,6 @@ function addCatData() {
     line.label = items[i]
     line.backgroundColor = color
     line.borderColor = color
-    //line.fillColor = colors[i]
     line.fill = true
     line.showLine = false
     chart_labels.push(line.label)
@@ -2128,7 +2132,7 @@ function addCatData() {
   // add duplicate entries into the list
   var dup = JSON.parse(sessionStorage.timeDuplicate)
 
-curr_ind = JSON.parse(sessionStorage.timeCurrent)
+  curr_ind = JSON.parse(sessionStorage.timeCurrent)
   // add data to table
   for (i = 0; i < items.length; i++) {
     if (curr_ind.includes(items[i])) {
@@ -2147,7 +2151,6 @@ curr_ind = JSON.parse(sessionStorage.timeCurrent)
     not.push(items[k])
   }
 
-
   myLineChart.update();
   sessionStorage.setItem("timeConfigs", JSON.stringify(total_configs));
    sessionStorage.setItem("timeChartLabels", JSON.stringify(chart_labels));
@@ -2155,7 +2158,6 @@ curr_ind = JSON.parse(sessionStorage.timeCurrent)
   sessionStorage.setItem("timeCurrCat", JSON.stringify(curr));
   sessionStorage.setItem("timeNotCat", JSON.stringify(not));
   sessionStorage.setItem("timeCatCost", JSON.stringify(cost));
-
 
   })
   sessionStorage.setItem("currentTimeCat", cat);
@@ -2235,23 +2237,23 @@ function remove_cat_time() {
   curr = JSON.parse(sessionStorage.timeCurrCat)
   for (p = 0; p < curr.length; p++) {
     item = curr[p]
-// remove legend data
-  index = timeChartLabels.indexOf(item) + 2
-  myLineChart.data.datasets.splice(index, 1);
-  timeChartLabels = removeElements([item], timeChartLabels)
+    // remove legend data
+    index = timeChartLabels.indexOf(item) + 2
+    myLineChart.data.datasets.splice(index, 1);
+    timeChartLabels = removeElements([item], timeChartLabels)
 
-  // remove real data
-  index = timeChartLabels.indexOf("real " + item) + 2
-  myLineChart.data.datasets.splice(index, 1);
-  timeChartLabels = removeElements(["real " + item], timeChartLabels)
+    // remove real data
+    index = timeChartLabels.indexOf("real " + item) + 2
+    myLineChart.data.datasets.splice(index, 1);
+    timeChartLabels = removeElements(["real " + item], timeChartLabels)
 
-  // remove total data in chart
-  index = timeChartLabels.indexOf("total " + item) + 2
-  myLineChart.data.datasets.splice(index, 1);
-  timeChartLabels = removeElements(["total " + item], timeChartLabels)
+    // remove total data in chart
+    index = timeChartLabels.indexOf("total " + item) + 2
+    myLineChart.data.datasets.splice(index, 1);
+    timeChartLabels = removeElements(["total " + item], timeChartLabels)
 
-  total_configs = removeElements(["real " + item, "total " + item], JSON.parse(sessionStorage.timeConfigs))
-  sessionStorage.setItem("timeConfigs", JSON.stringify(total_configs));
+    total_configs = removeElements(["real " + item, "total " + item], JSON.parse(sessionStorage.timeConfigs))
+    sessionStorage.setItem("timeConfigs", JSON.stringify(total_configs));
 
   }
 
@@ -2265,18 +2267,16 @@ function remove_cat_time() {
     .draw();
     item = total[z]
 
-  if (dup.includes(item)) {
-    index = total.indexOf(item)
-    for (j = 0; j < types.length; j++) {
-      table.row.add([item, types[j], cost[j][index][0], cost[j][index][1], cost[j][index][2]]).draw(false)
+    if (dup.includes(item)) {
+      index = total.indexOf(item)
+      for (j = 0; j < types.length; j++) {
+        table.row.add([item, types[j], cost[j][index][0], cost[j][index][1], cost[j][index][2]]).draw(false)
+      }
+      var del = dup.indexOf(item);
+      dup.splice(del, 1);
     }
-    var del = dup.indexOf(item);
-    dup.splice(del, 1);
   }
-
-  }
-    sessionStorage.setItem("timeDuplicate", JSON.stringify(dup))
-
+  sessionStorage.setItem("timeDuplicate", JSON.stringify(dup))
   // add duplicated entries between category and item entry back into the table
 
   sessionStorage.setItem("timeCurrCat", JSON.stringify([]));
