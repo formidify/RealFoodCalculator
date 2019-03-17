@@ -1,9 +1,30 @@
 '''
-    api.py
-    Chae Kim, Syd Botz, Claudia Naughton, Bryce Barton, James Yang
+    api.py - Python Flask Web Framework 
+    Code by Real Food Calculator Comps: Bryce Barton, Syd Botz, Chae Kim, Claudia Naughton, James Yang
+    Last Updated March 14, 2019
 
-TO DO:
-- change table from "test_data" to other name
+    Code hosts website at http://cmc307-06.mathcs.carleton.edu:2019 
+    API ENDPOINTS: 
+        - '/test_data_large'
+        - '/add_entry'
+        - "/delete_entry"
+        - "/vd_add_entry"
+        - "/52Ow41jelt"
+        - "/visualization/get_categories/"
+        - "/visualization/recent_years"
+        - "/visualization/total_data"
+        - "/visualization/quick_data/<yr>"
+        - "/visualization/pie_data"
+        - "/visualization/bar_data/<cat>+<yr>+<rk>"
+        - "/visualization/bar_item/<item>+<yr>"
+        - "/visualization/mixed_data/<cat>+<yr>"
+        - "/visualization/mixed_item/<item>+<yr>"
+        - "/visualization/item_data/<path:item>"
+        - "/visualization/get_categories_time/<cat>"
+        - "/visualization/get_item/<search>"
+        - "/visualization/get_vendor/<search>"
+        - "/visualization/get_label/<search>"
+        - "/visualization/brand_vendor_data/<path:item>+<path:type>"
 '''
 from flask import Flask, render_template, session
 import sys
@@ -51,6 +72,8 @@ def set_headers(response):
     response.headers['Access-Control-Allow-Origin'] = '*'
     return response
 
+# UNIVERSAL Search Method
+# Search Database for Entries that Match Any Combination of Fields 
 @app.route('/test_data_large')
 def get_products():
 
@@ -157,7 +180,6 @@ def get_products():
                     AND lower(test_data_large.disqualifier_description) LIKE lower('%{16}%')
             ORDER BY test_data_large.{17}
             """.format(month, description, category, productCode, brand, vendor, notes,local, fair, ecological, humane, disqualifier, localDescription, fairDescription, ecologicalDescription,humaneDescription, disqualifierDescription,orderBy)
-    print(query)
     products_list = []
     connection = get_connection()
     if connection is not None:
@@ -191,7 +213,7 @@ def get_products():
         connection.close()
     return json.dumps(products_list)
 
-# insert one item into database
+### ADD ONE ENTRY INTO DATABASE 
 @app.route("/add_entry")
 def insert_entry():
 
@@ -244,9 +266,9 @@ def insert_entry():
         get_select_query_results(connection, query, parameters)
         connection.commit()
         connection.close()
-        return "Stub Function: Inserted Entry"
+        return "Inserted Entry"
     else:
-        return "Stub Function: Could not get connection"
+        return "Could not get connection"
 
 #~~~~~BEGIN: USED EXCLUSIVELY FOR VIEW_DOWNLOAD PAGE~~~~~~~#
 # finds the exact match of the row in html table being edited and deletes it
