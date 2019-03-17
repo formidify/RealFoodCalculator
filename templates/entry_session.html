@@ -32,7 +32,6 @@ window.onload = function (){
         var row = results.insertRow(-1);
 		rowNum++;
 	 	row.setAttribute("id",'cur_row'+rowNum.toString());
-        console.log(entrySession[item]);
 	 	var colNum = 0;
         for (value in entrySession[item]){
              var cell = row.insertCell(-1);
@@ -48,17 +47,14 @@ window.onload = function (){
      }
      document.getElementById("costDesc").innerHTML = "Total Cost = $" + totalCost.toFixed(2);
 	 document.getElementById("EScostBox").style.backgroundColor= '#A3C1E5';
-
 	 document.getElementById("EScostBox").style.opacity='.8';
 	 document.getElementById("EScostBox").style.border='5px solid #A3C1E5';
 	 document.getElementById("EScostBox").style.paddingTop='0px';
 	 document.getElementById("EScostBox").style.paddingLeft='4px';
 	 document.getElementById("EScostBox").style.paddingRight='4px';
 	 document.getElementById("EScostBox").style.margin='18px';
-
 	 document.getElementById("EScostBox").style.borderRadius='4px';
 	 document.getElementById("EScostBox").style.color='black';
-
 	 document.getElementById("entrySessionData").value = entrySessionString;
      rowNum = 0;
 }
@@ -66,13 +62,11 @@ window.onload = function (){
 //when cancel session is selected, clear all entries
 function clearEntries(alert){
 	if (!alert){
-		console.log("Clearing Entries");
 		entrySession = [];
 		localStorage.removeItem('entrySession');
 		location.reload();
 	}else{
 		if (window.confirm("Are you sure you want to clear all entries?")){
-   			console.log("Clearing Entries");
 			entrySession = [];
    			localStorage.removeItem('entrySession');
    			location.reload();
