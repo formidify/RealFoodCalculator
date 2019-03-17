@@ -405,7 +405,6 @@ def get_key():
     connection = get_connection()
 
     query = "SELECT notes FROM test_data_large WHERE month='9729713'"
-    print(query)
     products_list = []
     connection = get_connection()
     if connection is not None:

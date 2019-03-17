@@ -19,6 +19,7 @@ import sys
 import simplejson as json
 import psycopg2
 import requests
+import config
 
 app = flask.Flask(__name__, static_folder='static', template_folder='templates')
 
@@ -43,7 +44,7 @@ If 'entry-session-form' in entry_session.html is submitted, generate api url to 
 @app.route('/entry_session', methods=['POST','GET'])
 def entrySession():
     labels = ['category','vendor', 'brand','description','notes','productCode', 'cost','local','localDescription', 'fair', 'fairDescription','ecological','ecologicalDescription','humane','humaneDescription','disqualifier','disqualifierDescription']
-    api_url = 'http://cmc307-06.mathcs.carleton.edu:5001/add_entry?'
+    api_url = config.api_add_url
     # for each item in entrySessionData, make an API URL to submit item into database
     if request.method == 'POST':
         # result is a dictionary with four items: year, month, rating_version, and entrySessionData
@@ -85,7 +86,7 @@ Retrieve and display results of api call.
 @app.route('/data_entry', methods = ['POST', 'GET'])
 def result():
     result =[{}]
-    api_url = 'http://cmc307-06.mathcs.carleton.edu:5001/test_data_large?'
+    api_url = config.api_q_url
     # create API URL to search for similar items
     if request.method == 'POST':
         result = request.form
@@ -116,7 +117,4 @@ def visualization():
     return render_template('visualization.html')
 
 if __name__ == '__main__':
-    # run website on http://realfoodnetwork.carleton.edu:2019
-    # 'realfoodnetwork.carleton.edu' can also be assessed with 'cmc307-06.mathcs.carleton.edu'
-    host='realfoodnetwork.carleton.edu'
-    app.run(host=host, port=2019, debug=True)
+    app.run(host=config.webhost, port=int(config.webport), debug=True)
