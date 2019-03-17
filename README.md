@@ -13,9 +13,9 @@ Real Food Calculator Comps Project '18
 	our tool will allow the RFC at Carleton to spend less time entering data and more time and effort increasing the total real 
 	food percentage at Carleton.
 
-    	Our tool consists of both a database and website that acts as an interface for and way to visualize data in the database. 
-    	Our database is hosted on a computer running PostgreSQL. We have constructed an API to interact with with website using 
-    	Python Flask and Psycopg as a database adapter. Our website uses Python Flask as a web framework which renders the HTML 
-    	and Javascript files in the templates folder. 
+    Our tool consists of both a database and website that acts as an interface for and way to visualize data in the database. 
+    Our database is hosted on a computer running PostgreSQL. We have constructed an API to interact with with website using 
+    Python Flask and Psycopg as a database adapter. Our website uses Python Flask as a web framework which renders the HTML 
+    and Javascript files in the templates folder. 
 
     	There is an extended User Guide and Developer Guide. Contact us if interested in details. 
