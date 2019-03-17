@@ -18,4 +18,4 @@ Real Food Calculator Comps Project '18
     Python Flask and Psycopg as a database adapter. Our website uses Python Flask as a web framework which renders the HTML 
     and Javascript files in the templates folder. 
 
-    	There is an extended User Guide and Developer Guide. Contact us if interested in details. 
+    There is an extended User Guide and Developer Guide. Contact us if interested in details. 
