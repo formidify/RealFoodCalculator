@@ -2,7 +2,7 @@
 <html lang="en">
 
 <!--  Entry Session page created by RFC CS Comps group 2019. Shows table that has all data entered
-in data entry page, displays and allows user to edit data, and allows user to submit data to database. No 
+in data entry page, displays and allows user to edit data, and allows user to submit data to database. No
 data will be sent to the database unless 'submit' is selected. Data will be stored as a local storage
 string in browser until user submits or cancels session.-->
 
@@ -10,7 +10,7 @@ string in browser until user submits or cancels session.-->
     <meta charset="utf-8">
     <title> Entry Session</title>
    <link rel="stylesheet" type="text/css" href="../static/styles.css" />
-   <script type="text/javascript" src="../static/example.js" defer></script>
+   <script type="text/javascript" src="../static/website.js" defer></script>
    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
    <link rel="shortcut icon" href="../static/favicon.ico" type="image/x-icon">
    <link rel="icon" href="../static/favicon.ico" type="image/x-icon">
@@ -21,7 +21,7 @@ string in browser until user submits or cancels session.-->
 window.onload = function (){
     if (localStorage.getItem('entrySession')){
 		var entrySessionString = localStorage.getItem('entrySession');
-		var entrySession = JSON.parse(localStorage.getItem('entrySession'));	
+		var entrySession = JSON.parse(localStorage.getItem('entrySession'));
 	}else{
  	var entrySession = [];
 	}
@@ -208,7 +208,7 @@ function saveButton(cur_row){
   	//remove deleteRow button
   	var deleteCell = parent.getElementsByTagName('td')[18];
   	parent.removeChild(deleteCell);
-	
+
 	//switch back to edit button
   	child.firstChild.innerHTML = 'edit';
   	child.firstChild.setAttribute('class', 'editbtn');

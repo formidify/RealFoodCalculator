@@ -1,22 +1,37 @@
 '''
-    api.py
-    Chae Kim, Syd Botz, Claudia Naughton, Bryce Barton, James Yang
+    api.py - Python Flask Web Framework 
+    Code by Real Food Calculator Comps: Bryce Barton, Syd Botz, Chae Kim, Claudia Naughton, James Yang
+    Last Updated March 14, 2019
 
-TO DO:
-- make a separate config.py file for password security
-- change table from "test_data" to other name
+    Code hosts website at http://cmc307-06.mathcs.carleton.edu:2019 
+    API ENDPOINTS: 
+        - '/test_data_large'
+        - '/add_entry'
+        - "/delete_entry"
+        - "/vd_add_entry"
+        - "/52Ow41jelt"
+        - "/visualization/get_categories/"
+        - "/visualization/recent_years"
+        - "/visualization/total_data"
+        - "/visualization/quick_data/<yr>"
+        - "/visualization/pie_data"
+        - "/visualization/bar_data/<cat>+<yr>+<rk>"
+        - "/visualization/bar_item/<item>+<yr>"
+        - "/visualization/mixed_data/<cat>+<yr>"
+        - "/visualization/mixed_item/<item>+<yr>"
+        - "/visualization/item_data/<path:item>"
+        - "/visualization/get_categories_time/<cat>"
+        - "/visualization/get_item/<search>"
+        - "/visualization/get_vendor/<search>"
+        - "/visualization/get_label/<search>"
+        - "/visualization/brand_vendor_data/<path:item>+<path:type>"
 '''
 from flask import Flask, render_template, session
 import sys
 import flask
 import simplejson as json
 import psycopg2
-
-
-#from config import password
-#from config import database
-#from config import user
-
+import config
 
 app = flask.Flask(__name__, static_folder='static', template_folder='templates')
 
@@ -28,10 +43,10 @@ def get_connection():
     '''
     connection = None
     try:
-        connection = psycopg2.connect(dbname='RealFood',
-                                      user='RealFood',
-                                      password='L00kB4uL3@p',
-                                      host='localhost')
+        connection = psycopg2.connect(dbname=config.database,
+                                      user=config.user,
+                                      password=config.password,
+                                      host=config.host)
     except Exception as e:
         print("This is exception")
         print(e)
@@ -57,6 +72,8 @@ def set_headers(response):
     response.headers['Access-Control-Allow-Origin'] = '*'
     return response
 
+# UNIVERSAL Search Method
+# Search Database for Entries that Match Any Combination of Fields 
 @app.route('/test_data_large')
 def get_products():
 
@@ -163,7 +180,6 @@ def get_products():
                     AND lower(test_data_large.disqualifier_description) LIKE lower('%{16}%')
             ORDER BY test_data_large.{17}
             """.format(month, description, category, productCode, brand, vendor, notes,local, fair, ecological, humane, disqualifier, localDescription, fairDescription, ecologicalDescription,humaneDescription, disqualifierDescription,orderBy)
-    print(query)
     products_list = []
     connection = get_connection()
     if connection is not None:
@@ -197,7 +213,7 @@ def get_products():
         connection.close()
     return json.dumps(products_list)
 
-# insert one item into database
+### ADD ONE ENTRY INTO DATABASE 
 @app.route("/add_entry")
 def insert_entry():
 
@@ -250,11 +266,12 @@ def insert_entry():
         get_select_query_results(connection, query, parameters)
         connection.commit()
         connection.close()
-        return "Stub Function: Inserted Entry"
+        return "Inserted Entry"
     else:
-        return "Stub Function: Could not get connection"
+        return "Could not get connection"
 
-""" THINGS CHAE CHANGED """
+#~~~~~BEGIN: USED EXCLUSIVELY FOR VIEW_DOWNLOAD PAGE~~~~~~~#
+# finds the exact match of the row in html table being edited and deletes it
 @app.route("/delete_entry")
 def delete_entry():
 
@@ -331,6 +348,8 @@ def delete_entry():
     else:
         return "Stub Function: Could not get connection"
 
+# adds entry exactly the way it is reflected in the current html table
+# different from normal entry in that it gives more fields to edit
 @app.route("/vd_add_entry")
 def vd_insert_entry():
 
@@ -399,7 +418,9 @@ def vd_insert_entry():
         return "Stub Function: Inserted Entry"
     else:
         return "Stub Function: Could not get connection"
+#~~~~~END : USED EXCLUSIVELY FOR VIEW_DOWNLOAD PAGE~~~~~~~#
 
+# getting key for encryption in login
 @app.route("/52Ow41jelt")
 def get_key():
 
@@ -412,7 +433,7 @@ def get_key():
     if connection is not None:
         try:
             for row in get_select_query_results(connection, query):
-                product = {'notes':row[0]}
+                product = {'random':row[0]}
                 products_list.append(product)
         except Exception as e:
             print(e)
@@ -1091,15 +1112,4 @@ def get_brand_vendor_data(item, type):
 
 
 if __name__ == '__main__':
-    """if len(sys.argv) != 3:
-        print('Usage: {0} host port'.format(sys.argv[0]))
-        print('  Example: {0} perlman.mathcs.carleton.edu 5101'.format(sys.argv[0]))
-        exit()
-    """
-#    host = sys.argv[1]
-    host = 'cmc307-06.mathcs.carleton.edu'
-#   port = int(sys.argv[2])
-#   host=host
-    port= 5001
-    print('Using Port: '+ sys.argv[0])
-    app.run(host=host,port=port, debug=True)
+    app.run(host=config.webhost,port=int(config.port), debug=True)
