@@ -3,9 +3,9 @@
     Code by Real Food Calculator Comps: Bryce Barton, Syd Botz, Chae Kim, Claudia Naughton, James Yang
     Last Updated March 14, 2019
 
-    Code hosts website at http://realfoodnetwork.carleton.edu:2019
+    Code hosts website at http://realfoodnetwork.carleton.edu:2019/rfc_home
     Renders html templates for url endpoints:
-        - '/' goes renders home.html
+        - '/rfc_home' goes renders home.html
         - '/login' renders login.html
         - '/entry_session' renders entry_session.html
         - '/data_entry' renders data_entry.html
