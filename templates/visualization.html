@@ -6,7 +6,6 @@
         <meta charset="utf-8">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
-        <script src="https://codepen.io/anon/pen/aWapBE.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
         <link rel="stylesheet" type="text/css" href="../static/visualization.css" />
@@ -179,6 +178,7 @@ getData.done(function(results) {
         datasets: [{
             data: result.data,
             backgroundColor: result.data.map(function(hex) {
+              print(hex);
             return "#" + intToARGB(hashCode(hex));
           })
         }],
