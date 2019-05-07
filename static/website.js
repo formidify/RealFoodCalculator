@@ -8,6 +8,7 @@ initialize();
 function initialize() {
   // this object does not exist unless attempted to log in
   var logged_in = sessionStorage.getItem("logged_in");
+  // if (logged_in == null) {logged_in =true;}
   if (logged_in == null) {logged_in =false;}
 
   // if not logged in but attempting to get onto another page of website
@@ -104,7 +105,7 @@ function go_to_visualization() {
 }
 
 // checks whether login credentials are correct
-function login(inputID, inputPW) {
+/*function login(inputID, inputPW) {
   var query = getBaseApiURL()+"/52Ow41jelt"
   console.log(query);
   fetch(query)
@@ -124,6 +125,15 @@ function login(inputID, inputPW) {
     else { try_again();}
   })
   return true;
+}*/
+
+function login(inputID, inputPW){
+  if (inputID && inputPW){
+    sessionStorage.setItem("logged_in",true);
+    go_to_home();
+    console.log("gotin");
+  }
+  else { try_again();}
 }
 
 function try_again(){
