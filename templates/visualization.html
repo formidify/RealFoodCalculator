@@ -178,7 +178,7 @@ getData.done(function(results) {
         datasets: [{
             data: result.data,
             backgroundColor: result.data.map(function(hex) {
-              print(hex);
+            console.log(hex);
             return "#" + intToARGB(hashCode(hex));
           })
         }],
