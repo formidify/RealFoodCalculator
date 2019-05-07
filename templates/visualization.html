@@ -180,7 +180,7 @@ getData.done(function(results) {
     data = {
         datasets: [{
             data: result.data,
-            backgroundColor: result.data.map(function(hex) {
+            backgroundColor: result.labels.map(function(hex) {
             return "#" + intToARGB(hashCode(hex));
           })
         }],
@@ -211,7 +211,7 @@ getData.done(function(results) {
     data = {
         datasets: [{
             data: result.data,
-            backgroundColor: result.data.map(function(hex) {
+            backgroundColor: result.labels.map(function(hex) {
             return "#" + intToARGB(hashCode(hex));
           })
         }],
@@ -241,7 +241,7 @@ getData.done(function(results) {
     data = {
         datasets: [{
             data: result.data,
-            backgroundColor: result.data.map(function(hex) {
+            backgroundColor: result.labels.map(function(hex) {
             return "#" + intToARGB(hashCode(hex));
           })
         }],
@@ -272,7 +272,7 @@ getData.done(function(results) {
     data = {
         datasets: [{
             data: result.data,
-            backgroundColor: result.data.map(function(hex) {
+            backgroundColor: result.labels.map(function(hex) {
             return "#" + intToARGB(hashCode(hex));
           })
         }],
