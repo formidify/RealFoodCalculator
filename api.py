@@ -762,8 +762,9 @@ def get_percent_data(cat, yr):
         cat = ''
         phrase = 'WHERE ' + yr + ' '
     else:
-        cat = 'trim(category) = \'' + cat + '\' AND'
-        phrase = 'WHERE ' + y + 'trim(category) = \'' + cat + '\' '
+        cat_temp = cat
+        cat = 'trim(category) = \'' + cat_temp + '\' AND'
+        phrase = 'WHERE ' + y + 'trim(category) = \'' + cat_temp + '\' '
 
 
     # if we convert all of the current non-real food purchases to real
