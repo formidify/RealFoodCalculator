@@ -186,6 +186,8 @@
         })
         .catch(err => { throw err });
 
+      localStorage.removeItem("origInfo");
+
       // create edit button and put in place of save button
       var cell = document.createElement('td');
       var para = document.createElement("button");

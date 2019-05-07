@@ -8,7 +8,7 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
   <link rel="shortcut icon" href="../static/favicon.ico" type="image/x-icon">
   <link rel="icon" href="../static/favicon.ico" type="image/x-icon">
- 
+
  <script>
 
 window.onload = function (){
@@ -35,11 +35,11 @@ if(localStorage.getItem("entrySession")){
 
 function checkInvalidInputs(){
   /*
-  Error Checking and Notification for Item Entry  
+  Error Checking and Notification for Item Entry
   Return False if item does not meet qualifications
   Return True if item is ready to be inserted into database
 
-  CHECK FOR: 
+  CHECK FOR:
     - existence of category, vendor, cost, and description
     - cost is greater than $0.00
     - an item has a real qualification if and only if it has a corresponding real description
@@ -65,7 +65,7 @@ function checkInvalidInputs(){
     invalid = true;
     alertIssues.push("Enter a valid cost.");
   }
-  
+
   // item has a real qualification if and only if it has a corresponding real description
   var descriptions = ["local", "fair", "humane", "ecological", "disqualifier"];
   for (qualification in descriptions){
@@ -96,9 +96,9 @@ function submit(){
   fields saved with checkboxes.
   */
 	if (!checkInvalidInputs()){
-    // retrieve fields' values with checked boxes 
+    // retrieve fields' values with checked boxes
     var itemsToSave = getItemsToSave();
-    
+
     // create list of item's values
     var thisEntry = [];
 
@@ -107,7 +107,7 @@ function submit(){
     var numInputs = document.querySelectorAll('input[type=number]');
     var categoryInputs = document.querySelectorAll('[name=category]');
     var radioInputs = document.querySelectorAll('[type=radio]');
-    
+
     // add 'category' to item
     thisEntry.push(categoryInputs[0].value);
 
@@ -117,7 +117,7 @@ function submit(){
       inputID = inputs[i].id;
     }
 
-    // add cost to item 
+    // add cost to item
     thisEntry.push(numInputs[0].value);
     numInputs[0].value = '';
 
@@ -140,13 +140,12 @@ function submit(){
     // add item to localStorage
     initializeEntrySession.push(thisEntry);
     localStorage.setItem('entrySession', JSON.stringify(initializeEntrySession));
-    
-    // TEST THESE TWO LINES BEFORE TURNING IN
+
     // clear form
     document.getElementById("data-entry-form").reset();
     // repopulate fields with saved checkboxes
     populateSavedItems(itemsToSave);
-  } 
+  }
 }
 
 function populateItem(description, category, productCode, brand, vendor, local, localDescription, fair, fairDescription, ecological, ecologicalDescription, humane, humaneDescription, disqualifier,disqualfierDescription, notes){
@@ -193,7 +192,7 @@ function populateForm(dataLabel, value){
       for (item in optionValues){
           var lowerItem = optionValues[item].toLowerCase();
           optionStrings.push(optionValues[item]);
-          // populate description with select value that matches 
+          // populate description with select value that matches
           if (value == lowerItem){
             document.getElementById(dataLabel).value = optionValues[item];
             return;
@@ -214,7 +213,7 @@ function populateForm(dataLabel, value){
 
 function searchMatches(){
   /*
-  Function to search for items that match fields in form 
+  Function to search for items that match fields in form
   Submits 'data-entry-form' for action on website.py
   */
     var itemsToSave = getItemsToSave();
@@ -227,7 +226,7 @@ function getItemsToSave(){
   Function to save form fields' values that have the checkbox checked
   Saves items to local storage 'savedEntry'
   Returns items to save as dictionary with field/value as key/value pairs
-  */ 
+  */
   itemsToSave = {}
   // iterate through checkboxes and save associated value to itemsToSave
   $("input:checkbox:checked").each(function() {
@@ -254,8 +253,8 @@ function getItemsToSave(){
       itemValue = document.getElementById(itemName).value;
       itemsToSave[itemName] = itemValue;
     }
-  }); 
-  // save items to localStorage   
+  });
+  // save items to localStorage
   localStorage.setItem('savedEntry', JSON.stringify(itemsToSave));
   return itemsToSave;
 }
@@ -267,7 +266,7 @@ function populateSavedItems(items){
   for (key in items){
     if (key == "real"){
       for (realKey in items["real"]){
-        if (!(realKey.includes("Description"))){ 
+        if (!(realKey.includes("Description"))){
           // choose between repopulating humane true, false, or n/a
           if (realKey.includes("humane") || (realKey == "humane")){
             document.getElementById("humane-na").checked = items[key]["humane-na"];
@@ -281,7 +280,7 @@ function populateSavedItems(items){
           } else{
             document.getElementById(realKey+"-true").checked = items[key][realKey];
             document.getElementById(realKey+"-false").checked = !(items[key][realKey]);
-          } 
+          }
         // repopulate real description with saved description
         } else{
           document.getElementById(realKey).value = items[key][realKey];
@@ -297,7 +296,7 @@ function populateSavedItems(items){
   }
 }
 </script>
-<script type="text/javascript" src="../static/example.js" defer></script>
+<script type="text/javascript" src="../static/website.js" defer></script>
 </head>
 
 <body class = "data_entry">
@@ -498,7 +497,7 @@ function populateSavedItems(items){
             </select>
           </div>
           <input class = "searchSubmit" id = "ESsubmit" type="submit" onclick="return searchMatches();" value="Search for Similar Items"/>
-        </div> 
+        </div>
       </fieldset>
   </form>
   <button class = "searchSubmit" type="button" id="ESenter" onclick="submit()">Submit Item to Entry Session</button>
