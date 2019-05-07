@@ -95,6 +95,30 @@
 
 Chart.defaults.global.defaultFontSize = 20;
 
+// Hash any string into an integer value
+// Then we'll use the int and convert to hex.
+function hashCode(str) {
+    var hash = 0;
+    for (var i = 0; i < str.length; i++) {
+        hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return hash;
+}
+
+// Convert an int to hexadecimal with a max length
+// of six characters.
+function intToARGB(i) {
+    var hex = ((i>>24)&0xFF).toString(16) +
+            ((i>>16)&0xFF).toString(16) +
+            ((i>>8)&0xFF).toString(16) +
+            (i&0xFF).toString(16);
+    // Sometimes the string returned will be too short so we
+    // add zeros to pad it out, which later get removed if
+    // the length is greater than six.
+    hex += '000000';
+    return hex.substring(0, 6);
+}
+
 // all time total real vs nonreal charts by years
 getData = $.get('http://cmc307-06.mathcs.carleton.edu:5001/visualization/total_data')
 
@@ -154,8 +178,8 @@ getData.done(function(results) {
     data = {
         datasets: [{
             data: result.data,
-            backgroundColor: palette('tol', result.data.length).map(function(hex) {
-            return '#' + hex;
+            backgroundColor: result.data.map(function(hex) {
+            return "#" + intToRGB(hashCode(hex));
           })
         }],
 
@@ -185,8 +209,8 @@ getData.done(function(results) {
     data = {
         datasets: [{
             data: result.data,
-            backgroundColor: palette('tol', result.data.length).map(function(hex) {
-            return '#' + hex;
+            backgroundColor: result.data.map(function(hex) {
+            return "#" + intToRGB(hashCode(hex));
           })
         }],
 
@@ -215,8 +239,8 @@ getData.done(function(results) {
     data = {
         datasets: [{
             data: result.data,
-            backgroundColor: palette('tol', result.data.length).map(function(hex) {
-            return '#' + hex;
+            backgroundColor: result.data.map(function(hex) {
+            return "#" + intToRGB(hashCode(hex));
           })
         }],
 
@@ -246,8 +270,8 @@ getData.done(function(results) {
     data = {
         datasets: [{
             data: result.data,
-            backgroundColor: palette('tol', result.data.length).map(function(hex) {
-            return '#' + hex;
+            backgroundColor: result.data.map(function(hex) {
+            return "#" + intToRGB(hashCode(hex));
           })
         }],
 
